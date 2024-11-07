@@ -27,7 +27,7 @@ export type categoriesSection = {
 
 const WhatAreYouLookingFor: FC<Props> = ({ categories }) => {
   const { t } = useTranslation('common');
-  const categoriesSection: categoriesSection = t('page.categoriesSection', { returnObjects: true });
+  const categoriesSection: categoriesSection = t('page.categoriesSection', { returnObjects: true }) as categoriesSection;
   const [isSearchCategoriesDrower, setIsSearchCategoriesDrower] = useState(false);
   const changMenu = () => {
     setIsSearchCategoriesDrower(!isSearchCategoriesDrower);

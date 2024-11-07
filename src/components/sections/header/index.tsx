@@ -75,7 +75,7 @@ const Header: FC<Props> = ({
   const allcategories: string = t('page.header.allcategories');
   const router = useRouter();
 
-  const loginOrUserName: loginOrUserName = t('page.header.loginOrUserName', { returnObjects: true });
+  const loginOrUserName = t('page.header.loginOrUserName', { returnObjects: true }) as loginOrUserName;
   const btnText: string = t('page.header.button');
 
   const [isSearchCategoriesDrower, setIsSearchCategoriesDrower] = useState(false);
@@ -100,7 +100,7 @@ const Header: FC<Props> = ({
   };
 
   ///// profile drop down data start
-  const menuOptions: menuOptions[] = t('page.menuOptions', { returnObjects: true });
+  const menuOptions = t('page.menuOptions', { returnObjects: true }) as menuOptions[];
   const deviceId = generateDeviceId();
   const storedRefreshToken = useAppSelector((state) => state.auth.token?.refreshToken);
   const [logout] = authApi.useLogoutMutation();

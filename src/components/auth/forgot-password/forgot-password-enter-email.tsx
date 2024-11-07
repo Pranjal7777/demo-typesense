@@ -19,7 +19,7 @@ export type ForgotPasswordWithEmail = {
 
 const ForgotPasswordEnterEmail = () => {
   const { t } = useTranslation('auth');
-  const ForgotPasswordWithEmail:ForgotPasswordWithEmail= t('page.forgotPasswordWithEmail',{returnObjects:true});
+  const ForgotPasswordWithEmail = t('page.forgotPasswordWithEmail', { returnObjects: true }) as ForgotPasswordWithEmail;
 
   const router=useRouter();
   const [email,setEmail]=useState('');

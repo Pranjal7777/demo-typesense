@@ -29,9 +29,9 @@ export type SignUpWithEmailAndPassword = {
 
 const RegisterWithEmailAndPassword: React.FC = () => {
   const { t } = useTranslation('auth');
-  const SignUpWithEmailAndPassword: SignUpWithEmailAndPassword = t('page.signUpWithEmailAndPassword', {
+  const SignUpWithEmailAndPassword = t('page.signUpWithEmailAndPassword', {
     returnObjects: true,
-  });
+  }) as SignUpWithEmailAndPassword;
 
   const router = useRouter();
 

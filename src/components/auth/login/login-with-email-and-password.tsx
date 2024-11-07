@@ -50,7 +50,7 @@ export type LoginWithEmail = {
 
 const LoginWithEmailAndPassword: React.FC = () => {
   const { t } = useTranslation('auth');
-  const LoginWithEmail: LoginWithEmail = t('page.loginWithEmail', { returnObjects: true });
+  const LoginWithEmail = t('page.loginWithEmail', { returnObjects: true }) as LoginWithEmail;
 
   const router = useRouter();
 

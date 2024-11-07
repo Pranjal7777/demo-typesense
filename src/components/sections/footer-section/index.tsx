@@ -43,9 +43,9 @@ const Footer = () => {
 
   const { t } = useTranslation('common');
   const footerSectionText: string = t('page.footerSectionText');
-  const footerSection: FooterSection = t('page.footerSection', { returnObjects: true });
+  const footerSection = t('page.footerSection', { returnObjects: true }) as FooterSection;
 
-  const connectSection: ConnectSection = t('page.connectSection', { returnObjects: true });
+  const connectSection = t('page.connectSection', { returnObjects: true }) as ConnectSection;
 
   return (
     <div className=' w-full bg-bg-primary-light text-text-secondary-light'>

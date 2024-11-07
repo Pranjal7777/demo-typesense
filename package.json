@@ -1,9 +1,12 @@
 {
-  "name": "@xterm/designkit",
-  "version": "0.1.0",
+  "name": "xterm-designkitt",
+  "version": "0.1.1",
   "private": false,
-  "main": "storybook-static/index.html",
-  "files": ["storybook-static"],
+  "main": "src/index.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",

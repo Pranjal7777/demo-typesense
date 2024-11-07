@@ -1,36 +1,18 @@
-# Development files
-.storybook/
-stories/
-__tests__/
-__mocks__/
-*.test.*
-*.spec.*
+# .npmignore
 
-# Source files 
-src/
-.babelrc
-.eslintrc
-.prettierrc
-tsconfig.json
-
-# Build and dependency directories
-node_modules/
-dist/storybook/
-build-storybook/
+# Exclude storybook build files
 storybook-static/
 
-# Version control
+# Exclude source control files
 .git/
 .gitignore
 
-# IDE and Editor files
-.idea/
-.vscode/
-*.swp
-*.swo
+# Exclude node_modules
+node_modules/
 
-# Misc
-.DS_Store
+# Exclude IDE/editor specific files
+.vscode/
+.idea/
+
+# Exclude any other unnecessary files
 *.log
-.env*
-coverage/

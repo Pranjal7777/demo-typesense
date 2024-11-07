@@ -1,0 +1,247 @@
+{
+    "page": {
+        "shopByCategory":{
+            "title":"Shop by Category",
+            "seeAllLink":"See all",
+            "items":[
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/equipment_1_df63a937c3.png",
+                    "title":"Construction",
+                    "description":"100,000+ listings"
+                },
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/equipment_3_57354786c5.png",
+                    "title":"Construction",
+                    "description":"100,000+ listings"
+                },
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/equipment_4_99a2477fe4.png",
+                    "title":"Construction",
+                    "description":"100,000+ listings"
+                },
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/equipment_5_427447a816.png",
+                    "title":"Construction",
+                    "description":"100,000+ listings"
+                },
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/equipment_6_86e49c4cde.png",
+                    "title":"Construction",
+                    "description":"100,000+ listings"
+                },
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/equipment_12_2563580592.png",
+                    "title":"Construction",
+                    "description":"100,000+ listings"
+                },
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/equipment_7_1568897e1d.png",
+                    "title":"Construction",
+                    "description":"100,000+ listings"
+                },
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/equipment_8_ac4651913f.png",
+                    "title":"Construction",
+                    "description":"100,000+ listings"
+                },
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/equipment_9_eaac0dd4ec.png",
+                    "title":"Construction",
+                    "description":"100,000+ listings"
+                },
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/equipment_10_b3fee96d71.png",
+                    "title":"Construction",
+                    "description":"100,000+ listings"
+                },
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/equipment_12_2563580592.png",
+                    "title":"Construction",
+                    "description":"100,000+ listings"
+                },
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/equipment_9_eaac0dd4ec.png",
+                    "title":"Construction",
+                    "description":"100,000+ listings"
+                }
+            ]
+        },
+        "popularBrands":{
+            "title":"Popular brands",
+            "seeAllLink":"See all",
+            "items":[
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/SCANIA_Logo_vector_1_6cbaa11903.svg",
+                    "brand":"volvo"    
+            
+                },
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/isuzu_2_1_c09c3ac705.svg",
+                    "brand":"volvo"    
+
+                },
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/hino_1_aaadf555b8.svg",
+                    "brand":"volvo"    
+            
+                },
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/Vector_16fa3c0d0a.svg",
+                    "brand":"volvo"    
+            
+                },
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/cat_1_721b9394d8.svg",
+                    "brand":"volvo"    
+            
+                },
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/hino_1_aaadf555b8.svg",
+                    "brand":"volvo"    
+            
+                },
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/mercedes_benz_9_1_442c21a7f6.svg",
+                    "brand":"volvo"    
+            
+                },
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/Group_1171280612_f8167ccb59.svg",
+                    "brand":"volvo"    
+            
+                },
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/Vector_4_a0add61d52.svg",
+                    "brand":"volvo"    
+            
+                },
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/Vector_1_ebf680a1fd.svg",
+                    "brand":"volvo"    
+            
+                },
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/navistar_international_1_1_8861a6891c.svg",
+                    "brand":"volvo"    
+            
+                },
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/Vector_3_23dd509a37.svg",
+                    "brand":"volvo"    
+            
+                },
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/hino_1_aaadf555b8.svg",
+                    "brand":"volvo"    
+            
+                },
+                {
+                    "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/bobcat_1_3ee6f1eaf5.svg",
+                   "brand":"volvo"    
+           
+                }
+              ]
+        },
+        "aboutUs":[
+            {
+                "title":"About female fashion",
+                "desc":[
+                    "Boat design for skiing has progressed since the days of utility boats that were used for various activities. Inboard motors are able to deliver more than enough power to thrill the heart of the most adventurous skier. A constant speed is rated as more important than speed for skiing, and inboard engines with direct drive or ‘v’ drive are good at providing constant conditions.",
+                    "Skiers want as little wake as possible, and flat water is their ideal. While hulls may be touted as suitable for both skiing and wakeboarding, the requirements for both activities are very different. Skiers want the flat water that a flatter type of hull produces, while Wakeboarders want as much wake as possible to do their stunts.",
+                    "While it is true that for the recreational and casual skier or wakeboarder, a conventional ski boat will suffice. Adding additional passengers to the ski boat will deliver a bigger wake, but it will fall short of the wake a serious wakeboarder would want to see.",
+                    "So wake boats have been developed with special hull features to give the wakeboarder enough lift to entertain us with tricks and jumps. Ballast tanks are able to modify the draft and hull shape to help create a suitable wake and can be emptied to reduce the wake and let the skiers smile again.",
+                    "An essential feature of wake boats is the Wakeboard Tower. While skiers can get away with a low towing point, wakeboarders need a tow point at least six feet high to allow them to do spectacular jumps.",
+                    "The one advantage that ski and wake boats have is that they can be used for either skiing or wakeboarding when the conditions favor one activity. For example, in flat calm conditions, skiing takes precedence, and wakeboarding takes over when there is a slight chop."
+                ]
+            },
+            {
+                "title":"Female fashion rates",
+                "desc":[
+                    "The average financing or boat loan rate for Ski and Wakeboard Boats today is 7.99%. Ski and Wakeboard boat loans currently range from 7.49% to 10.74%. Keep in mind, there are factors that determine this rate range such as down payment amount, your credit lines, and credit score.",
+                    "If you need a boat loan for a Ski and Wakeboard boat to cover the purchase of a new or used boat, the Boatzon loan calculator can help you determine what type of boat you can afford. Our pre-qualification process for a boat loan does not require your SSN required to pre-qualify, has no impact on your credit report, and we can approve your loan as fast as 24 hours."
+                ]
+            }
+        ],
+        "accordion":{
+            "title":"Female fashion faq’s",
+            "items":[
+                {
+                    "title":"What sizes are available for this dress?",
+                    "desc":"A ski and wake boat is a specialized type of powerboat designed for water sports activities like water skiing, wakeboarding, and wakesurfing. They typically feature specific design elements and technologies that enhance the wake and provide optimal conditions for these activities."
+                },
+                {
+                    "title":"What is the dress made of?",
+                    "desc":"A ski and wake boat is a specialized type of powerboat designed for water sports activities like water skiing, wakeboarding, and wakesurfing. They typically feature specific design elements and technologies that enhance the wake and provide optimal conditions for these activities."
+                },
+                {
+                    "title":"Do you have a size guide or chart?",
+                    "desc":"Ski and wake boats often have the following features: - Tower: A wakeboard tower is a prominent feature on these boats. It provides a high point for attaching tow ropes and accessories like wakeboard racks and speakers. - Ballast System: Many wake boats have integrated ballast systems that allow for adding weight to create larger wakes for wakeboarding and wakesurfing. - Wake-Shaping Devices: Some boats have integrated wake-shaping devices, such as tabs or plates, that can adjust the shape and size of the wake. - Tower Speakers: Wake boats often come equipped with tower-mounted speakers to enhance the on-water experience with music. - Tower-Mounted Bimini Tops: These boats may feature bimini tops mounted on the tower to provide shade while maintaining headroom."
+                }
+            ]
+        },
+        "browseFrontLoaderByState":{
+            "title":"Browse Front Loader By State",
+            "items":[
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)"
+            ]
+
+        },
+        "browseFrontLoaderByCities":{
+                "title":"Browse Front Loader By Cities",
+                "items":[
+                    
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)",
+                "Georgia Front Loader For Sale (120)"
+            ]
+
+        },
+        "featuredFrontLoaderForSale":{
+            "title":"Featured Front Loader for Sale",
+            "categoryItems":[
+                "category",
+                "category",
+                "category",
+                "category",
+                "category",
+                "category"
+            ],
+            "items":[
+                {
+                    
+                }
+            ]
+
+
+        }
+        
+    }
+}

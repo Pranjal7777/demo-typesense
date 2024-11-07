@@ -1,0 +1,157 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+:root {
+  --primary-color: #6d3ec1;
+  --secondary-color: #008f79;
+  --text-primary-color: #202020;
+  --text-secondary-color: #57585a;
+  --bg-secondary-light: #ffffff;
+  --bg-tertiary-light: #f0f1f1;
+  --cta-text: black;
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+
+  --icon-primary-dark:#ffffff;
+  --icon-secondary-dark :#343434;
+  
+  --icon-primary-light:black;
+  --icon-secondary-light :#E9E9E9;
+
+  --brand-color:#6d3ec1;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+
+/* width */
+::-webkit-scrollbar {
+  height: 6px;
+  width: 8px;
+  display: none;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+
+
+
+/*Custom Css Starts Here*/
+
+.custom-container {
+  height:100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding: 0px 64px;
+  padding-inline: clamp(4px, 64px, 64px);
+}
+
+
+/*Custom Css ends Here*/
+
+.overflow-x-auto::-webkit-scrollbar {
+  display: none;
+}
+
+/* input type=number up and down arrows none */
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+/* input[type=number] {
+  -moz-appearance: textfield;
+} */
+
+/* range control
+.slider::-webkit-slider-thumb {
+  background: #efffae;
+}
+
+.slider::-moz-range-thumb {
+  background: #74AA6D;
+} */
+
+
+/* components PhoneNumberInput styles starts */
+.my-custom-dropdown li:hover {
+  background-color: white;
+  /* Replace with your desired hover color */
+  color: black;
+  /* Replace with your desired text color on hover */
+}
+
+/* Target the .highlight class within your custom dropdown for base state */
+.my-custom-dropdown .highlight {
+  /* background-color: black; */
+  /* Base state styles for highlighted items */
+  color: black;
+}
+
+/* .selected-flag:hover{
+  background-color: #1A1A1A !important;
+}
+.selected-flag{
+  background-color: #1A1A1A !important;
+} */
+/* components PhoneNumberInput styles ends*/
+
+
+
+
+/* .slick-dots li button::before{
+  width: 20px;
+  height: 10px;
+  background: black;
+  border-radius: 19px;
+} */
+
+.error-messages {
+  color: red;
+  text-align: center;
+}
+
+.pac-container {
+  cursor: pointer;
+  padding: 10px;
+  z-index: 999;
+  background-color: white !important;
+}
+
+.focus\:outline-\[\#6D3EC1\]:focus {
+  outline-color: #6D3EC1;
+  outline: 2px solid #6D3EC1!important;
+}

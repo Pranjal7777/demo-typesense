@@ -1,0 +1,60 @@
+image: circleci/node:14.16.0
+
+options:
+  docker: true
+
+definitions:
+  services:
+    docker:
+      memory: 7128
+
+pipelines:
+  branches:
+    feat/latest-development:
+      - step:
+          size: 2x
+          services:
+            - docker
+          name: Setup Docker
+          caches:
+            - docker
+          script:
+            # Prepare data
+            - export REPO_NAME="react-le-offers-v2"
+            - export VERSION="0.2"
+
+            # Login to Docker Hub
+            - echo "${DOCKER_PASS}" | docker login --username ${DOCKER_USER} --password-stdin
+
+            # Build the docker image with build arguments
+            - |
+              docker build --pull --rm -f "Dockerfile" \
+              -t appscrip007/react-le-offers-v2:new \
+              --build-arg NEXT_PUBLIC_BASE_WEB_URL=${NEXT_PUBLIC_BASE_WEB_URL} \
+              --build-arg NEXT_PUBLIC_BASE_API_URL=${NEXT_PUBLIC_BASE_API_URL} \
+              --build-arg NEXT_PUBLIC_GUMLET_API_URL=${NEXT_PUBLIC_GUMLET_API_URL} \
+              --build-arg NEXT_PUBLIC_API_URL_VERSION=${NEXT_PUBLIC_API_URL_VERSION} \
+              --build-arg NEXT_PUBLIC_GOOGLE_API_KEY=${NEXT_PUBLIC_GOOGLE_API_KEY} \
+              --build-arg NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=${NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN} \
+              --build-arg NEXT_PUBLIC_FIREBASE_PROJECT_ID=${NEXT_PUBLIC_FIREBASE_PROJECT_ID} \
+              --build-arg NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=${NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET} \
+              --build-arg NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=${NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID} \
+              --build-arg NEXT_PUBLIC_FIREBASE_MESSAGING_APP_ID=${NEXT_PUBLIC_FIREBASE_MESSAGING_APP_ID} \
+              --build-arg NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=${NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID} \
+              --build-arg NEXT_PUBLIC_FACEBOOK_SDK_KEY=${NEXT_PUBLIC_FACEBOOK_SDK_KEY} \
+              --build-arg NEXT_PUBLIC_MQQT_SOCKET_URL=${NEXT_PUBLIC_MQQT_SOCKET_URL} \
+              --build-arg NEXT_PUBLIC_MQTT_USER=${NEXT_PUBLIC_MQTT_USER} \
+              --build-arg NEXT_PUBLIC_MQTT_PASSWORD=${NEXT_PUBLIC_MQTT_PASSWORD} \
+              --build-arg NEXT_PUBLIC_MQTT_WEBSOCKET_PORT=${NEXT_PUBLIC_MQTT_WEBSOCKET_PORT} \
+              --build-arg NEXT_PUBLIC_SERVER_PORT=${NEXT_PUBLIC_SERVER_PORT} \
+              --build-arg NEXT_PUBLIC_ANALYTICS_ID=${NEXT_PUBLIC_ANALYTICS_ID} \
+              --build-arg NEXT_PUBLIC_STRAPI_BASE_URL=${NEXT_PUBLIC_STRAPI_BASE_URL} \
+              --build-arg NEXT_PUBLIC_STRAPI_BASE_API_URL=${NEXT_PUBLIC_STRAPI_BASE_API_URL} \
+              --build-arg NEXT_PUBLIC_TYPESENSE_HOST=${NEXT_PUBLIC_TYPESENSE_HOST} \
+              --build-arg NEXT_PUBLIC_TYPESENSE_PORT=${NEXT_PUBLIC_TYPESENSE_PORT} \
+              --build-arg NEXT_PUBLIC_TYPESENSE_PROTOCOL=${NEXT_PUBLIC_TYPESENSE_PROTOCOL} \
+              --build-arg NEXT_PUBLIC_TYPESENSE_API_KEY=${NEXT_PUBLIC_TYPESENSE_API_KEY} \
+              --build-arg NEXT_PUBLIC_TYPESENSE_CONNECTION_TIMEOUT=${NEXT_PUBLIC_TYPESENSE_CONNECTION_TIMEOUT} .
+
+            # Push the tagged image
+            - docker push appscrip007/react-le-offers-v2:new

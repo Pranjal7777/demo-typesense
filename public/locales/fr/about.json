@@ -1,0 +1,83 @@
+{
+    "page": {
+        "headerBennerSection": {
+            "bannerUrlForMobile": "https://leoffer-media.s3.ap-south-1.amazonaws.com/about_us_mobile_9f9e4cc7ce.webp",
+            "bannerUrlForWeb": "https://leoffer-media.s3.ap-south-1.amazonaws.com/about_us_web_645f0dde28.webp",
+            "headerText": "Maîtrisez votre domaine. Restez en avance avec notre blog",
+            "headerDescription": "Votre avantage concurrentiel ultime.",
+            "headerDescriptionForMobile": "Tendances: chapeau seau, love bonito, lululemon, robe, hoodie, nike dunk, t-shirt vintage, sac à dos, zara, uniqlo"
+        },
+        "breadcrumbLinks": [
+            {
+                "name": "Accueil",
+                "link": "/"
+            },
+            {
+                "name": "À propos de Le-Offer",
+                "link": "/about"
+            }
+        ],
+        "aboutSection": {
+            "aboutSectionTitle": "À propos de Le-Offer",
+            "items": {
+                "title": "À propos de nous",
+                "desc": [
+                    "Bienvenue sur HeavyEquipMarket, où l'achat et la vente d'équipements lourds sont simplifiés et efficaces. Chez HeavyEquipMarket, nous comprenons l'importance de machines fiables dans divers secteurs, de la construction à l'agriculture, en passant par l'exploitation minière et le transport. Notre plateforme est née d'une passion pour faciliter les connexions entre acheteurs et vendeurs sur le marché des équipements lourds.",
+                    "Notre mission est simple: fournir une place de marché en ligne de confiance où entreprises et particuliers peuvent acheter et vendre des équipements lourds en toute confiance. Que vous cherchiez à moderniser votre flotte, à trouver les machines parfaites pour votre prochain projet ou à vendre des équipements dont vous n'avez plus besoin, HeavyEquipMarket est là pour simplifier le processus pour vous.",
+                    "Ce qui nous distingue, c'est notre engagement envers la transparence, la sécurité et un service client exceptionnel. Nous nous efforçons de maintenir une plateforme conviviale offrant des fonctionnalités robustes, y compris des annonces d'équipements détaillées, des filtres de recherche avancés et des options de paiement sécurisées. Notre équipe travaille sans relâche pour garantir que chaque transaction sur HeavyEquipMarket se déroule sans heurts, en toute sécurité et de manière satisfaisante pour les acheteurs et les vendeurs."
+                ]
+            }
+        },
+        "ourServiceSection": {
+            "ourServiceLink": "Notre Service",
+            "title": "Notre spécialité dans cette industrie",
+            "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam convallis, diam sed tincidunt luctus, velit eros semper eros, sit amet laoreet justo ante non turpis. In sit amet luctus nisl, id iaculis lorem",
+            "ourServiceImage": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171281569_a48edf4d4d.webp"
+        },
+        "meetourTeamSection": {
+            "title": "Rencontrez notre équipe",
+            "items": [
+                {
+                    "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282422_5_cfafa1e6f1.webp",
+                    "name": "Colleen",
+                    "designation": "PDG"
+                },
+                {
+                    "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282422_2_656c787dbb.webp",
+                    "name": "Gladys",
+                    "designation": "PDG"
+                },
+                {
+                    "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282422_6_3667a34eae.webp",
+                    "name": "Cameron",
+                    "designation": "PDG"
+                },
+                {
+                    "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282422_b8ecb359d7.webp",
+                    "name": "Darrell",
+                    "designation": "PDG"
+                },
+                {
+                    "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282422_7_8c45841b10.webp",
+                    "name": "Philip",
+                    "designation": "PDG"
+                },
+                {
+                    "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282422_1_b19a37aa5d.webp",
+                    "name": "Ann",
+                    "designation": "PDG"
+                },
+                {
+                    "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282422_4_280ea1c3e6.webp",
+                    "name": "Marjorie",
+                    "designation": "PDG"
+                },
+                {
+                    "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282422_3_4974885596.webp",
+                    "name": "Courtney",
+                    "designation": "PDG"
+                }
+            ]
+        }
+    }
+}

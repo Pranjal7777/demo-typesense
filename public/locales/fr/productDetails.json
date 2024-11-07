@@ -1,0 +1,149 @@
+{
+  "page": {
+    "soldBy": "Vendu par",
+    "viewMore": "Voir plus",
+    "seller": "Isabelle",
+    "rating": 2.0,
+    "followBtn": "Suivre",
+    "joiningDate": "Inscrit en septembre 2014",
+    "postedOn": "Publié le octobre 2024",
+    "newBtn": "Nouveau",
+    "hamburger": [
+      {
+        "home": "Page d'accueil",
+        "pagename": "Produit"
+      }
+    ],
+    "engagementStats": [
+      {
+        "likes": "Aime",
+        "views": "Vues",
+        "offers": "Des offres"
+      }
+    ],
+    "prodCTA": [
+      {
+        "firstBtn": "Acheter maintenant",
+        "secondBtn": "Offre d'échange",
+        "nostock": "En rupture de stock"
+      }
+    ],
+    "profileCard": [
+        {
+          "label": "Vendu par",
+          "buttonLabel" : "Suivre"
+        }
+      ],
+      "toggleInfo": [
+        {
+         "toggleOne": "Plus de ce revendeur",
+         "toggleTwo": "produits similaires"
+        }
+     ],
+    "familyName": "Meubles",
+    "categoryTitle": "Mobilier de salon",
+    "postedLabel": "Posté sur",
+    "unfollowBtn":"ne plus suivre",
+    "follwingBtn": "Suivant",
+    "cancelBtn": "Annuler",
+    "unfollowQues":"Voulez-vous ne plus suivre ce vendeur?",
+    "category": "Meubles et vie à la maison",
+    "price": "USD 245.00",
+    "posted": "il y a 20 jours",
+    "desc": "Description",
+    "description": "Obtenez 3 ans de services d'entretien après la garantie de la marque couvrant l'inspection, le nettoyage, les retouches de polissage, le remplacement des accessoires, le traitement préventif contre les taches et le traitement anti-termites...Lire la suite",
+    "productAttributes": [
+      {
+        "title": "Mobilier",
+        "attribute": [
+          {
+            "name": "Matelas",
+            "value": "Non"
+          },
+          {
+            "name": "Avec rangement",
+            "value": "Lit en résine"
+          },
+          {
+            "name": "Taille du lit",
+            "value": "Simple"
+          }
+        ]
+      },
+      {
+        "title": "Mobilier",
+        "attribute": [
+          {
+            "name": "Matériau du lit",
+            "value": "Lit en résine"
+          },
+          {
+            "name": "Avec rangement",
+            "value": "Non"
+          }
+        ]
+      },
+      {
+        "title": "Mobilier",
+        "attribute": [
+          {
+            "name": "Matériau du lit",
+            "value": "Lit en résine"
+          },
+          {
+            "name": "Avec rangement",
+            "value": "Non"
+          }
+        ]
+      },
+      {
+        "title": "Mobilier",
+        "attribute": [
+          {
+            "name": "Matériau du lit",
+            "value": "Lit en résine"
+          },
+          {
+            "name": "Avec rangement",
+            "value": "Non"
+          }
+        ]
+      }
+    ],
+    "locationTitle": "Emplacement",
+    "location": "Urdigere, 572140",
+    "btnBuyDirect": "Achat Direct",
+    "comments": {
+      "CommentsTitle": "Commentaires",
+      "allComments": [
+        {
+          "name": "@meow____",
+          "DateAndTime": "08 janvier 2024 12:51",
+          "text": "Bon vendeur bon produit ! Merci"
+        },
+        {
+          "name": "@meow____",
+          "DateAndTime": "08 janvier 2024 12:51",
+          "text": "Bon vendeur bon produit ! Merci"
+        }
+      ],
+      "commentBtn": "Ajouter des commentaires"
+    },
+    "webSection": {
+      "sectionTitle": "Autres produits du vendeur",
+      "actionText": "Voir tout"
+    },
+    "mobileSection": [
+      {
+        "sectionTitle": "Produits similaires",
+        "actionText": "Voir tout"
+      },
+      {
+        "sectionTitle": "Vu récemment",
+        "actionText": "Voir tout"
+      }
+    ],
+    "linkBtn": "J'aime",
+    "shareBtn": "Partager"
+  }
+}

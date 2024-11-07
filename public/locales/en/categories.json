@@ -1,0 +1,254 @@
+{
+    "page":{
+
+        "breadcrumb": [
+          {
+            "name":"Construction",
+            "link":"/"
+          },
+          {
+            "name":"Construction",
+            "link":"/"
+          }
+        ],
+        "sectionTitle":{
+           "title" :"100,000+ Buy New & Used Truck",
+           "description": "Buy & sell new and preloved women's bags & wallets and more! Get great deals on your favourite brands or sell the things you no longer need with Carousell."
+        },
+        "saveToSearch":"Save this search",
+        "filter1":{
+            "title":"Bags & Wallets",
+            "items":[
+                "Bags & Wallets",
+                "Dress",
+                "Home wear"
+    
+            ]
+        },
+        "filter2":{
+            "title":"Best Match",
+            "text":"Sort:",
+            "items":[
+                "Bags & Wallets",
+                "Dress",
+                "Home wear"
+    
+            ]
+        },
+        "filter3":{
+            "title":"Delivery"
+        },
+        "filter4":{
+            "title":"Brand",
+            "items":[
+                "Bags & Wallets",
+                "Dress",
+                "Home wear"
+    
+            ]
+        },
+        "filter5":{
+            "title":"Condition",
+            "items":[
+                "Bags & Wallets",
+                "Dress",
+                "Home wear"
+    
+            ]
+        },
+        "filter6":{
+            "title":"Price",
+            "items":[
+                "Bags & Wallets",
+                "Dress",
+                "Home wear"
+            ]
+        },
+        "filter7":{
+            "title":"Buyer Protection"
+        },
+        "filter8":{
+            "title":"More filters"
+        },
+        "filteredProducts":  [
+              {
+                "userName": "Eleanor Pena",
+                "timeStamp": "2 days ago",
+                "productName": "Yellow Ladies",
+                "productPrice": " $56.98",
+                "location": "Bangalore, 572140"
+              },
+              {
+                "userName": "Guy Hawkins",
+                "timeStamp": "5 days ago",
+                "productName": "Canon Mark III",
+                "productPrice": " $400",
+                "location": "Bangalore, 572140"
+              },
+              {
+                "userName": "Darrell Steward",
+                "timeStamp": "3 days ago",
+                "productName": "Apple Macbook 2",
+                "productPrice": "$800",
+                "location": "Bangalore, 572140"
+              },
+              {
+                "userName": "Marvin McKinney",
+                "timeStamp": "10 days ago",
+                "productName": "Levis Tshirt",
+                "productPrice": "$25.88",
+                "location": "Bangalore, 572140"
+              },
+              {
+                "userName": "Cody Fisher",
+                "timeStamp": "2 minutes ago",
+                "productName": "H&M Shirt Combo (3 Shirt)",
+                "productPrice": "$188",
+                "location": "Bangalore, 572140"
+              },
+              {
+                "userName": "Eleanor Pena",
+                "timeStamp": "2 days ago",
+                "productName": "Yellow Ladies",
+                "productPrice": " $56.98",
+                "location": "Bangalore, 572140"
+              },
+              {
+                "userName": "Guy Hawkins",
+                "timeStamp": "5 days ago",
+                "productName": "Canon Mark III",
+                "productPrice": " $400",
+                "location": "Bangalore, 572140"
+              },
+              {
+                "userName": "Darrell Steward",
+                "timeStamp": "3 days ago",
+                "productName": "Apple Macbook 2",
+                "productPrice": "$800",
+                "location": "Bangalore, 572140"
+              },
+              {
+                "userName": "Marvin McKinney",
+                "timeStamp": "10 days ago",
+                "productName": "Levis Tshirt",
+                "productPrice": "$25.88",
+                "location": "Bangalore, 572140"
+              },
+              {
+                "userName": "Cody Fisher",
+                "timeStamp": "2 minutes ago",
+                "productName": "H&M Shirt Combo (3 Shirt)",
+                "productPrice": "$188",
+                "location": "Bangalore, 572140"
+              },
+              {
+                "userName": "Eleanor Pena",
+                "timeStamp": "2 days ago",
+                "productName": "Yellow Ladies",
+                "productPrice": " $56.98",
+                "location": "Bangalore, 572140"
+              },
+              {
+                "userName": "Guy Hawkins",
+                "timeStamp": "5 days ago",
+                "productName": "Canon Mark III",
+                "productPrice": " $400",
+                "location": "Bangalore, 572140"
+              },
+              {
+                "userName": "Darrell Steward",
+                "timeStamp": "3 days ago",
+                "productName": "Apple Macbook 2",
+                "productPrice": "$800",
+                "location": "Bangalore, 572140"
+              },
+              {
+                "userName": "Marvin McKinney",
+                "timeStamp": "10 days ago",
+                "productName": "Levis Tshirt",
+                "productPrice": "$25.88",
+                "location": "Bangalore, 572140"
+              },
+              {
+                "userName": "Cody Fisher",
+                "timeStamp": "2 minutes ago",
+                "productName": "H&M Shirt Combo (3 Shirt)",
+                "productPrice": "$188",
+                "location": "Bangalore, 572140"
+              },
+              {
+                "userName": "Eleanor Pena",
+                "timeStamp": "2 days ago",
+                "productName": "Yellow Ladies",
+                "productPrice": " $56.98",
+                "location": "Bangalore, 572140"
+              },
+              {
+                "userName": "Guy Hawkins",
+                "timeStamp": "5 days ago",
+                "productName": "Canon Mark III",
+                "productPrice": " $400",
+                "location": "Bangalore, 572140"
+              },
+              {
+                "userName": "Darrell Steward",
+                "timeStamp": "3 days ago",
+                "productName": "Apple Macbook 2",
+                "productPrice": "$800",
+                "location": "Bangalore, 572140"
+              },
+              {
+                "userName": "Marvin McKinney",
+                "timeStamp": "10 days ago",
+                "productName": "Levis Tshirt",
+                "productPrice": "$25.88",
+                "location": "Bangalore, 572140"
+              },
+              {
+                "userName": "Cody Fisher",
+                "timeStamp": "2 minutes ago",
+                "productName": "H&M Shirt Combo (3 Shirt)",
+                "productPrice": "$188",
+                "location": "Bangalore, 572140"
+              }
+        ],
+        "aboutUs":[
+            {
+                "title":"About female fashion",
+                "desc":[
+                    "Boat design for skiing has progressed since the days of utility boats that were used for various activities. Inboard motors are able to deliver more than enough power to thrill the heart of the most adventurous skier. A constant speed is rated as more important than speed for skiing, and inboard engines with direct drive or ‘v’ drive are good at providing constant conditions.",
+                    "Skiers want as little wake as possible, and flat water is their ideal. While hulls may be touted as suitable for both skiing and wakeboarding, the requirements for both activities are very different. Skiers want the flat water that a flatter type of hull produces, while Wakeboarders want as much wake as possible to do their stunts.",
+                    "While it is true that for the recreational and casual skier or wakeboarder, a conventional ski boat will suffice. Adding additional passengers to the ski boat will deliver a bigger wake, but it will fall short of the wake a serious wakeboarder would want to see.",
+                    "So wake boats have been developed with special hull features to give the wakeboarder enough lift to entertain us with tricks and jumps. Ballast tanks are able to modify the draft and hull shape to help create a suitable wake and can be emptied to reduce the wake and let the skiers smile again.",
+                    "An essential feature of wake boats is the Wakeboard Tower. While skiers can get away with a low towing point, wakeboarders need a tow point at least six feet high to allow them to do spectacular jumps.",
+                    "The one advantage that ski and wake boats have is that they can be used for either skiing or wakeboarding when the conditions favor one activity. For example, in flat calm conditions, skiing takes precedence, and wakeboarding takes over when there is a slight chop."
+                ]
+            },
+            {
+                "title":"Female fashion rates",
+                "desc":[
+                    "The average financing or boat loan rate for Ski and Wakeboard Boats today is 7.99%. Ski and Wakeboard boat loans currently range from 7.49% to 10.74%. Keep in mind, there are factors that determine this rate range such as down payment amount, your credit lines, and credit score.",
+                    "If you need a boat loan for a Ski and Wakeboard boat to cover the purchase of a new or used boat, the Boatzon loan calculator can help you determine what type of boat you can afford. Our pre-qualification process for a boat loan does not require your SSN required to pre-qualify, has no impact on your credit report, and we can approve your loan as fast as 24 hours."
+                ]
+            }
+        ],
+        "accordion":{
+            "title":"Female fashion faq’s",
+            "items":[
+                {
+                    "title":"What sizes are available for this dress?",
+                    "desc":"A ski and wake boat is a specialized type of powerboat designed for water sports activities like water skiing, wakeboarding, and wakesurfing. They typically feature specific design elements and technologies that enhance the wake and provide optimal conditions for these activities."
+                },
+                {
+                    "title":"What is the dress made of?",
+                    "desc":"A ski and wake boat is a specialized type of powerboat designed for water sports activities like water skiing, wakeboarding, and wakesurfing. They typically feature specific design elements and technologies that enhance the wake and provide optimal conditions for these activities."
+                },
+                {
+                    "title":"Do you have a size guide or chart?",
+                    "desc":"Ski and wake boats often have the following features: - Tower: A wakeboard tower is a prominent feature on these boats. It provides a high point for attaching tow ropes and accessories like wakeboard racks and speakers. - Ballast System: Many wake boats have integrated ballast systems that allow for adding weight to create larger wakes for wakeboarding and wakesurfing. - Wake-Shaping Devices: Some boats have integrated wake-shaping devices, such as tabs or plates, that can adjust the shape and size of the wake. - Tower Speakers: Wake boats often come equipped with tower-mounted speakers to enhance the on-water experience with music. - Tower-Mounted Bimini Tops: These boats may feature bimini tops mounted on the tower to provide shade while maintaining headroom."
+                }
+            ]
+      }
+    }
+      
+}

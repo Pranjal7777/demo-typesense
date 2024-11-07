@@ -1,1 +1,0 @@
-export const MAP_MARKER = '/images/address-page/location_on.png';

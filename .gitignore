@@ -2,11 +2,9 @@
 
 # dependencies
 /node_modules
-node_modules/
 /.pnp
 .pnp.js
 .yarn/install-state.gz
-package-lock.json
 
 # testing
 /coverage
@@ -15,19 +13,11 @@ package-lock.json
 /.next/
 /out/
 
-#vscode 
-.vscode
-
 # production
 /build
 
 # misc
 .DS_Store
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
 *.pem
 
 # debug
@@ -44,3 +34,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+*storybook.log
+
+# storybook
+storybook-static/

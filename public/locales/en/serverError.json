@@ -1,8 +1,0 @@
-{
-    "page":{
-        "title":"There was a problem serving the requested page.",
-        "subTitle": "Usually this means that an unexpected error happened while processing your request. ",
-        "link":"Refresh the page",
-        "linkText":", the problem may be temporary. If the problem persists, contact us and we'll help get you on your way."
-    }
-}

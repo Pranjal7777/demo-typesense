@@ -1,0 +1,25 @@
+{
+  "homePage": {
+    "header": {
+      "defaultLocationName": "Camden Town, London",
+      "searchPlaceholder": "Search for restaurant and food",
+      "getAppButton": "Get the app",
+      "loginButton": "Login",
+      "signupButton": "Sign up"
+    },
+    "heroSection": {
+      "title": "TODAY’S DAILY DEALS",
+      "offerText": "50% OFF",
+      "subtitle": "Our Delicious Chicken Nuggets!",
+      "shopNowButton": "Shop Now",
+      "useCodeButton": "Use Code",
+      "defaultCode": "DEALS50"
+    }
+  },
+  "headings": {
+    "default": "Default Heading 1",
+    "custom": "Custom Heading 1",
+    "ellipsis": "ELLIPSIS overflow Custom Heading 1",
+    "clip": "CLIP overflow Custom Heading 1"
+  }
+}

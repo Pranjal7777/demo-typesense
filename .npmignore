@@ -1,0 +1,36 @@
+# Development files
+.storybook/
+stories/
+__tests__/
+__mocks__/
+*.test.*
+*.spec.*
+
+# Source files 
+src/
+.babelrc
+.eslintrc
+.prettierrc
+tsconfig.json
+
+# Build and dependency directories
+node_modules/
+dist/storybook/
+build-storybook/
+storybook-static/
+
+# Version control
+.git/
+.gitignore
+
+# IDE and Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Misc
+.DS_Store
+*.log
+.env*
+coverage/

@@ -1,0 +1,1 @@
+export const PROFILE_IMAGE = '/images/productcard/profileimage.png';

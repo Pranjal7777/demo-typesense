@@ -1,0 +1,239 @@
+{
+  "page": {
+    "soldBy": "Sold by",
+    "viewMore": "View More",
+    "seller": "Isabelle",
+    "hamburger": [
+      {
+        "home": "Home",
+        "pagename": "Product"
+      }
+    ],
+    "engagementStats": [
+      {
+        "likes": "Likes",
+        "views": "Views",
+        "offers": "Offers"
+      }
+    ],
+    "prodCTA": [
+      {
+        "firstBtn": "Buy Now",
+        "secondBtn": "Offer Trade",
+        "nostock": "Out Of Stock"
+      }
+    ],
+    "profileCard": [
+      {
+        "label": "Sold By",
+        "buttonLabel":"Follow"
+      }
+    ],
+    "toggleInfo": [
+       {
+        "toggleOne": "More From This Dealer",
+        "toggleTwo": "Similar Products"
+       }
+    ],
+    "rating": 2.0,
+    "postedLabel": "Posted On",
+    "followBtn": "Follow",
+    "unfollowBtn":"Unfollow",
+    "follwingBtn": "Following",
+    "unfollowQues":"Do you want to unfollow this seller?",
+    "cancelBtn": "Cancel",
+    "joiningDate": "Joined Sep 2014",
+    "postedOn": "Posted on Oct 2024",
+    "newBtn": "new",
+    "familyName": "Furniture",
+    "categoryTitle": "Living Room Furniture",
+    "category": "Furniture & home Living",
+    "price": "USD 245.00",
+    "posted": "20 days ago",
+    "desc": "Description",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
+    "productAttributes": [
+      {
+        "title": "Furniture",
+        "attribute": [
+          {
+            "name": "Mattress",
+            "value": "No"
+          },
+          {
+            "name": "Storage Included",
+            "value": "No"
+          },
+          {
+            "name": "Bed Size",
+            "value": "Single"
+          }
+        ]
+      },
+      {
+        "title": "Furniture",
+        "attribute": [
+          {
+            "name": "Bed Material",
+            "value": "Resin Bed"
+          },
+          {
+            "name": "Storage Included",
+            "value": "No"
+          }
+        ]
+      },
+      {
+        "title": "Furniture",
+        "attribute": [
+          {
+            "name": "Bed Material",
+            "value": "Resin Bed"
+          },
+          {
+            "name": "Storage Included",
+            "value": "No"
+          }
+        ]
+      },
+      {
+        "title": "Furniture",
+        "attribute": [
+          {
+            "name": "Bed Material",
+            "value": "Resin Bed"
+          },
+          {
+            "name": "Storage Included",
+            "value": "No"
+          }
+        ]
+      }
+    ],
+    "locationTitle": "Location",
+    "location": "Urdigere, 572140",
+    "btnBuyDirect": "Buy Direct",
+    "comments": {
+      "CommentsTitle": "Comments",
+      "allComments": [
+        {
+          "name": "@meow____",
+          "DateAndTime": "08 January, 2024 12:51 PM",
+          "text": "Good seller good product ! Thank you"
+        },
+        {
+          "name": "@meow____",
+          "DateAndTime": "08 January, 2024 12:51 PM",
+          "text": "Good seller good product ! Thank you"
+        },
+        {
+          "name": "@meow____",
+          "DateAndTime": "08 January, 2024 12:51 PM",
+          "text": "Good seller good product ! Thank you"
+        },
+        {
+          "name": "@meow____",
+          "DateAndTime": "08 January, 2024 12:51 PM",
+          "text": "Good seller good product ! Thank you"
+        },
+        {
+          "name": "@meow____",
+          "DateAndTime": "08 January, 2024 12:51 PM",
+          "text": "Good seller good product ! Thank you"
+        },
+        {
+          "name": "@meow____",
+          "DateAndTime": "08 January, 2024 12:51 PM",
+          "text": "Good seller good product ! Thank you"
+        },
+        {
+          "name": "@meow____",
+          "DateAndTime": "08 January, 2024 12:51 PM",
+          "text": "Good seller good product ! Thank you"
+        },
+        {
+          "name": "@meow____",
+          "DateAndTime": "08 January, 2024 12:51 PM",
+          "text": "Good seller good product ! Thank you"
+        },
+        {
+          "name": "@meow____",
+          "DateAndTime": "08 January, 2024 12:51 PM",
+          "text": "Good seller good product ! Thank you"
+        },
+        {
+          "name": "@meow____",
+          "DateAndTime": "08 January, 2024 12:51 PM",
+          "text": "Good seller good product ! Thank you"
+        },
+        {
+          "name": "@meow____",
+          "DateAndTime": "08 January, 2024 12:51 PM",
+          "text": "Good seller good product ! Thank you"
+        },
+        {
+          "name": "@meow____",
+          "DateAndTime": "08 January, 2024 12:51 PM",
+          "text": "Good seller good product ! Thank you"
+        },
+        {
+          "name": "@meow____",
+          "DateAndTime": "08 January, 2024 12:51 PM",
+          "text": "Good seller good product ! Thank you"
+        },
+        {
+          "name": "@meow____",
+          "DateAndTime": "08 January, 2024 12:51 PM",
+          "text": "Good seller good product ! Thank you"
+        },
+        {
+          "name": "@meow____",
+          "DateAndTime": "08 January, 2024 12:51 PM",
+          "text": "Good seller good product ! Thank you"
+        },
+        {
+          "name": "@meow____",
+          "DateAndTime": "08 January, 2024 12:51 PM",
+          "text": "Good seller good product ! Thank you"
+        },
+        {
+          "name": "@meow____",
+          "DateAndTime": "08 January, 2024 12:51 PM",
+          "text": "Good seller good product ! Thank you"
+        },
+        {
+          "name": "@meow____",
+          "DateAndTime": "08 January, 2024 12:51 PM",
+          "text": "Good seller good product ! Thank you"
+        },
+        {
+          "name": "@meow____",
+          "DateAndTime": "08 January, 2024 12:51 PM",
+          "text": "Good seller good product ! Thank you"
+        },
+        {
+          "name": "@meow____",
+          "DateAndTime": "08 January, 2024 12:51 PM",
+          "text": "Good seller good product ! Thank you"
+        }
+      ],
+      "commentBtn": "Post"
+    },
+    "webSection": {
+      "sectionTitle": "Other Products by the seller",
+      "actionText": "See all"
+    },
+    "mobileSection": [
+      {
+        "sectionTitle": "Similar Products",
+        "actionText": "See all"
+      },
+      {
+        "sectionTitle": "Recently Viewed",
+        "actionText": "See all"
+      }
+    ],
+    "likeBtn": "Like",
+    "shareBtn": "Share"
+  }
+}

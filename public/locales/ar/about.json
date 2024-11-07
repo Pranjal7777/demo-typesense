@@ -1,0 +1,83 @@
+{
+    "page": {
+        "headerBennerSection": {
+            "bannerUrlForMobile": "https://leoffer-media.s3.ap-south-1.amazonaws.com/about_us_mobile_9f9e4cc7ce.webp",
+            "bannerUrlForWeb": "https://leoffer-media.s3.ap-south-1.amazonaws.com/about_us_web_645f0dde28.webp",
+            "headerText": "أتقن مجالك. ابق في الطليعة مع مدونتنا",
+            "headerDescription": "ميزتك التنافسية النهائية.",
+            "headerDescriptionForMobile": "الشائع الآن: قبعة دلو، حب بونيتو، لولوليمون، فستان، هودي، نايكي دونك، تيشيرت قديم، حقيبة ظهر، زارا، يونيكلو"
+        },
+        "breadcrumbLinks": [
+            {
+                "name": "الرئيسية",
+                "link": "/"
+            },
+            {
+                "name": "عن Le-Offer",
+                "link": "/about"
+            }
+        ],
+        "aboutSection": {
+            "aboutSectionTitle": "عن Le-Offer",
+            "items": {
+                "title": "عنّا",
+                "desc": [
+                    "مرحبًا بك في HeavyEquipMarket، حيث يتم تسهيل وفعالية شراء وبيع المعدات الثقيلة. في HeavyEquipMarket، ندرك أهمية الآلات الموثوقة في مختلف الصناعات، من البناء إلى الزراعة، ومن التعدين إلى النقل. ولدينا شغف بتسهيل الروابط بين المشترين والبائعين في سوق المعدات الثقيلة.",
+                    "مهمتنا بسيطة: توفير سوق إلكتروني موثوق حيث يمكن للشركات والأفراد شراء وبيع المعدات الثقيلة بثقة. سواء كنت تبحث عن تحديث أسطولك، أو العثور على الآلة المثالية لمشروعك القادم، أو بيع المعدات التي لم تعد بحاجة إليها، فإن HeavyEquipMarket هنا لتبسيط العملية لك.",
+                    "ما يميزنا هو التزامنا بالشفافية والأمان وخدمة العملاء الاستثنائية. نسعى جاهدين للحفاظ على منصة سهلة الاستخدام تقدم ميزات قوية، بما في ذلك قوائم المعدات التفصيلية، وفلاتر البحث المتقدمة، وخيارات الدفع الآمنة. يعمل فريقنا بجد لضمان أن كل معاملة على HeavyEquipMarket تتم بسلاسة وأمان ورضا للطرفين."
+                ]
+            }
+        },
+        "ourServiceSection": {
+            "ourServiceLink": "خدمتنا",
+            "title": "تخصصنا في هذه الصناعة",
+            "desc": "لوريم إيبسوم دولار سيت أميت، كونسيكتيتور أديبيسكينغ إليت. إتيام كونفاليس، ديام سيد تينسيدنت لوكتوس، فيليت إيروس سيمبر إيروس، سيت أميت لاوريت جوستو أنتي نون توربيس. إن سيت أميت لوكتوس نيسل، إد إياكوليس لوريم",
+            "ourServiceImage": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171281569_a48edf4d4d.webp"
+        },
+        "meetourTeamSection": {
+            "title": "تعرف على فريقنا",
+            "items": [
+                {
+                    "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282422_5_cfafa1e6f1.webp",
+                    "name": "كولين",
+                    "designation": "المدير التنفيذي"
+                },
+                {
+                    "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282422_2_656c787dbb.webp",
+                    "name": "غلاديس",
+                    "designation": "المدير التنفيذي"
+                },
+                {
+                    "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282422_6_3667a34eae.webp",
+                    "name": "كاميرون",
+                    "designation": "المدير التنفيذي"
+                },
+                {
+                    "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282422_b8ecb359d7.webp",
+                    "name": "داريل",
+                    "designation": "المدير التنفيذي"
+                },
+                {
+                    "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282422_7_8c45841b10.webp",
+                    "name": "فيليب",
+                    "designation": "المدير التنفيذي"
+                },
+                {
+                    "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282422_1_b19a37aa5d.webp",
+                    "name": "آن",
+                    "designation": "المدير التنفيذي"
+                },
+                {
+                    "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282422_4_280ea1c3e6.webp",
+                    "name": "مارجوري",
+                    "designation": "المدير التنفيذي"
+                },
+                {
+                    "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282422_3_4974885596.webp",
+                    "name": "كورتني",
+                    "designation": "المدير التنفيذي"
+                }
+            ]
+        }
+    }
+}

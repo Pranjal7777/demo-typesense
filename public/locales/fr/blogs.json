@@ -1,0 +1,63 @@
+{
+    "page": {
+        "headerBennerSection": {
+            "bannerUrlForMobile": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282470_ab9db11eb6.webp",
+            "bannerUrlForWeb": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282491_6a2866850b.webp",
+            "headerText": "Maîtrisez votre domaine. Restez en avance avec notre blog",
+            "headerDescription": "Votre confidentialité est importante pour nous chez Snap Al. Nous respectons votre vie privée concernant toutes les informations que nous pouvons recueillir auprès de vous sur notre site Web.",
+            "headerDescriptionForMobile": "Tendances : chapeau seau, love bonito, lululemon, robe, hoodie, nike dunk, t-shirt vintage, sac à dos, zara, uniqlo"
+        },
+        "breadcrumbLinks": [
+            {
+                "name": "Accueil",
+                "link": "/"
+            },
+            {
+                "name": "Blog",
+                "link": "/blogs"
+            }
+        ],
+        "blogSection": {
+            "title": "Blog",
+            "blogSearchPlaceHolder": "recherche",
+            "items": [
+                {
+                    "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171281569_a48edf4d4d.webp",
+                    "date": "24 mai 2024",
+                    "title": "Comment commencer sur Le.Offer : Un guide étape par étape",
+                    "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam convallis, diam sed tincidunt luctus, velit eros semper eros, sit amet laoreet just"
+                },
+                {
+                    "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171281569_a48edf4d4d.webp",
+                    "date": "24 mai 2024",
+                    "title": "Comment commencer sur Le.Offer : Un guide étape par étape",
+                    "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam convallis, diam sed tincidunt luctus, velit eros semper eros, sit amet laoreet just"
+                },
+                {
+                    "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171281569_a48edf4d4d.webp",
+                    "date": "24 mai 2024",
+                    "title": "Comment commencer sur Le.Offer : Un guide étape par étape",
+                    "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam convallis, diam sed tincidunt luctus, velit eros semper eros, sit amet laoreet just"
+                },
+                {
+                    "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171281569_a48edf4d4d.webp",
+                    "date": "24 mai 2024",
+                    "title": "Comment commencer sur Le.Offer : Un guide étape par étape",
+                    "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam convallis, diam sed tincidunt luctus, velit eros semper eros, sit amet laoreet just"
+                },
+                {
+                    "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171281569_a48edf4d4d.webp",
+                    "date": "24 mai 2024",
+                    "title": "Comment commencer sur Le.Offer : Un guide étape par étape",
+                    "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam convallis, diam sed tincidunt luctus, velit eros semper eros, sit amet laoreet just"
+                },
+                {
+                    "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171281569_a48edf4d4d.webp",
+                    "date": "24 mai 2024",
+                    "title": "Comment commencer sur Le.Offer : Un guide étape par étape",
+                    "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam convallis, diam sed tincidunt luctus, velit eros semper eros, sit amet laoreet just"
+                }
+            ]
+        }
+    }
+}

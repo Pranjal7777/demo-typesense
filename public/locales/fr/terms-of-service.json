@@ -1,0 +1,85 @@
+{
+    "page": {
+        "headerBennerSection": {
+            "bannerUrlForMobile": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282507_e96fc3b3f9.webp",
+            "bannerUrlForWeb": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282506_69846e93bd.webp",
+            "headerText": "Nous nous soucions de votre vie privée",
+            "headerDescription": "Votre vie privée est importante pour nous chez Snap Al. Nous respectons votre vie privée concernant toute information que nous pourrions collecter auprès de vous sur notre site Web.",
+            "headerDescriptionForMobile": "Tendances : chapeau seau, love bonito, lululemon, robe, hoodie, nike dunk, t-shirt vintage, sac à dos, zara, uniqlo"
+        },
+        "breadcrumbLinks": [
+            {
+                "name": "Accueil",
+                "link": "/"
+            },
+            {
+                "name": "Conditions de service",
+                "link": "/terms-of-service"
+            }
+        ],
+        "termsOfServiceSection": {
+            "title": "Politique de confidentialité",
+            "items": [
+                {
+                    "title": "",
+                    "desc": ["Bienvenue sur HeavyEquipMarket, où l'achat et la vente d'équipements lourds sont simplifiés et efficaces. Chez HeavyEquipMarket, nous comprenons l'importance des machines fiables dans diverses industries, de la construction à l'agriculture, en passant par l'exploitation minière et le transport. Notre plateforme est née d'une passion pour faciliter les connexions entre acheteurs et vendeurs sur le marché des équipements lourds."]
+                },
+                {
+                    "title": "Quelles informations collectons-nous ?",
+                    "desc": [
+                        "Bienvenue sur HeavyEquipMarket, où l'achat et la vente d'équipements lourds sont simplifiés et efficaces. Chez HeavyEquipMarket, nous comprenons l'importance des machines fiables dans diverses industries, de la construction à l'agriculture, en passant par l'exploitation minière et le transport. Notre plateforme est née d'une passion pour faciliter les connexions entre acheteurs et vendeurs sur le marché des équipements lourds.",
+                        "Notre mission est simple : fournir une place de marché en ligne de confiance où les entreprises et les particuliers peuvent acheter et vendre des équipements lourds en toute confiance. Que vous cherchiez à moderniser votre flotte, à trouver la machine parfaite pour votre prochain projet, ou à vendre des équipements dont vous n'avez plus besoin, HeavyEquipMarket est là pour simplifier le processus pour vous.",
+                        "Ce qui nous distingue, c'est notre engagement envers la transparence, la sécurité et un service client exceptionnel. Nous nous efforçons de maintenir une plateforme conviviale offrant des fonctionnalités robustes, y compris des listes d'équipements détaillées, des filtres de recherche avancés et des options de paiement sécurisées. Notre équipe travaille sans relâche pour s'assurer que chaque transaction sur HeavyEquipMarket est fluide, sécurisée et satisfaisante pour les acheteurs comme pour les vendeurs.",
+                        "Chez HeavyEquipMarket, nous croyons au pouvoir de la technologie pour révolutionner la manière dont les équipements lourds sont achetés et vendus. En tirant parti des dernières avancées en matière de technologie de marché en ligne, nous connectons les acheteurs et les vendeurs au-delà des frontières géographiques, facilitant des transactions autrefois entravées par la distance et la logistique.",
+                        "Que vous soyez un professionnel chevronné de l'industrie ou un nouveau venu dans le monde des équipements lourds, nous vous invitons à rejoindre notre communauté. Explorez notre vaste inventaire, connectez-vous avec d'autres passionnés, et découvrez la commodité d'acheter et de vendre des équipements lourds en ligne comme jamais auparavant.",
+                        "Merci d'avoir choisi HeavyEquipMarket. Ensemble, construisons un avenir où l'acquisition de l'équipement lourd parfait est à quelques clics seulement."
+                    ]
+                },
+                {
+                    "title": "Quelles informations collectons-nous ?",
+                    "desc": [
+                        "Bienvenue sur HeavyEquipMarket, où l'achat et la vente d'équipements lourds sont simplifiés et efficaces. Chez HeavyEquipMarket, nous comprenons l'importance des machines fiables dans diverses industries, de la construction à l'agriculture, en passant par l'exploitation minière et le transport. Notre plateforme est née d'une passion pour faciliter les connexions entre acheteurs et vendeurs sur le marché des équipements lourds.",
+                        "Notre mission est simple : fournir une place de marché en ligne de confiance où les entreprises et les particuliers peuvent acheter et vendre des équipements lourds en toute confiance. Que vous cherchiez à moderniser votre flotte, à trouver la machine parfaite pour votre prochain projet, ou à vendre des équipements dont vous n'avez plus besoin, HeavyEquipMarket est là pour simplifier le processus pour vous.",
+                        "Ce qui nous distingue, c'est notre engagement envers la transparence, la sécurité et un service client exceptionnel. Nous nous efforçons de maintenir une plateforme conviviale offrant des fonctionnalités robustes, y compris des listes d'équipements détaillées, des filtres de recherche avancés et des options de paiement sécurisées. Notre équipe travaille sans relâche pour s'assurer que chaque transaction sur HeavyEquipMarket est fluide, sécurisée et satisfaisante pour les acheteurs comme pour les vendeurs.",
+                        "Chez HeavyEquipMarket, nous croyons au pouvoir de la technologie pour révolutionner la manière dont les équipements lourds sont achetés et vendus. En tirant parti des dernières avancées en matière de technologie de marché en ligne, nous connectons les acheteurs et les vendeurs au-delà des frontières géographiques, facilitant des transactions autrefois entravées par la distance et la logistique.",
+                        "Que vous soyez un professionnel chevronné de l'industrie ou un nouveau venu dans le monde des équipements lourds, nous vous invitons à rejoindre notre communauté. Explorez notre vaste inventaire, connectez-vous avec d'autres passionnés, et découvrez la commodité d'acheter et de vendre des équipements lourds en ligne comme jamais auparavant.",
+                        "Merci d'avoir choisi HeavyEquipMarket. Ensemble, construisons un avenir où l'acquisition de l'équipement lourd parfait est à quelques clics seulement."
+                    ]
+                },
+                {
+                    "title": "Quelles informations collectons-nous ?",
+                    "desc": [
+                        "Bienvenue sur HeavyEquipMarket, où l'achat et la vente d'équipements lourds sont simplifiés et efficaces. Chez HeavyEquipMarket, nous comprenons l'importance des machines fiables dans diverses industries, de la construction à l'agriculture, en passant par l'exploitation minière et le transport. Notre plateforme est née d'une passion pour faciliter les connexions entre acheteurs et vendeurs sur le marché des équipements lourds.",
+                        "Notre mission est simple : fournir une place de marché en ligne de confiance où les entreprises et les particuliers peuvent acheter et vendre des équipements lourds en toute confiance. Que vous cherchiez à moderniser votre flotte, à trouver la machine parfaite pour votre prochain projet, ou à vendre des équipements dont vous n'avez plus besoin, HeavyEquipMarket est là pour simplifier le processus pour vous.",
+                        "Ce qui nous distingue, c'est notre engagement envers la transparence, la sécurité et un service client exceptionnel. Nous nous efforçons de maintenir une plateforme conviviale offrant des fonctionnalités robustes, y compris des listes d'équipements détaillées, des filtres de recherche avancés et des options de paiement sécurisées. Notre équipe travaille sans relâche pour s'assurer que chaque transaction sur HeavyEquipMarket est fluide, sécurisée et satisfaisante pour les acheteurs comme pour les vendeurs.",
+                        "Chez HeavyEquipMarket, nous croyons au pouvoir de la technologie pour révolutionner la manière dont les équipements lourds sont achetés et vendus. En tirant parti des dernières avancées en matière de technologie de marché en ligne, nous connectons les acheteurs et les vendeurs au-delà des frontières géographiques, facilitant des transactions autrefois entravées par la distance et la logistique.",
+                        "Que vous soyez un professionnel chevronné de l'industrie ou un nouveau venu dans le monde des équipements lourds, nous vous invitons à rejoindre notre communauté. Explorez notre vaste inventaire, connectez-vous avec d'autres passionnés, et découvrez la commodité d'acheter et de vendre des équipements lourds en ligne comme jamais auparavant.",
+                        "Merci d'avoir choisi HeavyEquipMarket. Ensemble, construisons un avenir où l'acquisition de l'équipement lourd parfait est à quelques clics seulement."
+                    ]
+                },
+                {
+                    "title": "Quelles informations collectons-nous ?",
+                    "desc": [
+                        "Bienvenue sur HeavyEquipMarket, où l'achat et la vente d'équipements lourds sont simplifiés et efficaces. Chez HeavyEquipMarket, nous comprenons l'importance des machines fiables dans diverses industries, de la construction à l'agriculture, en passant par l'exploitation minière et le transport. Notre plateforme est née d'une passion pour faciliter les connexions entre acheteurs et vendeurs sur le marché des équipements lourds.",
+                        "Notre mission est simple : fournir une place de marché en ligne de confiance où les entreprises et les particuliers peuvent acheter et vendre des équipements lourds en toute confiance. Que vous cherchiez à moderniser votre flotte, à trouver la machine parfaite pour votre prochain projet, ou à vendre des équipements dont vous n'avez plus besoin, HeavyEquipMarket est là pour simplifier le processus pour vous.",
+                        "Ce qui nous distingue, c'est notre engagement envers la transparence, la sécurité et un service client exceptionnel. Nous nous efforçons de maintenir une plateforme conviviale offrant des fonctionnalités robustes, y compris des listes d'équipements détaillées, des filtres de recherche avancés et des options de paiement sécurisées. Notre équipe travaille sans relâche pour s'assurer que chaque transaction sur HeavyEquipMarket est fluide, sécurisée et satisfaisante pour les acheteurs comme pour les vendeurs.",
+                        "Chez HeavyEquipMarket, nous croyons au pouvoir de la technologie pour révolutionner la manière dont les équipements lourds sont achetés et vendus. En tirant parti des dernières avancées en matière de technologie de marché en ligne, nous connectons les acheteurs et les vendeurs au-delà des frontières géographiques, facilitant des transactions autrefois entravées par la distance et la logistique.",
+                        "Que vous soyez un professionnel chevronné de l'industrie ou un nouveau venu dans le monde des équipements lourds, nous vous invitons à rejoindre notre communauté. Explorez notre vaste inventaire, connectez-vous avec d'autres passionnés, et découvrez la commodité d'acheter et de vendre des équipements lourds en ligne comme jamais auparavant.",
+                        "Merci d'avoir choisi HeavyEquipMarket. Ensemble, construisons un avenir où l'acquisition de l'équipement lourd parfait est à quelques clics seulement."
+                    ]
+                },
+                {
+                    "title": "Quelles informations collectons-nous ?",
+                    "desc": [
+                        "Bienvenue sur HeavyEquipMarket, où l'achat et la vente d'équipements lourds sont simplifiés et efficaces. Chez HeavyEquipMarket, nous comprenons l'importance des machines fiables dans diverses industries, de la construction à l'agriculture, en passant par l'exploitation minière et le transport. Notre plateforme est née d'une passion pour faciliter les connexions entre acheteurs et vendeurs sur le marché des équipements lourds.",
+                        "Notre mission est simple : fournir une place de marché en ligne de confiance où les entreprises et les particuliers peuvent acheter et vendre des équipements lourds en toute confiance. Que vous cherchiez à moderniser votre flotte, à trouver la machine parfaite pour votre prochain projet, ou à vendre des équipements dont vous n'avez plus besoin, HeavyEquipMarket est là pour simplifier le processus pour vous.",
+                        "Ce qui nous distingue, c'est notre engagement envers la transparence, la sécurité et un service client exceptionnel. Nous nous efforçons de maintenir une plateforme conviviale offrant des fonctionnalités robustes, y compris des listes d'équipements détaillées, des filtres de recherche avancés et des options de paiement sécurisées. Notre équipe travaille sans relâche pour s'assurer que chaque transaction sur HeavyEquipMarket est fluide, sécurisée et satisfaisante pour les acheteurs comme pour les vendeurs.",
+                        "Chez HeavyEquipMarket, nous croyons au pouvoir de la technologie pour révolutionner la manière dont les équipements lourds sont achetés et vendus. En tirant parti des dernières avancées en matière de technologie de marché en ligne, nous connectons les acheteurs et les vendeurs au-delà des frontières géographiques, facilitant des transactions autrefois entravées par la distance et la logistique.",
+                        "Que vous soyez un professionnel chevronné de l'industrie ou un nouveau venu dans le monde des équipements lourds, nous vous invitons à rejoindre notre communauté. Explorez notre vaste inventaire, connectez-vous avec d'autres passionnés, et découvrez la commodité d'acheter et de vendre des équipements lourds en ligne comme jamais auparavant.",
+                        "Merci d'avoir choisi HeavyEquipMarket. Ensemble, construisons un avenir où l'acquisition de l'équipement lourd parfait est à quelques clics seulement."
+                    ]
+                }
+            ]
+        }
+    }
+}

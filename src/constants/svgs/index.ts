@@ -1,9 +1,0 @@
-export { default as AppleIcon } from "./AppleIcon";
-export { default as ArrowDown } from "./ArrowDown";
-export { default as ArrowRight } from "./ArrowRight";
-export { default as ArrowUp } from "./ArrowUp";
-export { default as GooglePlayIcon } from "./GooglePlayIcon";
-export { default as LocationIcon } from "./LocationIcon";
-export { default as MobileOutlineIcon } from "./MobileOutlineIcon";
-export { default as SearchIcon } from "./Searchicon";
-export { default as WebsiteLogo } from "./WebsiteLogo";

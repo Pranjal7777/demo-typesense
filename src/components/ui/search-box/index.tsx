@@ -195,6 +195,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
       [name]: value,
 
     }));
+    setShowRecentSearchResultsFromTypesense(false);
   };
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {

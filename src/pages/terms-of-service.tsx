@@ -62,8 +62,8 @@ const TermsAndService: FC<Props>= ({termsOfServiceData}) =>{
   
 
   const {t}=useTranslation('terms-of-service');
-  const headerBennerSection: HeaderBennerSection = t('page.headerBennerSection', { returnObjects: true });
-  const breadcrumbLinks: BreadcrumbLinks[] = t('page.breadcrumbLinks', { returnObjects: true });
+  const headerBennerSection = t('page.headerBennerSection', { returnObjects: true }) as HeaderBennerSection;
+  const breadcrumbLinks = t('page.breadcrumbLinks', { returnObjects: true }) as BreadcrumbLinks[];
   // const termsOfServiceSection: TermsOfServiceSection = t('page.termsOfServiceSection', { returnObjects: true });
   const strapiSeoData = termsOfServiceData.attributes.seoProperties;
   const keywords = termsOfServiceData?.attributes?.seoProperties?.keywords;

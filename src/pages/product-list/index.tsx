@@ -42,10 +42,10 @@ function ProductDetails() {
 
   const { t } = useTranslation('productList');
 
-  const aboutUs: aboutUs = t('page.aboutUs', { returnObjects: true });
-  const accordion: accordion = t('page.accordion', { returnObjects: true });
-  const browseFrontLoaderByState: BrowseFrontLoaderByState = t('page.browseFrontLoaderByState', { returnObjects: true });
-  const browseFrontLoaderByCities: BrowseFrontLoaderByCities = t('page.browseFrontLoaderByCities', { returnObjects: true });
+  const aboutUs = t('page.aboutUs', { returnObjects: true }) as aboutUs;
+  const accordion = t('page.accordion', { returnObjects: true }) as accordion;
+  const browseFrontLoaderByState = t('page.browseFrontLoaderByState', { returnObjects: true }) as BrowseFrontLoaderByState;
+  const browseFrontLoaderByCities = t('page.browseFrontLoaderByCities', { returnObjects: true }) as BrowseFrontLoaderByCities;
 
   const { myLocation } = useAppSelector((state: RootState) => state.auth);
   const { data: hilightedProducts, isError, error, isFetching } = productsApi.useGetAllHighlightedProductsQuery({page:1,latitude:myLocation?.latitude,longitude:myLocation?.longitude, country: myLocation?.country});

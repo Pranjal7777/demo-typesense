@@ -87,17 +87,17 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
   const desc: string = productDetails('page.desc');
   const postingLabel: string = productDetails('page.postedLabel');
   const followingBtn: string = productDetails('page.follwingBtn');
-  const hamburger: hamburger = productDetails('page.hamburger', { returnObjects: true });
-  const engagementStats: engagementStats = productDetails('page.engagementStats', { returnObjects: true });
-  const ctaText: ctas = productDetails('page.prodCTA', { returnObjects: true });
-  const profileCard: profileCard = productDetails('page.profileCard', { returnObjects: true });
-  const togglePanelText: togglePanelText = productDetails('page.toggleInfo', { returnObjects: true });
+  const hamburger = productDetails('page.hamburger', { returnObjects: true }) as hamburger;
+  const engagementStats = productDetails('page.engagementStats', { returnObjects: true }) as engagementStats;
+  const ctaText = productDetails('page.prodCTA', { returnObjects: true }) as ctas;
+  const profileCard = productDetails('page.profileCard', { returnObjects: true }) as profileCard;
+  const togglePanelText = productDetails('page.toggleInfo', { returnObjects: true }) as togglePanelText;
+  const prodDetails = apidata?.details;
   const [totalLikedCount, setTotalLikeCount] = useState<number>(apidata?.likeCount || 0);
   const { userInfo, myLocation } = useAppSelector((state: RootState) => state.auth);
   const [isFirstButtonLoading, setIsFirstButtonLoading] = useState(false);
   const dispatch = useDispatch();
-
-  const prodDetails = apidata?.details;
+  
   const breadcrumbSteps = [
     {
       name: hamburger[0].home,

@@ -74,7 +74,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
   setSelectedOption,
 }) => {
   const { t } = useTranslation('common');
-  const heroSection: heroSection = t('page.header.heroSection', { returnObjects: true });
+  const heroSection = t('page.header.heroSection', { returnObjects: true }) as heroSection;
  
   const {theme}=useTheme();
   const minThreshold = useNewWindowScroll(180);

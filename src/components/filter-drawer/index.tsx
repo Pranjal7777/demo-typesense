@@ -147,7 +147,7 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
   });
   const { setUpdateLocationDispatch, setMyLocationDispatch } = useActions();
   const { t } = useTranslation('common');
-  const heroSection: heroSection = t('page.header.heroSection', { returnObjects: true });
+  const heroSection = t('page.header.heroSection', { returnObjects: true }) as heroSection;
   const address = useAppSelector((state) => state.auth.myLocation?.address);
   const [formData, setFormData] = useState({
     location: '',

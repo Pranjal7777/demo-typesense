@@ -26,7 +26,7 @@ const Login: React.FC = () => {
   const router = useRouter();
 
   const { t } = useTranslation('auth');
-  const login: login = t('page.signIn', { returnObjects: true });
+  const login = t('page.signIn', { returnObjects: true }) as login;
 
   const handleLoginWithPhoneClick = useCallback(() => {
     router.push(`${SIGN_IN_PAGE}?step=2`);

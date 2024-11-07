@@ -48,7 +48,7 @@ const SearchBox: FC<Props> = ({
   handleRemoveLocationHelper,
 }) => {
   const { t } = useTranslation('common');
-  const heroSection: heroSection = t('page.header.heroSection', { returnObjects: true });
+  const heroSection = t('page.header.heroSection', { returnObjects: true }) as heroSection;
 
   const [searchItemAndUserDrower, setSearchItemAndUserDrower] = useState(true);
 

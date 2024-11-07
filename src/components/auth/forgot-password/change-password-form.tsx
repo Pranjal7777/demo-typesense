@@ -23,7 +23,7 @@ export type CreateNewPassword = {
 const ChangePasswordForm = () => {
 
   const { t } = useTranslation('auth');
-  const CreateNewPassword:CreateNewPassword= t('page.createNewPassword',{returnObjects:true});
+  const CreateNewPassword = t('page.createNewPassword', { returnObjects: true }) as CreateNewPassword;
 
   const [isCompleted, setIsCompleted] = useState(false);
   const [isLoading,setIsLoading]=useState(false);

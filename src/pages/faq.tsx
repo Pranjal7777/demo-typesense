@@ -83,7 +83,7 @@ export interface FaqProps {
 const Faq: React.FC<FaqProps> = ({ faqData }) => {
   const { t } = useTranslation('faq');
   // const headerBennerSection: HeaderBennerSection = t('page.headerBennerSection', { returnObjects: true });
-  const breadcrumbLinks: BreadcrumbLinks[] = t('page.breadcrumbLinks', { returnObjects: true });
+  const breadcrumbLinks = t('page.breadcrumbLinks', { returnObjects: true }) as BreadcrumbLinks[];
   // const faqSection: FaqSection = t('page.faqSection', { returnObjects: true });
 
   const [isBuyerOrSeller, setIsBuyerOrSeller] = useState(false);

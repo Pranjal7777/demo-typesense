@@ -49,7 +49,7 @@ export type CompleteSignUp = {
 
 const RegistrationDetails: React.FC = () => {
   const { t } = useTranslation('auth');
-  const CompleteSignUp: CompleteSignUp = t('page.completeSignUp', { returnObjects: true });
+  const CompleteSignUp = t('page.completeSignUp', { returnObjects: true }) as CompleteSignUp;
   const router = useRouter();
 
   const [isIndividualOrCompany, setIsIndividualOrCompany] = useState(true);

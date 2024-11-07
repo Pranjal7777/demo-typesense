@@ -130,11 +130,11 @@ const HomePage: FC<HomeProps> = ({
   const { myLocation } = useAppSelector((state: RootState) => state.auth);
   const userInfo = useAppSelector((state: RootState) => state.auth.userInfo);
 
-  const recommendedSection: RecommendedSection = t('page.recommendedSection', { returnObjects: true });
-  const sellAndBuySection: SellAndBuySection = t('page.sellAndBuySection', { returnObjects: true });
-  const dealersSection: DealersSection = t('page.dealersSection', { returnObjects: true });
-  const newAndUsedBannerSection: NewAndUsedBannerSection = t('page.newAndUsedBannerSection', { returnObjects: true });
-  const brandLogoSection: BrandLogoSection = t('page.brandLogoSection', { returnObjects: true });
+  const recommendedSection = t('page.recommendedSection', { returnObjects: true }) as RecommendedSection;
+  const sellAndBuySection = t('page.sellAndBuySection', { returnObjects: true }) as SellAndBuySection;
+  const dealersSection = t('page.dealersSection', { returnObjects: true }) as DealersSection;
+  const newAndUsedBannerSection = t('page.newAndUsedBannerSection', { returnObjects: true }) as NewAndUsedBannerSection;
+  const brandLogoSection = t('page.brandLogoSection', { returnObjects: true }) as BrandLogoSection;
 
   const [blogData, setBlogData] = useState<BlogDataType | null>(null);
   useEffect( ()=>{

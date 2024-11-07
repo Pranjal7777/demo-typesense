@@ -32,7 +32,7 @@ export type loginWithPhone = {
 
 const LoginWithPhone: React.FC = () => {
   const { t } = useTranslation('auth');
-  const loginWithPhoneData: loginWithPhone = t('page.loginWithPhone', { returnObjects: true });
+  const loginWithPhoneData = t('page.loginWithPhone', { returnObjects: true }) as loginWithPhone;
 
   const router = useRouter();
   // const { page } = router.query;

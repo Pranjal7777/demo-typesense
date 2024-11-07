@@ -146,8 +146,8 @@ const About: FC<Props> = ({ aboutData }) => {
   const joinedString = formatArrayToStrings(keywords);
   const { t } = useTranslation('about');
   // const headerBennerSection: HeaderBennerSection = t('page.headerBennerSection', { returnObjects: true });
-  const breadcrumbLinks: BreadcrumbLinks[] = t('page.breadcrumbLinks', { returnObjects: true });
-  const aboutSection: AboutSection = t('page.aboutSection', { returnObjects: true });
+  const breadcrumbLinks = t('page.breadcrumbLinks', { returnObjects: true }) as BreadcrumbLinks[];
+  const aboutSection = t('page.aboutSection', { returnObjects: true }) as AboutSection;
   // const ourServiceSection: OurServiceSection = t('page.ourServiceSection', { returnObjects: true });
   // const meetourTeamSection: MeetourTeamSection = t('page.meetourTeamSection', { returnObjects: true });
   const strapiSeoData = aboutData.attributes.seoProperties;

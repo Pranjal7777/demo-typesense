@@ -21,7 +21,7 @@ import { SIGN_IN_PAGE, SIGN_UP_PAGE } from '@/routes';
 const OAuth = () => {
   // const [user, setUser] = useState(null)
   const { t } = useTranslation('auth');
-  const loginWithPhoneData: loginWithPhone = t('page.loginWithPhone', { returnObjects: true });
+  const loginWithPhoneData = t('page.loginWithPhone', { returnObjects: true }) as loginWithPhone;
 
   const [login] = authApi.useLoginMutation();
   const { setUserDetailsDispatch } = useActions();

@@ -29,7 +29,7 @@ export type SignUp = {
 
 const Registration: React.FC = () => {
   const { t } = useTranslation('auth');
-  const SignUp = t('page.signUp', { returnObjects: true }) as SignUp;
+  const SignUp: SignUp = t('page.signUp', { returnObjects: true });
   const router = useRouter();
 
   const handelClick = useCallback(() => {

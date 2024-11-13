@@ -12,7 +12,7 @@ const ConfirmationPopup:FC<Props> = ({ isOpen, message, onClose, onConfirm }) =>
         isOpen ? '' : 'hidden'
       }`}
     >
-      <div className="w-[95%] max-w-[480px] relative bg-white rounded-lg p-8 shadow-lg">
+      <div className="w-[95%] max-w-[480px] relative bg-white rounded-lg p-8 shadow-lg z-[200]">
         <h2 className="font-semibold mb-4">{message}</h2>
         <div className="flex justify-end">
           <button

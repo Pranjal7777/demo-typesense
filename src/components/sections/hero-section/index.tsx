@@ -40,7 +40,7 @@ const HeroSection: FC<HeroSectionProps> = ({
   const minThreshold = useNewWindowScroll(180);
   const windowWidth = useWindowResize();
   const { t } = useTranslation('common');
-  const heroSection = t('page.header.heroSection', { returnObjects: true }) as heroSection;
+  const heroSection: heroSection = t('page.header.heroSection', { returnObjects: true });
   const [selectedOption, setSelectedOption] = useState('Items');
   const { searchClient } = useTypesenseSearch({ queryBy: selectedOption === 'Items' ? 'title.en,description' : 'first_name,last_name'});
 

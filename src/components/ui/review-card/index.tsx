@@ -1,9 +1,11 @@
 import { appClsx } from '@/lib/utils';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import ImageContainer from '../image-container';
 import UserPlaceholderIcon from '../../../../public/assets/svg/user-placeholder-icon';
 import Rating from '../rating';
 import { UserReviewType } from '@/store/types/seller-profile-type';
+import { DATE_AND_TIME_FORMAT } from '@/constants/config-strings';
+import { getFormattedDate } from '@/helper/get-formatted-date';
 
 type Props = {
   userReview: UserReviewType;
@@ -42,20 +44,43 @@ const ReviewCard: FC<Props> = ({
   imageContainerClass,
   dateClass,
 }) => {
+  const reviewedDate = useMemo(() => {
+    return getFormattedDate(userReview?.ratedDate, DATE_AND_TIME_FORMAT);
+  }, [userReview?.ratedDate]);
   return (
     <div className={appClsx('flex gap-2', cardClass)}>
       {userReview?.images?.length > 0 ? (
         <>
-          <ImageContainer height={height} width={width} className={appClsx('hidden md:block', profileImageClass)} alt={'profile-pic'} src={''}  />
-          <ImageContainer height={mobileHeight} width={mobileWidth} className={appClsx('md:hidden', profileImageClass)} alt={'profile-pic'} src={''} />
+          <ImageContainer
+            height={height}
+            width={width}
+            className={appClsx('hidden md:block', profileImageClass)}
+            alt={'profile-pic'}
+            src={''}
+          />
+          <ImageContainer
+            height={mobileHeight}
+            width={mobileWidth}
+            className={appClsx('md:hidden', profileImageClass)}
+            alt={'profile-pic'}
+            src={''}
+          />
         </>
       ) : (
         <>
-          <UserPlaceholderIcon className={appClsx('hidden md:block', profileImageClass)} height={height.toString()} width={width.toString()} />
-          <UserPlaceholderIcon className={appClsx('md:hidden', profileImageClass)} height={mobileHeight.toString()} width={mobileWidth.toString()} />
+          <UserPlaceholderIcon
+            className={appClsx('hidden md:block', profileImageClass)}
+            height={height.toString()}
+            width={width.toString()}
+          />
+          <UserPlaceholderIcon
+            className={appClsx('md:hidden', profileImageClass)}
+            height={mobileHeight.toString()}
+            width={mobileWidth.toString()}
+          />
         </>
       )}
-      <div className='flex flex-col gap-2'>
+      <div className="flex flex-col gap-2">
         <strong className={appClsx(' text-xs md:text-sm font-semibold', userNameClass)}>{userReview.firstName}</strong>
         <Rating
           value={userReview.rating}
@@ -67,7 +92,10 @@ const ReviewCard: FC<Props> = ({
           text={`${userReview.rating}`}
         />
         {userReview.review ? (
-          <p className={appClsx('text-text-quaternary-dark text-sm md:text-[16px]', commentClass)}> {userReview.review}</p>
+          <p className={appClsx('text-text-quaternary-dark text-sm md:text-[16px]', commentClass)}>
+            {' '}
+            {userReview.review}
+          </p>
         ) : null}
 
         {userReview.images.length > 0 ? (
@@ -76,7 +104,7 @@ const ReviewCard: FC<Props> = ({
           </div>
         ) : null}
 
-        <span className={appClsx('text-text-quaternary-dark text-xs', dateClass)}>{userReview.ratedDate}</span>
+        <span className={appClsx('text-text-quaternary-dark text-xs', dateClass)}>{reviewedDate}</span>
       </div>
     </div>
   );

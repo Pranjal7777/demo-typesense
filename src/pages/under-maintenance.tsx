@@ -15,7 +15,7 @@ type UnderMaintenance={
 const UnderMaintenancePage = () => {
 
   const { t } = useTranslation('underMaintenance');
-  const underMaintenance = t('page',{returnObjects:true}) as UnderMaintenance;
+  const underMaintenance:UnderMaintenance= t('page',{returnObjects:true});
 
   return (
 

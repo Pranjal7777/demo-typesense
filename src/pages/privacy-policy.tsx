@@ -71,8 +71,8 @@ export type Props = {
 
 const PrivacyPolicy: FC<Props> = ({ PrivacyData,htmlContent }) => {
   const { t } = useTranslation('privacy-policy');
-  const headerBennerSection = t('page.headerBennerSection', { returnObjects: true }) as HeaderBennerSection;
-  const breadcrumbLinks = t('page.breadcrumbLinks', { returnObjects: true }) as BreadcrumbLinks[];
+  const headerBennerSection: HeaderBennerSection = t('page.headerBennerSection', { returnObjects: true });
+  const breadcrumbLinks: BreadcrumbLinks[] = t('page.breadcrumbLinks', { returnObjects: true });
   // const privacyPolicySection: PrivacyPolicySection = t('page.privacyPolicySection', { returnObjects: true });
   const strapiSeoData = PrivacyData.attributes.seoProperties;
   const keywords = PrivacyData?.attributes?.seoProperties?.keywords;

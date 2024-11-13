@@ -23,13 +23,15 @@ import { AddressErrorType } from '@/store/types/profile-type';
 import { toast } from 'sonner';
 import isUserAuthenticated from '@/helper/validation/check-user-authentication';
 import { SIGN_IN_PAGE } from '@/routes';
+import showToast from '@/helper/show-toaster';
+import SearchIcon from '../../../public/assets/svg/search-icon';
 
-type Props ={
-  sellerProfileData: SellerProfileType,
-  followCountData:FollowCountDataType,
-}
+type Props = {
+  sellerProfileData: SellerProfileType;
+  followCountData: FollowCountDataType;
+};
 
-const SellerProfile:FC<Props> = ({sellerProfileData, followCountData}) => {
+const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
   const [isFollow, setIsFollow] = useState(sellerProfileData.isFollow);
   const [totalFollower, setTotalFollower] = useState(followCountData.totalFollower);
   const router = useRouter();
@@ -39,16 +41,14 @@ const SellerProfile:FC<Props> = ({sellerProfileData, followCountData}) => {
   const [tab, setTab] = useState('Listing');
   const reviewTabs = ['All', 'From Buyers', 'From Sellers'];
   const [reviewTab, setReviewTab] = useState('All');
-
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [productList, setProductList] = useState<Product[]>([]);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
 
-  // Debounce search term
   const debouncedSetSearchTerm = debounce(setDebouncedSearchTerm, 100);
- 
+
   useEffect(() => {
     debouncedSetSearchTerm(searchTerm);
   }, [searchTerm]);
@@ -61,16 +61,12 @@ const SellerProfile:FC<Props> = ({sellerProfileData, followCountData}) => {
 
   useEffect(() => {
     if (data) {
-      if (debouncedSearchTerm) {
-        setProductList(data.result); 
-      } else {
         if (page === 1) {
           setProductList(data.result);
         } else {
-          setProductList((prevProducts) => [...prevProducts, ...data.result]); 
+          setProductList((prevProducts) => [...prevProducts, ...data.result]);
         }
-      }
-      setIsSearchLoading(false); 
+      setIsSearchLoading(false);
     }
     setIsSearchLoading(false);
   }, [data]);
@@ -78,46 +74,40 @@ const SellerProfile:FC<Props> = ({sellerProfileData, followCountData}) => {
   const handleViewMore = () => {
     setPage((prevPage) => prevPage + 1);
   };
-  const [postFollow,{isLoading:isFollowPosting}] = sellerProfileApi.usePostFollowMutation();
-  const [postUnFollow,{isLoading:isUnFollowPosting}] = sellerProfileApi.usePostUnFollowMutation();
+  const [postFollow, { isLoading: isFollowPosting }] = sellerProfileApi.usePostFollowMutation();
+  const [postUnFollow, { isLoading: isUnFollowPosting }] = sellerProfileApi.usePostUnFollowMutation();
 
-  const followButtonHandler = useCallback(async(id: string) => {
-    const isUserLogin = isUserAuthenticated();
-    if(!isUserLogin){
-      router.push(SIGN_IN_PAGE);
-      return;
-    }
-    if(isFollow){
-      try{
-        await postUnFollow(id).unwrap();
-        setIsFollow(false);
-        setTotalFollower(totalFollower - 1);      
+  const followButtonHandler = useCallback(
+    async (id: string) => {
+      const isUserLogin = isUserAuthenticated();
+      if (!isUserLogin) {
+        router.push(SIGN_IN_PAGE);
+        return;
       }
-      catch (error){
-        const Error = error as AddressErrorType;
-        
-        toast.error( `${Error?.data?.message}`, {
-          duration: 4000,
-          position: 'top-center',
-        });
+      if (isFollow) {
+        try {
+          await postUnFollow(id).unwrap();
+          setIsFollow(false);
+          setTotalFollower(totalFollower - 1);
+          showToast({ message: `You are no longer following ${sellerProfileData?.username || ''}` });
+        } catch (error) {
+          const Error = error as AddressErrorType;
+          showToast({ message: `${Error?.data?.message || 'Something went wrong'}`, messageType: 'error' });
+        }
+      } else {
+        try {
+          await postFollow(id).unwrap();
+          setIsFollow(true);
+          setTotalFollower(totalFollower + 1);
+          showToast({ message: `You are now following ${sellerProfileData?.username || ''}` });
+        } catch (error) {
+          const Error = error as AddressErrorType;
+          showToast({ message: `${Error?.data?.message || 'Something went wrong'}`, messageType: 'error' });
+        }
       }
-    }
-    else{
-      try{
-        await postFollow(id).unwrap();
-        setIsFollow(true);
-        setTotalFollower(totalFollower + 1);    
-      }
-      catch (error){
-        const Error = error as AddressErrorType;
-        
-        toast.error( `${Error?.data?.message}`, {
-          duration: 4000,
-          position: 'top-center',
-        });
-      }
-    }
-  }, [postFollow,postUnFollow,isFollow,totalFollower,isUserAuthenticated]);
+    },
+    [postFollow, postUnFollow, isFollow, totalFollower, isUserAuthenticated]
+  );
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -127,8 +117,8 @@ const SellerProfile:FC<Props> = ({sellerProfileData, followCountData}) => {
   };
 
   return (
-    <Layout stickyHeader={true} stickyHeroSection={true} excludeFooter={true} >
-      {(isFollowPosting || isUnFollowPosting) && <FullScreenSpinner/>}
+    <Layout stickyHeader={true} stickyHeroSection={true} excludeFooter={true}>
+      {(isFollowPosting || isUnFollowPosting) && <FullScreenSpinner />}
       <div className="profile min-h-screen w-full px-[4%] md:px-[64px] mx-auto max-w-[1440px] border-t py-[20px] flex flex-col md:flex-row gap-x-[16px]">
         <div className="left w-full flex flex-col items-center md:w-[210px] text-text-secondary-dark">
           {sellerProfileData && (
@@ -138,27 +128,29 @@ const SellerProfile:FC<Props> = ({sellerProfileData, followCountData}) => {
               profilePic={sellerProfileData.profilePic || ''}
               ratingValue={sellerProfileData.totalAvgRating || 0}
               ratingText={`${sellerProfileData.totalAvgRating}`}
-              ratingTextClass='text-xs text-text-tertiary-light'
+              ratingTextClass="text-xs text-text-tertiary-light"
               buttonType={isFollow ? 'quinary' : 'primary'}
               buttonText={isFollow ? 'Following' : 'Follow'}
-              buttonClass='w-full sm:max-w-[343px] order-5 md:order-4 !h-9 md:w-[118px] md:h-[32px] flex justify-center items-center md:font-normal my-4'
-              starColor='#FDB514'
+              buttonClass="w-full sm:max-w-[343px] order-5 md:order-4 !h-9 md:w-[118px] md:h-[32px] flex justify-center items-center md:font-normal my-4"
+              starColor="#FDB514"
               totalFollowers={totalFollower}
               totalFollowing={followCountData.totalFollowing}
-              followingSectionClass='order-4 md:order-5'
-              followButtonHandler = {()=>{followButtonHandler(sellerProfileData.accountId);}}
+              followingSectionClass="order-4 md:order-5"
+              followButtonHandler={() => {
+                followButtonHandler(sellerProfileData.accountId);
+              }}
             />
           )}
         </div>
         <div className="right flex-1">
-          <nav className='flex w-full border-b md:border-b-0 items-start justify-between'>
-            <ul className='flex text-sm md:text-[16px] w-full md:w-auto gap-[20px] text-[#57585A] leading-[24px]'>
+          <nav className="flex w-full border-b md:border-b-0 items-start justify-between">
+            <ul className="flex text-sm md:text-[16px] w-full md:w-auto gap-[20px] text-[#57585A] leading-[24px]">
               {tabs.map((item, index) => (
                 <li
                   key={index}
                   onClick={() => setTab(item)}
                   tabIndex={0}
-                  role='button'
+                  role="button"
                   onKeyUp={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
@@ -174,44 +166,41 @@ const SellerProfile:FC<Props> = ({sellerProfileData, followCountData}) => {
                 </li>
               ))}
             </ul>
-            <div className='search-box w-[290px] h-[44px] hidden border md:flex gap-3 items-center px-[10px] bg-[#F3F3F3]'>
-              <Image
-                width={24}
-                height={24}
-                src={IMAGES.SEARCH_ICON_BLACK}
-                loader={gumletLoader}
-                alt="search-icon"
-              />
-              <input
-                value={searchTerm}
-                onChange={handleSearch}
-                placeholder='Search product'
-                type="text"
-                className='w-[100%] text-[14px] outline-none bg-[#F3F3F3] h-[100%]'
-              />
-            </div>
           </nav>
           <div className="content w-full md:pl-0 md:p-[20px] md:border mt-[20px] rounded-t-[12px]">
-            <h3 className='md:text-[20px]  md:pl-[20px] text-text-secondary-dark font-semibold pb-[20px]'>{tab}</h3>
+            <div className="pb-[20px] flex justify-between items-center">
+              <h3 className="md:text-[20px]  md:pl-[20px] text-text-secondary-dark font-semibold ">{tab}</h3>
+              {tab == 'Listing' && (
+                <div className="search-box w-[290px] h-[44px] hidden border md:flex gap-3 items-center px-[10px] bg-[#F3F3F3]">
+                  <SearchIcon className='h-[24px] w-[24px]'/>
+                  <input
+                    value={searchTerm}
+                    onChange={handleSearch}
+                    placeholder="Search product"
+                    type="text"
+                    className="w-[100%] text-[14px] outline-none bg-[#F3F3F3] h-[100%]"
+                  />
+                </div>
+              )}
+            </div>
             {tab === 'Listing' ? (
               <>
                 <div className="product md:pl-[20px] w-full grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-2 md:gap-4 lg:grid-cols-3 xl:grid-cols-4">
-                  {data && productList.length > 0 ? productList.map((product) => (
-                    <ProductCard showProfilePic={false} key={product._id} product={product} />
-                  )) : null}
-                  {(isLoading || isSearchLoading || isFetching) && [...Array(6)].map((_, index) => (
-                    <ProductCardSkeleton key={index} />
-                  ))}
+                  {data && productList.length > 0
+                    ? productList.map((product) => (
+                        <ProductCard showProfilePic={false} key={product._id} product={product} />
+                      ))
+                    : null}
+                  {(isLoading || isSearchLoading || isFetching) &&
+                    [...Array(6)].map((_, index) => <ProductCardSkeleton key={index} />)}
                 </div>
 
-                {
-                  (!isFetching  &&!isSearchLoading && productList.length < 1) ? <div className=' flex justify-center text-xl font-semibold'>
-                    No Product Found!</div> 
-                    : null
-                }
+                {!isFetching && !isSearchLoading && productList.length < 1 ? (
+                  <div className=" flex justify-center text-xl font-semibold">No Product Found!</div>
+                ) : null}
 
-                {((!isLoading && !isSearchLoading && data?.result) && productList.length < data?.Totalcount) ? (
-                  <div className='w-full flex justify-center items-center mt-6'>
+                {!isLoading && !isSearchLoading && data?.result && productList.length < data?.Totalcount ? (
+                  <div className="w-full flex justify-center items-center mt-6">
                     <button
                       className={'border-2 text-sm font-medium px-4 py-2 rounded dark:text-text-primary-dark'}
                       onClick={handleViewMore}
@@ -223,14 +212,14 @@ const SellerProfile:FC<Props> = ({sellerProfileData, followCountData}) => {
               </>
             ) : (
               <div className="review">
-                <nav className='border-b md:pl-[20px]'>
-                  <ul className='flex gap-[12px] text-sm md:text-[16px] text-[#57585A] leading-[24px]'>
+                <nav className="border-b md:pl-[20px]">
+                  <ul className="flex gap-[12px] text-sm md:text-[16px] text-[#57585A] leading-[24px]">
                     {reviewTabs.map((item, index) => (
                       <li
                         key={index}
                         onClick={() => setReviewTab(item)}
                         tabIndex={0}
-                        role='button'
+                        role="button"
                         onKeyUp={(e) => {
                           if (e.key === 'Enter' || e.key === ' ') {
                             e.preventDefault();
@@ -238,8 +227,9 @@ const SellerProfile:FC<Props> = ({sellerProfileData, followCountData}) => {
                           }
                         }}
                         className={
-                          (reviewTab === item ? ' text-text-secondary-dark font-semibold  border-b-[3px] border-brand-color ' : '') +
-                          'px-[8px] py-[11px]'
+                          (reviewTab === item
+                            ? ' text-text-secondary-dark font-semibold  border-b-[3px] border-brand-color '
+                            : '') + 'px-[8px] py-[11px]'
                         }
                       >
                         {item}
@@ -247,10 +237,14 @@ const SellerProfile:FC<Props> = ({sellerProfileData, followCountData}) => {
                     ))}
                   </ul>
                 </nav>
-                <div className='w-full'>
-                  {
-                    (reviewTab == 'All') ? <AllReviewsSection accountId={accountId || ''}/> : (reviewTab == 'From Buyers') ? <BuyersReviewSection accountId={accountId || ''}/> : (reviewTab == 'From Sellers') ? <SellersReviewSection accountId={accountId || ''}/> : null
-                  }
+                <div className="w-full">
+                  {reviewTab == 'All' ? (
+                    <AllReviewsSection accountId={accountId || ''} />
+                  ) : reviewTab == 'From Buyers' ? (
+                    <BuyersReviewSection accountId={accountId || ''} />
+                  ) : reviewTab == 'From Sellers' ? (
+                    <SellersReviewSection accountId={accountId || ''} />
+                  ) : null}
                 </div>
               </div>
             )}
@@ -278,7 +272,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       const profileRes = await fetch(`https://apiv2.le-offers.com/v1/profile?accountId=${id}`, {
         method: 'GET',
         headers: {
-          'Authorization': `${accessToken}`,
+          Authorization: `${accessToken}`,
           'Content-Type': 'application/json',
         },
       });
@@ -289,16 +283,18 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       } else {
         console.error(`Failed to fetch profile data: ${profileRes.status} ${profileRes.statusText}`);
       }
-
       // Second API call to fetch follow count data
       if (sellerProfileData) {
-        const followRes = await fetch(`https://apiv2.le-offers.com/v1/follow/count?userId=${sellerProfileData._id}&accountId=${id}`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-        });
+        const followRes = await fetch(
+          `https://apiv2.le-offers.com/v1/follow/count?userId=${sellerProfileData._id}&accountId=${id}`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `${accessToken}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
 
         if (followRes.ok) {
           const followData = await followRes.json();
@@ -322,4 +318,3 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   };
 }
-

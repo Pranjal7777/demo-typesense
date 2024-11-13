@@ -16,7 +16,7 @@ const FullScreenSpinner: FC<FullScreenSpinnerProps> = ({ className }) => {
   }, []);
 
   return (
-    <div className={appClsx('fixed z-50 flex h-[100vh] w-[100vw] items-center justify-center bg-bg-sexdenary-light opacity-80 inset-0', className)}>
+    <div className={appClsx('fixed z-[500] flex h-[100vh] w-[100vw] items-center justify-center bg-bg-sexdenary-light opacity-80 inset-0', className)}>
       <Spinner  />
     </div>
   );

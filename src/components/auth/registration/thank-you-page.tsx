@@ -29,7 +29,7 @@ const ThankYouPage = () => {
   const router=useRouter();
   const {theme}=useTheme();
   const { t } = useTranslation('auth');
-  const ThankyouPage = t('page.thankyouPage', { returnObjects: true }) as ThankyouPage;
+  const ThankyouPage:ThankyouPage= t('page.thankyouPage',{returnObjects:true});
   const {setUserDetailsDispatch} = useActions();
 
   const {data} = router.query;

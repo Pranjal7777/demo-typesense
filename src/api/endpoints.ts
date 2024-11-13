@@ -42,6 +42,8 @@ export const ADD_USER_TO_RECENT_SEARCH_URL = '/profile/views/';
 export const GET_ALL_SAVED_ADDRESS = 'v1/address';
 export const DELETE_ADDRESS = '?addressId=';
 export const DEFAULT_ADDRESS = '/default';
+export const GET_ADDRESS_ATTRIBUTES = 'v1/addressAttribute?type=1'
+export const GET_ADDRESS_TYPES = 'v1/addressAttribute?type=2'
 
 // seller-profile end point
 export const GET_ALL_SELLER_ASSETS = 'v2/python/userAssets/';
@@ -57,6 +59,10 @@ export const OFFSET  = 'offset';
 export const USER_RATING = 'v1/userRating';
 export const FOLLOW = 'v1/follow';
 export const UNFOLLOW = 'v1/unfollow';
+
+// my purchase
+export const GET_ALL_PURCHASE = 'v1/orders'
+export const GET_PURCHASE_DETAILS = 'v1/orders/details'
 // privacy policy
 export const GET_PRIVACY_POLICY_DATA = '/htmlPage';
 

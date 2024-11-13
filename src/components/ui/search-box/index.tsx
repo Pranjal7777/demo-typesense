@@ -74,7 +74,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
   setSelectedOption,
 }) => {
   const { t } = useTranslation('common');
-  const heroSection = t('page.header.heroSection', { returnObjects: true }) as heroSection;
+  const heroSection: heroSection = t('page.header.heroSection', { returnObjects: true });
  
   const {theme}=useTheme();
   const minThreshold = useNewWindowScroll(180);
@@ -90,6 +90,8 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
     search: '',
     location: '',
   });
+  console.log(formData, 'mirForm');
+  
   const [, setCrossAndLocationImage] = useState(false);
   const [isRecentSearchOpen, setIsRecentSearchOpen] = useState(false);
   const [isAutoCompleteLocationBoxOpen, setIsAutoCompleteLocationBoxOpen] = useState(false);
@@ -111,6 +113,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
       refetchOnReconnect: true,
     }
   );
+
 
 
   useEffect(() => {
@@ -141,8 +144,11 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
   });
   const [selectLocationLoading,setSelectLocationLoading]=useState(false);
   const { data: recentSearchData,isFetching: isRecentSearchDataFetching } = productsApi.useGetRecentSearchDataQuery(undefined, { skip: !isRecentSearchOpen });
+  console.log(recentSearchData, 'recentSearchData');
   const [trigger] = productsApi.useLazyAddRecentSearchDataQuery();
   const [triggerSingleProductSearch] = productsApi.useLazyAddRecentSearchDataWithSingleProductQuery();
+  console.log(triggerSingleProductSearch, 'mirS');
+  
   const [triggerAddUserDataToRecentSearch]=productsApi.useAddUserDataToRecentSearchMutation();
   const [searchResults, setSearchResults] = useState([]);
   const [showRecentSearchResultsFromTypesense, setShowRecentSearchResultsFromTypesense] = useState(false);
@@ -195,7 +201,6 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
       [name]: value,
 
     }));
-    setShowRecentSearchResultsFromTypesense(false);
   };
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -548,7 +553,6 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                   {isSearchProductsAndUsersFetching ? (
                     <div className='flex items-center justify-center h-[120px]'>
                       <Spinner/>
-
                     </div>
                   ) : isUserOrProduct.length ? (
                   
@@ -559,8 +563,9 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                           className="flex dark:hover:text-text-primary-dark border-border-tertiary-light h-14 items-center cursor-pointer hover:bg-bg-octonary-light dark:hover:bg-bg-duodenary-dark "
                           key={index}
                           onClick={async() => {
-                            await addItemToRecentSearch(item.assetId,item.assetTitle);
-                            await selectItemOrUserToSearch(`${item.assetTitle}`);
+                            //  addItemToRecentSearch(item.assetId,item.assetTitle);
+                            await triggerSingleProductSearch({ assetId:item.assetId, search:item.assetTitle }).unwrap();
+                             selectItemOrUserToSearch(`${item.assetTitle}`);
                             categoryRoute(item.categoryPath[0].id);
                           }}
                         >
@@ -636,7 +641,8 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                         key={index}
                         onClick={async () => {
                           selectItemOrUserToSearch(`${user.firstName} ${user.lastName}`);
-                          await addUserToRecentSearch(user.userId); 
+                          //  addUserToRecentSearch(user.userId); 
+                         await triggerAddUserDataToRecentSearch({clickeduserId: user.userId}).unwrap();
                           sellerProfileRoute(user.accountId);
                         }}
                       >

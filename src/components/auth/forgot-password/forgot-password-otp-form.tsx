@@ -21,7 +21,7 @@ export type OtpVerification = {
 const ForgotPasswordOtpForm = () => {
 
   const { t } = useTranslation('auth');
-  const OtpVerification = t('page.otpVerification', { returnObjects: true }) as OtpVerification;
+  const OtpVerification:OtpVerification= t('page.otpVerification',{returnObjects:true});
 
   const router=useRouter();
   const [otp, setOTP] = useState(['', '', '', '']);

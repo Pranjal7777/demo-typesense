@@ -42,7 +42,7 @@ const PhoneNumberInput: FC<Props> = ({
   const [phone, setPhone] = useState(phNo);
 
   return (
-    <div className={appClsx('mobile:mb-3 mb-5 w-full ', mainClassName)}>
+    <div className={appClsx('mobile:mb-3 mb-0 w-full ', mainClassName)}>
       {label && (
         <FormLabel className={appClsx('', labelClassName)}>
           {label}

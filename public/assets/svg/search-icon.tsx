@@ -9,8 +9,8 @@ type SearchIconProps = {
 } & SVGAttributes<SVGSVGElement>;
 
 const SearchIcon: FC<SearchIconProps> = ({
-  width = 22,
-  height = 22,
+  width = 20,
+  height = 20,
   primaryColor = '#57585A',
   className,
   ...props
@@ -20,7 +20,7 @@ const SearchIcon: FC<SearchIconProps> = ({
       width={width}
       height={height}
       {...props}
-      className={appClsx('', className)}
+      className={appClsx('w-auto h-auto', className)}
       viewBox="0 0 18 18"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

@@ -19,7 +19,7 @@ type ServerError={
 const ServerInternalError = () => {
 
   const { t } = useTranslation('serverError');
-  const serverError = t('page',{returnObjects:true}) as ServerError;
+  const serverError:ServerError= t('page',{returnObjects:true});
 
   return (
 

@@ -81,8 +81,8 @@ export type CategoriesPageProps = {
 const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, subCategories }) {
   const { t } = useTranslation('categories');
   // const sectionTitle: sectionTitle = t('page.sectionTitle', { returnObjects: true });
-  const aboutUs = t('page.aboutUs', { returnObjects: true }) as aboutUs;
-  const accordion = t('page.accordion', { returnObjects: true }) as accordion;
+  const aboutUs: aboutUs = t('page.aboutUs', { returnObjects: true });
+  const accordion: accordion = t('page.accordion', { returnObjects: true });
   const { myLocation } = useAppSelector((state: RootState) => state.auth);
 
   const router = useRouter();

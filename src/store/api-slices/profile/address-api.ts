@@ -1,6 +1,6 @@
-import { DEFAULT_ADDRESS, DELETE_ADDRESS, GET_ALL_SAVED_ADDRESS } from '@/api/endpoints';
+import { DEFAULT_ADDRESS, DELETE_ADDRESS, GET_ADDRESS_ATTRIBUTES, GET_ADDRESS_TYPES, GET_ALL_SAVED_ADDRESS } from '@/api/endpoints';
 import { rootApi } from '../root-api';
-import { ResponseAddress } from '@/store/types/profile-type';
+import { AddressAttributeResponse, ResponseAddress } from '@/store/types/profile-type';
 // import { ResponseAddress } from '@/store/types';
 
 export const addressApi = rootApi.injectEndpoints({
@@ -36,6 +36,18 @@ export const addressApi = rootApi.injectEndpoints({
         url: `${GET_ALL_SAVED_ADDRESS}${DEFAULT_ADDRESS}`,
         method: 'PATCH',
         body: updatedAddress,
+      }),
+    }),
+    getAddressAttributes: builder.query<AddressAttributeResponse, void>({
+      query: () => ({
+        url: `${GET_ADDRESS_ATTRIBUTES}`,
+        method: 'GET',
+      }),
+    }),
+    getAddressTypes: builder.query<AddressAttributeResponse, void>({
+      query: () => ({
+        url: `${GET_ADDRESS_TYPES}`,
+        method: 'GET',
       }),
     }),
   }),

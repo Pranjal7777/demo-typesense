@@ -58,6 +58,7 @@ export type ErrorStateType = {
   aptNo: boolean;
   addressTypeAttribute:boolean;
   addressNotesAttributes:boolean;
+  note?: boolean;
 };
 
 function Address() {
@@ -78,6 +79,7 @@ function Address() {
     aptNo: false,
     addressTypeAttribute:false,
     addressNotesAttributes:false,
+    note:false,
   };
   const initialFormData: UserInfoType = { 
     addressLine1: '',

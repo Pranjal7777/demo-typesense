@@ -22,6 +22,8 @@ export const IMAGES = {
   YOUTUBE_LOGO_BLACK: 'youtube_icon_1e565c301c.svg',
   INSTAGRAM_LOGO_BLACK: 'instagram_icon_41d668ff45.svg',
 
+  ORDER_SUCCESS:'/images/success.png',
+
   // HOME CATEGORY IMAGES
 
   CATEGORY_SECTION_ONE: '/assets/images/category_tv.svg',

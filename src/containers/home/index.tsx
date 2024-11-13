@@ -130,11 +130,11 @@ const HomePage: FC<HomeProps> = ({
   const { myLocation } = useAppSelector((state: RootState) => state.auth);
   const userInfo = useAppSelector((state: RootState) => state.auth.userInfo);
 
-  const recommendedSection = t('page.recommendedSection', { returnObjects: true }) as RecommendedSection;
-  const sellAndBuySection = t('page.sellAndBuySection', { returnObjects: true }) as SellAndBuySection;
-  const dealersSection = t('page.dealersSection', { returnObjects: true }) as DealersSection;
-  const newAndUsedBannerSection = t('page.newAndUsedBannerSection', { returnObjects: true }) as NewAndUsedBannerSection;
-  const brandLogoSection = t('page.brandLogoSection', { returnObjects: true }) as BrandLogoSection;
+  const recommendedSection: RecommendedSection = t('page.recommendedSection', { returnObjects: true });
+  const sellAndBuySection: SellAndBuySection = t('page.sellAndBuySection', { returnObjects: true });
+  const dealersSection: DealersSection = t('page.dealersSection', { returnObjects: true });
+  const newAndUsedBannerSection: NewAndUsedBannerSection = t('page.newAndUsedBannerSection', { returnObjects: true });
+  const brandLogoSection: BrandLogoSection = t('page.brandLogoSection', { returnObjects: true });
 
   const [blogData, setBlogData] = useState<BlogDataType | null>(null);
   useEffect( ()=>{
@@ -304,14 +304,14 @@ const HomePage: FC<HomeProps> = ({
             <ImgSlider banners={bannersAndRecommendedProducts?.banners} />
           ) : null}
           {
-          isFetchingBannersAndRecommendedProducts && (
-            <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2 gap-x-5 gap-y-7">
-              {Array.from({ length: 2 }).map((_, index) => (
-                <ImageSliderSkeleton key={index} />
-              ))}
-            </div>
-          )
-        }
+            isFetchingBannersAndRecommendedProducts && (
+              <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2 gap-x-5 gap-y-7">
+                {Array.from({ length: 2 }).map((_, index) => (
+                  <ImageSliderSkeleton key={index} />
+                ))}
+              </div>
+            )
+          }
           {/** Banner Section Ends */}
 
           {/* Recommended Product Sections */}
@@ -358,7 +358,7 @@ const HomePage: FC<HomeProps> = ({
           </div>
           {/*Recommended Product Sections Ends*/}
           {/* brand logo section start */}
-          <div className="mobile:my-0 mobile:mt-9 my-12 rounded-[20px] flex flex-col items-center justify-center  ">
+          <div className={`mobile:my-0 mobile:mt-9 ${recommendedProducts?.length > 0 ? 'my-12' :'mt-0 mb-12'} rounded-[20px] flex flex-col items-center justify-center`}>
             {' '}
             {/*px-16  mobile:px-2 bg-bg-tertiary-light dark:bg-bg-nonary-dark */}
             <SectionTitle className=" mb-3 mobile:mb-2 ">{brandLogoSection.title}</SectionTitle>

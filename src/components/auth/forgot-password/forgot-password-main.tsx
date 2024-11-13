@@ -16,7 +16,7 @@ export type ForgotPasswordWithEmailAndPhone = {
 const ForgotPasswordMain = () => {
 
   const { t } = useTranslation('auth');
-  const ForgotPasswordWithEmailAndPhone = t('page.forgotPasswordWithEmailAndPhone', { returnObjects: true }) as ForgotPasswordWithEmailAndPhone;
+  const ForgotPasswordWithEmailAndPhone:ForgotPasswordWithEmailAndPhone= t('page.forgotPasswordWithEmailAndPhone',{returnObjects:true});
 
   const router=useRouter();
   // const { page,step } = router.query;

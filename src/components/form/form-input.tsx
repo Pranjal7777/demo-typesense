@@ -10,6 +10,7 @@ export type Props = {
   labelClassName?: string;
   className?: string;
   errorClassName?: string;
+  placeholderClassName?: string;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 const FormInput: FC<Props> = ({
@@ -22,20 +23,22 @@ const FormInput: FC<Props> = ({
   labelClassName,
   errorClassName,
   className,
+  placeholderClassName,
   ...otherProps
 }) => {
   return (
-    <div className={appClsx('mobile:mb-3 mb-5 w-full', mainClassName)}>
+    <div className={appClsx('mobile:mb-3 mb-0 w-full', mainClassName)}>
       {label && (
         <FormLabel className={appClsx('', labelClassName)} htmlFor={name}>
           {label}{required && '*'}
         </FormLabel>
       )}
-      <div className=" flex items-center mobile:mt-1 mt-2 w-full relative">
+      <div className=" flex items-center mobile:mt-1 mt-1 w-full relative">
         <input
           className={appClsx(
-            'w-full px-5  focus:border-brand-color  focus:outline-[#6D3EC1] md:text-sm h-11 border dark:bg-bg-primary-dark dark:border-border-tertiary-dark text-text-secondary-dark dark:text-text-primary-dark border-border-tertiary-light rounded ',
+            'w-full px-4  focus:border-brand-color  focus:outline-[#6D3EC1] md:text-sm h-11 border dark:bg-bg-primary-dark dark:border-border-tertiary-dark text-text-secondary-dark dark:text-text-primary-dark border-border-tertiary-light rounded ',
             className,
+            placeholderClassName,
             { 'border-error dark:border-error': error }
           )}
           id={name}

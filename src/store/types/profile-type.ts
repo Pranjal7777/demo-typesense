@@ -37,3 +37,12 @@ export type AddressErrorType = {
   }
 }
 
+export interface AddressAttribute{
+  _id: string;
+  addressAttribute: string;
+};
+export interface AddressAttributeResponse {
+  message: string;
+  data: AddressAttribute[];
+}
+

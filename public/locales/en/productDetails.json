@@ -20,7 +20,8 @@
       {
         "firstBtn": "Buy Now",
         "secondBtn": "Offer Trade",
-        "nostock": "Out Of Stock"
+        "nostock": "Out Of Stock",
+        "makeOfferBtn":"Maker Offer"
       }
     ],
     "profileCard": [

@@ -17,7 +17,7 @@ type AppDownloadSection = {
 
 const DownloadCard: React.FC = () => {
   const { t } = useTranslation('common');
-  const appDownloadSection = t('page.appDownloadSection', { returnObjects: true }) as AppDownloadSection;
+  const appDownloadSection: AppDownloadSection = t('page.appDownloadSection', { returnObjects: true });
 
   const [phoneNumber, setPhoneNumber] = useState('');
   const [phoneNumberError, setPhoneNumberError] = useState('');

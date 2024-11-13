@@ -7,7 +7,7 @@ export const WEB_URL = WEB_DOMAIN + '/';
 export const GUMLET_API_URL = process.env.NEXT_PUBLIC_GUMLET_API_URL;
 
 export const STATIC_IMAGE_URL = process.env.NEXT_PUBLIC_STATIC_IMAGE_URL;
-export const STATIC_VIDEO_URL=process.env.NEXT_PUBLIC_STATIC_VIDEO_URL;
+export const STATIC_VIDEO_URL='https://asset.le-offers.com';
 export const BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
 export const AUTH_URL_V1 = '/v1';
 export const AUTH_URL_V2 = '/v2';

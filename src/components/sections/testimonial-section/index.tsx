@@ -17,7 +17,7 @@ export type translateType = {
 
 const TestimonialSection: React.FC = () => {
   const { t } = useTranslation('common');
-  const _text: translateType = t('page.userTestimonials', { returnObjects: true }) as translateType;
+  const _text: translateType = t('page.userTestimonials', { returnObjects: true });
   return (
     <div className=" py-12 mobile:py-0 mobile:mt-9 w-100">
       <div className="">

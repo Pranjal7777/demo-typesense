@@ -18,7 +18,7 @@ interface PopularBrands{
 function BrandSlider() {
 
   const { t } = useTranslation('productList');
-  const popularBrands = t('page.popularBrands',{returnObjects:true}) as PopularBrands;
+  const popularBrands:PopularBrands = t('page.popularBrands',{returnObjects:true});
 
   useEffect(() => {
     // Set interval to call btnPressNext every 1000 milliseconds (1 second)

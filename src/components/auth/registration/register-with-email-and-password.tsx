@@ -14,6 +14,7 @@ import authApi from '@/store/api-slices/auth';
 import { SIGN_IN_PAGE, SIGN_UP_PAGE } from '@/routes';
 import { toast } from 'sonner';
 import SignUpLink from '@/components/ui/signup-link';
+import IsEmailValid from '@/helper/validation/email-validation';
 
 export type SignUpWithEmailAndPassword = {
   signupPrompt: string;
@@ -29,9 +30,9 @@ export type SignUpWithEmailAndPassword = {
 
 const RegisterWithEmailAndPassword: React.FC = () => {
   const { t } = useTranslation('auth');
-  const SignUpWithEmailAndPassword = t('page.signUpWithEmailAndPassword', {
+  const SignUpWithEmailAndPassword: SignUpWithEmailAndPassword = t('page.signUpWithEmailAndPassword', {
     returnObjects: true,
-  }) as SignUpWithEmailAndPassword;
+  });
 
   const router = useRouter();
 
@@ -129,6 +130,13 @@ const RegisterWithEmailAndPassword: React.FC = () => {
         setIsLoading(false);
         return;
       }
+      
+      if(!IsEmailValid(requesPayloadForValidEmail.email)){
+        setSignupEmailError('Email is not Valid!');
+        setIsLoading(false);
+        return;
+      }
+
       const data = await validateEmail(requesPayloadForValidEmail).unwrap();
 
       if (data) {

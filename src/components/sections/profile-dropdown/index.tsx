@@ -45,7 +45,7 @@ const ProfileDropdown: FC<Props> = ({ menuOptions, signOut }) => {
             <RedirectCard
               label={menuOptions[3].item}
               labelIcon={<ShoppingBagIcon primaryColor={theme ? '#fff' : '#000'} />}
-              linkUrl={'/'}
+              linkUrl={'/my-purchases'}
               actionIcon={<RightArrowRoundedEdge primaryColor={theme ? '#fff' : '#000'} height="11" width="7" />}
             />
 

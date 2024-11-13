@@ -20,7 +20,7 @@ type UserLoginProps = { primaryColor?: any };
 
 const UserLogin: React.FC<UserLoginProps> = ({primaryColor}) => {
   const { t } = useTranslation('common');
-  const menuOptions = t('page.menuOptions', { returnObjects: true }) as menuOptions[];
+  const menuOptions: menuOptions[] = t('page.menuOptions', { returnObjects: true });
   const userInfo = useAppSelector((state) => state.auth.userInfo);
   const [isHovered, setIsHovered] = useState(false);
 

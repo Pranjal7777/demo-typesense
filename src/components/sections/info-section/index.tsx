@@ -9,7 +9,7 @@ type InfoSectionProps = {
 
 const InfoSection = () => {
   const { t } = useTranslation('common');
-  const infoSection = t('page.infoSection', { returnObjects: true }) as InfoSectionProps[];
+  const infoSection: InfoSectionProps[] = t('page.infoSection', { returnObjects: true });
 
   const [openCard, setOpenCard] = useState(0);
 

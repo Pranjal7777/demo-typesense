@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import React from 'react';
+import React, { useState } from 'react';
 import ProductSlider from '@/components/ui/product-slider';
 import Layout from '@/components/layout';
 import ProductAttribute from '@/components/product-attribute';
@@ -18,9 +18,11 @@ import OffersIconSVG from '../../../public/assets/svg/offers-icon';
 import { useRouter } from 'next/router';
 import SimilarProductsList from '@/components/similar-products';
 import UserProductList from '@/components/user-product-list';
-import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-
+import { useAppSelector } from '@/store/utils/hooks';
+import { setCheckoutProduct } from '@/store/slices/checkout-slice';
+import { useDispatch } from 'react-redux';
+import { getChatIdentifier } from '@/helper/payment';
 export type filteredProducts = {
   userName: string;
   timeStamp: string;
@@ -44,6 +46,7 @@ type ctas = {
   firstBtn: string;
   secondBtn: string;
   nostock: string;
+  makeOfferBtn: string;
 }[];
 
 type profileCard = {
@@ -73,11 +76,10 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
   const images = apidata?.images;
   const currencyCode = apidata?.units.currency_code;
   const prodDesc = apidata?.description;
-  const likeCount = apidata?.likeCount;
   const viewCount = apidata?.viewCount;
   const offerTradeCount = apidata?.numberOfOfferCount;
   const sellerUserName = apidata?.users.username;
-  const sellerProfilePic = apidata?.users.profilepic;
+  const sellerProfilePic = apidata?.users.profilePic;
   const sellerRating = apidata?.users.totalRatingCount;
   const prodTimeStamp = apidata?.creationTs;
   const isSold = apidata?.sold;
@@ -85,11 +87,16 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
   const desc: string = productDetails('page.desc');
   const postingLabel: string = productDetails('page.postedLabel');
   const followingBtn: string = productDetails('page.follwingBtn');
-  const hamburger = productDetails('page.hamburger', { returnObjects: true }) as hamburger;
-  const engagementStats = productDetails('page.engagementStats', { returnObjects: true }) as engagementStats;
-  const ctaText = productDetails('page.prodCTA', { returnObjects: true }) as ctas;
-  const profileCard = productDetails('page.profileCard', { returnObjects: true }) as profileCard;
-  const togglePanelText = productDetails('page.toggleInfo', { returnObjects: true }) as togglePanelText;
+  const hamburger: hamburger = productDetails('page.hamburger', { returnObjects: true });
+  const engagementStats: engagementStats = productDetails('page.engagementStats', { returnObjects: true });
+  const ctaText: ctas = productDetails('page.prodCTA', { returnObjects: true });
+  const profileCard: profileCard = productDetails('page.profileCard', { returnObjects: true });
+  const togglePanelText: togglePanelText = productDetails('page.toggleInfo', { returnObjects: true });
+  const [totalLikedCount, setTotalLikeCount] = useState<number>(apidata?.likeCount || 0);
+  const { userInfo, myLocation } = useAppSelector((state: RootState) => state.auth);
+  const [isFirstButtonLoading, setIsFirstButtonLoading] = useState(false);
+  const dispatch = useDispatch();
+
   const prodDetails = apidata?.details;
   const breadcrumbSteps = [
     {
@@ -101,13 +108,12 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
       link: router.asPath,
     },
   ];
-  const likeCounts = useSelector((state: RootState) => state.product.likeCounts[assetId]) || likeCount;
 
   const EngagementStatsData = [
     {
       logo: <HartSvg color={theme ? '#fff' : '#000'} className="w-[12px] h-[12px] md:w-[16px] md:h-[16px]" />,
       label: engagementStats[0].likes,
-      value: likeCounts,
+      value: totalLikedCount,
     },
     {
       logo: <ViewsIcon color={theme ? '#fff' : '#000'} />,
@@ -123,7 +129,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
   const ToggleInfo = [
     {
       label: togglePanelText[0].toggleOne,
-      content: <UserProductList accoundId={sellerAccountId} page='1' />,
+      content: <UserProductList accoundId={sellerAccountId} page="1" />,
     },
     {
       label: togglePanelText[0].toggleTwo,
@@ -131,7 +137,32 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
     },
   ];
 
-  
+  const handleFirstButtonClick = async () => {
+    if (!userInfo) router.push('/login');
+    if (data.result.isNegotiable) return;
+    try {
+      setIsFirstButtonLoading(true);
+      let payload = {
+        sellerId: sellerAccountId!,
+        assetId: assetId!,
+        buyerId: userInfo?.accountId!,
+        isExchange: false,
+        userLocation: myLocation,
+      };
+      const chatIdentifier = await getChatIdentifier(payload);
+      if (data) {
+        dispatch(setCheckoutProduct(data.result));
+      }
+      await router.push(
+        `/buy/select-address?assetId=${assetId}&sellerId=${sellerAccountId}&chatId=${chatIdentifier.data.chatId}`
+      );
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsFirstButtonLoading(false);
+    }
+  };
+
   return (
     <Layout stickyHeader={true} stickyHeroSection={true}>
       <div className="mt-10 md:mt-5">
@@ -142,7 +173,14 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
         {/* first section box start */}
         <div className="flex gap-8 mobile:gap-2 w-full xl:h-[576px] lg:h-[530px] md:h-full sm:h-[400px] flex-col lg:flex-row overflow-y-scroll">
           <div className=" h-full w-full lg:w-[60%]">
-            <ProductSlider className="" imagesArray={images} shareURL={shareLink} shareTitle={prodTitle} />
+            <ProductSlider
+              className=""
+              setTotalLikeCount={setTotalLikeCount}
+              imagesArray={images}
+              shareURL={shareLink}
+              shareTitle={prodTitle}
+              isProductLiked={apidata.isLiked}
+            />
             <div className="lg:mt-5 md:mt-3 sm:mt-2 flex items-end justify-between mobile:hidden"></div>
           </div>
 
@@ -159,10 +197,12 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
                 />
                 <div className="mobile:hidden">
                   <PdpCta
-                    firstButtonText={ctaText[0].firstBtn}
+                    firstButtonText={data.result?.isNegotiable ? ctaText[0].makeOfferBtn : ctaText[0].firstBtn}
                     isSold={isSold}
                     secondButtonText={ctaText[0].secondBtn}
                     noStockButtonText={ctaText[0].nostock}
+                    handleFirstButtonClick={handleFirstButtonClick}
+                    isFirstButtonLoading={isFirstButtonLoading}
                   />
                 </div>
                 <EngagementStats data={EngagementStatsData} />
@@ -177,6 +217,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
                   label={profileCard[0].label}
                   unfollowLabel={followingBtn}
                   accoundId={sellerAccountId}
+                  isFollow={apidata?.isFollow}
                 />
               </div>
               <div className="mt-5">
@@ -201,10 +242,12 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
       {/* sticky button for mobile screen start */}
       <div className=" px-2 z-10 sm:hidden flex items-center justify-between h-[76px] w-full fixed bottom-0 right-0 left-0 bg-bg-secondary-light dark:bg-bg-secondary-dark">
         <PdpCta
-          firstButtonText={ctaText[0].firstBtn}
+          firstButtonText={data.result?.isNegotiable ? ctaText[0].makeOfferBtn : ctaText[0].firstBtn}
           isSold={isSold}
           secondButtonText={ctaText[0].secondBtn}
           noStockButtonText={ctaText[0].nostock}
+          handleFirstButtonClick={handleFirstButtonClick}
+          isFirstButtonLoading={isFirstButtonLoading}
         />
       </div>
       {/* sticky button for mobile screen end */}

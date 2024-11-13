@@ -19,7 +19,7 @@ export type ForgotPasswordLinkSent = {
 
 const ResetPasswordLinkSent = () => {
   const { t } = useTranslation('auth');
-  const ForgotPasswordLinkSent = t('page.forgotPasswordLinkSent', { returnObjects: true }) as ForgotPasswordLinkSent;
+  const ForgotPasswordLinkSent:ForgotPasswordLinkSent= t('page.forgotPasswordLinkSent',{returnObjects:true});
 
   const router=useRouter();
   const message = localStorage.getItem('forgotPasswordMessage');

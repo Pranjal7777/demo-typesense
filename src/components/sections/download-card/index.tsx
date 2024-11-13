@@ -16,7 +16,7 @@ type AppDownloadSection={
 
 const DownloadCard: React.FC = () => {
   const { t } = useTranslation('common');
-  const appDownloadSection = t('page.appDownloadSection', { returnObjects: true }) as AppDownloadSection;
+  const appDownloadSection:AppDownloadSection = t('page.appDownloadSection', { returnObjects: true });
 
   return (
     <div className=" w-screen mobile:h-fit  md:h-[539px] bg-gradient-to-b from-gradient-color-from to-gradient-color-to">

@@ -19,11 +19,11 @@ import authApi from '@/store/api-slices/auth';
 import { generateDeviceId } from '@/helper/generate-device-id';
 import platform from 'platform';
 import { useActions } from '@/store/utils/hooks';
-import { useDebounce } from '@/hooks/use-debounce';
 import { SIGN_IN_PAGE, SIGN_UP_PAGE } from '@/routes';
 import SignupLink from '@/components/ui/signup-link';
 import Link from 'next/link';
-import { parsePhoneNumber } from 'awesome-phonenumber';
+import validatePhoneNumber from '@/helper/validation/phone-number-validation';
+import { PHONE_NUMBER, PHONE_NUMBER_INVALID_MESSAGE, USER_NAME } from '@/constants/texts';
 
 export type CompleteSignUp = {
   completeRegistration: string;
@@ -49,15 +49,11 @@ export type CompleteSignUp = {
 
 const RegistrationDetails: React.FC = () => {
   const { t } = useTranslation('auth');
-  const CompleteSignUp = t('page.completeSignUp', { returnObjects: true }) as CompleteSignUp;
+  const CompleteSignUp: CompleteSignUp = t('page.completeSignUp', { returnObjects: true });
   const router = useRouter();
 
   const [isIndividualOrCompany, setIsIndividualOrCompany] = useState(true);
   const [inviteReferralCode, setInViteReferralCode] = useState('');
-  const [phoneNumberError, setPhoneNumberError] = useState('');
-
-  const [isFilled, setIsFilled] = useState(false);
-
   const { setOtpVerificationDetailsDispatch } = useActions();
   const [errorState, setErrorState] = useState({
     firstName: '',
@@ -94,94 +90,81 @@ const RegistrationDetails: React.FC = () => {
 
   const [sendVerificationCode] = authApi.useSendVerificationCodeMutation();
   const [phoneNumberValidation] = authApi.useValidatePhoneNumberMutation();
+  const [validateUserName] = authApi.useValidateUserNameMutation();
   const [isLoading, setIsLoading] = useState(false);
-  const debouncedPhoneNumber = useDebounce(
-    {
-      countryCode: individualData.countryCode || companyData.countryCode,
-      phoneNumber: individualData.phoneNumber || companyData.phoneNumber,
-    },
-    500
-  );
 
   useEffect(() => {
-    //to remove timer from localstorage if the user backs from the screen
-    localStorage.removeItem('timer');
-    const checkPhoneNumberValidity = async (value: OtpData) => {
-      if (value.countryCode || value.phoneNumber) {
-        try {
-          const requesPayloadForValidPhoneNumber = {
-            countryCode: value.countryCode,
-            phoneNumber: value.phoneNumber,
-          };
-          // Make your API call here to check email validity
-          const data = await phoneNumberValidation(requesPayloadForValidPhoneNumber).unwrap();
+    setErrorState({
+      firstName: '',
+      lastName: '',
+      username: '',
+      phoneNumber: '',
+      country: '',
+      companyName: '',
+      email: '',
+    });
+  }, [isIndividualOrCompany]);
 
-          if (data) {
-            setPhoneNumberError('');
-          }
-        } catch (e) {
-          const error = e as { data: { message: string } };
-          if (error.data && error.data.message) {
-            setPhoneNumberError(error.data.message);
-          } else {
-            console.error('Unexpected error:', error);
-          }
-        }
-      }
-    };
+  useEffect(() => {
+    if (individualData.firstName && individualData.lastName) {
+      const firstAndLastNameStr = individualData.firstName.substring(0, 3) + individualData.lastName.substring(0, 3);
+      const lastFourDigit = Math.floor(1000 + Math.random() * 9000);
+      const newUsername = `${firstAndLastNameStr}${lastFourDigit}`;
+      setIndividualData({ ...individualData, username: newUsername });
+      setErrorState((prevState) => ({ ...prevState, username:'' }));
+    }
+  }, [individualData.firstName, individualData.lastName]);
 
-    const fetchPhoneValidity = async () => {
-      if (debouncedPhoneNumber) {
-        await checkPhoneNumberValidity(debouncedPhoneNumber);
-      }
-    };
-
-    fetchPhoneValidity();
-  }, [debouncedPhoneNumber, phoneNumberValidation]);
-
-  // const [isError,setIsError]=useState(false)
+  useEffect(() => {
+    if (companyData.companyName) {
+      const companyNameInLowerCase = companyData.companyName.replace(/\s+/g, '').toLowerCase();
+      const lastFourDigit = Math.floor(1000 + Math.random() * 9000);
+      const newUsername = `${companyNameInLowerCase}${lastFourDigit}`;
+      setCompanyData({ ...companyData, username: newUsername });
+      setErrorState((prevState) => ({ ...prevState, username:'' }));
+    }
+  }, [companyData.companyName]);
 
   const onIndividualChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    if (name in errorState) {
-      // If it matches, update the errorState with an empty string
-      setErrorState((prevState) => ({ ...prevState, [name]: '' }));
-    }
-    // Check if the value contains any special characters, numbers, or spaces
     if (name === 'firstName' || name === 'lastName') {
-      // Check if the value contains any special characters, numbers, or spaces
       if (/[^a-zA-Z]/.test(value)) {
-        // If it does, don't update the state
         return;
       }
+    }
+    if (name in errorState) {
+      setErrorState((prevState) => ({
+        ...prevState,
+        [name]: value.trim() == '' ? `${name == 'phoneNumber' ? 'Phone Number' : name} is missing` : '',
+      }));
     }
     setIndividualData({ ...individualData, [name]: value });
   };
 
   const onCompanyChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    if (name in errorState) {
-      // If it matches, update the errorState with an empty string
-      setErrorState((prevState) => ({ ...prevState, [name]: '' }));
-    }
-    // Check if the value contains any special characters, numbers, or spaces
     if (name === 'firstName' || name === 'lastName') {
-      // Check if the value contains any special characters, numbers, or spaces
       if (/[^a-zA-Z]/.test(value)) {
-        // If it does, don't update the state
         return;
       }
+    }
+    if (name in errorState) {
+      setErrorState((prevState) => ({ ...prevState, [name]: value.trim() == '' ? `${name} is missing` : '' }));
     }
     setCompanyData({ ...companyData, [name]: value });
   };
 
   const onPhoneChange = (value: string, data: { dialCode: string; name: string }) => {
-    setErrorState({ ...errorState, ['phoneNumber']: '' });
-
     const country = data.name;
     const countryCode = '+' + data.dialCode;
     const realPhone = value;
     const phoneNumber = realPhone.substring(countryCode.length - 1);
+    const isPhoneValid = validatePhoneNumber(`${countryCode}${phoneNumber}`);
+    if (!isPhoneValid) {
+      setErrorState((prevState) => ({ ...prevState, phoneNumber: PHONE_NUMBER_INVALID_MESSAGE }));
+    } else {
+      setErrorState((prevState) => ({ ...prevState, phoneNumber: '' }));
+    }
     if (isIndividualOrCompany) {
       setIndividualData({ ...individualData, countryCode, phoneNumber, country });
     } else {
@@ -208,26 +191,13 @@ const RegistrationDetails: React.FC = () => {
     }
   }, [individualData.country, companyData.country]);
 
-  useEffect(() => {
-    if (individualData.phoneNumber.length === 10 || companyData.phoneNumber.length === 10) {
-      const dataToCheck = isIndividualOrCompany ? individualData : companyData;
-      const isDataFilled = Object.values(dataToCheck).every((value) => value);
-      setIsFilled(isDataFilled);
-    } else {
-      setIsFilled(false);
-    }
-  }, [individualData, companyData]);
-
   const handleSubmit = () => {
     if (isIndividualOrCompany) {
       //company
       const email = localStorage.getItem('email');
-      // const password = localStorage.getItem("password")
-
       const reqPayloadForLogin: RequestPayloadForSignUp = {
         ...individualData,
         email,
-        // password,
         ...(inviteReferralCode && { inviteReferralCode }),
         deviceId: generateDeviceId(),
         deviceMake: platform.name,
@@ -244,11 +214,9 @@ const RegistrationDetails: React.FC = () => {
     } else {
       //individual
       const email = localStorage.getItem('email');
-      // const password = localStorage.getItem("password")
       const reqPayloadForLogin: RequestPayloadForSignUp = {
         ...companyData,
         email,
-        // password,
         ...(inviteReferralCode && { inviteReferralCode }),
         deviceId: generateDeviceId(),
         deviceMake: platform.name,
@@ -266,34 +234,141 @@ const RegistrationDetails: React.FC = () => {
   };
 
   const handleSubmitForVerification = async () => {
-    //code to show the empty box errors
     if (isIndividualOrCompany) {
+      // validation of individual form Data start
       const individualValues = Object.entries(individualData);
+      let isMissing = false;
       let isError = false;
       for (const [key, value] of individualValues) {
-        setErrorState((prevState) => ({ ...prevState, [key]: value.trim() === '' }));
-        if(key in errorState && value.trim()==''){
+        if (key in errorState && value.trim() == '') {
+          setErrorState((prevState) => ({
+            ...prevState,
+            [key]: value.trim() === '' && `${key == 'phoneNumber' ? PHONE_NUMBER : key == 'username' ? USER_NAME :key} is missing`,
+          }));
+          isMissing = true;
+        }
+      }
+      if(isMissing){
+        return;
+      }
+
+         if(individualData.username){
+          try {
+            setIsLoading(true);
+            const data = await validateUserName(individualData.username).unwrap();
+            setIsLoading(false);
+            if (data) {
+              setErrorState((prevState) => ({ ...prevState, username: '' }));
+            }
+          } catch (e) {
+            setIsLoading(false);
+            const error = e as { data: { message: string } };
+            if (error.data && error.data.message) {
+              setErrorState((prevState) => ({ ...prevState, username: `${error.data.message}` }));
+            } else {
+              setErrorState((prevState) => ({ ...prevState, username: `Unexpected error` }));
+            }
+            isError = true;
+          }   
+        }
+        
+        if(individualData.phoneNumber){
+          const isPhoneValid = validatePhoneNumber(`${individualData.countryCode}${individualData.phoneNumber}`);
+          if (isPhoneValid) {
+            try {
+              const requesPayloadForValidPhoneNumber = {
+                countryCode: individualData.countryCode,
+                phoneNumber: individualData.phoneNumber,
+              };
+              const data = await phoneNumberValidation(requesPayloadForValidPhoneNumber).unwrap();
+              setIsLoading(false);
+              if (data) {
+                setErrorState((prevState) => ({ ...prevState, phoneNumber: '' }));
+              }
+            } catch (e) {
+              setIsLoading(false);
+              const error = e as { data: { message: string } };
+              if (error.data && error.data.message) {
+                setErrorState((prevState) => ({ ...prevState, phoneNumber: `${error.data.message}` }));
+              } else {
+                setErrorState((prevState) => ({ ...prevState, phoneNumber: `Unexpected error` }));
+              }
+              isError=true;
+            }
+          } else {
+            setIsLoading(false);
+            setErrorState((prevState) => ({ ...prevState, phoneNumber: PHONE_NUMBER_INVALID_MESSAGE }));
+            isError = true;
+          }
+        }
+      if (isError) {
+        return;
+      }  
+      // validation of individual form Data end
+    } else {
+      // validation of company form Data start
+      const companyValues = Object.entries(companyData);
+      let isError = false;
+      let isMissing = false;
+      for (const [key, value] of companyValues) {
+        if (key in errorState && value.trim() == '') {
+          setErrorState((prevState) => ({ ...prevState, [key]: value.trim() === '' && `${key == 'phoneNumber' ? PHONE_NUMBER : key == 'username'? USER_NAME : key} is missing` }));
+          isMissing = true;
+        }       
+      }
+      if (isMissing) {
+        return;
+      }
+       if(companyData.username){
+        try {
+          setIsLoading(true);
+          const data = await validateUserName(companyData.username).unwrap();
+          setIsLoading(false);
+          if (data) {
+            setErrorState((prevState) => ({ ...prevState, username: '' }));
+          }
+        } catch (e) {
+          setIsLoading(false);
+          const error = e as { data: { message: string } };
+          if (error.data && error.data.message) {
+            setErrorState((prevState) => ({ ...prevState, username: `${error.data.message}` }));
+          } else {
+            setErrorState((prevState) => ({ ...prevState, username: `Unexpected error` }));
+          }
           isError = true;
         }
       }
-      const pn = parsePhoneNumber(`${individualData.countryCode}${individualData.phoneNumber}`);
-      if(isError){
-        return;
-      }    
-      if (!pn.valid ) {
-        setPhoneNumberError('Phone number is not valid!');
-        return;
-      }
-    } else {
-      const companyValues = Object.entries(companyData);
-      for (const [key, value] of companyValues) {
-        setErrorState((prevState) => ({ ...prevState, [key]: value === '' }));
-      }
-    }
 
-    if (phoneNumberError) {
-      setErrorState((prevState) => ({ ...prevState, [phoneNumberError]: phoneNumberError }));
-      return;
+       if(companyData.phoneNumber){
+        const isPhoneValid = validatePhoneNumber(`${companyData.countryCode}${companyData.phoneNumber}`);
+        if (isPhoneValid) {
+          setIsLoading(true);
+          try {
+            const requesPayloadForValidPhoneNumber = {
+              countryCode: companyData.countryCode,
+              phoneNumber: companyData.phoneNumber,
+            };
+            const data = await phoneNumberValidation(requesPayloadForValidPhoneNumber).unwrap();
+            setIsLoading(false);
+            if (data) {
+              setErrorState((prevState) => ({ ...prevState, phoneNumber: '' }));
+            }
+          } catch (e) {
+            setIsLoading(false);
+            const error = e as { data: { message: string } };
+            if (error.data && error.data.message) {
+              setErrorState((prevState) => ({ ...prevState, phoneNumber: `${error.data.message}` }));
+            } else {
+              setErrorState((prevState) => ({ ...prevState, phoneNumber: `Unexpected error` }));
+            }
+            return;
+          }
+        } else {
+          setErrorState((prevState) => ({ ...prevState, phoneNumber: PHONE_NUMBER_INVALID_MESSAGE }));
+          return;
+        }
+      }
+      // validation of company form Data end
     }
 
     if (isIndividualOrCompany) {
@@ -328,17 +403,6 @@ const RegistrationDetails: React.FC = () => {
         setIsLoading(false);
       }
     } else {
-      const pn = parsePhoneNumber(`${companyData.countryCode}${companyData.phoneNumber}`);
-      if (!pn.valid) {
-        setPhoneNumberError('Phone number is not Valid!');
-        return;
-      }
-
-      if (phoneNumberError) {
-        setErrorState((prevState) => ({ ...prevState, [phoneNumberError]: phoneNumberError }));
-        return;
-      }
-
       const companyValues = Object.values(companyData);
       if (companyValues.some((value) => value === '')) {
         return;
@@ -371,10 +435,7 @@ const RegistrationDetails: React.FC = () => {
   };
 
   useEffect(() => {
-    // const storeData = JSON.parse(localStorage.getItem("googleUser"));
-
     const storeData = localStorage.getItem('googleUser');
-
     if (storeData) {
       setIndividualData({
         ...individualData,
@@ -405,7 +466,6 @@ const RegistrationDetails: React.FC = () => {
   }, [router]);
 
   return (
-    // <div className=' mobile:w-full overflow-y-scroll lg:w-[40%] sm:w-full px-10 py-7 !pt-[60px] w-[40%] flex flex-col items-center justify-between'>
     <>
       <div className=" mobile:px-4 sm:max-w-[408px] w-full mobile:w-full flex flex-col items-center justify-start">
         <div className="w-full h-[13vh] flex flex-col gap-y-2 items-center">
@@ -441,7 +501,7 @@ const RegistrationDetails: React.FC = () => {
           {isIndividualOrCompany ? (
             <>
               <FormInput
-                placeholder='Enter your First Name'
+                placeholder="Enter your First Name"
                 required={true}
                 label={CompleteSignUp.firstNamePlaceholder}
                 error={errorState.firstName && 'First Name is missing'}
@@ -452,7 +512,7 @@ const RegistrationDetails: React.FC = () => {
               />
 
               <FormInput
-                placeholder='Enter your Last Name'
+                placeholder="Enter your Last Name"
                 required={true}
                 label={CompleteSignUp.lastNamePlaceholder}
                 error={errorState.lastName && 'Last Name is missing'}
@@ -463,10 +523,10 @@ const RegistrationDetails: React.FC = () => {
               />
 
               <FormInput
-                placeholder='Enter Account Name' 
+                placeholder="Enter Account Name"
                 required
                 label={CompleteSignUp.accountNamePlaceholder}
-                error={errorState.username && 'Account Name is missing'}
+                error={errorState.username}
                 type="text"
                 name="username"
                 value={individualData.username}
@@ -474,7 +534,7 @@ const RegistrationDetails: React.FC = () => {
               />
 
               <FormInput
-                placeholder='Enter your Email'
+                placeholder="Enter your Email"
                 required
                 label={CompleteSignUp.emailPlaceholder}
                 error={errorState.email && 'Email is missing'}
@@ -483,13 +543,11 @@ const RegistrationDetails: React.FC = () => {
                 value={individualData.email}
                 onChange={(e) => onIndividualChange(e)}
               />
-
-              {/* <FormInput label={CompleteSignUp.phonePlaceholder} type="number" name="phoneNumber" value={individualData.phoneNumber} onChange={(e)=>onIndividualChange(e)}/> */}
               <PhoneNumberInput
                 country="in"
                 required
                 label={CompleteSignUp.phonePlaceholder}
-                error={phoneNumberError ? phoneNumberError : errorState.phoneNumber && 'Phone Number is missing'}
+                error={errorState.phoneNumber}
                 onChange={onPhoneChange}
               />
 
@@ -498,7 +556,6 @@ const RegistrationDetails: React.FC = () => {
                 label="Country"
                 options={countries.data}
                 selectedValue={individualData.country}
-                // onSelect={setSelectedCountry}
                 onSelect={onIndividualChange}
                 id="country-selector"
                 name="country"
@@ -516,7 +573,7 @@ const RegistrationDetails: React.FC = () => {
           ) : (
             <>
               <FormInput
-                placeholder='Enter your First Name'
+                placeholder="Enter your First Name"
                 required={true}
                 label={CompleteSignUp.companyOptionFirstNamePlaceholder}
                 error={errorState.firstName && 'First Name is missing'}
@@ -527,7 +584,7 @@ const RegistrationDetails: React.FC = () => {
               />
 
               <FormInput
-                placeholder='Enter your Last Name'
+                placeholder="Enter your Last Name"
                 required={true}
                 label={CompleteSignUp.companyOptionLastNamePlaceholder}
                 error={errorState.lastName && 'Last Name is missing'}
@@ -538,7 +595,7 @@ const RegistrationDetails: React.FC = () => {
               />
 
               <FormInput
-                placeholder='Enter Company Name'
+                placeholder="Enter Company Name"
                 required={true}
                 label={CompleteSignUp.companyOptionCompanyPlaceholder}
                 error={errorState.companyName && 'Company Name is missing'}
@@ -549,10 +606,10 @@ const RegistrationDetails: React.FC = () => {
               />
 
               <FormInput
-                placeholder='Enter Account Name'
+                placeholder="Enter Account Name"
                 required={true}
                 label={CompleteSignUp.companyOptionAccountNamePlaceholder}
-                error={errorState.username && 'Account Name is missing'}
+                error={errorState.username}
                 type="text"
                 name="username"
                 value={companyData.username}
@@ -560,7 +617,7 @@ const RegistrationDetails: React.FC = () => {
               />
 
               <FormInput
-                placeholder='Enter your Email'
+                placeholder="Enter your Email"
                 required={true}
                 label={CompleteSignUp.emailPlaceholder}
                 error={errorState.email && 'Email is missing'}
@@ -574,7 +631,7 @@ const RegistrationDetails: React.FC = () => {
                 country="in"
                 required={true}
                 label={CompleteSignUp.phonePlaceholder}
-                error={phoneNumberError ? phoneNumberError : errorState.phoneNumber && 'Phone Number is missing'}
+                error={errorState.phoneNumber}
                 onChange={onPhoneChange}
               />
 
@@ -583,7 +640,6 @@ const RegistrationDetails: React.FC = () => {
                 label="Country"
                 options={countries.data}
                 selectedValue={companyData.country}
-                // onSelect={setSelectedCountry}
                 onSelect={onCompanyChange}
                 id="country-selector"
                 name="country"
@@ -611,8 +667,7 @@ const RegistrationDetails: React.FC = () => {
           </span>
           <Button
             isLoading={isLoading}
-            className={`bg-bg-tertiary-light mt-4 dark:bg-bg-undenary-dark text-sm font-semibold !text-[#888888] ${
-              isFilled && '!text-text-tertiary-color !bg-brand-color'
+            className={`text-sm font-semibold !text-text-tertiary-color !bg-brand-color
             }`}
             buttonType="primary"
             onClick={() => handleSubmitForVerification()}

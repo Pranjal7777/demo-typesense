@@ -18,7 +18,7 @@ const InfoBox: React.FC<InfoBoxProps> = ({ question, answer, width }) => {
         <div className="mobile:mt-2 mobile:text-sm lg:mt-5 sm:mt-1 text-text-octonary-light dark:text-text-tertiary-dark">
           <span className={`transition-height duration-300 ease-in-out ${isExpanded ? 'max-h-screen' : 'max-h-12'}`}>
             <span className="transition-all duration-300 ease-in text-sm md:text-base">
-              {isExpanded ? answer : `${answer?.substring(0, 300).trim()}...`}
+              {answer.length > 300 ? (isExpanded ? answer : `${answer?.substring(0, 300).trim()}...`) : answer}
               {answer?.length > 300 && (
                 <span
                   className="text-text-primary-light dark:text-text-quinary-dark font-bold hover:underline hover:cursor-pointer"

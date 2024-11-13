@@ -42,7 +42,7 @@ const AddressCards: FC<Props> = ({
           keyDownHandler(e, clickEvent);
         }}
         onClick={clickEvent}
-        className="hidden cursor-pointer dark:bg-bg-primary-dark border border-[#DBDBDB]  dark:border-[#3D3B45] min-h-[137px]  sm:flex justify-center items-center text-[16px] font-[600]  dark:text-text-secondary-light  w-[100%] p-[9px] max-h-fit rounded-[8px] max-w-[427px]  min-w-[320px] md:min-w-[289px] lg:min-w-fit"
+        className="hidden cursor-pointer dark:bg-bg-primary-dark border border-[#DBDBDB]  dark:border-[#3D3B45] min-h-[137px] md:min-h-full  sm:flex justify-center items-center text-[16px] font-[600]  dark:text-text-secondary-light  w-[100%] p-[9px] max-h-fit rounded-[8px] max-w-[427px]  min-w-[320px] md:min-w-[289px] lg:min-w-fit"
       >
         + Add New Address
       </div>

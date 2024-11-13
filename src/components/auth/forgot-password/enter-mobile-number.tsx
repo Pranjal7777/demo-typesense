@@ -16,7 +16,7 @@ export type ForgotPasswordWithPhone = {
 
 const EnterMobileNumber = () => {
   const { t } = useTranslation('auth');
-  const ForgotPasswordWithPhone = t('page.forgotPasswordWithPhone', { returnObjects: true }) as ForgotPasswordWithPhone;
+  const ForgotPasswordWithPhone:ForgotPasswordWithPhone= t('page.forgotPasswordWithPhone',{returnObjects:true});
 
   const router=useRouter();
   const [phoneNumber,setPhoneNumber]=useState('');

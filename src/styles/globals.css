@@ -28,6 +28,16 @@
   --icon-secondary-light :#E9E9E9;
 
   --brand-color:#6d3ec1;
+  --bg-primary-dark: #1A1A1A;
+  --bg-secondary-dark: #242424;
+  --border-tertiary-light: #DBDBDB;
+  --border-dark:#3D3B45;
+  --border-light:#DBDBDB;
+  --text-secondary-dark:#242424;
+  --text-secondary-light:#f0f0f0;
+  --text-light:#929293;
+  --bg-light:#e2e8f0;
+
 }
 
 @media (prefers-color-scheme: dark) {
@@ -104,6 +114,37 @@ input::-webkit-inner-spin-button {
 .slider::-moz-range-thumb {
   background: #74AA6D;
 } */
+
+/* default radio button appearance */
+input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #333; /* Border color */
+  border-radius: 50%; /* Makes it round */
+  position: relative;
+  cursor: pointer;
+}
+
+/* radio button dot with :checked and ::before */
+input[type="radio"]::before {
+  content: '';
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: transparent;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: background-color 0.3s ease;
+}
+
+/* When checked */
+input[type="radio"]:checked::before {
+  background-color: var(--brand-color);
+}
 
 
 /* components PhoneNumberInput styles starts */

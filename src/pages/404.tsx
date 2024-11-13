@@ -20,7 +20,7 @@ type NotFound={
 const PageNotFound = () => {
 
   const { t } = useTranslation('notFound');
-  const notFound = t('page',{returnObjects:true}) as NotFound;
+  const notFound:NotFound= t('page',{returnObjects:true});
 
   return (
 

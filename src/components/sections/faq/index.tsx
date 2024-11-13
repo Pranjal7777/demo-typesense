@@ -14,7 +14,7 @@ interface FaqSection{
 
 const FAQ = () => {
   const { t } = useTranslation('common');
-  const faqSection = t('page.faqSection',{returnObjects:true}) as FaqSection;
+  const faqSection:FaqSection= t('page.faqSection',{returnObjects:true});
 
   const [openCard,setOpenCard]=useState<number>(0);
 

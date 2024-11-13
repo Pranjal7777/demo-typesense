@@ -8,6 +8,7 @@ const config: Config = {
     './src/containers/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
     './src/*.{js,ts,jsx,tsx,mdx}',
+    './public/assets/svg/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     screens: {
@@ -121,6 +122,7 @@ const config: Config = {
         'btn-tertiary-light': '#FFFFFF',
         'btn-quaternary-light': '#008F79',
         'btn-quinary-light': '#016F5E',
+        'btn-bg-primary-light': '#6D3EC1',
         //-------------------------------------
         'btn-primary-dark': '',
         'btn-secondary-dark': '',

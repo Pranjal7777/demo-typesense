@@ -1,13 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { rootApi } from './api-slices/root-api';
 import {authSlice} from './slices/auth-slice';
-import productSlice from './slices/product-detaill-slice';
-// import { setupListeners } from '@reduxjs/toolkit/query';
+import checkoutSlice from './slices/checkout-slice';
 
 const rootReducer = {
   auth: authSlice.reducer,
   [rootApi.reducerPath]: rootApi.reducer,
-  product: productSlice.reducer
+  checkout: checkoutSlice.reducer,
 };
 
 const store = configureStore({

@@ -35,7 +35,7 @@ const EnterAddressHeader: FC<Props> = ({
         </div>
       ) : null}
 
-      <h1 className="text-[18px] md:text-[20px] leading-[28px] md:leading-[30px] font-semibold">{children}</h1>
+      <h1 className="text-[18px] md:text-[20px] leading-[28px] md:leading-[30px] font-semibold mobile:!text-xl ">{children}</h1>
       {theme ? (
         <CloseIcon
           onClick={clickEvent}

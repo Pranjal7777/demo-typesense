@@ -11,16 +11,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store';
 import FullScreenSpinner from '../full-screen-spinner';
 import { toast } from 'sonner';
-import { toggleLike } from '@/store/slices/product-detaill-slice';
+// import { setLikeCount, toggleLike } from '@/store/slices/product-detaill-slice';
 
 export type Props = {
   imagesArray: { url: string; type: string; thumbnailURL: string }[];
   className: string;
   shareURL: string;
   shareTitle?: string;
+  isProductLiked: boolean;
+  setTotalLikeCount:React.Dispatch<React.SetStateAction<number>>;
 };
 
-const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shareTitle }) => {
+const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shareTitle, isProductLiked, setTotalLikeCount }) => {
   const route = useRouter();
   const { id } = route.query;
   const [likeAndDislikeProduct] = productsApi.useLikeAndDislikeProductMutation();
@@ -35,6 +37,8 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
   const router = useRouter();
   const isLoggedIn = getCookie('isUserAuth');
   const [showVideo, setShowVideo] = useState(false);
+  const [isLiked, setIsLiked] = useState(isProductLiked)
+  
   // Handlers for next and previous buttons
   const btnPressPrev = () => {
     setCurrentImageIndex((prevIndex) => {
@@ -118,14 +122,21 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
   const handleLike = async () => {
     if (isLoggedIn) {
       setIsLoading(true);
-      const newLikeState = !isLiked;
+      // const newLikeState = !isLiked;
       try {
         if (typeof userID === 'string' && typeof id === 'string') {
           const userId: string = userID;
           const assetId: string = id;
-          const result = await likeAndDislikeProduct({ assetid: assetId, like: newLikeState, userId }).unwrap();
+          const result = await likeAndDislikeProduct({ assetid: assetId, like: !isLiked, userId }).unwrap();
           toast.success(result.message);
-          dispatch(toggleLike({ productId: assetId, isLiked: newLikeState }));
+          // dispatch(toggleLike({ productId: assetId, isLiked: newLikeState }));
+          setIsLiked((prev)=>!prev)
+          if(isLiked){
+            setTotalLikeCount((prev)=>prev - 1)
+          }
+          else{
+            setTotalLikeCount((prev)=>prev + 1)
+          }
         } else {
           console.error(userID + 'or' + id + 'is not string');
         }
@@ -157,9 +168,6 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
     playVideo(currentImageIndex);
   };
   const [videoSrc, setVideoSrc] = useState<string>('');
-
-  const isLiked = useSelector((state: RootState) => state.product.likedProducts[id as string]);
-  const dispatch = useDispatch<AppDispatch>();
 
   return (
     <>

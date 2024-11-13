@@ -154,5 +154,11 @@ export const authApi = rootApi.injectEndpoints({
         body: data,
       }),
     }),
+    validateUserName: builder.mutation<ResponseValidVerificationCodePayload,string>({
+      query: (userName) => ({
+        url: `${AUTH_URL_V1}/userName?username=${userName}&trigger=1`,
+        method: 'POST',
+      }),
+    }),
   }),
 });

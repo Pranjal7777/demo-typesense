@@ -3,14 +3,17 @@ import Button, { BUTTON_TYPE_CLASSES } from '../button';
 import Rating from '../rating';
 import React, { useState, useCallback } from 'react';
 import PopUpCard from '../popup-card';
-import ImageContainer from '../image-container';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import { sellerProfileApi } from '@/store/api-slices/seller-profile/seller-profile-api'; // Import the API slice
 import FullScreenSpinner from '../full-screen-spinner'; // Import the spinner component
-import { toast } from 'sonner';
 import { getCookie } from '@/utils/cookies';
 import { useRouter } from 'next/router';
+import showToast from '@/helper/show-toaster';
+import { AddressErrorType } from '@/store/types/profile-type';
+import UserPlaceholderIcon from '../../../../public/assets/svg/user-placeholder-icon';
+import Image from 'next/image';
+import { STATIC_IMAGE_URL } from '@/config';
 
 type SellerProfileCardProps = {
   sellerName: string;
@@ -22,6 +25,7 @@ type SellerProfileCardProps = {
   label: string;
   unfollowLabel?: string;
   accoundId: string;
+  isFollow: boolean;
 };
 
 const ProfileCard: React.FC<SellerProfileCardProps> = ({
@@ -34,10 +38,12 @@ const ProfileCard: React.FC<SellerProfileCardProps> = ({
   label,
   unfollowLabel,
   accoundId,
+  isFollow,
 }) => {
-  const [isFollowed, setIsFollowed] = useState(false);
+  
+  const [isFollowed, setIsFollowed] = useState(isFollow);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { t: productDetails } = useTranslation('productDetails');
   const unfollowBtnText: string = productDetails('page.unfollowBtn');
@@ -48,25 +54,27 @@ const ProfileCard: React.FC<SellerProfileCardProps> = ({
   const [postUnFollow] = sellerProfileApi.usePostUnFollowMutation();
   const isUserAuth = getCookie('isUserAuth');
   const handleButtonClick = useCallback(async () => {
-    if(!isUserAuth) {
+    if (!isUserAuth) {
       router.push('/login');
       return;
     }
-
-
-    if (isFollowed) {
-      setIsPopupOpen(true);
-    } else {
-      setIsLoading(true);
-      try {
-        await postFollow(accoundId);
+    try {
+      if (!isFollowed) {
+        setIsLoading(true);
+        await postFollow(accoundId).unwrap();
         setIsFollowed(true);
-        toast.success(`You have successfully followed ${sellerName}!`);
-      } catch (error) {
-        toast.error('Failed to follow. Please try again.');
-      } finally {
-        setIsLoading(false);
+        showToast({ message: `You have successfully followed ${sellerName || ''}` });
+      } else {
+        setIsPopupOpen(true);
       }
+    } catch (error) {
+      const Error = error as AddressErrorType;
+      showToast({
+        message: `${Error?.data?.message || 'Something went wrong please try after sometime'}`,
+        messageType: 'error',
+      });
+    } finally {
+      setIsLoading(false);
     }
   }, [isFollowed, accoundId, postFollow]);
 
@@ -77,10 +85,12 @@ const ProfileCard: React.FC<SellerProfileCardProps> = ({
   const handleUnfollow = async () => {
     setIsLoading(true);
     try {
-      await postUnFollow(accoundId);
+      await postUnFollow(accoundId).unwrap();
+      showToast({ message: `You are no longer following ${sellerName || ''}` });
       setIsFollowed(false);
     } catch (error) {
-      console.error('Error unfollowing:', error);
+      const Error = error as AddressErrorType;
+      showToast({ message: `${Error?.data?.message || 'Something went wrong'}`, messageType: 'error' });
     } finally {
       setIsLoading(false);
       setIsPopupOpen(false);
@@ -88,17 +98,23 @@ const ProfileCard: React.FC<SellerProfileCardProps> = ({
   };
 
   return (
-    <div className={`p-5 mt-5 rounded-[4px] bg-bg-quinquedenary-light dark:bg-bg-quinquedenary-dark flex justify-between w-[${width}]`}>
-      {isLoading && <FullScreenSpinner />} 
+    <div
+      className={`p-5 mt-5 rounded-[4px] bg-bg-quinquedenary-light dark:bg-bg-quinquedenary-dark flex justify-between w-[${width}]`}
+    >
+      {isLoading && <FullScreenSpinner />}
       <div className={`${appClsx(className)} w-full flex items-center justify-between`}>
         <div className={`${appClsx(className)} flex items-center`}>
-          <ImageContainer
-            className="lg:w-[62px] lg:h-[62px] md:w-[48px] md:h-[48px] sm:w-[43px] sm:h-[42px] mobile:w-[56px] mobile:h-[56px]"
-            width={62}
-            height={62}
-            src={profilePic}
-            alt="user-image"
+          {profilePic ? (
+            <Image
+            width={100}
+            height={100}
+            className=' rounded-full lg:w-[62px] lg:h-[62px] md:w-[48px] md:h-[48px] sm:w-[43px] sm:h-[42px] mobile:w-[56px] mobile:h-[56px]'
+            src={`${STATIC_IMAGE_URL}/${profilePic}`}
+            alt="profile-image"
           />
+          ) : (
+            <UserPlaceholderIcon className="rounded-full lg:w-[62px] lg:h-[62px] md:w-[48px] md:h-[48px] sm:w-[43px] sm:h-[42px] mobile:w-[56px] mobile:h-[56px]" />
+          )}
 
           <div className="flex flex-col ml-4 rtl:ml-0 rtl:mr-4">
             <span className="text-text-tertiary-light dark:text-text-tertiary-dark md:text-xs mobile:text-[10px] font-medium">

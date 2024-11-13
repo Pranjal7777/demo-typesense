@@ -14,7 +14,7 @@ type ConnectSection = {
 
 const NewsLetterInput = () => {
   const { t } = useTranslation('common');
-  const connectSection = t('page.connectSection', { returnObjects: true }) as ConnectSection;
+  const connectSection: ConnectSection = t('page.connectSection', { returnObjects: true });
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
   const [isLoading, setIsLoading] = useState(false);

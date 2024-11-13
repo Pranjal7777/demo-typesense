@@ -32,7 +32,7 @@ export type otpVerification = {
 
 const OTPForm: React.FC = () => {
   const { t } = useTranslation('auth');
-  const otpVerification = t('page.otpVerification', { returnObjects: true }) as otpVerification;
+  const otpVerification: otpVerification = t('page.otpVerification', { returnObjects: true });
 
   // Todo Need to remove this.
 

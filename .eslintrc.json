@@ -1,0 +1,45 @@
+{
+  "extends": [
+    "next/core-web-vitals",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:jsx-a11y/recommended"
+  ],
+  "plugins": [
+    "react",
+    "unicorn",
+    "check-file"
+  ],
+  "rules": {
+    "react/prop-types": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/no-unknown-property": "warn",
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "semi": ["error", "always"],
+    "quotes": ["error", "single",{ "allowTemplateLiterals": true }],
+    "indent": ["error", 2],
+    "react/jsx-uses-react": "warn",
+    "react/jsx-uses-vars": "warn",
+    "camelcase": ["error", {
+      "properties": "always"
+    }],
+    "unicorn/filename-case": [
+      "error",
+      {
+        "case": "kebabCase"
+      }
+    ],
+    "unicorn/prefer-array-find": "error",
+    "react/jsx-pascal-case": ["error", {
+      "allowAllCaps": false,
+      "ignore": []
+    }]
+    // "check-file/folder-naming-convention": [
+    //   "error",
+    //   {
+    //     "src/**/*": "KEBAB_CASE",
+    //     "mocks/*/": "KEBAB_CASE"
+    //   }
+    // ]
+  }
+}

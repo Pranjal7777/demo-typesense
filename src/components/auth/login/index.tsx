@@ -32,7 +32,7 @@ const Login = () => {
   const router=useRouter();
 
   const { t } = useTranslation('auth');
-  const login = t('page.signIn', { returnObjects: true }) as login;
+  const login:login= t('page.signIn',{returnObjects:true});
 
   const handelLoginWithPhoneClick=()=>{
     router.push(`${SIGN_IN_PAGE}?step=2`);

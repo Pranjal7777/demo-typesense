@@ -138,7 +138,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
   ];
 
   const handleFirstButtonClick = async () => {
-    if (!userInfo) router.push('/login');
+    if (!userInfo) return router.push('/login');
     if (data.result.isNegotiable) return;
     try {
       setIsFirstButtonLoading(true);

@@ -59,6 +59,7 @@ export const getChatIdentifier = async ({
     return data;
   } catch (error) {
     console.error('Error fetching chat identifier:', error);
+    toast.error(error as string);
     throw error; 
   }
 };

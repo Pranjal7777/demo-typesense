@@ -18,7 +18,7 @@ interface ShopByCategory{
 
 const CategorySlider = () => {
   const { t } = useTranslation('productList');
-  const shopByCategory: ShopByCategory = t('page.shopByCategory',{returnObjects:true});
+  const shopByCategory= t('page.shopByCategory',{returnObjects:true}) as ShopByCategory; 
  
   useEffect(() => {
     // Set interval to call btnPressNext every 1000 milliseconds (1 second)

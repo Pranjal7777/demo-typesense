@@ -17,10 +17,31 @@ import LeftArrowRoundedEdgeIcon from '../../../public/assets/svg/left-arrow-roun
 import { routeSellerProfile, routeToCategories } from '@/store/utils/route-helper';
 import keyDownHandler from '@/helper/key-down-handler';
 import { useRouter } from 'next/router';
+import { Configure } from 'react-instantsearch-dom';
+import { InstantSearch } from 'react-instantsearch-dom';
+import { Hits } from 'react-instantsearch-dom';
+import SearchResults from '../typesense/SearchResults';
+import { CustomSearchResults } from '../ui/search-box/custom-hits';
 
 interface PlacePredictions {
   place_id: string;
   description: string;
+}
+
+interface Hit {
+  title: {
+    en: string;
+  };
+  categories: {
+    id: string;
+  }[];
+  mainCategory: string;
+}
+
+interface SearchState {
+  search: string;
+  location: string;
+  resultDropdown: boolean;
 }
 
 export type Props = {
@@ -29,7 +50,7 @@ export type Props = {
   className: string;
   searchItemAndUserDrower: boolean;
   setSearchItemAndUserDrower: React.Dispatch<React.SetStateAction<boolean>>;
-  setFormData: React.Dispatch<React.SetStateAction<{ search: string; location: string }>>;
+  setFormData: React.Dispatch<React.SetStateAction<SearchState>>;
   handleGetLocationHelper: () => Promise<boolean>;
   handleRemoveLocationHelper: () => void;
   handleOnChange: (_e: ChangeEvent<HTMLInputElement>) => void;
@@ -53,6 +74,11 @@ export type Props = {
   products: SearchItems[] | SearchUsers[];
   handleOptionSelect: (_option: string) => void;
   selectedOption: string;
+  handleInstantSearchOnChange?: (_e: ChangeEvent<HTMLInputElement>) => void;
+  showRecentSearchResultsFromTypesense?: boolean;
+  searchResults?: any;
+  searchClient?: any;
+  setSelectedOption?: React.Dispatch<React.SetStateAction<'Items' | 'Users'>>;
 };
 
 export type heroSection = {
@@ -82,18 +108,23 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
   handleOptionSelect,
   selectedOption,
   setFormData,
+  handleInstantSearchOnChange,
+  showRecentSearchResultsFromTypesense,
+  searchResults,
+  searchClient,
+  setSelectedOption,
 }) => {
   // please do not remove this -> this code is for translation of this page
   // const { t } = useTranslation('common');
   //   const heroSection:heroSection = t('page.header.heroSection', { returnObjects: true });
   const { myLocation } = useAppSelector((state: RootState) => state.auth);
 
-  const {theme}=useTheme();
+  const { theme } = useTheme();
   const router = useRouter();
   const [isUserOrItem, setIsUserOrItem] = useState(true);
   const [isLocationTextBoxFocused, setIsLocationTextBoxFocused] = useState(true);
-  
-  // please do not remove this -> this code is for removing user location form redux 
+
+  // please do not remove this -> this code is for removing user location form redux
   // const removeLocation = () => {
   //   handleRemoveLocationHelper();
   //   setIsLocationTextBoxFocused(false);
@@ -105,30 +136,50 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
     }));
   };
 
-  const clearLocationFromLocationSearchBox=()=>{
-    setFormData({ ...formData, location: '' });
+  const clearLocationFromLocationSearchBox = () => {
+    // setFormData({ ...formData, location: '' });
+    setFormData((prevState) => ({
+      ...prevState,
+      location: '',
+    }));
     // handleRemoveLocationHelper()
   };
 
-  const fetchCurrentLocation=async()=>{
-    const isLocationUpdated=await handleGetLocationHelper(); 
-    if(!isLocationUpdated){
-      formData.location==='' && setFormData({ ...formData, location: myLocation.address });
+  const fetchCurrentLocation = async () => {
+    const isLocationUpdated = await handleGetLocationHelper();
+    if (!isLocationUpdated) {
+      formData.location === '' &&
+        setFormData((prevState) => ({
+          ...prevState,
+          location: myLocation.address,
+        }));
     }
   };
 
-  const categoryRoute=(categoryId:string)=>{
-    router.push(routeToCategories({category:{id:categoryId}}));
+  const categoryRoute = (categoryId: string, search: string) => {
+    // router.push(routeToCategories({category:{id:categoryId}}));
+
+    setFormData((prevState) => ({
+      ...prevState,
+      search: search,
+      resultDropdown: router?.pathname === '/categories/[id]' ? false : prevState.resultDropdown,
+    }));
+    const url = routeToCategories({ category: { id: categoryId } });
+    const query = search ? { search } : {};
+    router.push({ pathname: url, query });
     setSearchItemAndUserDrower(!searchItemAndUserDrower);
   };
-  const sellerProfileRoute=(userId:string)=>{
+  const sellerProfileRoute = (userId: string) => {
     router.push(routeSellerProfile(userId));
     setSearchItemAndUserDrower(!searchItemAndUserDrower);
   };
 
   useEffect(() => {
-    setFormData({ ...formData, location: myLocation?.address });
-  }, [myLocation,myLocation?.address]);
+    setFormData((prevState) => ({
+      ...prevState,
+      location: myLocation?.address,
+    }));
+  }, [myLocation, myLocation?.address]);
 
   return (
     <div
@@ -137,159 +188,372 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
         className
       )}
     >
-      <div className="sticky top-0 py-2  bg-bg-secondary-light dark:bg-bg-primary-dark">
-        <div className="relative mx-4 flex items-center justify-center my-3 transition delay-0 ease-in duration-1000">
-          <LeftArrowRoundedEdgeIcon primaryColor={`${theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}`} className='hover:cursor-pointer hover:scale-125 absolute left-1' onClick={() => setSearchItemAndUserDrower(!searchItemAndUserDrower)}/>
-          <span className="text-lg font-bold">Search</span>
-        </div>
+      <InstantSearch
+        searchClient={searchClient}
+        indexName={selectedOption === 'Items' ? 'kwibal_asset' : 'kwibal_accounts'}
+      >
+        <Configure
+          query={formData.search}
+          hitsPerPage={10}
+          attributesToRetrieve={
+            selectedOption === 'Items'
+              ? ['assetId', 'assetTitle', 'images', 'categoryPath', 'inSection']
+              : ['userId', 'accountId', 'firstName', 'lastName', 'userName', 'profilePic']
+          }
+        />
+        <div className="sticky top-0 py-2  bg-bg-secondary-light dark:bg-bg-primary-dark">
+          <div className="relative mx-4 flex items-center justify-center my-3 transition delay-0 ease-in duration-1000">
+            <LeftArrowRoundedEdgeIcon
+              primaryColor={`${theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}`}
+              className="hover:cursor-pointer hover:scale-125 absolute left-1"
+              onClick={() => {
+                // setSearchItemAndUserDrower(!searchItemAndUserDrower)
+                const { search, ...restQuery } = router.query;
+                router.push({
+                  pathname: router.pathname,
+                  query: restQuery,
+                });
+                setSearchItemAndUserDrower(!searchItemAndUserDrower);
+              }}
+            />
+            <span className="text-lg font-bold">Search</span>
+          </div>
 
-        <div className="truncate relative mx-4 flex items-center mb-4">
-
-          <SearchIcon width={20} height={20} primaryColor={`${theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}`} className='absolute left-4 rtl:right-4'/>
-          <input
+          <div className="truncate relative mx-4 flex items-center mb-4">
+            <SearchIcon
+              width={20}
+              height={20}
+              primaryColor={`${theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}`}
+              className="absolute left-4 rtl:right-4"
+            />
+            {/* <input
             className="truncate border-border-tertiary-light dark:border-border-tertiary-dark dark:bg-bg-quinary-dark focus:border-2 focus:!border-brand-color dark:text-bg-tertiary-light px-11 rtl:px-5 pr-9 rtl:pr-12 text-sm outline-none border rounded-md h-12 w-full focus:border-primary bg-bg-tertiary-light"
             type="text"
             name="search"
             onFocus={() => setIsLocationTextBoxFocused(true)}
             value={formData.search}
             onChange={(e) => handleOnChange(e)}
-          />
+          /> */}
 
-          <HydrationGuard>
-            {formData.search !== '' ? (
-              <>
-                <CloseIcon width={'17'} height={'17'} className={'absolute right-4 rtl:right-[95%] cursor-pointer transition duration-75 hover:scale-105'} primaryColor={`${theme ? 'var(--icon-primary-dark)' : 'var( --icon-primary-light)'}`} onClick={removeUserAndItem}/>
-              </>
-            ) : null}
-          </HydrationGuard>
-        </div>
+            <input
+              className="truncate border-border-tertiary-light dark:border-border-tertiary-dark dark:bg-bg-quinary-dark focus:border-2 focus:!border-brand-color dark:text-bg-tertiary-light px-11 rtl:px-5 pr-9 rtl:pr-12 text-sm outline-none border rounded-md h-12 w-full focus:border-primary bg-bg-tertiary-light"
+              type="text"
+              name="search"
+              onFocus={() => setIsLocationTextBoxFocused(true)}
+              value={formData.search}
+              onChange={(e) => handleInstantSearchOnChange?.(e)}
+              autoComplete="off"
+            />
 
-        <div className="relative mx-4 flex items-center mb-4">
-          
+            {showRecentSearchResultsFromTypesense && (
+              <SearchResults>
+                <div className="absolute top-[48px] shadow-2xl bg-bg-secondary-light dark:bg-bg-secondary-dark left-0 right-0 rounded-b-md overflow-y-auto max-h-[263px]">
+                  {searchResults?.length ? (
+                    searchResults?.map((hit: Hit) => (
+                      <div
+                        className="flex dark:hover:text-text-primary-dark border-border-tertiary-light h-14 items-center cursor-pointer hover:bg-bg-octonary-light dark:hover:bg-bg-duodenary-dark"
+                        onClick={async () => {
+                          // categoryRoute(hit.categories[0].id);
+                          // setShowRecentSearchResultsFromTypesense(false);
+                        }}
+                      >
+                        <div className="truncate ml-3 flex">
+                          <div className="font-medium text-sm text-text-primary-light dark:text-text-primary-dark">
+                            {hit?.title?.en}
+                          </div>
+                          <div className="font-semibold text-sm text-brand-color ml-1">in </div>
+                          <div className="font-medium text-sm text-text-primary-light dark:text-text-primary-dark ml-1">
+                            {hit.mainCategory}
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="flex items-center justify-center h-14 text-text-primary-light dark:text-text-primary-dark">
+                      No results found
+                    </div>
+                  )}
+                </div>
+              </SearchResults>
+            )}
+            {!!formData?.search && !showRecentSearchResultsFromTypesense && (
+              <SearchResults>
+                <div className="absolute top-[48px] shadow-2xl bg-bg-secondary-light dark:bg-bg-secondary-dark left-0 right-0 rounded-b-md overflow-y-auto max-h-[263px]">
+                  {selectedOption === 'Items' ? (
+                    <Hits
+                      hitComponent={({ hit }) => {
+                        return (
+                          <div
+                            className="flex dark:hover:text-text-primary-dark border-border-tertiary-light h-14 items-center cursor-pointer hover:bg-bg-octonary-light dark:hover:bg-bg-duodenary-dark"
+                            onClick={async () => {
+                              // @ts-ignore
+                              await addItemToRecentSearch(hit.id, hit.title.en);
+                              // @ts-ignore
+                              await selectItemOrUserToSearch(hit.title.en);
 
-          <LocationSvg width={'20'} height={'20'} color={`${theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}`} className='absolute left-4 rtl:right-4'/> 
-          <input
-            className="truncate border-border-tertiary-light dark:border-border-tertiary-dark dark:bg-bg-quinary-dark focus:border-2 focus:!border-brand-color dark:text-bg-tertiary-light px-11 rtl:px-5 pr-10 rtl:pr-12  text-sm outline-none border rounded-md h-12 w-full focus:border-primary bg-bg-tertiary-light"
-            name="location"
-            autoComplete="off"
-            type="text"
-            onFocus={() => setIsLocationTextBoxFocused(false)}
-            value={formData.location}
-            onChange={(e) => {
-              handleOnChange(e);
-              getPlacePredictions({ input: e.target.value });
-            }}
-          />
+                              // setShowRecentSearchResultsFromTypesense(false);
+                              // @ts-ignore
+                              categoryRoute(hit.categories[0].id);
+                              // setIsOpen(false);
+                            }}
+                          >
+                            <div className="truncate ml-3 flex">
+                              <div className="font-medium text-sm text-text-primary-light dark:text-text-primary-dark">
+                                {/* @ts-ignore */}
+                                {hit?.title?.en}
+                              </div>
+                              <div className="font-semibold text-sm text-brand-color ml-1">in </div>
+                              <div className="font-medium text-sm text-text-primary-light dark:text-text-primary-dark ml-1">
+                                {hit.mainCategory}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      }}
+                    />
+                  ) : (
+                    <Hits
+                      hitComponent={({ hit }) => {
+                        return (
+                          <button
+                            className="w-full flex dark:hover:text-text-primary-dark text-text-secondary-light dark:text-text-primary-dark border-border-tertiary-light h-14 items-center cursor-pointer hover:bg-bg-octonary-light dark:hover:bg-bg-duodenary-dark"
+                            onClick={async () => {
+                              // selectItemOrUserToSearch(`${hit.first_name} ${hit.last_name}`);
+                              // await addUserToRecentSearch(hit.user_id);
+                              // sellerProfileRoute(hit.id);
+                            }}
+                          >
+                            <div className="truncate ml-3 flex">
+                              <div className="border-3 font-medium text-sm text-text-primary-light dark:text-text-primary-dark">
+                                {hit.first_name} {hit.last_name}
+                              </div>
+                            </div>
+                          </button>
+                        );
+                      }}
+                    />
+                  )}
+                </div>
+              </SearchResults>
+            )}
 
-          <>
-            {formData.location ? (
-              <>
-                <CloseIcon width={'17'} height={'17'} className={'absolute right-4 rtl:right-[95%] hover:cursor-pointer transition duration-75 hover:scale-105'} primaryColor={`${theme ? 'var(--icon-primary-dark)' : 'var( --icon-primary-light)'}`} onClick={clearLocationFromLocationSearchBox}/>
-              </>
-            ) : null}
-          </>
-        </div>
-      </div>
-
-      {isLocationTextBoxFocused ? (
-        <>
-          <div className="sticky top-[196px] dark:bg-bg-primary-dark  bg-bg-secondary-light flex items-center justify-around mb-4 h-12 border-b-2 dark:border-b-border-tertiary-dark border-border-tertiary-light">
-            <div
-              className="hover:cursor-pointer h-[98%] w-[25%] flex flex-col items-center justify-center"
-              onClick={() => {
-                setIsUserOrItem(true);
-                handleOptionSelect('Items');
-              }}
-              tabIndex={0}
-              role="button"
-              onKeyUp={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  setIsUserOrItem(true);
-                  handleOptionSelect('Items');
-                }
-              }}
-            >
-              <div
-                className={` h-full w-full ${isUserOrItem ? 'text-primary' : ''}  flex items-center justify-center `}
-              >
-                Items
-              </div>
-              <div
-                className={`transition-all duration-100 ease-in ${
-                  isUserOrItem ? 'border-brand-color border-[3px] rounded-t-2xl' : ''
-                }  w-full`}
-              ></div>
-            </div>
-
-            <div
-              className="h-[98%] w-[25%] flex flex-col items-center justify-center"
-              onClick={() => {
-                setIsUserOrItem(false);
-                handleOptionSelect('Users');
-              }}
-              role="button"
-              tabIndex={0}
-              onKeyUp={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  handleOptionSelect('Users');
-                }
-              }}
-            >
-              <div
-                className={` hover:cursor-pointer ${
-                  !isUserOrItem ? 'text-primary' : ''
-                } h-full w-full flex items-center justify-center`}
-              >
-                Users
-              </div>
-              <div
-                className={`transition-all duration-100 ease-in ${
-                  !isUserOrItem ? 'border-brand-color border-[3px] rounded-t-2xl' : ''
-                } w-full `}
-              ></div>
-            </div>
+            <HydrationGuard>
+              {formData.search !== '' ? (
+                <>
+                  <CloseIcon
+                    width={'17'}
+                    height={'17'}
+                    className={'absolute right-4 rtl:right-[95%] cursor-pointer transition duration-75 hover:scale-105'}
+                    primaryColor={`${theme ? 'var(--icon-primary-dark)' : 'var( --icon-primary-light)'}`}
+                    onClick={removeUserAndItem}
+                  />
+                </>
+              ) : null}
+            </HydrationGuard>
           </div>
 
-          <div className="h-full overflow-y-scroll border-primary px-4 divide-y-2 dark:divide-border-tertiary-dark divide-border-tertiary-light">
-            {isSearchProductsAndUsersFetching ? (
-              <div className=" flex items-center justify-center h-[50%]">
-                <Spinner />
+          <div className="relative mx-4 flex items-center mb-4">
+            <LocationSvg
+              width={'20'}
+              height={'20'}
+              color={`${theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}`}
+              className="absolute left-4 rtl:right-4"
+            />
+            <input
+              className="truncate border-border-tertiary-light dark:border-border-tertiary-dark dark:bg-bg-quinary-dark focus:border-2 focus:!border-brand-color dark:text-bg-tertiary-light px-11 rtl:px-5 pr-10 rtl:pr-12  text-sm outline-none border rounded-md h-12 w-full focus:border-primary bg-bg-tertiary-light"
+              name="location"
+              autoComplete="off"
+              type="text"
+              onFocus={() => setIsLocationTextBoxFocused(false)}
+              value={formData.location}
+              onChange={(e) => {
+                handleOnChange(e);
+                getPlacePredictions({ input: e.target.value });
+              }}
+            />
+
+            <>
+              {formData.location ? (
+                <>
+                  <CloseIcon
+                    width={'17'}
+                    height={'17'}
+                    className={
+                      'absolute right-4 rtl:right-[95%] hover:cursor-pointer transition duration-75 hover:scale-105'
+                    }
+                    primaryColor={`${theme ? 'var(--icon-primary-dark)' : 'var( --icon-primary-light)'}`}
+                    onClick={clearLocationFromLocationSearchBox}
+                  />
+                </>
+              ) : null}
+            </>
+          </div>
+        </div>
+
+        {isLocationTextBoxFocused ? (
+          <>
+            <div className="sticky top-[196px] dark:bg-bg-primary-dark  bg-bg-secondary-light flex items-center justify-around mb-4 h-12 border-b-2 dark:border-b-border-tertiary-dark border-border-tertiary-light">
+              <div
+                className="hover:cursor-pointer h-[98%] w-[25%] flex flex-col items-center justify-center"
+                onClick={() => {
+                  setIsUserOrItem(true);
+                  // handleOptionSelect('Items');
+                  setSelectedOption?.('Items');
+                }}
+                tabIndex={0}
+                role="button"
+                onKeyUp={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setIsUserOrItem(true);
+                    handleOptionSelect('Items');
+                  }
+                }}
+              >
+                <div
+                  className={` h-full w-full ${isUserOrItem ? 'text-primary' : ''}  flex items-center justify-center `}
+                >
+                  Items
+                </div>
+                <div
+                  className={`transition-all duration-100 ease-in ${
+                    isUserOrItem ? 'border-brand-color border-[3px] rounded-t-2xl' : ''
+                  }  w-full`}
+                ></div>
               </div>
-            ) : (
-              products.length === 0 ? (
+
+              <div
+                className="h-[98%] w-[25%] flex flex-col items-center justify-center"
+                onClick={() => {
+                  setIsUserOrItem(false);
+                  // handleOptionSelect('Users');
+                  setSelectedOption?.('Users');
+                }}
+                role="button"
+                tabIndex={0}
+                onKeyUp={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleOptionSelect('Users');
+                  }
+                }}
+              >
+                <div
+                  className={` hover:cursor-pointer ${
+                    !isUserOrItem ? 'text-primary' : ''
+                  } h-full w-full flex items-center justify-center`}
+                >
+                  Users
+                </div>
+                <div
+                  className={`transition-all duration-100 ease-in ${
+                    !isUserOrItem ? 'border-brand-color border-[3px] rounded-t-2xl' : ''
+                  } w-full `}
+                ></div>
+              </div>
+            </div>
+
+            <div className="h-full overflow-y-scroll border-primary px-4 divide-y-2 dark:divide-border-tertiary-dark divide-border-tertiary-light">
+              {isSearchProductsAndUsersFetching ? (
+                <div className=" flex items-center justify-center h-[50%]">
+                  <Spinner />
+                </div>
+              ) : formData.search ? (
+                selectedOption == 'Items' ? (
+                  <CustomSearchResults searchQuery={formData.search}>
+                    <Hits
+                      hitComponent={({ hit }) => {
+                        console.log(hit, 'hit==>>');
+                        return (
+                          <div
+                            tabIndex={0}
+                            role="button"
+                            key={hit.id}
+                               // @ts-ignore
+                            onClick={() => categoryRoute(hit.categories[0].id , hit.title.en)}
+                            // onKeyDown={(e) => keyDownHandler(e, ()=>categoryRoute(hit.categoryPath[0].id as string))}
+                          >
+                            {/* @ts-ignore */}
+                            <SearchItemsAndCategoryCard item={hit} />
+                          </div>
+                        );
+                      }}
+                    />
+                  </CustomSearchResults>
+                ) : (
+                  <CustomSearchResults searchQuery={formData.search}>
+                    <Hits
+                      hitComponent={({ hit }) => {
+                        return (
+                          <div
+                            key={hit.id}
+                            tabIndex={0}
+                            role="button"
+                            onClick={() => sellerProfileRoute(hit.id)}
+                            // onKeyDown={(e) => keyDownHandler(e, ()=>categoryRoute(item.userId))}
+                          >
+                            {/* @ts-ignore */}
+                            <SearchUserAndCategoryCard item={hit} />
+                          </div>
+                        );
+                      }}
+                    />
+                  </CustomSearchResults>
+                )
+              ) : (
                 <div className=" border-error bg-bg-secondary-light dark:bg-bg-primary-dark flex items-center h-[50%] justify-center">
                   <p className="truncate ml-3 fixed flex dark:text-text-primary-dark ">No Data Found!</p>
                 </div>
-              ) : (selectedOption == 'Items' ? 
-                (products as SearchItems[])?.map((item, index) => (
-                  <div
-                    tabIndex={0}
-                    role="button"
-                    key={index} 
-                    onClick={()=>categoryRoute(item.categoryPath[0].id as string)} 
-                    onKeyDown={(e) => keyDownHandler(e, ()=>categoryRoute(item.categoryPath[0].id as string))}>
-                    <SearchItemsAndCategoryCard  item={item} />
-                  </div>
-                )) : (products as SearchUsers[])?.map((item, index) => (
-                  <div key={index} 
-                    tabIndex={0}
-                    role="button"
-                    onClick={()=>sellerProfileRoute(item.userId)} 
-                    onKeyDown={(e) => keyDownHandler(e, ()=>categoryRoute(item.userId))}
-                  >
-                    <SearchUserAndCategoryCard  item={item} />
-                  </div>
-                )))
-            )}
-          </div>
-        </>
-      ) : placePredictions.length ? (
-        <>
-          <div className="h-full overflow-y-scroll border-primary px-4 divide-y-2 dark:divide-border-tertiary-dark divide-border-tertiary-light">
+              )}
+            </div>
+          </>
+        ) : placePredictions.length ? (
+          <>
+            <div className="h-full overflow-y-scroll border-primary px-4 divide-y-2 dark:divide-border-tertiary-dark divide-border-tertiary-light">
+              <div
+                className="flex items-center my-4 hover:cursor-pointer"
+                onClick={fetchCurrentLocation}
+                tabIndex={0}
+                role="button"
+                onKeyUp={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                  }
+                }}
+              >
+                <LocationTargetIcon primaryColor={`${theme ? 'var(--brand-color)' : 'var(--brand-color)'}`} />
+
+                <div className=" text-xs ml-2 font-medium">Current location</div>
+              </div>
+              {isPlacePredictionsLoading ? (
+                <div className=" flex items-center justify-center h-[50%]">
+                  <Spinner />
+                </div>
+              ) : placePredictions.length === 0 ? (
+                <div className=" border-error bg-bg-secondary-light dark:bg-bg-primary-dark flex items-center h-[50%] justify-center">
+                  <p className="truncate ml-3 flex dark:text-text-primary-dark ">No Data Found!</p>
+                </div>
+              ) : (
+                placePredictions.map((item, index) => (
+                  <>
+                    <SearchLocationAutocompleteCard
+                      key={index}
+                      cardNumber={index}
+                      item={item}
+                      selectedAddressFromLocationBox={selectedAddressFromLocationBox}
+                      setIsLocationTextBoxFocused={setIsLocationTextBoxFocused}
+                      setSearchItemAndUserDrower={setSearchItemAndUserDrower}
+                    />
+                    {/* <p> {item?.description}</p>  */}
+                  </>
+                ))
+              )}
+            </div>
+          </>
+        ) : (
+          <div className=" px-4 h-full flex flex-col overflow-y-scroll">
             <div
-              className="flex items-center my-4 hover:cursor-pointer"
+              className="flex fixed items-center my-1 hover:cursor-pointer"
               onClick={fetchCurrentLocation}
               tabIndex={0}
               role="button"
@@ -299,54 +563,17 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
                 }
               }}
             >
-              <LocationTargetIcon primaryColor={`${theme ? 'var(--brand-color)' : 'var(--brand-color)'}`}/>
+              <LocationTargetIcon
+                width="20"
+                height="20"
+                primaryColor={`${theme ? 'var(--brand-color)' : 'var(--brand-color)'}`}
+              />
 
               <div className=" text-xs ml-2 font-medium">Current location</div>
             </div>
-            {isPlacePredictionsLoading ? (
-              <div className=" flex items-center justify-center h-[50%]">
-                <Spinner />
-              </div>
-            ) : placePredictions.length === 0 ? (
-              <div className=" border-error bg-bg-secondary-light dark:bg-bg-primary-dark flex items-center h-[50%] justify-center">
-                <p className="truncate ml-3 flex dark:text-text-primary-dark ">No Data Found!</p>
-              </div>
-            ) : (
-              placePredictions.map((item, index) => (
-                <>
-                  <SearchLocationAutocompleteCard
-                    key={index}
-                    cardNumber={index}
-                    item={item}
-                    selectedAddressFromLocationBox={selectedAddressFromLocationBox}
-                    setIsLocationTextBoxFocused={setIsLocationTextBoxFocused}
-                    setSearchItemAndUserDrower={setSearchItemAndUserDrower}
-                  />
-                  {/* <p> {item?.description}</p>  */}
-                </>
-              ))
-            )}
           </div>
-        </>
-      ) : (
-        <div className=" px-4 h-full flex flex-col overflow-y-scroll">
-          <div
-            className="flex fixed items-center my-1 hover:cursor-pointer"
-            onClick={fetchCurrentLocation}
-            tabIndex={0}
-            role="button"
-            onKeyUp={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-              }
-            }}
-          >
-            <LocationTargetIcon width='20' height='20' primaryColor={`${theme ? 'var(--brand-color)' : 'var(--brand-color)'}`}/>
-
-            <div className=" text-xs ml-2 font-medium">Current location</div>
-          </div>
-        </div>
-      )}
+        )}
+      </InstantSearch>
     </div>
   );
 };

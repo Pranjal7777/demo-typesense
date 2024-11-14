@@ -53,7 +53,7 @@ const SearchLocationAutocompleteCard: FC<Props> = ({
       </div>
       <div className="ml-2">
         <div className="h-12 w-12 flex items-center justify-center">
-          <Image width={12} height={12} src={IMAGES.UP_LEFT_ARROW_ICON} loader={gumletLoader} alt="up-left-arrow" />
+          {/* <Image width={12} height={12} src={IMAGES.UP_LEFT_ARROW_ICON} loader={gumletLoader} alt="up-left-arrow" /> */}
         </div>
       </div>
     </div>

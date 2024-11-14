@@ -147,6 +147,8 @@ export interface SearchItems {
     categoryPath: CategoryPath[];
     _id: number;
     units: number;
+    title: Title2;
+    mainCategory?: string;
   }
   interface CategoryPath {
     id: string;

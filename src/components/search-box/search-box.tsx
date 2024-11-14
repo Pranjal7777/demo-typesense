@@ -97,6 +97,7 @@ const SearchBox: FC<Props> = ({
   const [formData, setFormData] = useState({
     search: '',
     location: '',
+    resultDropdown: false,
   });
 
   const handleRemoveSearchHelper = () => {

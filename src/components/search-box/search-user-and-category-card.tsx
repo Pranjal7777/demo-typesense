@@ -1,14 +1,13 @@
 import { STATIC_IMAGE_URL } from '@/config';
-import { gumletLoader } from '@/lib/gumlet';
-import { IMAGES } from '@/lib/images';
 import Image from 'next/image';
 import React, { FC } from 'react';
+import UpLeftArrowIcon from '../../../public/images/up-left-arrow.svg';
 
 export type category = {
-  images?: { url: string }[];
-  firstName: string;
-  lastName: string;
   userName: string;
+  profile_pic: string;
+  first_name: string;
+  last_name: string;
 };
 
 export type Props = {
@@ -23,21 +22,19 @@ const SearchUserAndCategoryCard: FC<Props> = ({ item }) => {
           className="rounded-full h-10"
           width={40}
           height={40}
-          src={item.images?.[0]?.url ? `${STATIC_IMAGE_URL}/${item.images[0].url}` : '/images/user-profile-icon-black.svg'}
-          // src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
-
+          src={item.profile_pic ? `${STATIC_IMAGE_URL}/${item.profile_pic}` : '/images/user-profile-icon-black.svg'}
           alt={''}
         />
         <div className="ml-2 rtl:mr-2 rtl:ml-0">
           <div className="text-sm font-medium">
-            {item.firstName} {item.lastName}
+            {item.first_name} {item.last_name}
           </div>
           <div className="text-xs font-normal text-text-secondary-color dark:text-text-tertiary-dark">
             {item.userName}
           </div>
         </div>
       </div>
-      <Image width={12} height={12} src={IMAGES.UP_LEFT_ARROW_ICON} loader={gumletLoader} alt="up-left-arrow" />
+      <Image width={12} height={12} src={UpLeftArrowIcon}  alt="up-left-arrow" />
     </div>
   );
 };

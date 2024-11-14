@@ -1,9 +1,8 @@
 import { STATIC_IMAGE_URL } from '@/config';
-import { gumletLoader } from '@/lib/gumlet';
-import { IMAGES } from '@/lib/images';
 import { SearchItems } from '@/store/types';
 import Image from 'next/image';
 import React, { FC } from 'react';
+import UpLeftArrowIcon from '../../../public/images/up-left-arrow.svg';
 
 export type category = {
   assetTitle: string;
@@ -24,18 +23,16 @@ const SearchItemsAndCategoryCard: FC<Props> = ({ item }) => {
           width={40}
           height={40}
           src={item.images?.[0]?.url ? `${STATIC_IMAGE_URL}/${item.images[0].url}` : '/images/user-profile-icon-black.svg'}
-          // src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
-
           alt={''}
         />
         <div className="ml-2 rtl:mr-2 rtl:ml-0">
           <div className="text-sm font-medium">
-            {item.assetTitle} in{' '}
-            <span className="text-sm font-normal text-brand-color truncate"> {item.inSection}</span>{' '}
+            {item?.title?.en} in{' '}
+            <span className="text-sm font-normal text-brand-color truncate"> {item?.mainCategory}</span>{' '}
           </div>
         </div>
       </div>
-      <Image width={12} height={12} src={IMAGES.UP_LEFT_ARROW_ICON} loader={gumletLoader} alt="up-left-arrow" />
+      <Image width={12} height={12} src={UpLeftArrowIcon}  alt="up-left-arrow" />
     </div>
   );
 };

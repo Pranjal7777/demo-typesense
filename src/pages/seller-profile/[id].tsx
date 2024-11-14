@@ -25,6 +25,7 @@ import isUserAuthenticated from '@/helper/validation/check-user-authentication';
 import { SIGN_IN_PAGE } from '@/routes';
 import showToast from '@/helper/show-toaster';
 import SearchIcon from '../../../public/assets/svg/search-icon';
+import { BASE_API_URL } from '@/config';
 
 type Props = {
   sellerProfileData: SellerProfileType;
@@ -262,6 +263,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { id } = params as { id: string };
   const cookies = cookie.parse(req.headers.cookie || '');
   const accessToken = cookies.accessToken?.replace(/"/g, '') || null;
+  // console.log('accessToken', accessToken);
 
   let sellerProfileData = null;
   let followCountData = null;
@@ -269,7 +271,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (accessToken) {
     try {
       // First API call to fetch profile data
-      const profileRes = await fetch(`https://apiv2.le-offers.com/v1/profile?accountId=${id}`, {
+      const profileRes = await fetch(`${BASE_API_URL}/v1/profile?accountId=${id}`, {
         method: 'GET',
         headers: {
           Authorization: `${accessToken}`,
@@ -286,7 +288,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       // Second API call to fetch follow count data
       if (sellerProfileData) {
         const followRes = await fetch(
-          `https://apiv2.le-offers.com/v1/follow/count?userId=${sellerProfileData._id}&accountId=${id}`,
+          `${BASE_API_URL}/v1/follow/count?userId=${sellerProfileData._id}&accountId=${id}`,
           {
             method: 'GET',
             headers: {

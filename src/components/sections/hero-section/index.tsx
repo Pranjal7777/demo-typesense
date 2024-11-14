@@ -8,6 +8,9 @@ import { useTranslation } from 'next-i18next';
 import NewSearchBox from '@/components/ui/search-box';
 import { useNewWindowScroll } from '@/hooks/new-use-window-scroll';
 import useTypesenseSearch from '@/hooks/useTypesenseSearch';
+import { useRouter } from 'next/router';
+import { RootState } from '@/store/store';
+import { useAppSelector } from '@/store/utils/hooks';
 
 export type heroSection = {
   title: string;
@@ -29,6 +32,12 @@ export type HeroSectionProps = {
   imageClassName?: string;
 };
 
+export type FormDataT = {
+  search: string;
+  resultDropdown: boolean;
+  location: string;
+};
+
 const HeroSection: FC<HeroSectionProps> = ({
   stickyHeaderWithSearchBox,
   handleGetLocationHelper,
@@ -41,8 +50,23 @@ const HeroSection: FC<HeroSectionProps> = ({
   const windowWidth = useWindowResize();
   const { t } = useTranslation('common');
   const heroSection = t('page.header.heroSection', { returnObjects: true }) as heroSection;
-  const [selectedOption, setSelectedOption] = useState('Items');
-  const { searchClient } = useTypesenseSearch({ queryBy: selectedOption === 'Items' ? 'title.en,description' : 'first_name,last_name'});
+  const [selectedOption, setSelectedOption] = useState<'Items' | 'Users'>('Items');
+  const router = useRouter();
+  const [formData, setFormData] = useState<FormDataT>({
+    search: (router?.query?.search as string) ?? '',
+    resultDropdown: false,
+    location: '',
+  });
+  const { userInfo } = useAppSelector((state: RootState) => state.auth);
+  const { searchClient } = useTypesenseSearch({
+    searchItem: formData.search,
+    selectedOption: selectedOption,
+    accountId: userInfo?.accountId,
+    skip: 0,
+    limit: 10,
+    time: Math.floor(Date.now() / 1000),
+    queryBy: selectedOption === 'Items' ? 'title.en,description' : 'first_name,last_name',
+  });
 
   return (
     <div
@@ -56,23 +80,10 @@ const HeroSection: FC<HeroSectionProps> = ({
       )}
       style={{ backgroundPosition: '50% 20%' }}
     >
-      {
-        !stickyHeaderWithSearchBox && <HeroImage src={IMAGES.PRIMARY_BANNER} className={imageClassName} />
-      }
-      {/* image shadow or overlay */}
-      {/*       
-      <SearchBox
-        stickyHeaderWithSearchBox={stickyHeaderWithSearchBox}
-        // content={content}
-        windowScroll={windowScroll}
-        windowWidth={windowWidth}
-        handleGetLocationHelper={handleGetLocationHelper}
-        handleRemoveLocationHelper={handleRemoveLocationHelper}
-      /> */}
-
+      {!stickyHeaderWithSearchBox && <HeroImage src={IMAGES.PRIMARY_BANNER} className={imageClassName} />}
       <div
-        className={` flex flex-col mt-14 border-error ${stickyHeaderWithSearchBox ? 'w-full' :
-          minThreshold ? 'w-full ' : 'max-w-full sm:max-w-[1083px] sm:mx-[64px] '
+        className={` flex flex-col mt-14 border-error ${
+          stickyHeaderWithSearchBox ? 'w-full' : minThreshold ? 'w-full ' : 'max-w-full sm:max-w-[1083px] sm:mx-[64px] '
         }`}
       >
         <h1
@@ -84,13 +95,14 @@ const HeroSection: FC<HeroSectionProps> = ({
         </h1>
         <NewSearchBox
           stickyHeaderWithSearchBox={stickyHeaderWithSearchBox}
-          // content={content}
           windowWidth={windowWidth}
           handleGetLocationHelper={handleGetLocationHelper}
           handleRemoveLocationHelper={handleRemoveLocationHelper}
           searchClient={searchClient}
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
+          formData={formData}
+          setFormData={setFormData}
         />
         <p
           className={`z-[0] mobile:mt-2 mobile:mb-7 mobile:text-[10px] mobile:leading-4 mobile:font-medium mobile:text-center mobile:order-2 text-text-secondary-light dark:text-text-primary-dark text-base font-medium text-secondary transition-all duration-700 ease-in mobile:px-4 ${

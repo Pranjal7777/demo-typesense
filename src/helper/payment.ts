@@ -28,7 +28,7 @@ export const getChatIdentifier = async ({
   const accessToken = getCleanToken(Cookies.get('accessToken'));
   
   if (!accessToken) {
-    throw new Error('Access token not found');
+    return null;
   }
   try {
     const identifier = `${assetId}_${sellerId}_${buyerId}`;
@@ -52,16 +52,16 @@ export const getChatIdentifier = async ({
     );
     
     if (!response.ok) {
-      let responseBody = await response.json();
-      throw new Error(`${responseBody.message}`);
+      const responseBody = await response.json();
+      throw new Error(responseBody.message || 'Failed to fetch chat identifier');
     }
 
     const data = await response.json();
     return data;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching chat identifier:', error);
-    toast.error(error as string);
-    // throw error; 
+    toast.error(error.message || 'Failed to fetch chat identifier');
+    return null;
   }
 };
 

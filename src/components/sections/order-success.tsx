@@ -27,7 +27,6 @@ export default function OrderSuccess() {
               </div>
             </div>
             <h1 className="text-2xl font-bold mb-2 dark:text-white lg:mt-4">{THANK_YOU}</h1>
-            <p className="text-gray-600 mb-8">{WAIT_ORDER}</p>
             <div className="hidden md:block" >
               <button onClick={() => router.push('/')} className="w-full bg-brand-color  text-white font-bold py-3 px-4 rounded">{BACK_HOME}</button>
             </div>

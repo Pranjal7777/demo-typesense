@@ -61,7 +61,6 @@ const baseQueryWithAuth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQuery
     await new Promise(res => setTimeout(res, 2000));
   }
   let result = await baseQuery(args, api, extraOptions);
-
   if (result.error && (result.error.status === 401 || result.error.status === 400)) {
     
     setRemoveUserDataDispatch();

@@ -28,7 +28,7 @@ const SimilarProductsList: React.FC<SimilarProductsProps> = ({ assetId, category
         </div>
       )}
 
-      {!isLoading && !isError && data?.result.length === 0 && <div className="text-center">No Products found</div>}
+      {!isLoading && !isError && !data && <div className="text-center">No Products found</div>}
 
       {data && !isLoading && !isError && data?.result?.length > 0 && (
         <div className="w-full grid grid-cols-2 sm:grid-cols-3 2lg:grid-cols-4 xl:grid-cols-5 gap-4">

@@ -16,6 +16,7 @@ import { useTheme } from '@/hooks/theme';
 import { useActions } from '@/store/utils/hooks';
 import DownArrowRoundedEdge from '../../../../public/assets/svg/down-arrow-rounded-edge';
 import PrimaryLogo from '../../../../public/assets/svg/primary-logo';
+import ThankYouImage from '../../../../public/assets/images/thankyou_logo.svg';
 
 export type ThankyouPage = {
   thanksMessage: string;
@@ -55,10 +56,12 @@ const ThankYouPage = () => {
         </div>
           : null
       }
-      <Image width={300} height={300} className={`h-screen object-cover w-screen absolute ${theme ? '' : 'z-[10]'}`} src={IMAGES.THANK_YOU_PAGE_BG_IMAGE} alt="thank_you" loader={gumletLoader}/>
+      <Image width={300} height={300} className={`h-screen object-cover w-screen absolute ${theme ? '' : 'z-[10]'}`} src={ThankYouImage} alt="thank_you" 
+      // loader={gumletLoader}
+      />
    
       
-      <div className='z-10 mobile:px-4 sm:max-w-[408px] w-full mobile:w-full flex flex-col items-center justify-center h-full'>
+      <div className='z-10 mobile:px-4 sm:max-w-[408px] w-full mobile:w-full flex flex-col items-center justify-center h-full light:bg-bg-secondary-light'>
         <Link href={'/'} className={'sm:mt-20 sm:mb-10 mobile:mt-14 mobile:mb-10 z-10'}>
           {/* <Image onClick={()=>{router.push('/');}} className={appClsx('')} width={126} height={36} src={IMAGES.PRIMARY_LOGO_WHITE_OTHER} alt="left_banner" loader={gumletLoader}/> */}
           <PrimaryLogo logoType='secondary' onClick={buttonClickHandler}/>

@@ -61,10 +61,10 @@ const CategoriesDrawer: React.FC<CategoriesDrawerProps> = ({ isSearchCategoriesD
         key={index}
         tabIndex={0}
         role="button"
-        onClick={() => categoryRoute(item._id)}
+        // onClick={() => categoryRoute(item._id)}
         onKeyDown={(e) =>keyDownHandler(e,()=>categoryRoute(item._id))}
       >
-        <CategoriesCard data={item} />
+        <CategoriesCard data={item} changMenu={changMenu}/>
         {searchField.length > 0 && Array.isArray(item.child) && (
           <div className="ml-4">{renderCategories(item.child)}</div>
         )}

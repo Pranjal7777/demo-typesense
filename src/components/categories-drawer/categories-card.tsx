@@ -11,9 +11,10 @@ import { useRouter } from 'next/router';
 import keyDownHandler from '@/helper/key-down-handler';
 type CategoryCardProps = {
   data: categories;
+  changMenu:()=>void;
 };
 
-const CategoriesCard: FC<CategoryCardProps> = ({ data }) => {
+const CategoriesCard: FC<CategoryCardProps> = ({ data,changMenu }) => {
   const [isOpen, setIsOpen] = useState(false);
   const theme = useTheme();
   const currTheme = theme.theme;
@@ -22,21 +23,28 @@ const CategoriesCard: FC<CategoryCardProps> = ({ data }) => {
   
   const subCategoryRoute=(subCategoryId:string)=>{
     router.push(routeToCategories({subCategory:{id:subCategoryId}}));
-  };
-  
+  };  
+
+  const handleClick=()=>{
+    subCategoryRoute(data._id);
+    changMenu();
+  }
 
   return (
-    <div onClick={()=>subCategoryRoute(data._id)}  
+    <div 
+      
       tabIndex={0}
       role="button"
-      onKeyDown={(e) => keyDownHandler(e,()=>subCategoryRoute(data._id))} className={`!transition !duration-700 !ease-in flex flex-col h-20 ${isOpen && '!h-fit'}`}>
+      onKeyDown={(e) => keyDownHandler(e,()=>subCategoryRoute(data._id))} className={`!transition !duration-700 !ease-in flex flex-col h-20 ${isOpen && '!h-fit'}`}
+      >
       <div
         className="flex items-center w-full justify-between h-20 cursor-pointer  "
         role="button"
         tabIndex={0}
+       
       >
-        <Link href={''} className='w-[100%]'>
-          <div className="flex items-center h-20 w-full dark:hover:bg-bg-denary-light hover:bg-bg-octonary-light">
+        <Link href={routeToCategories({subCategory:{id:data._id}})} className='w-[100%]'>
+          <div  onClick={handleClick} className="flex items-center h-20 w-full dark:hover:bg-bg-denary-light hover:bg-bg-octonary-light">
             <ImageContainer
               width={40}
               height={40}
@@ -74,6 +82,7 @@ const CategoriesCard: FC<CategoryCardProps> = ({ data }) => {
               </>
             )
           ) : null}
+
         </div>}
         
       </div>
@@ -82,7 +91,7 @@ const CategoriesCard: FC<CategoryCardProps> = ({ data }) => {
         {typeof data.child === 'string' ? (
           <></>
         ) : (
-          data.child.map((item, index) => <CategoriesCard data={item} key={index} />)
+          data.child.map((item, index) => <CategoriesCard data={item} key={index}  changMenu={changMenu}/>)
         )}
       </div>
     </div>

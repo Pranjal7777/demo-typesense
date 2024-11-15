@@ -3,6 +3,9 @@ import { gumletLoader } from '@/lib/gumlet';
 import { IMAGES } from '@/lib/images';
 import Image from 'next/image';
 import React, { FC, useState } from 'react';
+import { useTheme } from '@/hooks/theme';
+import DownArrowRoundedEdge from '../../../../public/assets/svg/down-arrow-rounded-edge';
+import UpArrowRoundedEdge from '../../../../public/assets/svg/up-arrow-rounded-edge';
 
 export type Props = {
   item: {
@@ -13,7 +16,7 @@ export type Props = {
 
 const DescriptionDropdown: FC<Props> = ({ item }) => {
   const [isOpen, setIsOpen] = useState(false);
-  // const [theme] = useTheme();
+  const {theme}=useTheme();
 
   return (
     <>
@@ -29,47 +32,15 @@ const DescriptionDropdown: FC<Props> = ({ item }) => {
         }}
       >
         <span className="text-xl font-medium mobile:text-sm  text-text-tertiary-light dark:text-text-secondary-light">{item.title}</span>
-        {isOpen ? (
-          <>
-            
+           {
+          isOpen ? (
+            <UpArrowRoundedEdge primaryColor={theme ? 'white' :  'black'} className={`sm:hidden `}/>
+                    
+          ) : (
 
-            <Image
-              className="dark:hidden inline-block"
-              width={13}
-              height={13}
-              src={IMAGES.PLUS_ICON_BLACK}
-              loader={gumletLoader}
-              alt="plus_icon_white"
-            />
-            <Image
-              className="dark:inline-block hidden"
-              width={13}
-              height={13}
-              src={IMAGES.PLUS_ICON_WHITE}
-              loader={gumletLoader}
-              alt="plus_icon_white"
-            />
-          </>
-        ) : (
-          <>
-            <Image
-              className="dark:hidden inline-block"
-              width={13}
-              height={1.5}
-              src={IMAGES.MINUS_ICON_BLACK}
-              loader={gumletLoader}
-              alt="plus_icon_white"
-            />
-            <Image
-              className="dark:inline-block hidden"
-              width={13}
-              height={1.5}
-              src={IMAGES.MINUS_ICON_WHITE}
-              loader={gumletLoader}
-              alt="plus_icon_white"
-            />
-          </>
-        )}
+            <DownArrowRoundedEdge primaryColor={theme ? 'white' :  'black'} className={`sm:hidden `}/>
+          )
+        }
       </div>
       <span
         className={`text-base mobile:text-xs text-text-tertiary-light dark:text-text-tertiary-dark mt-6  ${

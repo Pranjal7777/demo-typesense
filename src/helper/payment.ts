@@ -50,9 +50,10 @@ export const getChatIdentifier = async ({
         },
       }
     );
-
+    
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      let responseBody = await response.json();
+      throw new Error(`${responseBody.message}`);
     }
 
     const data = await response.json();

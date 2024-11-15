@@ -121,29 +121,28 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
 
   const handleLike = async () => {
     if (isLoggedIn) {
-      setIsLoading(true);
-      // const newLikeState = !isLiked;
+      // Optimistically updating UI immediately
+      const newLikeState = !isLiked;
+      setIsLiked(newLikeState);
+      setTotalLikeCount(prev => newLikeState ? prev + 1 : prev - 1);
+
       try {
         if (typeof userID === 'string' && typeof id === 'string') {
           const userId: string = userID;
           const assetId: string = id;
-          const result = await likeAndDislikeProduct({ assetid: assetId, like: !isLiked, userId }).unwrap();
+          const result = await likeAndDislikeProduct({ assetid: assetId, like: newLikeState, userId }).unwrap();
           toast.success(result.message);
-          // dispatch(toggleLike({ productId: assetId, isLiked: newLikeState }));
-          setIsLiked((prev)=>!prev)
-          if(isLiked){
-            setTotalLikeCount((prev)=>prev - 1)
-          }
-          else{
-            setTotalLikeCount((prev)=>prev + 1)
-          }
         } else {
           console.error(userID + 'or' + id + 'is not string');
+          // Reverting changes if validation fails
+          setIsLiked(!newLikeState);
+          setTotalLikeCount(prev => newLikeState ? prev - 1 : prev + 1);
         }
       } catch (error) {
+        // Reverting changes if API call fails
+        setIsLiked(!newLikeState);
+        setTotalLikeCount(prev => newLikeState ? prev - 1 : prev + 1);
         toast.error('Error updating like count');
-      } finally {
-        setIsLoading(false);
       }
     } else {
       router.push('/login');

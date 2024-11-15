@@ -61,14 +61,15 @@ export const getChatIdentifier = async ({
   } catch (error) {
     console.error('Error fetching chat identifier:', error);
     toast.error(error as string);
-    throw error; 
+    // throw error; 
   }
 };
 
 export const getStripePaymentKeys = async (payload: any, userLocation: any) => {
-  const accessToken = Cookies.get('accessToken')?.split('"')[1];
+  const accessToken = getCleanToken(Cookies.get('accessToken'));
 
   if (!accessToken) {
+    toast.error('Session expired. Please login again.');
     throw new Error('Access token not found');
   }
 
@@ -77,31 +78,36 @@ export const getStripePaymentKeys = async (payload: any, userLocation: any) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        lan: 'en',
-        Authorization: accessToken, 
-        city: userLocation.city,
-        country: userLocation.country,
-        ipaddress: userLocation.ip,
-        latitude: userLocation.latitude,
-        longitude: userLocation.longitude,
+        'Authorization': `${accessToken}`,
+        'Platform': '3',
+        'Lan': 'en',
+        'City': userLocation?.city || '',
+        'Country': userLocation?.country || '',
+        'Ipaddress': userLocation?.ip || '0.0.0.0',
+        'Latitude': userLocation?.latitude || '',
+        'Longitude': userLocation?.longitude || ''
       },
-      body: JSON.stringify(payload), 
+      body: JSON.stringify(payload),
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      let responseBody = await response.json();
-      throw new Error(responseBody.message);
+      const errorMessage = data?.message || 'Payment processing failed';
+      toast.error(errorMessage);
+      throw new Error(errorMessage);
     }
 
-    const data = await response.json();
-    if(!data?.data?.paymentIntentData?.clientSecret){
+    if (!data?.data?.paymentIntentData?.clientSecret) {
+      toast.error('Invalid payment response from server');
       throw new Error('Payment intent data not found');
     }
 
-    return data; 
-  } catch (error) {
+    return data;
+  } catch (error: any) {
     console.error('API Error: payment method:', error);
-    toast.error(error as string);
+    const errorMessage = error?.message || 'Payment processing failed';
+    toast.error(errorMessage);
     throw error;
   }
 };

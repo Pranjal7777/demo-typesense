@@ -36,7 +36,8 @@ const nextConfig = {
       'le-offers-v2.gumlet.io',
       'photos.le-offers.com',
       'leoffer-images.s3.ap-south-1.amazonaws.com',
-      'photos.platform.kwibal.com'
+      'photos.platform.kwibal.com',
+      'ideal-excitement-d2904ea8a5.media.strapiapp.com'
     ]
   },
   i18n,

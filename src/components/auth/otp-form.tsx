@@ -441,7 +441,7 @@ const OTPForm: React.FC = () => {
         <div className="mt-6 w-full flex items-center justify-center">
           {otp.map((digit, index) => (
             <input
-              className="border rounded focus:outline-[#6D3EC1] dark:bg-bg-primary-dark dark:border-border-tertiary-dark dark:text-text-primary-dark border-border-tertiary-light outline-brand-color !w-[62px] h-[62px] text-center"
+              className="border rounded focus:outline-[var(--brand-color)] dark:bg-bg-primary-dark dark:border-border-tertiary-dark dark:text-text-primary-dark border-border-tertiary-light outline-brand-color !w-[62px] h-[62px] text-center"
               // autoFocus={index == 0 && true}
               key={index}
               ref={refs[index]}

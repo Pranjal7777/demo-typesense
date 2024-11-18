@@ -35,6 +35,7 @@ import FeedsIcon from '../../../../public/assets/svg/feed-icon';
 import NotificationIcon from '../../../../public/assets/svg/notification-icon';
 import MessageIcon from '../../../../public/assets/svg/message-icon';
 import { removeCookie } from '@/utils/cookies';
+import LeftArrowIcon from '../../../../public/assets/svg/left-arrow-icon';
 export type loginOrUserName = {
   login: string;
   userName: string;
@@ -184,14 +185,14 @@ const Header: FC<Props> = ({
           maxThreshold && ' border-b border-border-tertiary-light dark:border-b-border-tertiary-dark'
         }  
          ${stickyHeaderWithSearchBox && 'border-b border-b-border-tertiary-light dark:border-b-border-tertiary-dark'} ${
-      minThreshold
-        ? stickyHeaderWithSearchBox
-          ? 'text-text-primary-light dark:text-text-primary-dark bg-bg-secondary-light dark:bg-bg-primary-dark'
-          : 'text-text-primary-light dark:text-text-primary-dark bg-bg-secondary-light dark:bg-bg-primary-dark'
-        : stickyHeaderWithSearchBox
-          ? 'text-text-primary-light dark:text-text-primary-dark bg-bg-secondary-light dark:bg-bg-primary-dark'
-          : 'text-text-secondary-light dark:text-text-primary-dark'
-    } h-[69px] w-full fixed top-0 text-sm font-medium capitalize transition ease-in-out duration-2000`}
+          minThreshold
+            ? stickyHeaderWithSearchBox
+              ? 'text-text-primary-light dark:text-text-primary-dark bg-bg-secondary-light dark:bg-bg-primary-dark'
+              : 'text-text-primary-light dark:text-text-primary-dark bg-bg-secondary-light dark:bg-bg-primary-dark'
+            : stickyHeaderWithSearchBox
+            ? 'text-text-primary-light dark:text-text-primary-dark bg-bg-secondary-light dark:bg-bg-primary-dark'
+            : 'text-text-secondary-light dark:text-text-primary-dark'
+        } h-[69px] w-full fixed top-0 text-sm font-medium capitalize transition ease-in-out duration-2000`}
       >
         <div className=" max-w-[1440px] px-[64px] m-auto h-full flex items-center justify-between">
           <div className="flex items-center h-full w-[65%]">
@@ -255,18 +256,32 @@ const Header: FC<Props> = ({
                   loader={gumletLoader}
                 />
               )} */}
-
+              {/* 
               <PrimaryLogo
                 primaryColor={`${
                   stickyHeaderWithSearchBox
                     ? 'var(--brand-color)'
                     : theme
-                      ? minThreshold
-                        ? 'var(--brand-color)'
+                    ? minThreshold
+                      ? 'var(--brand-color)'
+                      : 'var(--icon-primary-dark)'
+                    : minThreshold
+                    ? 'var(--brand-color)'
+                    : 'var(--icon-primary-dark)'
+                }`}
+              /> */}
+              <PrimaryLogo
+                primaryColor={`${
+                  stickyHeaderWithSearchBox
+                    ? theme
+                    ? 'var(--icon-primary-dark)'
+                    : 'var(--icon-primary-light)' :
+                     theme ?
+                       minThreshold ?
+                         'var(--icon-primary-dark)'
                         : 'var(--icon-primary-dark)'
-                      : minThreshold
-                        ? 'var(--brand-color)'
-                        : 'var(--icon-primary-dark)'
+                      : minThreshold ? 'var(--icon-primary-light)' : 'var(--icon-primary-dark)'
+                    
                 }`}
               />
             </Link>
@@ -282,18 +297,18 @@ const Header: FC<Props> = ({
                       windowWidth > 1440
                         ? showItems
                         : windowWidth > 1320
-                          ? 4
-                          : windowWidth > 1144
-                            ? 3
-                            : windowWidth >= 1144
-                              ? 2
-                              : windowWidth >= 963
-                                ? 1
-                                : windowWidth >= 831
-                                  ? 0
-                                  : windowWidth >= 634
-                                    ? 0
-                                    : 0
+                        ? 4
+                        : windowWidth > 1144
+                        ? 3
+                        : windowWidth >= 1144
+                        ? 2
+                        : windowWidth >= 963
+                        ? 1
+                        : windowWidth >= 831
+                        ? 0
+                        : windowWidth >= 634
+                        ? 0
+                        : 0
                     )
                     .map((item, index) => (
                       <HeaderDropdown key={index} item={item} />
@@ -302,27 +317,36 @@ const Header: FC<Props> = ({
               </>
 
               <li className="flex mx-4 items-center justify-center">
-                <button
-                  className="flex items-center justify-center"
-                  onClick={() => changMenu()}
-                >
-                  <CategoriesIcon
+                <button className="flex items-center justify-center" onClick={() => changMenu()}>
+                  {/* <CategoriesIcon
                     color={`${
                       stickyHeaderWithSearchBox
                         ? 'var(--icon-primary-light)'
                         : theme
-                          ? minThreshold
-                            ? 'var(--icon-primary-dark)'
+                        ? minThreshold
+                          ? 'var(--icon-primary-dark)'
+                          : 'var(--icon-primary-dark)'
+                        : minThreshold
+                        ? 'var(--icon-primary-light)'
+                        : 'var(--icon-primary-dark)'
+                    }`}
+                  /> */}
+                  <CategoriesIcon
+                    color={`${
+                      stickyHeaderWithSearchBox
+                        ? theme
+                        ? 'var(--icon-primary-dark)'
+                        : 'var(--icon-primary-light)' :
+                         theme ?
+                           minThreshold ?
+                             'var(--icon-primary-dark)'
                             : 'var(--icon-primary-dark)'
-                          : minThreshold
-                            ? 'var(--icon-primary-light)'
-                            : 'var(--icon-primary-dark)'
+                          : minThreshold ? 'var(--icon-primary-light)' : 'var(--icon-primary-dark)'
+                        
                     }`}
                   />
 
-                  <span className="ml-2 rtl:ml-0 rtl:mr-2 truncate" >
-                    {allcategories}
-                  </span>
+                  <span className="ml-2 rtl:ml-0 rtl:mr-2 truncate">{allcategories}</span>
                 </button>
               </li>
             </ul>
@@ -339,12 +363,12 @@ const Header: FC<Props> = ({
                         stickyHeaderWithSearchBox
                           ? 'var(--icon-primary-light)'
                           : theme
-                            ? minThreshold
-                              ? 'var(--icon-primary-dark)'
-                              : 'var(--icon-primary-dark)'
-                            : minThreshold
-                              ? 'var(--icon-primary-light)'
-                              : 'var(--icon-primary-dark)'
+                          ? minThreshold
+                            ? 'var(--icon-primary-dark)'
+                            : 'var(--icon-primary-dark)'
+                          : minThreshold
+                          ? 'var(--icon-primary-light)'
+                          : 'var(--icon-primary-dark)'
                       }`}
                     />
                   </div>
@@ -355,12 +379,12 @@ const Header: FC<Props> = ({
                         stickyHeaderWithSearchBox
                           ? 'var(--icon-primary-light)'
                           : theme
-                            ? minThreshold
-                              ? 'var(--icon-primary-dark)'
-                              : 'var(--icon-primary-dark)'
-                            : minThreshold
-                              ? 'var(--icon-primary-light)'
-                              : 'var(--icon-primary-dark)'
+                          ? minThreshold
+                            ? 'var(--icon-primary-dark)'
+                            : 'var(--icon-primary-dark)'
+                          : minThreshold
+                          ? 'var(--icon-primary-light)'
+                          : 'var(--icon-primary-dark)'
                       }`}
                     />
                   </div>
@@ -371,12 +395,12 @@ const Header: FC<Props> = ({
                         stickyHeaderWithSearchBox
                           ? 'var(--icon-primary-light)'
                           : theme
-                            ? minThreshold
-                              ? 'var(--icon-primary-dark)'
-                              : 'var(--icon-primary-dark)'
-                            : minThreshold
-                              ? 'var(--icon-primary-light)'
-                              : 'var(--icon-primary-dark)'
+                          ? minThreshold
+                            ? 'var(--icon-primary-dark)'
+                            : 'var(--icon-primary-dark)'
+                          : minThreshold
+                          ? 'var(--icon-primary-light)'
+                          : 'var(--icon-primary-dark)'
                       }`}
                     />
                   </div>
@@ -384,17 +408,19 @@ const Header: FC<Props> = ({
               )}
 
               {userInfo ? (
-                <UserLogin primaryColor={`${
-                  stickyHeaderWithSearchBox
-                    ? 'var(--icon-primary-light)'
-                    : theme
+                <UserLogin
+                  primaryColor={`${
+                    stickyHeaderWithSearchBox
+                      ? 'var(--icon-primary-light)'
+                      : theme
                       ? minThreshold
                         ? 'var(--icon-primary-dark)'
                         : 'var(--icon-primary-dark)'
                       : minThreshold
-                        ? 'var(--icon-primary-light)'
-                        : 'var(--icon-primary-dark)'
-                }`}/>
+                      ? 'var(--icon-primary-light)'
+                      : 'var(--icon-primary-dark)'
+                  }`}
+                />
               ) : (
                 <Link className="mx-9 " href={SIGN_IN_PAGE}>
                   {' '}
@@ -425,7 +451,9 @@ const Header: FC<Props> = ({
 
       {/* <CategoryDrower className={`sm:hidden mobile:inline-block ${searchCategoryDrower && "!hidden"} transition duration-700`} searchCategoryDrower={searchCategoryDrower} setsearchCategoryDrower={setsearchCategoryDrower}/> */}
       <nav
-        className={`z-[2] border-error ${stickyHeaderWithSearchBox && 'bg-bg-secondary-light dark:bg-bg-secondary-dark'} ${
+        className={`z-[2] border-error ${
+          stickyHeaderWithSearchBox && 'bg-bg-secondary-light dark:bg-bg-secondary-dark'
+        } ${
           minThreshold && 'dark:bg-bg-primary-dark bg-bg-secondary-light'
         } mobile:inline-block sm:hidden h-[69px] w-full fixed top-0  flex items-center justify-center px-[16px]`}
       >
@@ -475,12 +503,12 @@ const Header: FC<Props> = ({
                   stickyHeaderWithSearchBox
                     ? 'var(--brand-color)'
                     : theme
-                      ? minThreshold
-                        ? 'var(--brand-color)'
-                        : 'var(--icon-primary-dark)'
-                      : minThreshold
-                        ? 'var(--brand-color)'
-                        : 'var(--icon-primary-dark)'
+                    ? minThreshold
+                      ? 'var(--brand-color)'
+                      : 'var(--icon-primary-dark)'
+                    : minThreshold
+                    ? 'var(--brand-color)'
+                    : 'var(--icon-primary-dark)'
                 }`}
               />
             </Link>
@@ -525,7 +553,8 @@ const Header: FC<Props> = ({
             <>
               <div className=" relative w-12 h-12 flex items-center justify-center">
                 <Link className="relative w-12 h-12 flex items-center justify-center" href="/">
-                  <Image
+                  <LeftArrowIcon height="15" width="15" primaryColor={theme ? '#FFFFFF' : '#202020'} />
+                  {/* <Image
                     className="hover:cursor-pointer hover:scale-102 absolute left-1 dark:hidden"
                     width={15}
                     height={15}
@@ -540,11 +569,11 @@ const Header: FC<Props> = ({
                     src={IMAGES.BACK_ARROW_ICON_WHITE}
                     alt="back-arrow-icon"
                     loader={gumletLoader}
-                  />
+                  /> */}
                 </Link>
               </div>
 
-              <div className=" flex items-center justify-center ">
+              {/* <div className=" flex items-center justify-center ">
                 <div className="mr-9">
                   <Image
                     width={21}
@@ -591,7 +620,7 @@ const Header: FC<Props> = ({
                     alt="hand-burger-menu-icon-black"
                   />
                 </div>
-              </div>
+              </div> */}
             </>
           )}
         </div>
@@ -600,20 +629,25 @@ const Header: FC<Props> = ({
       {/* <ProfileDropdown/> */}
       {showProfileDropdown ? (
         <div className="profile-dropdown fixed z-50 w-screen h-screen sm:hidden hover:cursor-pointer   bg-bg-secondary-light dark:bg-[#1A1A1A] text-text-primary-light dark:text-text-primary-dark">
-          <div className='max-h-[90%] overflow-y-scroll'>
-            <AddressHeader iconClickEvent={handBurgerMenuClickHandler} className="py-[17px]" iconClassName="left-[16px]">
+          <div className="max-h-[90%] overflow-y-scroll">
+            <AddressHeader
+              iconClickEvent={handBurgerMenuClickHandler}
+              className="py-[17px]"
+              iconClassName="left-[16px]"
+            >
               My Account
             </AddressHeader>
             <ProfileDropdown menuOptions={menuOptions} signOut={signOut} />
             {!userInfo?.accountId ? (
-              <button
+              <Button
                 onClick={handleLogin}
-                className="bg-[#6D3EC1] h-[48px] w-[343px] text-[#FFFFFF] rounded-[4px] block font-[600] absolute bottom-[10%] left-[50%] translate-x-[-50%]"
+                buttonType="primary"
+                className=" h-[48px] w-[343px] rounded-[4px] block font-[600] absolute bottom-[10%] left-[50%] translate-x-[-50%]"
               >
                 Login
-              </button>
+              </Button>
             ) : null}
-  
+
             <div className=" switch absolute left-[50%] translate-x-[-50%] bottom-[15px] flex justify-between bg-[#EDEDED] dark:bg-[#2C2C2C] w-[95px] h-[40px] border-2 rounded-[100px] mx-auto">
               <div
                 role="button"

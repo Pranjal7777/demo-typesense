@@ -28,7 +28,7 @@ export type Props = {
   excludeHeroSection?:boolean,
   stickyHeroSection?:boolean,
   excludeFooter?:boolean,
-
+  containerClass?: string,
   title?: string;
   keywords?: string;
   description?: string;
@@ -52,7 +52,7 @@ const Layout: FC<Props> = ({
   categories,
   categoriesWithChildCategories,
   myLocationFromServer,
-  // containerClass,
+  containerClass,
 }) => {
   const { locale } = useRouter();
   const { token, myLocation, ipAddress } = useAppSelector((state: RootState) => state.auth);
@@ -230,7 +230,7 @@ const Layout: FC<Props> = ({
             `   
               ${(stickyHeader || excludeHeroSection) && 'mt-[69px] sm:mt-[69px]'}
               ${stickyHeroSection && 'mt-[132px] sm:mt-[142px]'}
-             dark:bg-bg-primary-dark w-full h-full mx-auto overflow-hidden`
+             dark:bg-bg-primary-dark w-full h-full mx-auto overflow-hidden`,containerClass
           )}
         >
           {children}

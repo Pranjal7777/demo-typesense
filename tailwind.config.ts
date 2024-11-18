@@ -80,7 +80,7 @@ const config: Config = {
         'bg-undenary-light': '#2C2C2D',
         'bg-duodenary-light': '#fff0d0',
         'bg-terdenary-light': '#EAEAEA',
-        'bg-quattuordenary-light': '#F1ECF9',
+        'bg-quattuordenary-light': '#E9FBF4',
         'bg-quinquedenary-light': '#F6F6F6',
         'bg-sexdenary-light': '#374151',
         //-------------------------------------
@@ -96,6 +96,7 @@ const config: Config = {
         'bg-denary-dark': '#3C3C3C',
         'bg-undenary-dark': '#202020',
         'bg-duodenary-dark': '#414141',
+        'bg-quattuordenary-dark':'#15392B',
         'bg-quinquedenary-dark': '#242424', 
         'bg-sexdenary-dark': '#343434',
   

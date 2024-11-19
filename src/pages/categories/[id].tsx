@@ -326,7 +326,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
     resetFilters,
   } = useTypesenseCategory({
     categoryId: id as string,
-    country: myLocation?.country || 'India',
+    country: 'India',
   });
 
 

@@ -13,14 +13,15 @@ import keyDownHandler from '@/helper/key-down-handler';
 interface ProductCardProps {
   product: Product;
   showProfilePic?: boolean;
+  isTypeSenseData?: boolean;
 }
 
-const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true }) => {
+const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isTypeSenseData = false  }) => {
   const { theme } = useTheme();
   const router = useRouter();
   const userAccountId = product.accountId;
   const handleProductClick = () => {
-    router.push(`/product/${product._id}`);
+    router.push(`/product/${isTypeSenseData ? product.id : product._id}`);
   };
   const imageUrl = product?.images?.[0];
   const src =

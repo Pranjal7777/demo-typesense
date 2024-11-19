@@ -29,25 +29,24 @@ const PriceTab: React.FC<PriceTabProps> = ({
           : 'bg-white dark:bg-bg-primary-dark border-[#3D3B45]'
       }  rounded text-sm`}
     >
-      <TextWrapper
-        className={`font-semibold flex justify-end w-[80%] ${
-          inputFocus === focus ? '!text-[#6D3EC1]' : '!text-text-primary-light dark:!text-text-secondary-light'
-        }`}
-      >
-        {currency}
-      </TextWrapper>
-      <span className="w-full pl-1 font-medium">
-        $
+      <div className="flex items-center justify-center w-full">
+        <TextWrapper
+          className={`font-semibold ${
+            inputFocus === focus ? '!text-[#6D3EC1]' : '!text-text-primary-light dark:!text-text-secondary-light'
+          }`}
+        >
+          {currency}
+        </TextWrapper>
         <input
           type="number"
           name={inputFocus === focus ? 'input-min' : 'input-max'}
-          className="bg-transparent w-9 outline-none"
+          className="bg-transparent w-9 outline-none pl-1 font-medium text-center"
           value={price}
           onChange={handlePriceInputChange}
           min={inputMin}
           max={inputMax}
         />
-      </span>
+      </div>
     </div>
   );
 };

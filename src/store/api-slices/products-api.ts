@@ -21,6 +21,7 @@ import {
   SEARCH_PRODUCTS_AND_USERS_URL,
   SUBSCRIBE_TO_NEWS_LETTER_URL,
 } from '@/api/endpoints';
+import { FilterParameterResponse } from '@/types/filter';
 
 export const productsApi = rootApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -192,6 +193,12 @@ export const productsApi = rootApi.injectEndpoints({
         url: `${AUTH_URL_V2}/${GET_ALL_BANNERS_AND_PRODUCTS_URL}/?page=${page}&lat=${
           latitude || DEFAULT_LOCATION.latitude
         }&long=${longitude || DEFAULT_LOCATION.longitude}&limit=10&country=${country || DEFAULT_LOCATION.country}&cat_id=${catId}`,
+        method: 'GET',
+      }),
+    }),
+    getFilterParameters: builder.query<FilterParameterResponse, void>({
+      query: () => ({
+        url: `${AUTH_URL_V1}/filterParameter`,
         method: 'GET',
       }),
     }),

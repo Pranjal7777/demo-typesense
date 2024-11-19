@@ -1,7 +1,7 @@
-import { gumletLoader } from '@/lib/gumlet';
-import { IMAGES } from '@/lib/images';
 import Image from 'next/image';
 import React from 'react';
+import CrossIcon from '../../../public/images/cross-icon.svg';
+import CrossIconWhite from '../../../public/images/cross_icon_white.svg';
 
 type SelectedFilterProps = {
   label: string;
@@ -15,21 +15,23 @@ const SelectedFilterCard: React.FC<SelectedFilterProps> = ({ label, onDelete }) 
         {label}
       </p>
       <Image
-        src={IMAGES.CROSS_ICON}
+        // src={IMAGES.CROSS_ICON}
+        src={CrossIcon}
         alt="crossIcon"
         height={8}
         width={8}
         className="dark:hidden inline cursor-pointer "
-        loader={gumletLoader}
+        // loader={gumletLoader}
         onClick={onDelete}
       />
       <Image
-        src={IMAGES.CROSS_ICON_WHITE}
+        // src={IMAGES.CROSS_ICON_WHITE}
+        src={CrossIconWhite}
         alt="crossIcon"
         height={8}
         width={8}
         className="hidden dark:inline cursor-pointer "
-        loader={gumletLoader}
+        // loader={gumletLoader}
         onClick={onDelete}
       />
     </div>

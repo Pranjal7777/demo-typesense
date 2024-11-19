@@ -67,7 +67,7 @@ export const authApi = rootApi.injectEndpoints({
         headers: {
           Authorization: `${guestGeneratedToken}`,
         },
-      }),
+      }), 
     }),
     getGuestRefreshToken: builder.mutation<ResponseGetGuestTokenPayload, void>({
       query: () => ({

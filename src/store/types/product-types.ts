@@ -17,6 +17,7 @@ export interface Banner {
   }
 export interface Product {
     _id: string;
+    id?: string;
     username: string;
     assetTitle: string;
     assetTypeTitle: string;

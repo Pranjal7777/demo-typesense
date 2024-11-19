@@ -58,16 +58,16 @@ const CustomRangeInput: React.FC<CustomRangeInputProps> = ({ handleDistance, pre
         ))}
       </div>
       <div
-        className="absolute top-[-34px] text-white bg-[#6D3EC1] py-1 px-3 rounded text-xs shadow-sm transform -translate-x-1/2"
+        className="absolute top-[-34px] text-white bg-[#6D3EC1] py-1 px-3 rounded text-xs shadow-sm transform -translate-x-1/2 min-w-[50px] text-center"
         style={{ left: calculateLeftPosition() }}
       >
-        <p className="w-0 h-0 border-solid border-t-[#6D3EC1] border-l-transparent border-r-transparent border-b-transparent border-t-[14px] border-r-[8px] border-b-0 border-l-[8px] transform rotate-0 absolute bottom-[-10px]"></p>
+        <p className="w-0 h-0 border-solid border-t-[#6D3EC1] border-l-transparent border-r-transparent border-b-transparent border-t-[14px] border-r-[8px] border-b-0 border-l-[8px] transform rotate-0 absolute bottom-[-10px] left-1/2 -translate-x-1/2"></p>
         {steps[value]}
       </div>
       <style jsx>
         {`
           .custom-range::-webkit-slider-runnable-track {
-            width: 100%;
+            width: 100%; 
             height: 8px;
             cursor: pointer;
             background: #ddd; /* Background color of the track */

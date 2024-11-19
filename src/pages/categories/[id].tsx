@@ -18,7 +18,6 @@ import { useRouter } from 'next/router';
 import Slider from '@/components/ui/slider';
 import BrandSlider from '@/components/sections/brand-slider';
 import { GetServerSidePropsContext, NextPage } from 'next';
-// import { HydrationGuard } from '@/components/ui/hydration-guard';
 import { GetAllSubCategoriesByCategoryId } from '@/helper/categories-data-from-server';
 import { Category, Product } from '@/store/types';
 import dynamic from 'next/dynamic';
@@ -32,6 +31,11 @@ import AboutUs from '@/components/about-us';
 import Accordion from '@/components/sections/accordion-card';
 import InfoSection from '@/components/sections/info-section';
 import { convertRTKQueryErrorToString } from '@/helper/convert-rtk-query-error-to-string';
+import { useTypesenseCategory } from '@/hooks/useTypesenseCategory';
+import { useSearchParams } from 'next/navigation';
+import Select from 'react-select';
+import { useTheme } from '@/hooks/theme';
+import { StylesConfig } from 'react-select';
 
 export type filteredProducts = {
   userName: string;
@@ -77,6 +81,12 @@ export type CategoriesPageProps = {
   subCategories: Category[];
 };
 
+// Define the option type
+type SortOption = {
+  value: string;
+  label: string;
+};
+
 // eslint-disable-next-line react/prop-types
 const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, subCategories }) {
   const { t } = useTranslation('categories');
@@ -87,34 +97,23 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
 
   const router = useRouter();
 
-  const {id}=router.query;
-  
+  const { id } = router.query;
+  const searchParams = useSearchParams();
+
   const initialFilters = {
-    type: '',
-    condition: '',
-    postedWithin: '',
-    zipcode: '',
-    pendingOffer: '',
-    price: '',
-    distance: '',
-    address: '',
+    type: searchParams.get("type") || '',
+    condition: searchParams.get("condition") || '',
+    postedWithin: searchParams.get("postedWithin") || '',
+    zipcode: searchParams.get("zipcode") || '',
+    pendingOffer: searchParams.get("pendingOffer") || '',
+    price: searchParams.get("price") || '',
+    distance: searchParams.get("distance") || '',
+    address: searchParams.get("address") || '',
+    category:{title:searchParams.get("categoryTitle") || '',_id:searchParams.get("categoryId") || ''}
   };
 
   const [filtersDrawer, setFilterDrawer] = useState(false);
   const [selectedItemsFromFilterSection, setSelectedItemsFromFilterSection] = useState<filterTypes>(initialFilters);
-  // const [isEnabled, setIsEnabled] = useState(false);
-
-  // const { data: bannersAndProducts } = productsApi.useGetAllBannersAndProductsQuery({
-  //   page: 1,
-  //   latitude: '',
-  //   longitude: '',
-  //   country: '',
-  // });
-  // const {
-  //   data: subCategories,
-  //   // error: subCategoriesError,
-  //   // isFetching: isFetchingSubCategories,
-  // } = categoriesApi.useGetSubCategoriesByParentIdQuery({ parentId: '62690a902eb06c48582c5a7f' });
 
   const closeFilter = () => {
     setFilterDrawer(false);
@@ -124,24 +123,30 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
   };
   const addFiltersToQuery = (selectedFilters: filterTypes) => {
     const { pathname, query } = router;
-
-    // Create a copy of the existing query parameters
     const updatedQuery = { ...query };
 
-    // Update query parameters based on selected filters
     (Object.keys(selectedFilters) as (keyof filterTypes)[]).forEach((filterName) => {
       const filterValue = selectedFilters[filterName];
 
-      if (filterValue) {
-        // Add filter to query if value is present
-        updatedQuery[filterName] = String(filterValue);
+      if (filterName === 'category' && typeof filterValue === 'object') {
+        if ('_id' in filterValue) {
+          if (!filterValue._id || !filterValue.title) {
+            delete updatedQuery.categoryId;
+            delete updatedQuery.categoryTitle;
+          } else {
+            updatedQuery.categoryId = filterValue._id;
+            updatedQuery.categoryTitle = filterValue.title;
+          }
+        }
       } else {
-        // Remove filter from query if value is empty or null
-        delete updatedQuery[filterName];
+        if (filterValue) {
+          updatedQuery[filterName] = String(filterValue);
+        } else {
+          delete updatedQuery[filterName];
+        }
       }
     });
 
-    // Replace the current URL with the updated query parameters
     router.replace(
       {
         pathname,
@@ -152,27 +157,55 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
     );
   };
   const removeFilter = (key: string) => {
-    const updatedFeaturedFilters = { ...selectedItemsFromFilterSection, [key]: '' };
+    const updatedFeaturedFilters = { ...selectedItemsFromFilterSection };
+    if (key === 'category') {
+      updatedFeaturedFilters.category = { title: '', _id: '' };
+    } 
+    else {
+      (updatedFeaturedFilters as any)[key] = '';
+    }
+
     setSelectedItemsFromFilterSection(updatedFeaturedFilters);
     addFiltersToQuery(updatedFeaturedFilters);
+    
+    let typesenseFilters = transformFilters(updatedFeaturedFilters);
+    if(!typesenseFilters?.address){
+      typesenseFilters.address = ""
+    }
+    if(!typesenseFilters?.type){
+      typesenseFilters.type =''
+    }
+    updateFilters(typesenseFilters);
   };
 
-  // const clearFilter = () => {
-  //   if (featuredFiltersDrawer) {
-  //     setSelectedItemsFromFilterFeaturedSection(featureFilterObj);
-  //   } else {
-  //     setSelectedItemsFromFilterBestSection(bestFilterObj);
-  //   }
-  // };
   const selectedItemsFromFiltersSectionList = () => {
     return Object.entries(selectedItemsFromFilterSection).map(
-      ([key, value]) =>
-        value && (
+      ([key, value]) => {
+        // Skip rendering if it's the distance filter
+        if (key === 'distance') return null;
+        if (!value) return null;
+        if (typeof value === 'object') {
+          if ('title' in value && (!value.title || value.title === '')) return null;
+          if ('min' in value && !value.min) return null;
+        }
+        if (typeof value === 'string' && value === '') return null;
+
+        return (
           <div key={key} className="mb-2">
-            <SelectedFilterCard label={value} onDelete={() => removeFilter(key)} />
+            <SelectedFilterCard 
+              label={
+                typeof value === 'string' 
+                  ? value 
+                  : 'title' in value 
+                    ? value.title 
+                    : `$${value.min} - $${value.max}`
+              } 
+              onDelete={() => removeFilter(key)} 
+            />
           </div>
-        )
-    );
+        );
+      }
+    ).filter(Boolean);
   };
   const handleFilterDrawer = () => {
     setFilterDrawer(true);
@@ -183,18 +216,11 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
     sethighlightedProductsPageCount(highlightedProductsPageCount + 1);
   };
   const [allHighlightedProducts, setAllHighlightedProducts] = useState<Product[]>([]);
-  const [
-    trigger,
-    {
-      data: highlightedProducts,
-      isError,
-      error,
-      isFetching,
-    }] = productsApi.useLazyGetAllHighlightedProductsForFilterQuery();
-  
-  
+  const [trigger, { data: highlightedProducts, isError, error, isFetching }] =
+    productsApi.useLazyGetAllHighlightedProductsForFilterQuery();
+
   useEffect(() => {
-    if(highlightedProductsPageCount){
+    if (highlightedProductsPageCount) {
       trigger({
         page: highlightedProductsPageCount,
         latitude: myLocation?.latitude,
@@ -205,7 +231,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
     }
   }, [highlightedProductsPageCount]);
   useEffect(() => {
-    if(id){
+    if (id) {
       setAllHighlightedProducts([]);
       sethighlightedProductsPageCount(1);
       trigger({
@@ -218,8 +244,8 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
     }
   }, [id]);
   useEffect(() => {
-    if(highlightedProducts){
-      setAllHighlightedProducts([...allHighlightedProducts,...highlightedProducts.result]);
+    if (highlightedProducts) {
+      setAllHighlightedProducts([...allHighlightedProducts, ...highlightedProducts.result]);
     }
   }, [highlightedProducts]);
 
@@ -233,16 +259,18 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
   };
   const [recommendedProducts, setRecommendedProducts] = useState<Product[]>([]);
   const [
-    triggerBannersAndRecommendedProducts,{
+    triggerBannersAndRecommendedProducts,
+    {
       data: bannersAndRecommendedProducts,
       isError: isErrorBannersAndRecommendedProducts,
       error: errorBannersAndRecommendedProducts,
       isFetching: isFetchingBannersAndRecommendedProducts,
-    // refetch,
-    }] = productsApi.useLazyGetAllBannersAndProductsForFilterQuery();
-  
+      // refetch,
+    },
+  ] = productsApi.useLazyGetAllBannersAndProductsForFilterQuery();
+
   useEffect(() => {
-    if(bannersAndRecommendedProductsPageCount){
+    if (bannersAndRecommendedProductsPageCount) {
       triggerBannersAndRecommendedProducts({
         page: bannersAndRecommendedProductsPageCount,
         latitude: myLocation?.latitude,
@@ -253,7 +281,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
     }
   }, [bannersAndRecommendedProductsPageCount]);
   useEffect(() => {
-    if(id){
+    if (id) {
       setRecommendedProducts([]);
       setBannersAndRecommendedProductsPageCount(1);
       triggerBannersAndRecommendedProducts({
@@ -264,16 +292,12 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
         catId: id as string,
       });
     }
-    
   }, [id]);
   useEffect(() => {
-    if(bannersAndRecommendedProducts){
-      setRecommendedProducts([...recommendedProducts,...bannersAndRecommendedProducts.result]);
+    if (bannersAndRecommendedProducts) {
+      setRecommendedProducts([...recommendedProducts, ...bannersAndRecommendedProducts.result]);
     }
   }, [bannersAndRecommendedProducts]);
-
-  
-
 
   useEffect(() => {
     const updatedFilters = {
@@ -285,9 +309,112 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
       price: getQueryParam(router.query.price),
       distance: getQueryParam(router.query.distance),
       address: getQueryParam(router.query.address),
+      category:{title:searchParams.get("categoryTitle") || '',_id:searchParams.get("categoryId") || ''}
     };
     setSelectedItemsFromFilterSection(updatedFilters);
   }, [router.query]);
+
+  const {
+    products,
+    isLoading,
+    error: errorTypesense,
+    totalCount,
+    hasMore,
+    filters,
+    loadMore,
+    updateFilters,
+    resetFilters,
+  } = useTypesenseCategory({
+    categoryId: id as string,
+    country: myLocation?.country || 'India',
+  });
+
+
+  useEffect(()=>{
+    resetFilters()
+  },[id])
+
+
+  const hasActiveFilters = () => {
+    return Object.entries(selectedItemsFromFilterSection).some(([key, value]) => {
+      if (key === 'category') {
+        const categoryValue = value as { title: string; _id: string };
+        return categoryValue?.title && categoryValue?._id;
+      }
+      return value !== '';
+    });
+  };
+
+  interface TypesenseFilters {
+    address?: string;
+    price?: {
+      min: number;
+      max: number;
+    };
+    [key: string]: any;
+  }
+
+  const transformFilters = (filters: filterTypes): TypesenseFilters => {
+    const cleanedFilters = Object.fromEntries(
+      Object.entries(filters).filter(([_, value]) => value !== '' && value !== undefined)
+    );
+
+    return {
+      ...cleanedFilters,
+      price: filters.price ? (
+        typeof filters.price === 'string' 
+          ? (() => {
+              const [min, max] = filters.price.replace(/\$/g, '').split(' - ');
+              return {
+                min: parseInt(min),
+                max: parseInt(max)
+              };
+            })()
+          : filters.price
+      ) : undefined,
+    };
+  };
+
+  useEffect(() => {
+    const initialFilters = { ...selectedItemsFromFilterSection };
+    const typesenseFilters = transformFilters(initialFilters);
+    console.log(typesenseFilters,selectedItemsFromFilterSection,"typesenseFilters")
+    updateFilters(typesenseFilters);
+  }, []); 
+
+  const theme = useTheme();
+
+  const customStyles: StylesConfig<SortOption, false> = {
+    control: (provided) => ({
+      ...provided,
+      width: '100%',
+      outline: 'none',
+      minHeight: '44px',
+      border: theme.theme ? '1px solid #433934' : `1px solid var(--border-tertiary-light)`,
+      borderRadius: '0.375rem',
+      backgroundColor: theme.theme ? 'var(--bg-primary-dark)' : '#FFF',
+      fontSize: '14px',
+      color: theme.theme ? 'var(--bg-secondary-dark)' : 'var(--bg-primary-light)',
+      fontWeight: '400',
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isFocused 
+        ? (theme.theme ? '#2D3748' : '#EDF2F7') 
+        : theme.theme ? 'var(--bg-primary-dark)' : '#FFF',
+      color: theme.theme ? '#fff' : 'var(--bg-primary-light)',
+      fontSize: '14px',
+      fontWeight: '400',
+    }),
+    menu: (provided) => ({
+      ...provided,
+      backgroundColor: theme.theme ? 'var(--bg-primary-dark)' : '#fff',
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      color: theme.theme ? '#fff' : 'var(--bg-primary-light)',
+    }),
+  };
 
   return (
     <>
@@ -297,7 +424,9 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
         setSelectedItemsFromFilterSection={setSelectedItemsFromFilterSection}
         closeFilter={closeFilter}
         changeItems={changeSelectedItem}
+        // addFiltersToQuery={(selectedFilters) => handleFilterChange(selectedFilters)}
         addFiltersToQuery={addFiltersToQuery}
+        updateFilters={updateFilters}
       />
 
       <Layout>
@@ -324,10 +453,10 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
           {/* categories section starts */}
           <div className=" ">
             {allHighlightedProducts.length > 0 && (
-              <div className=' w-full pt-9 sm:py-8 lg:py-12 flex flex-col items-center justify-center'>
+              <div className=" w-full pt-9 sm:py-8 lg:py-12 flex flex-col items-center justify-center">
                 <div className=" flex  w-full justify-between">
                   <SectionTitle>Featured Products</SectionTitle>
-
+              
                   <button className="flex cursor-pointer justify-between " onClick={handleFilterDrawer}>
                     <div>
                       {' '}
@@ -350,27 +479,23 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
                     </div>
                   </button>
                 </div>
-                
-                {
-                  !Object.keys(selectedItemsFromFilterSection).every(
-                    key => (initialFilters as { [key: string]: string })[key] === ''
-                  ) && (
-                    <div className="border-2 boreder-error flex gap-10 items-center w-full flex-wrap mt-5 mobile:overflow-x-scroll h-8 md:h-4">
-                      <div className="flex gap-3 overflow-x-auto scrollbar-hide">{selectedItemsFromFiltersSectionList()}</div>
+
+                {hasActiveFilters() && (
+                  <div className="border-2 boreder-error flex gap-10 items-center w-full flex-wrap mt-5 mobile:overflow-x-scroll h-8 md:h-4 border-none">
+                    <div className="flex gap-3 overflow-x-auto scrollbar-hide">
+                      {selectedItemsFromFiltersSectionList()}
                     </div>
-                  )
-                }
+                  </div>
+                )}
                 {/* Selected Filters categories section - 01 end */}
                 {/* Product card categories section - 01 start */}
                 <div className="mt-10 w-full">
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-x-3 gap-y-4 md:gap-x-2 md:gap-y-7">
-                    {
-                      isError ? (
-                        <h2>{convertRTKQueryErrorToString(error)}</h2>
-                      ) : highlightedProducts?.result !== undefined ? (
-                        allHighlightedProducts.map((product, index) => <ProductCard key={index} product={product} />)
-                      ) : null
-                    }
+                    {isError ? (
+                      <h2>{convertRTKQueryErrorToString(error)}</h2>
+                    ) : highlightedProducts?.result !== undefined ? (
+                      allHighlightedProducts.map((product, index) => <ProductCard key={index} product={product} />)
+                    ) : null}
                     {isFetching && (
                       <>
                         {Array.from({ length: 10 }).map((_, index) => (
@@ -381,13 +506,10 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
                   </div>
 
                   <div className=" mt-7 w-full flex items-center justify-center">
-                    {/* @todo this button should be one component */}
                     {highlightedProducts ? (
                       <button
                         className={`border-2 text-sm font-medium px-4 py-2 rounded dark:text-text-primary-dark
-                    ${
-                      (allHighlightedProducts.length >= highlightedProducts?.Totalcount ? 'hidden' : '')
-                      }
+                    ${allHighlightedProducts.length >= highlightedProducts?.Totalcount ? 'hidden' : ''}
                     
                     `}
                         onClick={() => handleHighlightedProductsPageCountPageCount()}
@@ -399,52 +521,110 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
                 </div>
               </div>
             )}
-          
-            {
-              recommendedProducts.length > 0 && (
-                <div className=' w-full pt-9 sm:py-8 lg:py-12 flex flex-col items-center justify-center'>
+            {recommendedProducts.length > 0 && (
+              <div className=" w-full pt-9 sm:py-8 lg:py-12 flex flex-col items-center justify-center">
+                <div className=" w-full">
                   <div className=" flex  w-full justify-between">
                     <SectionTitle>All Products</SectionTitle>
-                  </div>
-                
-                  <div className="mt-10 w-full">
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-x-3 gap-y-4 md:gap-x-2 md:gap-y-7">
-                      {
-          
-                        isErrorBannersAndRecommendedProducts ? <h2>{convertRTKQueryErrorToString(errorBannersAndRecommendedProducts)}</h2> : (bannersAndRecommendedProducts?.result !== undefined && bannersAndRecommendedProducts?.Totalcount !== 0 ) ? ( // <h2>{convertRTKQueryErrorToString(errorBannersAndRecommendedProducts)}</h2>
-                          recommendedProducts.map((product, index) => (
-                            <ProductCard key={index} product={product} />
-                          ))
-                        ) : null
-                      }
-                      {isFetchingBannersAndRecommendedProducts && (
-                        <>
-                          {Array.from({ length: 10 }).map((_, index) => (
-                            <Skeleton key={index} />
-                          ))}
-                        </>
-                      )}
+                    <div className="ml-auto mr-[24px] relative inline-flex items-center gap-2">
+                      <Select
+                        className="w-[200px] mobile:text-sm text-[14px]"
+                        onChange={(option) => {
+                          updateFilters({ sort: option?.value });
+                        }}
+                        options={[
+                          { value: 'newest', label: 'Newest First' },
+                          { value: 'oldest', label: 'Oldest First' },
+                          { value: 'price_asc', label: 'Low to High' },
+                          { value: 'price_desc', label: 'High to Low' }
+                        ]}
+                        defaultValue={{ value: 'newest', label: 'Newest First' }}
+                        formatOptionLabel={({ label }, { context }) => (
+                          context === 'value' ? `Sort by: ${label}` : label
+                        )}
+                        styles={customStyles}
+                        theme={(theme) => ({
+                          ...theme,
+                          borderRadius: 0,
+                          colors: {
+                            ...theme.colors,
+                            primary25: theme ? '#f1ecf9' : '#EDF2F7',
+                            primary: theme ? 'var(--brand-color)' : 'var(--brand-color-hover)',
+                          },
+                        })}
+                      />
                     </div>
+                    <button className="flex cursor-pointer justify-between items-center" onClick={handleFilterDrawer}>
+                      <div>
+                        
+                        <img
+                          className=" inline-block mobile:hidden"
+                          width={28}
+                          height={24}
+                          // src={IMAGES.FILTERS_ICON_BLACK}
+                          src={'/images/filters_icon_white.svg'}
+                          alt="dollar_coin_icon"
+                          // loader={gumletLoader}
+                        />
+                            <img
+                          className=" mobile:block hidden"
+                          width={20}
+                          height={18}
+                          // src={IMAGES.FILTERS_ICON_BLACK}
+                          src={'/images/filters_icon_white.svg'}
+                          alt="dollar_coin_icon"
+                          // loader={gumletLoader}
+                        />
+                      </div>
+                    </button>
+                  </div>
+                  {hasActiveFilters() && (
+                    <div className="border-2 boreder-error flex gap-10 items-center w-full flex-wrap mt-5 mobile:overflow-x-scroll h-8 md:h-4 border-none mb-2">
+                      <div className="flex gap-3 overflow-x-auto scrollbar-hide">
+                        {selectedItemsFromFiltersSectionList()}
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <div className="mt-10 w-full mobile:mt-6">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-x-3 gap-y-4 md:gap-x-2 md:gap-y-7">
+                    {errorTypesense ? (
+                      <div className="col-span-full">
+                        <h2 className="text-center text-red-500">{errorTypesense}</h2>
+                      </div>
+                    ) : products.length > 0 ? (
+                      products.map((product, index) => <ProductCard key={`${product?.id}-${index}`} product={product} isTypeSenseData={true} />)
+                    ) : !isLoading ? (
+                      <div className="col-span-full text-center py-8 dark:text-white">
+                        <h2>No products found</h2>
+                      </div>
+                    ) : null}
 
-                    <div className=" mt-7 w-full flex items-center justify-center">
-                      {/* @todo this button should be one component */}
+                    {isLoading && (
+                      <>
+                        {Array.from({ length: 10 }).map((_, index) => (
+                          <Skeleton key={`skeleton-${index}`} />
+                        ))}
+                      </>
+                    )}
+                  </div>
+
+                  {hasMore && (
+                    <div className="mt-7 w-full flex items-center justify-center">
                       <button
-                        className={`border-2 text-sm font-medium px-4 py-2 rounded dark:text-text-primary-dark
-                  ${
-                bannersAndRecommendedProducts &&
-                        (recommendedProducts.length >= bannersAndRecommendedProducts?.Totalcount ? 'hidden' : '')
-                }
-                  ${!bannersAndRecommendedProducts ? 'hidden' : ''}
-                  `}
-                        onClick={() => handleBannersAndRecommendedProductsPageCount()}
+                        className="border-2 text-sm font-medium px-4 py-2 rounded dark:text-text-primary-dark
+                          hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors
+                          disabled:opacity-50 disabled:cursor-not-allowed"
+                        onClick={loadMore}
+                        disabled={isLoading}
                       >
-                        View more
+                        {isLoading ? 'Loading...' : 'View more'}
                       </button>
                     </div>
-                  </div>
+                  )}
                 </div>
-              )
-            }
+              </div>
+            )}
           </div>
         </div>
         <div className="border-b border-border-tertiary-light dark:border-border-tertiary-dark mt-12"></div>

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, KeyboardEvent, useCallback, useEffect, useState } from 'react';
+import React, { ChangeEvent, KeyboardEvent, useCallback, useEffect, useState, useMemo, useRef } from 'react';
 import Button, { BUTTON_TYPE_CLASSES } from '../ui/button';
 import Image from 'next/image';
 import { IMAGES } from '@/lib/images';
@@ -16,24 +16,20 @@ import { useTranslation } from 'next-i18next';
 import { heroSection } from '../search-box/search-user-and-category-drower';
 import LocationTargetIcon from '../../../public/assets/svg/location-target-icon';
 import { getLocationName, getUserLocation } from '@/helper/get-location';
-import CategoriesDrawer from '../categories-drawer';
-// import DistanceRangeInput from '../u-i/distance-range-input';
 import TextWrapper from '../ui/text-wrapper';
-import FilterTab from '../ui/filter-tab';
 import PriceTab from '../ui/price-tab';
 import CustomRangeInput from '../ui/custom-range-input';
-
-type SortingParam = {
-  id: number;
-  label: string;
-  buttonType: 'primary' | 'tertiary';
-};
-
-type PostedWithinTypes = {
-  id: number;
-  label: string;
-  buttonType: 'primary' | 'tertiary';
-};
+import { productsApi } from '@/store/api-slices/products-api';
+import { FilterParameter } from '@/types/filter';
+import CrossIconWhite from '../../../public/images/cross_icon_white.svg';
+import CrossIcon from '../../../public/images/cross-icon.svg';
+import MyLocationIcon from '../../../public/images/location-icon.svg';
+import { useDebounce } from '@/hooks/use-debounce';
+import SelectCategoryDrawer from '../categories-drawer/select-category-drawer';
+import { categories } from '@/store/types';
+import { useSearchParams } from 'next/navigation';
+import { toast } from 'sonner';
+import { toggleScrollLock } from '@/utils/scroll-lock';
 
 export type filterTypes = {
   type: string;
@@ -41,9 +37,10 @@ export type filterTypes = {
   postedWithin: string;
   zipcode: string;
   pendingOffer: string;
-  price: string;
+  price: string | { min: number; max: number };
   distance: string;
   address: string;
+  category: { title: string; _id: string };
 };
 
 type FilterDrawerProps = {
@@ -53,15 +50,13 @@ type FilterDrawerProps = {
   selectedItemsFromFilterSection: filterTypes;
   setSelectedItemsFromFilterSection: React.Dispatch<React.SetStateAction<filterTypes>>;
   addFiltersToQuery: (_item: filterTypes) => void;
+  updateFilters: (_item: any) => void;
 };
 
 type pendingOffersTypes = {
   id: number;
   label: string;
 };
-
-//  Data
-const pendingOffersData = [{ id: 1, label: 'Pending Offer' }];
 
 const typeData = [
   {
@@ -82,28 +77,6 @@ const typeData = [
   },
 ];
 
-const postedWithinData: PostedWithinTypes[] = [
-  { id: 1, label: 'All Listings', buttonType: 'tertiary' },
-  { id: 2, label: 'Last 24 Hours', buttonType: 'tertiary' },
-  { id: 3, label: 'Last 7 days', buttonType: 'tertiary' },
-  { id: 4, label: 'Last 30 days', buttonType: 'tertiary' },
-  { id: 5, label: 'Last 6 Months', buttonType: 'tertiary' },
-];
-
-const conditionData = [
-  {
-    id: 1,
-    label: 'All',
-  },
-  {
-    id: 2,
-    label: 'New',
-  },
-  {
-    id: 3,
-    label: 'Used',
-  },
-];
 
 const FilterDrawer: React.FC<FilterDrawerProps> = ({
   filtersDrawer,
@@ -112,9 +85,12 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
   selectedItemsFromFilterSection,
   setSelectedItemsFromFilterSection,
   addFiltersToQuery,
+  updateFilters,
 }) => {
   const { theme } = useTheme();
+  const { data: filterParameters } = productsApi.useGetFilterParametersQuery();
   const [selectedFilters, setSelectedFilters] = useState<filterTypes>({
+    category: { title: '', _id: '' },
     type: '',
     condition: '',
     postedWithin: '',
@@ -125,43 +101,52 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
     address: '',
   });
 
-  const [sortingParams, setSortingParams] = useState<SortingParam[]>([
-    { id: 1, label: 'Newest First', buttonType: 'tertiary' },
-    { id: 2, label: 'Oldest First', buttonType: 'tertiary' },
-    { id: 3, label: 'Distance', buttonType: 'tertiary' },
-    { id: 4, label: 'Price: Low To High', buttonType: 'tertiary' },
-    { id: 5, label: 'Price: High To Low', buttonType: 'tertiary' },
-  ]);
-  const [pendingOffers] = useState<pendingOffersTypes[]>(pendingOffersData);
   const [types] = useState<pendingOffersTypes[]>(typeData);
-  const [conditions] = useState<pendingOffersTypes[]>(conditionData);
-  const [postedWithins, setPostedWithins] = useState<PostedWithinTypes[]>(postedWithinData);
   const [isSearchCategoriesDrower, setIsSearchCategoriesDrower] = useState(false);
-  const [minPrice, setMinPrice] = useState<number>(2500);
-  const [maxPrice, setMaxPrice] = useState<number>(7500);
+
   const [inputFocus, setInputFocus] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('India');
   const [isAutoCompleteLocationBoxOpen, setIsAutoCompleteLocationBoxOpen] = useState(false);
-  const { placesService, placePredictions } = usePlacesService({
+  const { placesService, placePredictions, getPlacePredictions } = usePlacesService({
     apiKey: GOOGLE_MAPS_KEY,
   });
   const { setUpdateLocationDispatch, setMyLocationDispatch } = useActions();
   const { t } = useTranslation('common');
   const heroSection = t('page.header.heroSection', { returnObjects: true }) as heroSection;
   const address = useAppSelector((state) => state.auth.myLocation?.address);
+  const [zipCode, setZipCode] = useState('');
+  const searchParams = useSearchParams();
   const [formData, setFormData] = useState({
-    location: '',
+    location: searchParams.get('address') || '',
+    selectedLocation: searchParams.get('address') ? true : false,
     address: '',
   });
-  const [zipCode, setZipCode] = useState('');
+  const [selectedLocationFromBox, setSelectedLocationFromBox] = useState(searchParams.get('address') || '');
+  const priceFilter = filterParameters?.data.filters.find((f) => f.typeCode === 3);
+  const initialMinPrice = priceFilter?.data?.[0]?.minPrice ?? 2500;
+  const initialMaxPrice = priceFilter?.data?.[0]?.maxPrice ?? 7500;
+  const [minPrice, setMinPrice] = useState<number>(initialMinPrice);
+  const [maxPrice, setMaxPrice] = useState<number>(initialMaxPrice);
+  const filterRef = useRef<HTMLDivElement>(null);
 
-  const toggleButtonType = (itemId: number) => {
-    setSortingParams((prevParams) =>
-      prevParams.map((param) =>
-        param.id === itemId ? { ...param, buttonType: 'primary' } : { ...param, buttonType: 'tertiary' }
-      )
-    );
-  };
+  useEffect(() => {
+    if (priceFilter?.data?.[0]) {
+      setMinPrice(priceFilter.data[0].minPrice ?? initialMinPrice);
+      setMaxPrice(priceFilter.data[0].maxPrice ?? initialMaxPrice);
+    }
+  }, [filterParameters]);
+
+  const debouncedLocationSearchTerm: string = useDebounce(formData.location, 200);
+
+  useEffect(() => {
+    if (debouncedLocationSearchTerm.length > 2 && !formData.selectedLocation) {
+      getPlacePredictions({ input: debouncedLocationSearchTerm });
+    }
+  }, [debouncedLocationSearchTerm]);
+
+  useEffect(() => {
+    if (placePredictions.length) setIsAutoCompleteLocationBoxOpen(true);
+  }, [placePredictions]);
 
   const handlePriceInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -179,11 +164,11 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
     if (name === 'range-min') {
       setMinPrice(parseInt(value));
       setInputFocus('min');
-      setSelectedFilters({ ...selectedFilters, price: `$${minPrice} - $${maxPrice}` });
+      setSelectedFilters({ ...selectedFilters, price: `$${parseInt(value)} - $${maxPrice}` });
     } else if (name === 'range-max') {
       setMaxPrice(parseInt(value));
       setInputFocus('max');
-      setSelectedFilters({ ...selectedFilters, price: `$${minPrice} - $${maxPrice}` });
+      setSelectedFilters({ ...selectedFilters, price: `$${minPrice} - $${parseInt(value)}` });
     }
   };
 
@@ -225,6 +210,9 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
               longitude: longitude,
             };
             setMyLocationDispatch(data);
+            setSelectedLocationFromBox(placeDetails?.formatted_address || '');
+            setTimeout(() => setIsAutoCompleteLocationBoxOpen(false), 0);
+            setSelectedFilters((prev) => ({ ...prev, address: data.address }));
           } else {
             console.error('Geocode was not successful for the following reason:', status);
           }
@@ -238,7 +226,8 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
 
     setFormData((prevState) => ({
       ...prevState,
-      [name]: value,
+      selectedLocation: false,
+      ['location']: value,
     }));
 
     const data = {
@@ -275,6 +264,7 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
             country: String(placeName.country),
           });
           setSelectedFilters({ ...selectedFilters, address: placeName.city });
+          setSelectedLocationFromBox(placeName.city);
         } catch (e) {
           console.error(e);
         }
@@ -292,8 +282,53 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
     setZipCode(e.target.value);
   };
 
-  const handleSubmit = () => {
-    setSelectedFilters({ ...selectedFilters, zipcode: zipCode });
+  const handleSubmit = async () => {
+    if (!zipCode) return;
+
+    try {
+      // @ts-ignore: Google maps types
+      const geocoder = new google.maps.Geocoder();
+
+      const response = await new Promise((resolve, reject) => {
+        geocoder.geocode({ address: zipCode }, (results, status) => {
+          if (status === 'OK' && results?.[0]) {
+            resolve(results[0]);
+          } else {
+            reject(new Error('Invalid ZIP code'));
+          }
+        });
+      });
+
+      // @ts-ignore: Response typing
+      const { lat, lng } = response.geometry.location;
+      const latitude = lat();
+      const longitude = lng();
+
+      // @ts-ignore: Response typing
+      const formattedAddress = response.formatted_address;
+
+      const data = {
+        address: formattedAddress,
+        city: '',
+        country: '',
+        latitude: latitude.toString(),
+        longitude: longitude.toString(),
+      };
+
+      setMyLocationDispatch(data);
+      // setFormData(prev => ({ ...prev, location: formattedAddress }))
+      setSelectedLocationFromBox(formattedAddress);
+      setSelectedFilters((prev) => ({
+        ...prev,
+        // zipcode: zipCode,
+        address: formattedAddress,
+      }));
+      setTimeout(() => setIsAutoCompleteLocationBoxOpen(false), 0);
+    } catch (error) {
+      console.error('Error validating ZIP code:', error);
+      toast.error('Please enter a valid ZIP code');
+      setZipCode('');
+    }
   };
 
   const handleClearLocations = () => {
@@ -305,13 +340,13 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
       city: '',
       country: '',
     });
+    setSelectedFilters((prev) => ({ ...prev, address: '' }));
+    setSelectedLocationFromBox('');
   };
-
   const handleReset = () => {
-    setMaxPrice(7500);
-    setMinPrice(2500);
-    setPostedWithins((prevParams) => prevParams.map((param) => (param = { ...param, buttonType: 'tertiary' })));
-    setSelectedFilters({
+    setMaxPrice(initialMaxPrice);
+    setMinPrice(initialMinPrice);
+    let initialData = {
       type: '',
       condition: '',
       postedWithin: '',
@@ -320,7 +355,9 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
       price: '',
       distance: '',
       address: '',
-    });
+      category: { title: '', _id: '' },
+    };
+    setSelectedFilters(initialData);
     setInputFocus('');
     setZipCode('');
     handleClearLocations();
@@ -336,50 +373,361 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
   const handleDistance = (value: string) => {
     setSelectedFilters({
       ...selectedFilters,
-      distance: value === 'Country' || value === 'World' ? value : `distance ${value} km`,
+      distance: value === 'Country' || value === 'World' ? value : value,
     });
   };
 
-  const toggleButtonTypePosted = (itemId: number) => {
-    setPostedWithins((prevParams) =>
-      prevParams.map((param) => {
-        return param.id === itemId ? { ...param, buttonType: 'primary' } : { ...param, buttonType: 'tertiary' };
-      })
-    );
-  };
-
-  const handlePostedWithinClick = (label: string, id: number) => {
-    const selectedItem = postedWithins.find((param) => param.id === id && param.buttonType === 'primary');
-
-    if (selectedItem) {
-      setSelectedFilters({ ...selectedFilters, postedWithin: '' });
-      toggleButtonTypePosted(0);
-    } else {
-      toggleButtonTypePosted(id);
-      setSelectedFilters({ ...selectedFilters, postedWithin: label });
-    }
-  };
-
   const handleApplyFilters = () => {
+    let filters = { ...selectedFilters };
+    if (selectedLocationFromBox?.length) {
+      filters.address = selectedLocationFromBox;
+    }
     setSelectedItemsFromFilterSection({ ...selectedFilters });
     closeFilter();
-    addFiltersToQuery(selectedFilters);
+
+    const cleanFilters = {
+      ...selectedFilters,
+      category: { title: selectedFilters.category?.title || '', _id: selectedFilters.category?._id || '' },
+    };
+    addFiltersToQuery(cleanFilters);
+
+    const selectedFiltersData = { ...cleanFilters };
+    if (selectedFiltersData.price && typeof selectedFiltersData.price === 'string') {
+      const [min, max] = selectedFiltersData.price.replace(/\$/g, '').split(' - ');
+      selectedFiltersData.price = {
+        min: parseInt(min),
+        max: parseInt(max),
+      };
+    }
+    updateFilters(selectedFiltersData);
+    setFormData({
+      location: '',
+      address: '',
+      selectedLocation: false,
+    });
+    setZipCode('');
   };
 
   useEffect(() => {
+    const price = console.log(selectedItemsFromFilterSection, 'asdkoasodk');
     setSelectedFilters({ ...selectedItemsFromFilterSection });
 
-    if (!selectedFilters?.postedWithin) {
-      setPostedWithins((prevParams) => prevParams.map((param) => (param = { ...param, buttonType: 'tertiary' })));
+    // Handle price initialization from query
+    if (selectedItemsFromFilterSection.price) {
+      const priceString = selectedItemsFromFilterSection.price;
+      if (typeof priceString === 'string') {
+        const [min, max] = priceString.replace(/\$/g, '').split(' - ').map(Number);
+        setMinPrice(min);
+        setMaxPrice(max);
+      }
+    } else {
+      setMinPrice(initialMinPrice);
+      setMaxPrice(initialMaxPrice);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtersDrawer, selectedItemsFromFilterSection]);
+
+  const renderFilterSection = (filter: FilterParameter) => {
+    switch (filter.typeCode) {
+      case 6: // Category type
+        return (
+          <div className="type">
+            <TextWrapper className="text-base font-semibold leading-6">Category Type</TextWrapper>
+            <div
+              className="flex justify-between items-center cursor-pointer mt-[16px] border border-[#DBDBDB] dark:border-[#3D3B45] p-[12px] w-full rounded"
+              onClick={() => changMenu()}
+              role="button"
+              tabIndex={0}
+              onKeyUp={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  changMenu();
+                }
+              }}
+            >
+              <TextWrapper className="text-sm font-normal leading-5">
+                {' '}
+                {selectedFilters?.category?.title ? selectedFilters?.category?.title : 'Select Type'}
+              </TextWrapper>
+              <RightArrowSVG primaryColor={theme ? '#fff' : '#000'} />
+            </div>
+          </div>
+        );
+
+      case 3: // Price
+        return (
+          <div className="price mt-[24px]">
+            <TextWrapper className="text-base font-semibold leading-6">{filter.name}</TextWrapper>
+            <div className="w-full mt-[14px]">
+              <div className="flex w-full gap-4 justify-between items-center">
+                <PriceTab
+                  currency={filter.currencySymbol || 'USD'}
+                  focus="min"
+                  handlePriceInputChange={handlePriceInputChange}
+                  inputFocus={inputFocus}
+                  price={minPrice}
+                />
+                <PriceTab
+                  currency={filter.currencySymbol || 'USD'}
+                  focus="max"
+                  handlePriceInputChange={handlePriceInputChange}
+                  inputFocus={inputFocus}
+                  price={maxPrice}
+                />
+              </div>
+              <div className="slider mt-[24px] h-[5px] relative bg-[#DBDBDB] dark:bg-[#242424] rounded-sm">
+                <div
+                  className="progress h-full absolute rounded-sm bg-[#6D3EC1]"
+                  style={{
+                    left: `${((minPrice / initialMaxPrice) * 100).toFixed(2)}%`,
+                    right: `${(100 - (maxPrice / initialMaxPrice) * 100).toFixed(2)}%`,
+                  }}
+                />
+              </div>
+              <div className="range-input">
+                <input
+                  type="range"
+                  name="range-min"
+                  className="range-min"
+                  min={initialMinPrice}
+                  max={initialMaxPrice}
+                  value={minPrice}
+                  step={(initialMaxPrice - initialMinPrice) / 100}
+                  onChange={handleRangeInputChange}
+                />
+                <input
+                  type="range"
+                  name="range-max"
+                  className="range-max"
+                  min={initialMinPrice}
+                  max={initialMaxPrice}
+                  value={maxPrice}
+                  step={(initialMaxPrice - initialMinPrice) / 100}
+                  onChange={handleRangeInputChange}
+                />
+              </div>
+            </div>
+          </div>
+        );
+
+      case 19: // Type
+        return (
+          <div className="types mt-[24px]">
+            <TextWrapper className="text-base font-semibold leading-6 text-bg-primary-light">Type</TextWrapper>
+            <div className="flex gap-3 flex-wrap mt-[14px] w-full">
+              {types?.map((type) => (
+                <TypeCard
+                  name={type.label}
+                  key={type.id}
+                  isSelected={type.label === selectedFilters.type}
+                  onClick={() => handleFilterClick('type', type.label)}
+                />
+              ))}
+            </div>
+          </div>
+        );
+
+      case 20: // Condition
+        console.log(filter.data, 'filter.data==>');
+        return (
+          <div className="condition mt-[24px]">
+            <TextWrapper className="text-base font-semibold leading-6 text-bg-primary-light">Condition</TextWrapper>
+            <div className="flex gap-2 w-full overflow-x-scroll mt-[12px]">
+              {filter.data?.map((condition) => (
+                <ConditionCard
+                  name={condition.name}
+                  key={condition.value}
+                  isSelected={condition.value === selectedFilters.condition}
+                  onClick={() => handleFilterClick('condition', condition.name)}
+                />
+              ))}
+            </div>
+          </div>
+        );
+      case 7: // Location
+        return (
+          <>
+            <div className="location mt-[24px] mobile:pb-[100px]">
+              <TextWrapper className="text-base font-semibold leading-6 text-bg-primary-light">Location</TextWrapper>
+              <div className="country flex flex-col mt-[12px]">
+                <span className="text-sm font-medium">Country</span>
+                <FormDropdown
+                  required={true}
+                  label=""
+                  options={countries.data}
+                  selectedValue={selectedCountry}
+                  onSelect={(e) => {
+                    handleCountryChange(e);
+                    changeItems({ country: selectedCountry });
+                  }}
+                  id="country-selector"
+                  name="country"
+                  className="rounded"
+                />
+              </div>
+              <div className="location flex flex-col h-[86px] mt-[12px]">
+                <span className="text-sm font-medium">Location</span>
+                <div className="relative w-full mt-2 items-center flex border border-[#DBDBDB] dark:border-[#3D3B45] h-[45px] justify-center rounded">
+                  <Image
+                    width={17}
+                    height={17}
+                    className="absolute left-3"
+                    // src={IMAGES.LOCATION_ICON_BLACK}
+                    // loader={gumletLoader}
+                    src={MyLocationIcon}
+                    alt="location-icon"
+                  />
+
+                  <input
+                    className={
+                      'truncate h-full mr-12 text-sm bg-transparent w-[65%] dark:text-white placeholder-text-denary-light '
+                    }
+                    placeholder={heroSection?.searchPlace?.placeholder}
+                    autoComplete="off"
+                    value={selectedLocationFromBox}
+                    onChange={(e) => {
+                      setSelectedLocationFromBox(e.target.value);
+                      handleOnChange(e);
+                    }}
+                    onKeyDown={handleKeyDown}
+                    name="location"
+                  />
+                  {isAutoCompleteLocationBoxOpen ? (
+                    <>
+                      <div className=" absolute top-[46px] bg-bg-secondary-light dark:bg-bg-secondary-dark left-0 right-0 rounded-md">
+                        {placePredictions.slice(0, 5).map((search, index) => (
+                          <span
+                            onClick={() => selectedAddressFromLocationBox(index)}
+                            className="flex border-b dark:border-none dark:hover:text-text-secondary-dark border-border-tertiary-light h-9 items-center rounded-md cursor-pointer hover:bg-bg-octonary-light  dark:hover:bg-bg-duodenary-dark "
+                            key={index}
+                            tabIndex={0}
+                            role="button"
+                            onKeyUp={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                selectedAddressFromLocationBox(index);
+                              }
+                            }}
+                          >
+                            <div className="ml-4">
+                              <Image
+                                className="border-error max-w-[14px] max-h-[18px]"
+                                width={14}
+                                height={14}
+                                // src={IMAGES.LOCATION_ICON_BLACK}
+                                // loader={gumletLoader}
+                                src={MyLocationIcon}
+                                alt="history-icon"
+                              />
+                            </div>
+                            <div className="truncate ml-2 flex">
+                              <div className="truncate font-normal text-sm text-text-primary-light dark:text-text-primary-dark">
+                                {search.description}&nbsp;
+                              </div>
+                            </div>
+                          </span>
+                        ))}
+                      </div>
+                    </>
+                  ) : null}
+
+                  {formData.location || address ? (
+                    <>
+                      <Image
+                        width={17}
+                        height={17}
+                        className={
+                          'absolute right-4 rtl:right-[95%] cursor-pointer transition duration-75 hover:scale-105 dark:hidden inline'
+                        }
+                        // src={IMAGES.CROSS_ICON}
+                        src={CrossIcon}
+                        alt="location-target-icon"
+                        // loader={gumletLoader}
+                        onClick={handleClearLocations}
+                      />
+                      <Image
+                        width={17}
+                        height={17}
+                        className={
+                          'absolute right-4 rtl:right-[95%] cursor-pointer transition duration-75 hover:scale-105 dark:inline hidden'
+                        }
+                        // src={IMAGES.CROSS_ICON_WHITE}
+                        src={CrossIconWhite}
+                        alt="location-target-icon"
+                        // loader={gumletLoader}
+                        onClick={handleClearLocations}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <LocationTargetIcon
+                        width={'20'}
+                        height={'20'}
+                        className={
+                          ' absolute right-3 rtl:right-[95%] cursor-pointer transition duration-75 hover:scale-105 '
+                        }
+                        color="var(--brand-color)"
+                        onClick={handleGetLocationHelper}
+                      />
+                    </>
+                  )}
+                </div>
+              </div>
+              <TextWrapper className="text-center text-sm md:text-base">{'Or'}</TextWrapper>
+              <div className="zipcode flex flex-col h-[86px] mt-[12px]">
+                <span className="text-sm font-semibold">Enter ZIP/Postal Code</span>
+                <div className="flex mt-2 border dark:border-[#3D3B45] rounded h-[45px] overflow-hidden">
+                  <input
+                    type="number"
+                    className="w-[100%] h-full bg-transparent p-4"
+                    value={zipCode}
+                    onChange={handleInputChange}
+                  />
+                  <Button
+                    buttonType={BUTTON_TYPE_CLASSES.primary}
+                    className="w-[150px] text-sm md:text-base rounded-tl-none rounded-bl-none rounded-tr-[4px] rounded-br-[4px]"
+                    onClick={() => {
+                      handleSubmit();
+                    }}
+                  >
+                    Submit
+                  </Button>
+                </div>
+              </div>
+              <div className="distance mt-[12px]">
+                <TextWrapper className="text-base font-semibold leading-6 text-bg-primary-light">
+                  Distance (mi)
+                </TextWrapper>
+                <CustomRangeInput handleDistance={handleDistance} presentValue={'Country'} />
+              </div>
+            </div>
+          </>
+        );
+    }
+  };
+
+  const handleSelectCategory = (category: categories) => {
+    setSelectedFilters({ ...selectedFilters, category: { title: String(category.title), _id: String(category._id) } });
+  };
+
+  useEffect(() => {
+    toggleScrollLock(filtersDrawer);
+
+    return () => {
+      toggleScrollLock(false);
+    };
+  }, [filtersDrawer]);
 
   return (
     <>
-      <CategoriesDrawer isSearchCategoriesDrower={isSearchCategoriesDrower} changMenu={changMenu} />
+      <SelectCategoryDrawer
+        filterParameters={filterParameters}
+        isSearchCategoriesDrower={isSearchCategoriesDrower}
+        changMenu={changMenu}
+        handleSelectCategory={handleSelectCategory}
+      />
       <div className={`${filtersDrawer ? 'block' : 'hidden'}`}>
         <div
+          ref={filterRef}
           className={`z-50 mobile:hidden transition-opacity ease-in duration-200 ${
             !filtersDrawer ? 'opacity-0 pointer-events-none hidden' : 'opacity-100 inline-block'
           } fixed w-full h-full right-0`}
@@ -408,339 +756,48 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
                 width={15}
                 height={15}
                 className="cursor-pointer hover:scale-110 dark:md:hidden md:inline-block hidden"
-                src={IMAGES.CROSS_ICON}
+                // src={IMAGES.CROSS_ICON}
                 alt="cross_icon"
                 onClick={closeFilter}
-                loader={gumletLoader}
+                // loader={gumletLoader}
+                src={CrossIcon}
               />
               <Image
                 width={15}
                 height={15}
                 className="cursor-pointer hover:scale-110 md:hidden hidden dark:md:inline-block"
-                src={IMAGES.CROSS_ICON_WHITE}
+                // src={IMAGES.CROSS_ICON_WHITE}
+                src={CrossIconWhite}
                 alt="cross_icon"
                 onClick={closeFilter}
-                loader={gumletLoader}
+                // loader={gumletLoader}
               />
               <Image
                 className="cursor-pointer hover:scale-110 dark:hidden inline-block md:hidden"
                 width={15}
                 height={15}
-                src={IMAGES.BACK_ARROW_ICON_BLACK}
+                // src={IMAGES.BACK_ARROW_ICON_BLACK}
+                src={CrossIcon}
                 alt="back-arrow-icon"
                 onClick={closeFilter}
-                loader={gumletLoader}
+                // loader={gumletLoader}
               />
               <Image
                 className="cursor-pointer hover:scale-110 dark:inline-block dark:md:hidden hidden md:hidden"
                 width={15}
                 height={15}
-                src={IMAGES.BACK_ARROW_ICON_WHITE}
+                // src={IMAGES.BACK_ARROW_ICON_WHITE}
+                src={CrossIconWhite}
                 onClick={closeFilter}
                 alt="back-arrow-icon"
-                loader={gumletLoader}
+                // loader={gumletLoader}
               />
             </div>
-            <div className="pb-5 pt-2 p-6 sticky top-0 w-full dark:bg-[#1A1A1A] bg-bg-secondary-light">
-              <div className="sortby mt-[24px]">
-                <TextWrapper className="text-base font-semibold leading-6 text-bg-primary-light">Sort By</TextWrapper>
-                <div className="mt-[16px] flex flex-wrap gap-2 ">
-                  {sortingParams.map((item) => (
-                    <Button
-                      key={item.id}
-                      buttonType={
-                        item.buttonType === 'tertiary' ? BUTTON_TYPE_CLASSES.tertiary : BUTTON_TYPE_CLASSES.primary
-                      }
-                      className="w-[30%] mobile:text-[11px] text-[13px] font-normal mb-0"
-                      onClick={() => toggleButtonType(item.id)}
-                    >
-                      {item.label}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-              <div className="type mt-[24px]">
-                <TextWrapper className="text-base font-semibold leading-6">Type</TextWrapper>
-                <div
-                  className="flex justify-between items-center cursor-pointer mt-[16px] border border-[#DBDBDB] dark:border-[#3D3B45] p-[12px] w-full rounded"
-                  onClick={() => changMenu()}
-                  role="button"
-                  tabIndex={0}
-                  onKeyUp={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      changMenu();
-                    }
-                  }}
-                >
-                  <TextWrapper className="text-sm font-normal leading-5">Select Type</TextWrapper>
-                  <RightArrowSVG primaryColor={theme ? '#fff' : '#000'} />
-                </div>
-              </div>
-              <div className="pendingoffers mt-[24px]">
-                <TextWrapper className="text-base font-semibold leading-6">Pending Offers</TextWrapper>
-                {pendingOffers?.map((offer: { id: number; label: string }) => (
-                  <FilterTab
-                    key={offer.id}
-                    className={`backdrop:text-[13px] mobile:text-[11px] ${
-                      selectedFilters.pendingOffer === offer.label ? ' !border-[#6D3EC1]  bg-[#6D3EC10D]' : ''
-                    } mt-[16px] w-[120px] px-[10px] py-[10px] font-normal`}
-                    buttonType={BUTTON_TYPE_CLASSES.tertiary}
-                    onClick={() => handleFilterClick('pendingOffer', offer.label)}
-                    text={offer.label}
-                  />
-                ))}
-              </div>
-              <div className="price mt-[24px]">
-                <TextWrapper className="text-base font-semibold leading-6">Price</TextWrapper>
-                <div className="w-full mt-[14px]">
-                  <div className="flex w-full gap-4 justify-between items-center">
-                    <PriceTab
-                      currency="USD"
-                      focus="min"
-                      handlePriceInputChange={handlePriceInputChange}
-                      inputFocus={inputFocus}
-                      price={minPrice}
-                    />
-                    <PriceTab
-                      currency="USD"
-                      focus="max"
-                      handlePriceInputChange={handlePriceInputChange}
-                      inputFocus={inputFocus}
-                      price={maxPrice}
-                    />
-                  </div>
-                  <div className="slider mt-[24px] h-[5px] relative bg-[#DBDBDB] dark:bg-[#242424] rounded-sm">
-                    <div
-                      className="progress h-full left-[25%] right-[25%] absolute rounded-sm bg-[#6D3EC1] height: 100%"
-                      style={{
-                        left: `${((minPrice / 10000) * 100).toFixed(2)}%`,
-                        right: `${((1 - maxPrice / 10000) * 100).toFixed(2)}%`,
-                      }}
-                    />
-                  </div>
-                  <div className="range-input">
-                    <input
-                      type="range"
-                      name="range-min"
-                      className="range-min"
-                      min="50"
-                      max="10000"
-                      value={minPrice}
-                      step="100"
-                      onChange={handleRangeInputChange}
-                    />
-                    <input
-                      type="range"
-                      name="range-max"
-                      className="range-max"
-                      min="250"
-                      max="10000"
-                      value={maxPrice}
-                      step="100"
-                      onChange={handleRangeInputChange}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="types mt-[24px]">
-                <TextWrapper className="text-base font-semibold leading-6 text-bg-primary-light">Type</TextWrapper>
-                <div className="flex gap-3 flex-wrap mt-[14px] w-full">
-                  {types?.map((type) => (
-                    <TypeCard
-                      name={type.label}
-                      key={type.id}
-                      isSelected={type.label === selectedFilters.type}
-                      onClick={() => handleFilterClick('type', type.label)}
-                    />
-                  ))}
-                </div>
-              </div>
-              <div className="condition mt-[24px]">
-                <TextWrapper className="text-base font-semibold leading-6 text-bg-primary-light">Condition</TextWrapper>
-                <div className="flex gap-2 w-full overflow-x-scroll mt-[12px]">
-                  {conditions?.map((condition) => (
-                    <ConditionCard
-                      name={condition.label}
-                      key={condition.id}
-                      isSelected={condition.label === selectedFilters.condition}
-                      onClick={() => handleFilterClick('condition', condition.label)}
-                    />
-                  ))}
-                </div>
-              </div>
-              <div className="location mt-[24px]">
-                <TextWrapper className="text-base font-semibold leading-6 text-bg-primary-light">Location</TextWrapper>
-                <div className="country flex flex-col mt-[12px]">
-                  <span className="text-sm font-medium">Country</span>
-                  <FormDropdown
-                    required={true}
-                    label=""
-                    options={countries.data}
-                    selectedValue={selectedCountry}
-                    onSelect={(e) => {
-                      handleCountryChange(e);
-                      changeItems({ country: selectedCountry });
-                    }}
-                    id="country-selector"
-                    name="country"
-                    className="rounded"
-                  />
-                </div>
-                <div className="location flex flex-col h-[86px] mt-[12px]">
-                  <span className="text-sm font-medium">Location</span>
-                  <div className="relative w-full mt-2 items-center flex border border-[#DBDBDB] dark:border-[#3D3B45] h-[45px] justify-center rounded">
-                    <Image
-                      width={17}
-                      height={17}
-                      className="absolute left-3"
-                      src={IMAGES.LOCATION_ICON_BLACK}
-                      loader={gumletLoader}
-                      alt="location-icon"
-                    />
-
-                    <input
-                      className={
-                        'truncate h-full mr-12 text-sm bg-transparent w-[65%] dark:text-white placeholder-text-denary-light '
-                      }
-                      placeholder={heroSection?.searchPlace?.placeholder}
-                      autoComplete="off"
-                      value={address || formData.location}
-                      onChange={(e) => {
-                        handleOnChange(e);
-                      }}
-                      onKeyDown={handleKeyDown}
-                      name="location"
-                    />
-                    {isAutoCompleteLocationBoxOpen ? (
-                      <>
-                        <div className=" absolute top-[46px] bg-bg-secondary-light dark:bg-bg-secondary-dark left-0 right-0 rounded-md">
-                          {placePredictions.slice(0, 5).map((search, index) => (
-                            <span
-                              onClick={() => selectedAddressFromLocationBox(index)}
-                              className="flex border-b dark:border-none dark:hover:text-text-secondary-dark border-border-tertiary-light h-9 items-center rounded-md cursor-pointer hover:bg-bg-octonary-light  dark:hover:bg-bg-duodenary-dark "
-                              key={index}
-                              tabIndex={0}
-                              role="button"
-                              onKeyUp={(e) => {
-                                if (e.key === 'Enter' || e.key === ' ') {
-                                  e.preventDefault();
-                                  selectedAddressFromLocationBox(index);
-                                }
-                              }}
-                            >
-                              <div className="ml-4">
-                                <Image
-                                  className="border-error max-w-[14px] max-h-[18px]"
-                                  width={14}
-                                  height={14}
-                                  src={IMAGES.LOCATION_ICON_BLACK}
-                                  loader={gumletLoader}
-                                  alt="history-icon"
-                                />
-                              </div>
-                              <div className="truncate ml-2 flex">
-                                <div className="truncate font-normal text-sm text-text-primary-light dark:text-text-primary-dark">
-                                  {search.description}&nbsp;
-                                </div>
-                              </div>
-                            </span>
-                          ))}
-                        </div>
-                      </>
-                    ) : null}
-
-                    {formData.location || address ? (
-                      <>
-                        <Image
-                          width={17}
-                          height={17}
-                          className={
-                            'absolute right-4 rtl:right-[95%] cursor-pointer transition duration-75 hover:scale-105 dark:hidden inline'
-                          }
-                          src={IMAGES.CROSS_ICON}
-                          alt="location-target-icon"
-                          loader={gumletLoader}
-                          onClick={handleClearLocations}
-                        />
-                        <Image
-                          width={17}
-                          height={17}
-                          className={
-                            'absolute right-4 rtl:right-[95%] cursor-pointer transition duration-75 hover:scale-105 dark:inline hidden'
-                          }
-                          src={IMAGES.CROSS_ICON_WHITE}
-                          alt="location-target-icon"
-                          loader={gumletLoader}
-                          onClick={handleClearLocations}
-                        />
-                      </>
-                    ) : (
-                      <>
-                        <LocationTargetIcon
-                          width={'20'}
-                          height={'20'}
-                          className={
-                            ' absolute right-3 rtl:right-[95%] cursor-pointer transition duration-75 hover:scale-105 '
-                          }
-                          color="var(--brand-color)"
-                          onClick={handleGetLocationHelper}
-                        />
-                      </>
-                    )}
-                  </div>
-                </div>
-                <TextWrapper className="text-center text-sm md:text-base">{'Or'}</TextWrapper>
-                <div className="zipcode flex flex-col h-[86px] mt-[12px]">
-                  <span className="text-sm font-semibold">Enter ZIP/Postal Code</span>
-                  <div className="flex mt-2 border dark:border-[#3D3B45] rounded h-[45px] overflow-hidden">
-                    <input
-                      type="number"
-                      className="w-[100%] h-full bg-transparent p-4"
-                      value={zipCode}
-                      onChange={handleInputChange}
-                    />
-                    <Button
-                      buttonType={BUTTON_TYPE_CLASSES.primary}
-                      className="w-[150px] text-sm md:text-base rounded-tl-none rounded-bl-none rounded-tr-[4px] rounded-br-[4px]"
-                      onClick={() => {
-                        handleSubmit();
-                      }}
-                    >
-                      Submit
-                    </Button>
-                  </div>
-                </div>
-                <div className="distance mt-[12px]">
-                  <TextWrapper className="text-base font-semibold leading-6 text-bg-primary-light">
-                    Distance (mi)
-                  </TextWrapper>
-                  {/* <DistanceRangeInput onMouseDown={() => {}} onTouchStart={() => {}} /> */}
-                  <CustomRangeInput
-                    handleDistance={handleDistance}
-                    presentValue={selectedFilters.distance.split(' ')[1]}
-                  />
-                </div>
-              </div>
-              <div className="postedwithin mt-[30px] pb-24">
-                <TextWrapper className="text-base font-semibold leading-6 text-bg-primary-light">
-                  Posted Within
-                </TextWrapper>
-                <div className="mt-[16px] flex flex-wrap gap-2 ">
-                  {postedWithins?.map((post) => (
-                    <Button
-                      key={post.id}
-                      buttonType={
-                        post.buttonType === 'tertiary' ? BUTTON_TYPE_CLASSES.tertiary : BUTTON_TYPE_CLASSES.primary
-                      }
-                      className="w-[30%] text-[13px] mobile:text-[11px] font-thin mb-0"
-                      onClick={() => handlePostedWithinClick(post.label, post.id)}
-                    >
-                      {post.label}
-                    </Button>
-                  ))}
-                </div>
-              </div>
+            <div className="pb-5 lg:pb-[120px] pt-2 p-6 sticky top-0 w-full dark:bg-[#1A1A1A] bg-bg-secondary-light">
+              {/* dyanamic filter section */}
+              {filterParameters?.data.filters.map((filter, index) => (
+                <React.Fragment key={index}>{renderFilterSection(filter)}</React.Fragment>
+              ))}
             </div>
             <div className="sticky z-[999] bottom-0 flex gap-2 items-center mx-auto px-3 w-full h-[80px] dark:bg-[#1A1A1A] bg-bg-secondary-light">
               <Button
@@ -759,7 +816,7 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
         </div>
       </div>
 
-      <style jsx>
+      <style global jsx>
         {`
           input:focus {
             border: none;

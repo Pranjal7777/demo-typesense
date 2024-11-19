@@ -176,6 +176,11 @@ const RegistrationDetails: React.FC = () => {
       setCompanyData({ ...companyData, countryCode, phoneNumber });
     }
   };
+
+  const onInviteReferralChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setInViteReferralCode(e.target.value);
+    setErrorState((prevState) => ({ ...prevState, inviteReferralCode: '' }));
+  };
   useEffect(() => {
     if (individualData.country || companyData.country) {
       if (isIndividualOrCompany) {
@@ -651,7 +656,7 @@ const RegistrationDetails: React.FC = () => {
                 type="text"
                 name="inviteReferralCode"
                 value={inviteReferralCode}
-                onChange={(e) => setInViteReferralCode(e.target.value)}
+                onChange={onInviteReferralChange}
                 error={errorState.inviteReferralCode}
               />
             </>
@@ -735,7 +740,7 @@ const RegistrationDetails: React.FC = () => {
                 type="text"
                 name="inviteReferralCode"
                 value={inviteReferralCode}
-                onChange={(e) => setInViteReferralCode(e.target.value)}
+                onChange={onInviteReferralChange}
                 error={errorState.inviteReferralCode}
               />
             </>

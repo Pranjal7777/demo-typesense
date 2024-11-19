@@ -27,7 +27,7 @@ const Auth = () => {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     Keywords: 'Sign up',
-    name: 'Sign up | Le-offer - The biggest buy & sell marketplace globally in 2024',
+    name: 'Sign up | Kwibal - The biggest buy & sell marketplace globally in 2024',
     description: 'Negotiate and get the best deals , buy direct or trade your products for another one.',
     url: 'https://webv2.le-offers.com/',
     logo: 'https://leoffer-media.s3.ap-south-1.amazonaws.com/og_image_36021e5b9a.svg',

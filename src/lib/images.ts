@@ -7,7 +7,7 @@ export const IMAGES = {
 
   PRIMARY_LOGO_WHITE_OTHER: 'Frame_1171282390_1_750d5a6b8a.webp',
 
-  PRIMARY_BANNER: '/hero_banner_image_ebcf25a1a0.webp',
+  PRIMARY_BANNER: 'https://ideal-excitement-d2904ea8a5.media.strapiapp.com/header_hero_image_641d579655.webp',
 
   // Favicon & Main Logo icon
   WEBSITE_FAVICON: '/images/banner/fav.svg',
@@ -16,11 +16,11 @@ export const IMAGES = {
 
   //Footer section
 
-  FACEBOOK_LOGO_BLACK: 'facebook_icon_c7ebaa0d3c.svg',
-  LINKEDIN_LOGO_BLACK: 'linkedin_6e2d9a5200.svg',
-  TWITTER_LOGO_BLACK: 'twitter_6c2db0a29f.svg',
-  YOUTUBE_LOGO_BLACK: 'youtube_icon_1e565c301c.svg',
-  INSTAGRAM_LOGO_BLACK: 'instagram_icon_41d668ff45.svg',
+  FACEBOOK_LOGO_BLACK: 'https://ideal-excitement-d2904ea8a5.media.strapiapp.com/facebook_black_icon_9f7a05d524.webp',
+  LINKEDIN_LOGO_BLACK: 'https://ideal-excitement-d2904ea8a5.media.strapiapp.com/linkedln_black_cc29d1cab1.webp',
+  TWITTER_LOGO_BLACK: 'https://ideal-excitement-d2904ea8a5.media.strapiapp.com/twitter_black_a9df55952e.webp',
+  YOUTUBE_LOGO_BLACK: 'https://ideal-excitement-d2904ea8a5.media.strapiapp.com/youtube_black_1658fed43e.webp',
+  INSTAGRAM_LOGO_BLACK: 'https://ideal-excitement-d2904ea8a5.media.strapiapp.com/instagram_black_2817ff3e4d.webp',
 
   ORDER_SUCCESS:'/images/success.png',
 
@@ -59,8 +59,8 @@ export const IMAGES = {
   // Download Section
 
   LEFT_BG_IMAGE: 'Frame_1171281390_1_1_e118a866f1.webp',
-  GOOGLE_LOGO: 'google_logo_b2d0a3caa7.svg',
-  FACEBOOK_LOGO: 'facebook_logo_c87b651fa6.svg',
+  GOOGLE_LOGO: 'https://ideal-excitement-d2904ea8a5.media.strapiapp.com/google_icon_dc0de416e7.webp',
+  FACEBOOK_LOGO: 'https://ideal-excitement-d2904ea8a5.media.strapiapp.com/facebbook_icon_97896fddad.webp',
   PASSWORD_HIDE_ICON_BLACK: 'password_hide_icon_black_a6f60c9308.svg',
   PASSWORD_HIDE_ICON_WHITE: 'password_hide_icon_white_2d38d0118c.svg',
   PASSWORD_SHOW_ICON_BLACK: 'password_show_icon_black_a3c7905cb7.svg',
@@ -71,7 +71,7 @@ export const IMAGES = {
   MOBILE_PHONE_ICON_WHITE: 'mobile_phone_icon_aa3670df53.svg',
   HONE_ICON: '/assets/images/phone_icon.svg',
   THANK_YOU_LOGO: 'thankyou_logo_528601771b.svg',
-  THANK_YOU_PAGE_BG_IMAGE: 'Signup_25bb04d40f.webp',
+  THANK_YOU_PAGE_BG_IMAGE: 'https://ideal-excitement-d2904ea8a5.media.strapiapp.com/Signup_76bf8f73fe.webp',
   RESET_PASSWORD_LOGO: '/assets/images/reset_password_icon.svg',
 
   MOBILE_MOCKUPS: '/mobile_dummy_0d581f7648.webp',

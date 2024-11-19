@@ -80,7 +80,7 @@ const PrivacyPolicy: FC<Props> = ({ PrivacyData,htmlContent }) => {
   // const {data:htmlContent,isFetching,isError }=productsApi.useGetPrivacyPolicyDataQuery();
 
   return (
-    <Layout stickyHeader={true} stickyHeroSection={true}>
+    <Layout  excludeHeroSection={true} stickyHeader={true}>
       <CustomHeader
         title={strapiSeoData?.metaTitle}
         keywords={joinedString}

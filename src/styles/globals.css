@@ -21,13 +21,14 @@
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
 
-  --icon-primary-dark:#ffffff;
+  --icon-primary-dark:#FFFFFF;
+  --icon-primary-light:#202020;
   --icon-secondary-dark :#343434;
   
   --icon-primary-light:black;
   --icon-secondary-light :#E9E9E9;
 
-  --brand-color:#6d3ec1;
+  --brand-color:#1FD18E;
   --bg-primary-dark: #1A1A1A;
   --bg-secondary-dark: #242424;
   --border-tertiary-light: #DBDBDB;

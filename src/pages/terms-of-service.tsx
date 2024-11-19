@@ -69,7 +69,7 @@ const TermsAndService: FC<Props>= ({termsOfServiceData}) =>{
   const keywords = termsOfServiceData?.attributes?.seoProperties?.keywords;
   const joinedString = formatArrayToStrings(keywords);
   return (
-    <Layout stickyHeroSection={true} stickyHeader={true}>
+    <Layout  excludeHeroSection={true} stickyHeader={true}>
       <CustomHeader
         title={strapiSeoData?.metaTitle}
         keywords={joinedString}
@@ -81,7 +81,7 @@ const TermsAndService: FC<Props>= ({termsOfServiceData}) =>{
         twitterURL={strapiSeoData?.twitterCard?.twitterURL}
       />
       <PageHeaderWithBreadcrumb className='' steps={breadcrumbLinks}></PageHeaderWithBreadcrumb>
-      <div className="mt-[5px] mobile:mt-[5px] relative custom-container mx-auto sm:px-16 mobile:px-4 ">
+      <div className="mt-[50px] md:mt-[69px] relative custom-container mx-auto sm:px-16 mobile:px-4 ">
         {/* <PageBanner 
                 bannerUrlForMobile={headerBennerSection.bannerUrlForMobile}
                 bannerUrlForWeb={headerBennerSection.bannerUrlForWeb}

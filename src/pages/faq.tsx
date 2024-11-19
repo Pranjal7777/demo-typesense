@@ -148,12 +148,12 @@ const Faq: React.FC<FaqProps> = ({ faqData }) => {
                     {faqData?.FAQSection?.title}
                   </ContentSectionPageTitle>
 
-                  <Description className="mobile:mb-5" desc={[faqData?.FAQSection?.description]} />
+                  <Description className="mb-0" desc={[faqData?.FAQSection?.description]} />
                 </>
               ) : null}
 
               <div className="flex flex-col items-center justify-center">
-                <div className="flex mb-20 mobile:mb-3 items-center justify-between h-[60px] mobile:h-[50px] rounded-full dark:bg-bg-tertiary-dark border-border-denary-light dark:border-border-primary-dark bg-bg-octonary-light  max-w-[400px] mobile:max-w-[350px] w-full border-2">
+                <div className="flex my-9 md:my-16  items-center justify-between h-[60px] mobile:h-[50px] rounded-full dark:bg-bg-tertiary-dark border-border-denary-light dark:border-border-primary-dark bg-bg-octonary-light  max-w-[400px] mobile:max-w-[350px] w-full border-2">
                   <button
                     className={`w-[50%] h-full rounded-full transition-all ease-in duration-300 dark:text-text-primary-dark ${
                       isBuyerOrSeller ? 'bg-brand-color text-text-secondary-light' : 'text-text-primary-light'

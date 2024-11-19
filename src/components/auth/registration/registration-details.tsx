@@ -63,6 +63,7 @@ const RegistrationDetails: React.FC = () => {
     country: '',
     companyName: '',
     email: '',
+    inviteReferralCode:''
   });
 
   const [individualData, setIndividualData] = useState({
@@ -75,6 +76,7 @@ const RegistrationDetails: React.FC = () => {
     country: 'India',
     email: '',
   });
+  console.log(individualData, 'mir individualData');
 
   const [companyData, setCompanyData] = useState({
     accountType: 'company',
@@ -91,6 +93,8 @@ const RegistrationDetails: React.FC = () => {
   const [sendVerificationCode] = authApi.useSendVerificationCodeMutation();
   const [phoneNumberValidation] = authApi.useValidatePhoneNumberMutation();
   const [validateUserName] = authApi.useValidateUserNameMutation();
+  const [validateReferralCode] = authApi.useLazyValidateReferralCodeQuery();
+  
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -102,6 +106,7 @@ const RegistrationDetails: React.FC = () => {
       country: '',
       companyName: '',
       email: '',
+      inviteReferralCode: '',
     });
   }, [isIndividualOrCompany]);
 
@@ -111,7 +116,7 @@ const RegistrationDetails: React.FC = () => {
       const lastFourDigit = Math.floor(1000 + Math.random() * 9000);
       const newUsername = `${firstAndLastNameStr}${lastFourDigit}`;
       setIndividualData({ ...individualData, username: newUsername });
-      setErrorState((prevState) => ({ ...prevState, username:'' }));
+      setErrorState((prevState) => ({ ...prevState, username: '' }));
     }
   }, [individualData.firstName, individualData.lastName]);
 
@@ -121,7 +126,7 @@ const RegistrationDetails: React.FC = () => {
       const lastFourDigit = Math.floor(1000 + Math.random() * 9000);
       const newUsername = `${companyNameInLowerCase}${lastFourDigit}`;
       setCompanyData({ ...companyData, username: newUsername });
-      setErrorState((prevState) => ({ ...prevState, username:'' }));
+      setErrorState((prevState) => ({ ...prevState, username: '' }));
     }
   }, [companyData.companyName]);
 
@@ -243,67 +248,91 @@ const RegistrationDetails: React.FC = () => {
         if (key in errorState && value.trim() == '') {
           setErrorState((prevState) => ({
             ...prevState,
-            [key]: value.trim() === '' && `${key == 'phoneNumber' ? PHONE_NUMBER : key == 'username' ? USER_NAME :key} is missing`,
+            [key]:
+              value.trim() === '' &&
+              `${key == 'phoneNumber' ? PHONE_NUMBER : key == 'username' ? USER_NAME : key} is missing`,
           }));
           isMissing = true;
         }
       }
-      if(isMissing){
+      if (isMissing) {
         return;
       }
 
-         if(individualData.username){
+      if (individualData.username) {
+        try {
+          setIsLoading(true);
+          const data = await validateUserName(individualData.username).unwrap();
+          setIsLoading(false);
+          if (data) {
+            setErrorState((prevState) => ({ ...prevState, username: '' }));
+          }
+        } catch (e) {
+          setIsLoading(false);
+          const error = e as { data: { message: string } };
+          if (error.data && error.data.message) {
+            setErrorState((prevState) => ({ ...prevState, username: `${error.data.message}` }));
+          } else {
+            setErrorState((prevState) => ({ ...prevState, username: `Unexpected error` }));
+          }
+          isError = true;
+        }
+      }
+
+      if (individualData.phoneNumber) {
+        const isPhoneValid = validatePhoneNumber(`${individualData.countryCode}${individualData.phoneNumber}`);
+        if (isPhoneValid) {
           try {
-            setIsLoading(true);
-            const data = await validateUserName(individualData.username).unwrap();
+            const requesPayloadForValidPhoneNumber = {
+              countryCode: individualData.countryCode,
+              phoneNumber: individualData.phoneNumber,
+            };
+            const data = await phoneNumberValidation(requesPayloadForValidPhoneNumber).unwrap();
             setIsLoading(false);
             if (data) {
-              setErrorState((prevState) => ({ ...prevState, username: '' }));
+              setErrorState((prevState) => ({ ...prevState, phoneNumber: '' }));
             }
           } catch (e) {
             setIsLoading(false);
             const error = e as { data: { message: string } };
             if (error.data && error.data.message) {
-              setErrorState((prevState) => ({ ...prevState, username: `${error.data.message}` }));
+              setErrorState((prevState) => ({ ...prevState, phoneNumber: `${error.data.message}` }));
             } else {
-              setErrorState((prevState) => ({ ...prevState, username: `Unexpected error` }));
+              setErrorState((prevState) => ({ ...prevState, phoneNumber: `Unexpected error` }));
             }
-            isError = true;
-          }   
-        }
-        
-        if(individualData.phoneNumber){
-          const isPhoneValid = validatePhoneNumber(`${individualData.countryCode}${individualData.phoneNumber}`);
-          if (isPhoneValid) {
-            try {
-              const requesPayloadForValidPhoneNumber = {
-                countryCode: individualData.countryCode,
-                phoneNumber: individualData.phoneNumber,
-              };
-              const data = await phoneNumberValidation(requesPayloadForValidPhoneNumber).unwrap();
-              setIsLoading(false);
-              if (data) {
-                setErrorState((prevState) => ({ ...prevState, phoneNumber: '' }));
-              }
-            } catch (e) {
-              setIsLoading(false);
-              const error = e as { data: { message: string } };
-              if (error.data && error.data.message) {
-                setErrorState((prevState) => ({ ...prevState, phoneNumber: `${error.data.message}` }));
-              } else {
-                setErrorState((prevState) => ({ ...prevState, phoneNumber: `Unexpected error` }));
-              }
-              isError=true;
-            }
-          } else {
-            setIsLoading(false);
-            setErrorState((prevState) => ({ ...prevState, phoneNumber: PHONE_NUMBER_INVALID_MESSAGE }));
             isError = true;
           }
+        } else {
+          setIsLoading(false);
+          setErrorState((prevState) => ({ ...prevState, phoneNumber: PHONE_NUMBER_INVALID_MESSAGE }));
+          isError = true;
         }
+      }
+      if (inviteReferralCode) {
+        try {
+          setIsLoading(true);
+          const data = await validateReferralCode(inviteReferralCode).unwrap();
+          console.log(data, 'mir inviteReferralCode success');
+          
+          setIsLoading(false);
+          if (data) {
+            setErrorState((prevState) => ({ ...prevState, inviteReferralCode: '' }));
+          }
+        } catch (e) {
+          setIsLoading(false);
+          console.log(e, 'mir inviteReferralCode error');
+          const error = e as { data: { message: string } };
+          if (error.data && error.data.message) {
+            setErrorState((prevState) => ({ ...prevState, inviteReferralCode: `${error.data.message}` }));
+          } else {
+            setErrorState((prevState) => ({ ...prevState, inviteReferralCode: `Unexpected error` }));
+          }
+          isError = true;
+        }
+      }
       if (isError) {
         return;
-      }  
+      }
       // validation of individual form Data end
     } else {
       // validation of company form Data start
@@ -312,14 +341,19 @@ const RegistrationDetails: React.FC = () => {
       let isMissing = false;
       for (const [key, value] of companyValues) {
         if (key in errorState && value.trim() == '') {
-          setErrorState((prevState) => ({ ...prevState, [key]: value.trim() === '' && `${key == 'phoneNumber' ? PHONE_NUMBER : key == 'username'? USER_NAME : key} is missing` }));
+          setErrorState((prevState) => ({
+            ...prevState,
+            [key]:
+              value.trim() === '' &&
+              `${key == 'phoneNumber' ? PHONE_NUMBER : key == 'username' ? USER_NAME : key} is missing`,
+          }));
           isMissing = true;
-        }       
+        }
       }
       if (isMissing) {
         return;
       }
-       if(companyData.username){
+      if (companyData.username) {
         try {
           setIsLoading(true);
           const data = await validateUserName(companyData.username).unwrap();
@@ -339,7 +373,7 @@ const RegistrationDetails: React.FC = () => {
         }
       }
 
-       if(companyData.phoneNumber){
+      if (companyData.phoneNumber) {
         const isPhoneValid = validatePhoneNumber(`${companyData.countryCode}${companyData.phoneNumber}`);
         if (isPhoneValid) {
           setIsLoading(true);
@@ -355,25 +389,50 @@ const RegistrationDetails: React.FC = () => {
             }
           } catch (e) {
             setIsLoading(false);
+            isError = true;
             const error = e as { data: { message: string } };
             if (error.data && error.data.message) {
               setErrorState((prevState) => ({ ...prevState, phoneNumber: `${error.data.message}` }));
             } else {
               setErrorState((prevState) => ({ ...prevState, phoneNumber: `Unexpected error` }));
             }
-            return;
+            isError = true;
           }
         } else {
           setErrorState((prevState) => ({ ...prevState, phoneNumber: PHONE_NUMBER_INVALID_MESSAGE }));
-          return;
+          isError = true;
         }
+      }
+
+      if (inviteReferralCode) {
+        try {
+          setIsLoading(true);
+          const data = await validateReferralCode(inviteReferralCode).unwrap();       
+          setIsLoading(false);
+          if (data) {
+            setErrorState((prevState) => ({ ...prevState, inviteReferralCode: '' }));
+          }
+        } catch (e) {
+          setIsLoading(false);
+          const error = e as { data: { message: string } };
+          if (error.data && error.data.message) {
+            setErrorState((prevState) => ({ ...prevState, inviteReferralCode: `${error.data.message}` }));
+          } else {
+            setErrorState((prevState) => ({ ...prevState, inviteReferralCode: `Unexpected error` }));
+          }
+          isError = true;
+        }
+      }
+
+      if(isError){
+        return;
       }
       // validation of company form Data end
     }
 
     if (isIndividualOrCompany) {
       const individualValues = Object.values(individualData);
-      if (individualValues.some((value) => value == ' ')) {
+      if (individualValues.some((value) => value == '')) {
         return;
       }
 
@@ -459,6 +518,29 @@ const RegistrationDetails: React.FC = () => {
       setIndividualData({ ...individualData, email: email });
       setCompanyData({ ...companyData, email: email });
     }
+
+    const signUpData = localStorage.getItem('signUpData');
+    if (signUpData) {
+      const parsedData = JSON.parse(signUpData);
+      console.log(parsedData, 'mir signUpData');
+      setIndividualData({
+        ...individualData,
+        email: parsedData.email,
+        phoneNumber: parsedData.phoneNumber,
+        countryCode: parsedData.countryCode,
+        country: parsedData.country,
+        firstName: parsedData.firstName,
+        lastName: parsedData.lastName,
+        username: parsedData.username,
+      });
+      setCompanyData({
+        ...companyData,
+        email: parsedData.email,
+        phoneNumber: parsedData.phoneNumber,
+        countryCode: parsedData.countryCode,
+        country: parsedData.country,
+      });
+    }
   }, []);
 
   const handleSignInClick = useCallback(() => {
@@ -540,12 +622,14 @@ const RegistrationDetails: React.FC = () => {
                 error={errorState.email && 'Email is missing'}
                 type="email"
                 name="email"
+                disabled={true}
                 value={individualData.email}
                 onChange={(e) => onIndividualChange(e)}
               />
               <PhoneNumberInput
                 country="in"
                 required
+                value={individualData.countryCode + individualData.phoneNumber}
                 label={CompleteSignUp.phonePlaceholder}
                 error={errorState.phoneNumber}
                 onChange={onPhoneChange}
@@ -568,6 +652,7 @@ const RegistrationDetails: React.FC = () => {
                 name="inviteReferralCode"
                 value={inviteReferralCode}
                 onChange={(e) => setInViteReferralCode(e.target.value)}
+                error={errorState.inviteReferralCode}
               />
             </>
           ) : (
@@ -651,6 +736,7 @@ const RegistrationDetails: React.FC = () => {
                 name="inviteReferralCode"
                 value={inviteReferralCode}
                 onChange={(e) => setInViteReferralCode(e.target.value)}
+                error={errorState.inviteReferralCode}
               />
             </>
           )}

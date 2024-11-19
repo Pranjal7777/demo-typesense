@@ -12,7 +12,7 @@ const CategoriesIcon: FC<CategoriesIconProps> = ({
   width = '16',
   height = '16',
   className,
-  color = 'white',
+  color = '#FFF',
   ...props
 }) => {
   return (

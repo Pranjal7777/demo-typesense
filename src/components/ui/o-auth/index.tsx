@@ -125,7 +125,7 @@ const OAuth = () => {
           width={20}
           height={20}
           src={`${IMAGES.GOOGLE_LOGO}`}
-          loader={gumletLoader}
+          // loader={gumletLoader}
           alt="google_logo"
         />
         <span className="text-[16px] leading-6 ml-2 rtl:ml-0 rtl:mr-2">
@@ -139,7 +139,7 @@ const OAuth = () => {
           width={20}
           height={20}
           src={`${IMAGES.FACEBOOK_LOGO}`}
-          loader={gumletLoader}
+          // loader={gumletLoader}
           alt="facebook_logo"
         />
         <span className="text-[16px] leading-6 ml-2 rtl:ml-0 rtl:mr-2">

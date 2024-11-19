@@ -35,7 +35,7 @@ const FaqCard:FC<FaqCardProps> = ({question,answer,id,isOpen,onClick}) => {
             )
           }
         </div>
-        <div className={`${isOpen ? '' : 'truncate' } ml-5 rtl:ml-0 rtl:mr-5 mobile:text-base font-semibold text-xl text-text-primary-light dark:text-text-secondary-light`}>
+        <div className={`break-words ml-5 rtl:ml-0 rtl:mr-5 mobile:text-base  font-semibold text-xl text-text-primary-light dark:text-text-secondary-light`}>
           {question}
         </div>
       </div >

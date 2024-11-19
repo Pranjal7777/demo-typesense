@@ -42,6 +42,14 @@ const PhoneNumberInput: FC<Props> = ({
   const [phone, setPhone] = useState(phNo);
 
   return (
+    <>
+    <style>
+      {`
+      .form-control:focus {
+        outline: 2px solid var(--brand-color) !important;
+      }
+      `}
+    </style>
     <div className={appClsx('mobile:mb-3 mb-0 w-full ', mainClassName)}>
       {label && (
         <FormLabel className={appClsx('', labelClassName)}>
@@ -62,7 +70,7 @@ const PhoneNumberInput: FC<Props> = ({
             color: 'black',
             height:'120px'
           }}
-          inputClass={appClsx('!border-none  focus:outline-[#6D3EC1] dark:!bg-bg-primary-dark dark:!text-text-primary-dark',inputClass)}
+          inputClass={appClsx('!border-none  dark:!bg-bg-primary-dark dark:!text-text-primary-dark',inputClass)}
           searchClass={appClsx(' !border-1 !border-error',searchClass)}
           buttonClass={appClsx(' !border-none dark:!bg-bg-primary-dark dark:hover:!bg-bg-primary-dark !focus:bg-transparent !hover:bg-transparent dark:!text-text-primary-dark',buttonClass)}
           dropdownClass={appClsx(
@@ -84,6 +92,7 @@ const PhoneNumberInput: FC<Props> = ({
         </span>
       )}
     </div>
+    </>
   );
 };
 

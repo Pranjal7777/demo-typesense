@@ -39,11 +39,11 @@ const CustomerTestimonial: FC<Props> = ({ data }) => {
         <Warp key={index}>
          
           <div
-            className="border rounded-lg pt-3 px-3 mobile:shadow mobile:rounded-lg mobile:w-full flex flex-col mobile:items-center mobile:justify-center rtl:text-right w-[275px] h-[241px] mobile:h-[180px]  dark:bg-bg-primary-dark bg-bg-secondary-light mobile:dark:border dark:border-border-tertiary-dark"
+            className="border rounded-lg p-4 mobile:shadow mobile:rounded-lg mobile:w-full flex flex-col mobile:items-center mobile:justify-center rtl:text-right w-full h-fit mobile:h-[180px]  dark:bg-bg-primary-dark bg-bg-secondary-light mobile:dark:border dark:border-border-tertiary-dark"
             key={index}
           >
             <div className="mobile:pl-4 mobile:mt-0 gap-2 place-content-center md:place-content-start">
-              <Rating value={item.ratings} key={index} color="#6d3ec1" className='mobile:text-xs sm:text-2xl' itemClassName="mr-2 " />
+              <Rating value={item.ratings} key={index} color="var(--brand-color)" className='mobile:text-xs sm:text-2xl' itemClassName="mr-2 " />
             </div>
             <div className="flex flex-wrap text-wrap w-full flex-col mobile:items-center mobile:justify-center pt-3 ">
               <p className=" text-text-primary-light dark:text-text-primary-dark font-semibold text-xs sm:text-base py-2">

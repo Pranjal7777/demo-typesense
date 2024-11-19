@@ -66,7 +66,7 @@ const Footer = () => {
                     height={32}
                     src={IMAGES.FACEBOOK_LOGO_BLACK}
                     alt="FACEBOOK_LOGO_BLACK"
-                    loader={gumletLoader}
+                    // loader={gumletLoader}
                   />
                 </Link>
                 <Link href={'https://x.com/appscrip'} target='_blank' >
@@ -76,7 +76,7 @@ const Footer = () => {
                     height={32}
                     src={IMAGES.TWITTER_LOGO_BLACK}
                     alt="TWITTER_LOGO_BLACK"
-                    loader={gumletLoader}
+                    // loader={gumletLoader}
                   />
                 </Link>
                 <Link href={'https://www.linkedin.com/company/appscrip?originalSubdomain=in'} target='_blank' >
@@ -87,7 +87,7 @@ const Footer = () => {
                     height={32}
                     src={IMAGES.LINKEDIN_LOGO_BLACK}
                     alt="LINKEDIN_LOGO_BLACK"
-                    loader={gumletLoader}
+                    // loader={gumletLoader}
                   />
                 </Link>
                 <Link href={'https://www.instagram.com/appscrip01/?hl=en'} target='_blank' >
@@ -98,7 +98,7 @@ const Footer = () => {
                     height={32}
                     src={IMAGES.INSTAGRAM_LOGO_BLACK}
                     alt="INSTAGRAM_LOGO_BLACK"
-                    loader={gumletLoader}
+                    // loader={gumletLoader}
                   />
                 </Link>
                 <Link href={'https://www.youtube.com/channel/UC7U65c_o1hNwiwTkWXG32fg'} target='_blank' >
@@ -109,7 +109,7 @@ const Footer = () => {
                     height={32}
                     src={IMAGES.YOUTUBE_LOGO_BLACK}
                     alt="YOUTUBE_LOGO_BLACK"
-                    loader={gumletLoader}
+                    // loader={gumletLoader}
                   />
                 </Link>
               </div>

@@ -160,5 +160,11 @@ export const authApi = rootApi.injectEndpoints({
         method: 'POST',
       }),
     }),
+    validateReferralCode: builder.query<ResponseValidVerificationCodePayload, string>({
+      query: (referralCode) => ({
+        url: `${AUTH_URL_V1}/validateReferralCode?referralCode=${referralCode}`,
+        method: 'GET',
+      }),
+    }),
   }),
 });

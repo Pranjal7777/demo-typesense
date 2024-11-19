@@ -1,3 +1,4 @@
+
 import dynamic from 'next/dynamic';
 import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'next-i18next';
@@ -134,6 +135,8 @@ const HomePage: FC<HomeProps> = ({
   const sellAndBuySection = t('page.sellAndBuySection', { returnObjects: true }) as SellAndBuySection;
   const dealersSection = t('page.dealersSection', { returnObjects: true }) as DealersSection;
   const newAndUsedBannerSection = t('page.newAndUsedBannerSection', { returnObjects: true }) as NewAndUsedBannerSection;
+  console.log(newAndUsedBannerSection, 'mir newAndUsedBannerSection');
+  
   const brandLogoSection = t('page.brandLogoSection', { returnObjects: true }) as BrandLogoSection;
 
   const [blogData, setBlogData] = useState<BlogDataType | null>(null);
@@ -226,6 +229,7 @@ const HomePage: FC<HomeProps> = ({
       <Layout
         tokenFromServer={tokenFromServer}
         categories={categories}
+        // stickyHeader={true}
         categoriesWithChildCategories={categoriesWithChildCategories}
         myLocationFromServer={myLocationFromServer}
       >
@@ -243,7 +247,9 @@ const HomePage: FC<HomeProps> = ({
             categories={categories}
           /> */}
           {/* @todo sell button should be separate component */}
-          <span
+
+          
+          {/* <span
             className="cursor-pointer hover:scale-102 shadow-sm bg-brand-color text-text-secondary-light dark:text-text-secondary-light hidden mobile:flex items-center justify-center fixed w-[89px] h-[44px] bottom-3 right-4 rounded-full z-[1]"
             onClick={sellPage}
             onKeyDown={(e) => {
@@ -257,7 +263,9 @@ const HomePage: FC<HomeProps> = ({
           >
             <span className="text-3xl">+</span>
             <span className="ml-1 text-base font-semibold mr-1 tracking-wide">Sell</span>
-          </span>
+          </span> */}
+
+
           {/*Highlight Product Sections*/}
           <div className="mx-auto ">
             {(!isFetching && highlightedProducts?.result==null) ? null:  <SectionTitle className="sm:mt-12 sm:mb-8 mt-8 mb-4 ">Featured Products</SectionTitle> }
@@ -391,14 +399,14 @@ const HomePage: FC<HomeProps> = ({
               {newAndUsedBannerSection.description}
             </SectionDescription>
 
-            <div className=" w-full flex sm:flex-col lg:flex-row mobile:flex-col items-center justify-between  rounded-xl">
+            <div className=" w-full h-full flex flex-col lg:flex-row gap-x-2 gap-3 items-center justify-between  rounded-xl">
               {newAndUsedBannerSection.items.map((_item, _id) => {
                 return (
                   <div
                     key={_id}
-                    className="mobile:w-full rounded-xl mobile:bg-[#7A45D4] lg:ml-3 lg:mt-0 sm:mt-3 mobile:mt-3  lg:max-w-[648px] mobile:h-[426px]  sm:w-full relative flex items-end lg:items-center "
+                    className="mobile:w-full h-full w-1/2 py-6 px-5 rounded-xl !bg-[var(--brand-color)]  lg:max-w-[648px] mobile:h-[426px]  sm:w-full relative flex  flex-col-reverse md:flex-row items-center justify-center md:justify-between lg:items-center "
                   >
-                    <div className="absolute mb-6 lg:mt-10 ml-6 rtl:mr-6">
+                    <div className=" self-baseline md:self-center">
                       <div className="text-2xl font-semibold leading-9 text-text-secondary-light dark:text-text-primary-dark">
                         {_item.title}
                       </div>
@@ -411,23 +419,23 @@ const HomePage: FC<HomeProps> = ({
                         onKeyDown={handleKeyDown}
                         tabIndex={0}
                         role="button"
-                        className="bg-bg-secondary-light rounded px-3 py-2 flex items-center justify-between mobile:justify-around w-[80%] mobile:w-[80%] mobile:h-[44px]"
+                        className="bg-bg-secondary-light rounded px-3 py-2 flex items-center gap-3 justify-between mobile:justify-around w-fit mobile:h-[44px]"
                       >
                         <span className="text-sm font-bold leading-5 text-brand-color">{_item.btnText}</span>
                         <UpArrowIconRight primaryColor={'var(--brand-color)'} />
                       </span>
                     </div>
-                    <Image
+                    {/* <Image
                       width={750}
                       height={750}
                       className=" object-cover w-full h-full rounded-xl hidden sm:inline-block"
-                      src={_item.image}
+                      src={_item.mobileImage}
                       alt="truck_image"
-                    />
+                    /> */}
                     <Image
-                      width={343}
-                      height={306}
-                      className=" w-1/2 absolute top-10 left-24 h-1/2 inline-block sm:hidden"
+                      width={200}
+                      height={200}
+                      className=" w-[200px] top-10 left-24 h-[200px] inline-block"
                       src={_item.mobileImage}
                       alt="truck_image"
                     />

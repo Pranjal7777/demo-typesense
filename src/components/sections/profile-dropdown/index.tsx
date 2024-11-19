@@ -120,7 +120,7 @@ const ProfileDropdown: FC<Props> = ({ menuOptions, signOut }) => {
             <UserAccountCard
               profileImage=""
               accountName="User Account Name"
-              desc="Please Login to le.offer to continue"
+              desc="Please Login to Kwibal to continue"
             />
           </Link>
           <div className="block lg:hidden font-bold p-4">
@@ -130,7 +130,7 @@ const ProfileDropdown: FC<Props> = ({ menuOptions, signOut }) => {
 
             <div className="flex flex-col font-normal text-base gap-5 mt-5">
               <Link href={'/about'}>
-                <span>About Le-Offer</span>
+                <span>About Kwibal</span>
               </Link>
               <Link href={'/blog'}>
                 <span>Blog</span>

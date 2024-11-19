@@ -36,7 +36,7 @@ const FormInput: FC<Props> = ({
       <div className=" flex items-center mobile:mt-1 mt-1 w-full relative">
         <input
           className={appClsx(
-            'w-full px-4  focus:border-brand-color  focus:outline-[#6D3EC1] md:text-sm h-11 border dark:bg-bg-primary-dark dark:border-border-tertiary-dark text-text-secondary-dark dark:text-text-primary-dark border-border-tertiary-light rounded ',
+            'w-full px-4  focus:border-[var(--brand-color)]  focus:outline-[var(--brand-color)] md:text-sm h-11 border dark:bg-bg-primary-dark dark:border-border-tertiary-dark text-text-secondary-dark dark:text-text-primary-dark border-border-tertiary-light rounded ',
             className,
             placeholderClassName,
             { 'border-error dark:border-error': error }

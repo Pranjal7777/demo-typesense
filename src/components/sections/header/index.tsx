@@ -356,7 +356,7 @@ const Header: FC<Props> = ({
             <HydrationGuard>
               {userInfo && (
                 <div className="hidden md:flex gap-6 mr-8">
-                  <div className="cursor-pointer relative">
+                  {/* <div className="cursor-pointer relative">
                     <MessageIcon
                       className="hover:scale-105"
                       primaryColor={`${
@@ -371,20 +371,21 @@ const Header: FC<Props> = ({
                           : 'var(--icon-primary-dark)'
                       }`}
                     />
-                  </div>
+                  </div> */}
                   <div className="cursor-pointer">
                     <FeedsIcon
                       className="hover:scale-105"
                       primaryColor={`${
                         stickyHeaderWithSearchBox
-                          ? 'var(--icon-primary-light)'
-                          : theme
-                          ? minThreshold
-                            ? 'var(--icon-primary-dark)'
-                            : 'var(--icon-primary-dark)'
-                          : minThreshold
-                          ? 'var(--icon-primary-light)'
-                          : 'var(--icon-primary-dark)'
+                          ? theme
+                          ? 'var(--icon-primary-dark)'
+                          : 'var(--icon-primary-light)' :
+                           theme ?
+                             minThreshold ?
+                               'var(--icon-primary-dark)'
+                              : 'var(--icon-primary-dark)'
+                            : minThreshold ? 'var(--icon-primary-light)' : 'var(--icon-primary-dark)'
+                          
                       }`}
                     />
                   </div>
@@ -393,14 +394,15 @@ const Header: FC<Props> = ({
                       className="hover:scale-105"
                       primaryColor={`${
                         stickyHeaderWithSearchBox
-                          ? 'var(--icon-primary-light)'
-                          : theme
-                          ? minThreshold
-                            ? 'var(--icon-primary-dark)'
-                            : 'var(--icon-primary-dark)'
-                          : minThreshold
-                          ? 'var(--icon-primary-light)'
-                          : 'var(--icon-primary-dark)'
+                          ? theme
+                          ? 'var(--icon-primary-dark)'
+                          : 'var(--icon-primary-light)' :
+                           theme ?
+                             minThreshold ?
+                               'var(--icon-primary-dark)'
+                              : 'var(--icon-primary-dark)'
+                            : minThreshold ? 'var(--icon-primary-light)' : 'var(--icon-primary-dark)'
+                          
                       }`}
                     />
                   </div>
@@ -411,14 +413,15 @@ const Header: FC<Props> = ({
                 <UserLogin
                   primaryColor={`${
                     stickyHeaderWithSearchBox
-                      ? 'var(--icon-primary-light)'
-                      : theme
-                      ? minThreshold
-                        ? 'var(--icon-primary-dark)'
-                        : 'var(--icon-primary-dark)'
-                      : minThreshold
-                      ? 'var(--icon-primary-light)'
-                      : 'var(--icon-primary-dark)'
+                      ? theme
+                      ? 'var(--icon-primary-dark)'
+                      : 'var(--icon-primary-light)' :
+                       theme ?
+                         minThreshold ?
+                           'var(--icon-primary-dark)'
+                          : 'var(--icon-primary-dark)'
+                        : minThreshold ? 'var(--icon-primary-light)' : 'var(--icon-primary-dark)'
+                      
                   }`}
                 />
               ) : (
@@ -429,7 +432,7 @@ const Header: FC<Props> = ({
                 // <div className=" mx-9" onClick={changeisLoginModalOpen}> {loginOrUserName.login}</div>
               )}
             </HydrationGuard>
-            <Button
+            {/* <Button
               onClick={sellPage}
               type="button"
               className={'mb-0 rounded-lg py-2 w-24 h-[34px] text-center hover:scale-105 transition-all duration-200'}
@@ -442,7 +445,7 @@ const Header: FC<Props> = ({
               //   : `!text-text-secondary-light dark:text-text-secondary-dark`}
             >
               {btnText}
-            </Button>
+            </Button> */}
           </div>
         </div>
       </nav>

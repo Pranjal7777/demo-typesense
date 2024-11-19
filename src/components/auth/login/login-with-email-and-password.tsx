@@ -193,6 +193,7 @@ const LoginWithEmailAndPassword: React.FC = () => {
         // setLoginErrorForEmail(error.data.message);
         setError(error?.data?.message);
         if (error?.status === 412) {
+
           localStorage.setItem('auth_email', formData?.email);
 
           toast.info('Redirecting to SignUp page', {
@@ -213,9 +214,9 @@ const LoginWithEmailAndPassword: React.FC = () => {
     const email = localStorage.getItem('auth_email');
     if (email) {
       setFormData({ email: email });
-      localStorage.removeItem('auth_email');
+      // localStorage.removeItem('auth_email');
     }
-  });
+  },[]);
 
   const handleSignUpClick = useCallback(() => {
     router.push(`${SIGN_UP_PAGE}?step=1`);

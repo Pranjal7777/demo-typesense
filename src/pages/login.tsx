@@ -1,3 +1,4 @@
+
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -14,10 +15,12 @@ import CustomHeader from '@/components/ui/custom-header';
 import PrimaryLogo from '../../public/assets/svg/primary-logo';
 import DownArrowRoundedEdge from '../../public/assets/svg/down-arrow-rounded-edge';
 import CloseIcon from '../../public/assets/svg/close-icon';
+import { useTheme } from '@/hooks/theme';
 
 const Auth = () => {
   const router = useRouter();
   const { step } = router.query;
+  const {theme} =  useTheme();
 
   const organizationSchema: SchemaItem = {
     '@context': 'https://schema.org',
@@ -80,7 +83,7 @@ const Auth = () => {
           tabIndex={0}
           className={`h-[15vh] flex justify-center items-end cursor-pointer sm:mb-10  mobile:mb-[38px]  ${step === '5' ? 'hidden' : ''} cursor-pointer`}
         >
-          <PrimaryLogo width={127} height={36} primaryColor={'var(--brand-color)'} className='absolute top-[40px]' />
+          <PrimaryLogo width={127} height={36} primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}  className='absolute top-[40px]' />
         </section>
         {(() => {
           switch (step) {

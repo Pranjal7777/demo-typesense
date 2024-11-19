@@ -1,5 +1,3 @@
-
-// import Button from '@/components/ui/button';
 import FormHeader from '@/components/form/form-header';
 import FormSubHeader from '@/components/form/form-sub-header';
 import { gumletLoader } from '@/lib/gumlet';
@@ -82,9 +80,9 @@ const ThankYouPage = () => {
             <Link href={'/'} className=' w-full h-full flex items-center justify-center'> {ThankyouPage.buyOption}</Link>  
           </button>
            
-          <button onClick={buttonClickHandler}  className='w-[166px] h-[48px] md:h-[44px] md:w-[198px] rounded-[4px] text-[16px] font-semibold bg-transparent border border-border-[#FFF] text-text-primary-dark  hover:!scale-100 '  >
+          {/* <button onClick={buttonClickHandler}  className='w-[166px] h-[48px] md:h-[44px] md:w-[198px] rounded-[4px] text-[16px] font-semibold bg-transparent border border-border-[#FFF] text-text-primary-dark  hover:!scale-100 '  >
             <Link href={'/'} className=' w-full h-full flex items-center justify-center'> {ThankyouPage.sellOption}</Link>
-          </button>
+          </button> */}
           
         </div>
       </div>

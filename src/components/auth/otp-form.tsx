@@ -295,6 +295,7 @@ const OTPForm: React.FC = () => {
 
             if (data) {
               localStorage.removeItem('timer');
+              localStorage.removeItem('signUpData');
               // console.log(data);
               
               // setUserDetailsDispatch(data);
@@ -322,8 +323,6 @@ const OTPForm: React.FC = () => {
         setIsLoading(false);
       }
     } else if (router.pathname.includes(SIGN_IN_PAGE)) {
-      console.log('inside else if');
-
       // const { countryCode, phoneNumber, emailOrPhone,loginType, phoneNumberOrEmail, verificationId } =
       const { countryCode, loginType, phoneNumberOrEmail, verificationId } =
         typeof window !== 'undefined' && localStorage.getItem('otpData')
@@ -350,8 +349,8 @@ const OTPForm: React.FC = () => {
         };
         try {
           const { data } = await login(reqPayloadForLogin).unwrap();
-
           setUserDetailsDispatch(data);
+          localStorage.removeItem('auth_email');
           router.push('/');
         } catch (e) {
           const error = e as { data: { message: string } };
@@ -385,6 +384,7 @@ const OTPForm: React.FC = () => {
 
           if (data) {
             setUserDetailsDispatch(data);
+            localStorage.removeItem('auth_email');
             router.push('/');
           }
         } catch (e) {
@@ -474,11 +474,13 @@ const OTPForm: React.FC = () => {
           <Button
             buttonType="primary"
             isLoading={isLoading}
-            className={`mt-6 hover:cursor-pointer w-[70%] min-w-[303px] my-2 outline-none h-11 rounded bg-bg-tertiary-light dark:bg-bg-undenary-dark text-sm font-semibold !text-[#888888] ${
-              isCompleted && '!text-text-tertiary-color !bg-brand-color'
+            className={`mt-6 hover:cursor-pointer w-[70%] min-w-[303px] my-2 outline-none h-11 rounded
+                 text-sm font-semibold
+                 ${
+              (isCompleted || isLoading) ? '!text-text-tertiary-color !bg-brand-color' : 'bg-bg-tertiary-light dark:bg-bg-undenary-dark !text-[#888888]'
             }`}
             disabled={!isCompleted}
-            onClick={() => handleSubmit()}
+            onClick={ handleSubmit}
           >
             {otpVerification.verifyButton}
           </Button>

@@ -1,3 +1,4 @@
+
 import dynamic from 'next/dynamic';
 import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'next-i18next';
@@ -246,7 +247,9 @@ const HomePage: FC<HomeProps> = ({
             categories={categories}
           /> */}
           {/* @todo sell button should be separate component */}
-          <span
+
+          
+          {/* <span
             className="cursor-pointer hover:scale-102 shadow-sm bg-brand-color text-text-secondary-light dark:text-text-secondary-light hidden mobile:flex items-center justify-center fixed w-[89px] h-[44px] bottom-3 right-4 rounded-full z-[1]"
             onClick={sellPage}
             onKeyDown={(e) => {
@@ -260,7 +263,9 @@ const HomePage: FC<HomeProps> = ({
           >
             <span className="text-3xl">+</span>
             <span className="ml-1 text-base font-semibold mr-1 tracking-wide">Sell</span>
-          </span>
+          </span> */}
+
+
           {/*Highlight Product Sections*/}
           <div className="mx-auto ">
             {(!isFetching && highlightedProducts?.result==null) ? null:  <SectionTitle className="sm:mt-12 sm:mb-8 mt-8 mb-4 ">Featured Products</SectionTitle> }

@@ -99,7 +99,7 @@ const SelectCategoryDrawer: React.FC<CategoriesDrawerProps> = ({
           isSearchCategoriesDrower ? 'w-full opacity-100 inline-block' : 'w-0 opacity-0 hidden'
         } `}
       >
-        <div className="md:pb-5 pt-2 h-fit w-full dark:bg-bg-nonary-dark bg-bg-secondary-light">
+        <div className="pt-2 h-fit w-full dark:bg-bg-nonary-dark bg-bg-secondary-light">
           {/* Header */}
           <div className="w-full flex items-center justify-between my-6 font-semibold text-xl px-[28px] ">
             <span className="flex">All Categories</span>

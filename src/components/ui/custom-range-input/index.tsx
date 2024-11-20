@@ -58,10 +58,10 @@ const CustomRangeInput: React.FC<CustomRangeInputProps> = ({ handleDistance, pre
         ))}
       </div>
       <div
-        className="absolute top-[-34px] text-white bg-[#6D3EC1] py-1 px-3 rounded text-xs shadow-sm transform -translate-x-1/2 min-w-[50px] text-center"
+        className="absolute top-[-34px] text-white bg-brand-color py-1 px-3 rounded text-xs shadow-sm transform -translate-x-1/2 min-w-[50px] text-center"
         style={{ left: calculateLeftPosition() }}
       >
-        <p className="w-0 h-0 border-solid border-t-[#6D3EC1] border-l-transparent border-r-transparent border-b-transparent border-t-[14px] border-r-[8px] border-b-0 border-l-[8px] transform rotate-0 absolute bottom-[-10px] left-1/2 -translate-x-1/2"></p>
+        <p className="w-0 h-0 border-solid border-t-brand-color border-l-transparent border-r-transparent border-b-transparent border-t-[14px] border-r-[8px] border-b-0 border-l-[8px] transform rotate-0 absolute bottom-[-10px] left-1/2 -translate-x-1/2"></p>
         {steps[value]}
       </div>
       <style jsx>
@@ -81,7 +81,7 @@ const CustomRangeInput: React.FC<CustomRangeInputProps> = ({ handleDistance, pre
             height: 24px;
             width: 24px;
             border-radius: 50%;
-            background: #6d3ec1; /* Thumb color */
+            background: var(--brand-color); 
             cursor: pointer;
             margin-top: -8px;
             border: none;
@@ -91,7 +91,7 @@ const CustomRangeInput: React.FC<CustomRangeInputProps> = ({ handleDistance, pre
             height: 24px;
             width: 24px;
             border-radius: 50%;
-            background: #6d3ec1; /* Thumb color */
+            background: var(--brand-color);
             cursor: pointer;
             border: none;
           }
@@ -108,7 +108,7 @@ const CustomRangeInput: React.FC<CustomRangeInputProps> = ({ handleDistance, pre
             height: 24px;
             width: 24px;
             border-radius: 50%;
-            background: #6d3ec1; /* Thumb color */
+            background: var(--brand-color); 
             cursor: pointer;
             border: none;
           }

@@ -476,7 +476,7 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
               </div>
               <div className="slider mt-[24px] h-[5px] relative bg-[#DBDBDB] dark:bg-[#242424] rounded-sm">
                 <div
-                  className="progress h-full absolute rounded-sm bg-[#6D3EC1]"
+                  className="progress h-full absolute rounded-sm bg-brand-color"
                   style={{
                     left: `${((minPrice / initialMaxPrice) * 100).toFixed(2)}%`,
                     right: `${(100 - (maxPrice / initialMaxPrice) * 100).toFixed(2)}%`,
@@ -802,7 +802,7 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
             <div className="sticky z-[999] bottom-0 flex gap-2 items-center mx-auto px-3 w-full h-[80px] dark:bg-[#1A1A1A] bg-bg-secondary-light">
               <Button
                 buttonType="secondary"
-                className="py-3 px-14 md:px-9 text-base !text-[#6D3EC1] !border-[#6D3EC1] bg-bg-secondary-light dark:bg-[#1A1A1A]"
+                className="py-3 px-14 md:px-9 text-base !text-brand-color !border-brand-color bg-bg-secondary-light dark:bg-[#1A1A1A]"
                 style={{ border: '1px solid' }}
                 onClick={handleReset}
               >
@@ -839,7 +839,7 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
             height: 20px;
             width: 20px;
             border-radius: 50%;
-            background: #6d3ec1;
+            background: var(--brand-color);
             pointer-events: auto;
             -webkit-appearance: none;
             cursor: pointer;
@@ -849,7 +849,7 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
             width: 20px;
             border: none;
             border-radius: 50%;
-            background: #6d3ec1;
+            background: var(--brand-color);
             pointer-events: auto;
             -moz-appearance: none;
             cursor: pointer;

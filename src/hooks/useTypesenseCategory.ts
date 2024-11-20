@@ -69,31 +69,16 @@ export const useTypesenseCategory = ({ categoryId, initialFilters, country }: Us
     if (filters.category?._id) {
       filterBy += ` && categories.id:=${filters.category._id}`;
     }
-    if (filters.distance) {
-      let radius = 400; // default radius in km
-      switch (filters.distance) {
-        case '50':
-          radius = 50;
-          break;
-        case '100':
-          radius = 100;
-          break;
-        case '500':
-          radius = 500;
-          break;
-        case '1000':
-          radius = 1000;
-          break;
-        case 'Country':
-        case 'World':
-          // Not applying geo filter for country/world
-          return filterBy;
+    if (filters.address) {
+      if (!filters.distance || (!['World', 'Country'].includes(filters.distance))) {
+        let radius = 400; // default radius from config
+
+        if (filters.distance) {
+          radius = parseInt(filters.distance);
+        }
+
+        filterBy += ` && geo_location:(${myLocation?.latitude}, ${myLocation?.longitude}, ${radius} km)`;
       }
-      filterBy += ` && geo_location:(${myLocation?.latitude}, ${myLocation?.longitude}, ${  radius } km)`;
-    }
-    if(filters.address){
-      let radius = 400; //need to make this dynamic from config api
-      filterBy += ` && geo_location:(${myLocation?.latitude}, ${myLocation?.longitude}, ${  radius } km)`;
     }
     return filterBy;
   };

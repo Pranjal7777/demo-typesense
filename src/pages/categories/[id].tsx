@@ -337,6 +337,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
 
   const hasActiveFilters = () => {
     return Object.entries(selectedItemsFromFilterSection).some(([key, value]) => {
+      if (key === 'distance') return false;
       if (key === 'category') {
         const categoryValue = value as { title: string; _id: string };
         return categoryValue?.title && categoryValue?._id;
@@ -391,11 +392,12 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
       outline: 'none',
       minHeight: '44px',
       border: theme.theme ? '1px solid #433934' : `1px solid var(--border-tertiary-light)`,
-      borderRadius: '0.375rem',
+      borderRadius: '0.775rem',
       backgroundColor: theme.theme ? 'var(--bg-primary-dark)' : '#FFF',
       fontSize: '14px',
       color: theme.theme ? 'var(--bg-secondary-dark)' : 'var(--bg-primary-light)',
       fontWeight: '400',
+      cursor: 'pointer'
     }),
     option: (provided, state) => ({
       ...provided,
@@ -405,6 +407,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
       color: theme.theme ? '#fff' : 'var(--bg-primary-light)',
       fontSize: '14px',
       fontWeight: '400',
+      cursor: 'pointer'
     }),
     menu: (provided) => ({
       ...provided,
@@ -413,6 +416,17 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
     singleValue: (provided) => ({
       ...provided,
       color: theme.theme ? '#fff' : 'var(--bg-primary-light)',
+    }),
+    indicatorSeparator: () => ({
+      display: 'none'
+    }),
+    valueContainer: (provided) => ({
+      ...provided,
+      padding: '2px 0px 2px 8px',
+    }),
+    indicatorsContainer: (provided) => ({
+      ...provided,
+      padding: '0px 12px 0px 0px',
     }),
   };
 
@@ -455,29 +469,29 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
             {allHighlightedProducts.length > 0 && (
               <div className=" w-full pt-9 sm:py-8 lg:py-12 flex flex-col items-center justify-center">
                 <div className=" flex  w-full justify-between">
-                  <SectionTitle>Featured Products</SectionTitle>
-              
-                  <button className="flex cursor-pointer justify-between " onClick={handleFilterDrawer}>
+                  <SectionTitle>Featured Products</SectionTitle>   
+                  {/* <button className="flex cursor-pointer justify-between " 
+                  onClick={handleFilterDrawer}>
                     <div>
                       {' '}
                       <Image
                         className="dark:inline-block hidden"
-                        width={32}
-                        height={32}
-                        src={IMAGES.FILTERS_ICON_WHITE}
+                        width={28}
+                        height={24}
+                        src={'/images/filters_icon_white.svg'}
                         alt="dollar_coin_icon"
-                        loader={gumletLoader}
+                        // loader={gumletLoader}
                       />
                       <Image
                         className="dark:hidden inline-block"
-                        width={32}
-                        height={32}
-                        src={IMAGES.FILTERS_ICON_BLACK}
+                        width={20}
+                        height={18}
+                        src={'/images/filters_icon_black.svg'}
                         alt="dollar_coin_icon"
-                        loader={gumletLoader}
+                        // loader={gumletLoader}
                       />
                     </div>
-                  </button>
+                  </button> */}
                 </div>
 
                 {hasActiveFilters() && (

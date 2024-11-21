@@ -3,6 +3,7 @@ import Button from '../../ui/button';
 import { productsApi } from '@/store/api-slices/products-api';
 import { useTranslation } from 'next-i18next';
 import { toast } from 'sonner';
+import { PROJECT_NAME } from '@/config';
 
 type ConnectSection = {
   title: string;
@@ -14,7 +15,7 @@ type ConnectSection = {
 
 const NewsLetterInput = () => {
   const { t } = useTranslation('common');
-  const connectSection = t('page.connectSection', { returnObjects: true }) as ConnectSection;
+  const connectSection = t('page.connectSection', { returnObjects: true, projectName: PROJECT_NAME.toLowerCase() }) as ConnectSection;
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
   const [isLoading, setIsLoading] = useState(false);

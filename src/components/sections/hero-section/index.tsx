@@ -11,6 +11,7 @@ import useTypesenseSearch from '@/hooks/useTypesenseSearch';
 import { useRouter } from 'next/router';
 import { RootState } from '@/store/store';
 import { useAppSelector } from '@/store/utils/hooks';
+import { PROJECT_NAME } from '@/config';
 
 export type heroSection = {
   title: string;
@@ -49,7 +50,7 @@ const HeroSection: FC<HeroSectionProps> = ({
   const minThreshold = useNewWindowScroll(180);
   const windowWidth = useWindowResize();
   const { t } = useTranslation('common');
-  const heroSection = t('page.header.heroSection', { returnObjects: true }) as heroSection;
+  const heroSection = t('page.header.heroSection', { returnObjects: true, projectName: PROJECT_NAME }) as heroSection;
   const [selectedOption, setSelectedOption] = useState<'Items' | 'Users'>('Items');
   const router = useRouter();
   const [formData, setFormData] = useState<FormDataT>({

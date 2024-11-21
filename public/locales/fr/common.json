@@ -398,7 +398,7 @@
       ]
     },
     "appDownloadSection": {
-      "heading": "Tout le monde gagne sur Kwibal",
+      "heading": "Tout le monde gagne sur {{projectName}}",
       "subHeading": "Déverrouillez des fonctionnalités exclusives en téléchargeant l'application Equipnow dès aujourd'hui !",
       "newsLetterTitle": "Abonnez-vous à notre newsletter",
       "qrText": "Scannez ici"

@@ -15,6 +15,7 @@ import { useActions } from '@/store/utils/hooks';
 import DownArrowRoundedEdge from '../../../../public/assets/svg/down-arrow-rounded-edge';
 import PrimaryLogo from '../../../../public/assets/svg/primary-logo';
 import ThankYouImage from '../../../../public/assets/images/thankyou_logo.svg';
+import { PROJECT_NAME } from '@/config';
 
 export type ThankyouPage = {
   thanksMessage: string;
@@ -28,7 +29,7 @@ const ThankYouPage = () => {
   const router=useRouter();
   const {theme}=useTheme();
   const { t } = useTranslation('auth');
-  const ThankyouPage = t('page.thankyouPage', { returnObjects: true }) as ThankyouPage;
+  const ThankyouPage = t('page.thankyouPage', { returnObjects: true, projectName: PROJECT_NAME}) as ThankyouPage;
   const {setUserDetailsDispatch} = useActions();
 
   const {data} = router.query;

@@ -5,6 +5,7 @@ import PhoneNumberInput from '../form/phone-number-input';
 import Button, { BUTTON_TYPE_CLASSES } from '../ui/button';
 import validatePhoneNumber from '@/helper/validation/phone-number-validation';
 import { toast } from 'sonner';
+import { PROJECT_NAME } from '@/config';
 
 type AppDownloadSection = {
   heading: string;
@@ -17,7 +18,7 @@ type AppDownloadSection = {
 
 const DownloadCard: React.FC = () => {
   const { t } = useTranslation('common');
-  const appDownloadSection = t('page.appDownloadSection', { returnObjects: true }) as AppDownloadSection;
+  const appDownloadSection = t('page.appDownloadSection', { returnObjects: true, projectName: PROJECT_NAME }) as AppDownloadSection;
 
   const [phoneNumber, setPhoneNumber] = useState('');
   const [phoneNumberError, setPhoneNumberError] = useState('');

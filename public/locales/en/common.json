@@ -76,7 +76,7 @@
           "placeholder": "Search Places"
         },
         "button":"Search",
-        "popularSearch": "Buy & Sell products from users around you. Kwibal also provides shipping services and secure escrowed payments to provide the safest buy and sell experience to all users."
+        "popularSearch": "Buy & Sell products from users around you. {{projectName}} also provides shipping services and secure escrowed payments to provide the safest buy and sell experience to all users."
       }
     },
     "categoriesSection": {
@@ -226,7 +226,7 @@
     },
     "button":"View More",
     "flowSection": {
-      "title": "Sell and buy every kinda thing on Kwibal",
+      "title": "Sell and buy every kinda thing on {{projectName}}",
       "section": [
         {
           "heading": "Sell and declutter",
@@ -316,7 +316,7 @@
       ]
     },
     "sellAndBuySection":{
-      "title":"Buy & Sell every kind of thing on Kwibal",
+      "title":"Buy & Sell every kind of thing on {{projectName}}",
       "items":[
         {
           "image":"https://leoffer-images.s3.ap-south-1.amazonaws.com/thumbnail_Frame_1171281931_7a2f88df33.png",
@@ -336,7 +336,7 @@
       ]
     },
     "guidesAndTipsSection":{
-      "title":"Kwibal Guides & Tips",
+      "title":"{{projectName}} Guides & Tips",
       "description":"Gallery of the moment keys are handed over for your equipment. Use #PurchasedOnLe-Offers for a chance to be featured in our happy equipment's gallery.",
       "items":[
         {
@@ -346,12 +346,12 @@
         },
         {
           "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/guides_and_tipes_3_9e53904345.webp",
-          "title":"What kind of equipments are sold by Kwibal ?",
+          "title":"What kind of equipments are sold by {{projectName}} ?",
           "description":"Learn More"
         },
         {
           "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/guides_and_tipes_2_730bec9053.webp",
-          "title":"Buying An Equipment On Kwibal Tutorial",
+          "title":"Buying An Equipment On {{projectName}} Tutorial",
           "description":"Learn More"
         }
       ]
@@ -363,19 +363,19 @@
         {
           "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282174_9e1a047177.png",
           "question":"How to create your dealer store ?",
-          "description":" Follow our best practice guide to clear dealer stores on Kwibal for bests conversion",
+          "description":" Follow our best practice guide to clear dealer stores on {{projectName}} for bests conversion",
           "btnText":"Learn More"
         },
         {
           "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282175_be1cc79204.png",
-          "question":"How to list your products on Kwibal ?",
-          "description":" Kwibal allows bulk listings of all your inventory or manual listing for each of your products from your seller portal",
+          "question":"How to list your products on {{projectName}} ?",
+          "description":" {{projectName}} allows bulk listings of all your inventory or manual listing for each of your products from your seller portal",
           "btnText":"Learn More"
         },
         {
           "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282176_7f074e5579.png",
-          "question":" How do you get paid by Kwibal ?",
-          "description":"Link your bank account securely with Kwibal. Money  earned is deposited into your secure cash wallet which you can withdraw to your bank account",
+          "question":" How do you get paid by {{projectName}} ?",
+          "description":"Link your bank account securely with {{projectName}}. Money  earned is deposited into your secure cash wallet which you can withdraw to your bank account",
           "btnText":"Learn More"
         }
       ]
@@ -385,11 +385,11 @@
       "questions":[
         {
           "question":"Why is my account banned/suspended?",
-          "answer":"If you find that you are receiving a notification that your account is banned/suspended, this means that you've either breached one of our Posting rules or there is a non-compliant activity as per our Trust and Safety rules relating to your account. Business Users in case of Account banned/suspended are requested to contact the administrator For any support feel free to Kwibal Customer Services Team"
+          "answer":"If you find that you are receiving a notification that your account is banned/suspended, this means that you've either breached one of our Posting rules or there is a non-compliant activity as per our Trust and Safety rules relating to your account. Business Users in case of Account banned/suspended are requested to contact the administrator For any support feel free to {{projectName}} Customer Services Team"
         },
         {
           "question":"How to edit/delete an ad?",
-          "answer":"If you wish to modify or delete an existing Ad, you can do so by following the below steps: - 1. After you have logged in to Kwibal account, Go to Profile - My Ads 2 Click on the Ad, you will find Edit and Delete buttons on the Ad update screen 3. Click on edit to edit the Ad and click on Delete button to remove your ad"
+          "answer":"If you wish to modify or delete an existing Ad, you can do so by following the below steps: - 1. After you have logged in to {{projectName}} account, Go to Profile - My Ads 2 Click on the Ad, you will find Edit and Delete buttons on the Ad update screen 3. Click on edit to edit the Ad and click on Delete button to remove your ad"
         },
         {
           "question":"How do I delete my account?",
@@ -406,7 +406,7 @@
       ]
     },
     "appDownloadSection": {
-      "heading": "Everyone Wins on Kwibal",
+      "heading": "Everyone Wins on {{projectName}}",
       "subHeading": "Unlock exclusive features when you download theEquipnow app today!",
       "phoneNumberTitle":"Enter Your Phone Number",
       "phonePlaceHolder": "Phone Number",
@@ -576,7 +576,7 @@
         "itemName": "About",
         "categories": [
           {
-            "displayName":"About Kwibal",
+            "displayName":"About {{projectName}}",
             "link":"/about"
           },
           {
@@ -601,9 +601,9 @@
       "title": "Connect With Us",
       "tollFree": "Toll-free",
       "newsLetterTitle": "Subscribe To our Newsletter",
-      "newsLetterInputPlaceholder": "hi@Kwibal.com",
+      "newsLetterInputPlaceholder": "hi@{{projectName}}.com",
       "newsLetterSubmitBtnText": "Submit",
-      "copyright":"Kwibal All Rights Reserved @ Appscrip"
+      "copyright":"{{projectName}} All Rights Reserved @ Appscrip"
     },
     "menuOptions":[
       {"item": "Profile"},

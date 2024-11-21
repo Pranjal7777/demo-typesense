@@ -10,6 +10,7 @@ import { useTheme } from '@/hooks/theme';
 import MoonIcon from '../../../../public/assets/svg/moon-icon';
 import SunIcon from '../../../../public/assets/svg/sun-icon';
 import PrimaryLogo from '../../../../public/assets/svg/primary-logo';
+import { PROJECT_NAME } from '@/config';
 
 type FooterSection = {
   itemName: string,
@@ -43,7 +44,7 @@ const Footer = () => {
 
   const { t } = useTranslation('common');
   const footerSectionText: string = t('page.footerSectionText');
-  const footerSection = t('page.footerSection', { returnObjects: true }) as FooterSection;
+  const footerSection = t('page.footerSection', { returnObjects: true, projectName: PROJECT_NAME }) as FooterSection;
 
   const connectSection = t('page.connectSection', { returnObjects: true }) as ConnectSection;
 

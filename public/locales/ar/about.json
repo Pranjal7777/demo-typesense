@@ -13,12 +13,12 @@
                 "link": "/"
             },
             {
-                "name": "عن Kwibal",
+                "name": "عن {{projectName}}",
                 "link": "/about"
             }
         ],
         "aboutSection": {
-            "aboutSectionTitle": "عن Kwibal",
+            "aboutSectionTitle": "عن {{projectName}}",
             "items": {
                 "title": "عنّا",
                 "desc": [

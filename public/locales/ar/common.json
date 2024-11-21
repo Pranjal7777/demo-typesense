@@ -226,7 +226,7 @@
       },
       "button": "عرض المزيد",
       "flowSection": {
-        "title": "بيع وشراء كل نوع من الأشياء على Kwibal",
+        "title": "بيع وشراء كل نوع من الأشياء على {{projectName}}",
         "section": [
           {
             "heading": "بيع وتنظيف",
@@ -311,7 +311,7 @@
         ]
       },
       "sellAndBuySection": {
-        "title": "بيع وشراء كل نوع من الأشياء على Kwibal",
+        "title": "بيع وشراء كل نوع من الأشياء على {{projectName}}",
         "items": [
           {
             "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/shopping_bag_d56eb873db.png",
@@ -331,7 +331,7 @@
         ]
       },
       "guidesAndTipsSection": {
-        "title": "أدلة ونصائح Kwibal",
+        "title": "أدلة ونصائح {{projectName}}",
         "description": "معرض لمفاتيح اللحظة التي تتم فيها تسليم معداتك. استخدم #PurchasedOnLeOffers لفرصة للظهور في معرض السعادة لدينا.",
         "items": [
           {
@@ -341,12 +341,12 @@
           },
           {
             "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/guides_and_tipes_3_9e53904345.webp",
-            "title": "ما نوع المعدات التي تباع على Kwibal",
+            "title": "ما نوع المعدات التي تباع على {{projectName}}",
             "description": "تعرف أكثر"
           },
           {
             "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/guides_and_tipes_2_730bec9053.webp",
-            "title": "شراء معدة على Kwibal دليل التعليمات",
+            "title": "شراء معدة على {{projectName}} دليل التعليمات",
             "description": "تعرف أكثر"
           }
         ]
@@ -362,12 +362,12 @@
           },
           {
             "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282175_be1cc79204.png",
-            "description": "هل تحتاج إلى عرض توضيحي؟ دعنا نجدد جدول أعمالنا اليوم ونناقش أي من خطط Kwibal Professional هي الأفضل لعملك",
+            "description": "هل تحتاج إلى عرض توضيحي؟ دعنا نجدد جدول أعمالنا اليوم ونناقش أي من خطط {{projectName}} Professional هي الأفضل لعملك",
             "btnText": "تعرف أكثر"
           },
           {
             "image": "https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282176_7f074e5579.png",
-            "description": "تعرف على Kwibal Live... الورشة الظاهرية الخاصة بك وتطبيق جولة الفيديو المباشرة. قم بإجراء جولات بحرية مباشرة، وحتى تأهيل عميل أثناء فيديو مباشر",
+            "description": "تعرف على {{projectName}} Live... الورشة الظاهرية الخاصة بك وتطبيق جولة الفيديو المباشرة. قم بإجراء جولات بحرية مباشرة، وحتى تأهيل عميل أثناء فيديو مباشر",
             "btnText": "تعرف أكثر"
           }
         ]
@@ -398,7 +398,7 @@
         ]
       },
       "appDownloadSection": {
-        "heading": "Everyone Wins on Kwibal",
+        "heading": "Everyone Wins on {{projectName}}",
         "subHeading": "Unlock exclusive features when you download theEquipnow app today!",
         "newsLetterTitle":"Subscribe To our Newsletter",
         "qrText": "Scan here"

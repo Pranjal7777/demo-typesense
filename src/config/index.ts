@@ -1,7 +1,7 @@
 
 
 // NOTE: API CONFIG
-
+export const PROJECT_NAME = 'Kwibal';
 export const WEB_DOMAIN = process.env.NEXT_PUBLIC_WEB_DOMAIN;
 export const WEB_URL = WEB_DOMAIN + '/';
 export const GUMLET_API_URL = process.env.NEXT_PUBLIC_GUMLET_API_URL;

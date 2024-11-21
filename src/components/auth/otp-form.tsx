@@ -111,6 +111,11 @@ const OTPForm: React.FC = () => {
   };
 
   const handleChange = (index: number, value: string) => {
+    console.log('', value, 'mir otp');
+    
+    if (!/^\d$/.test(value) && isNaN(Number(value))) {
+      return; // Exit early if the value is not a single digit
+    }
     if (value.length > 1) {
       value = value.slice(0, 1); // Limit to one character
     }
@@ -445,8 +450,10 @@ const OTPForm: React.FC = () => {
               // autoFocus={index == 0 && true}
               key={index}
               ref={refs[index]}
-              type="number"
-              value={digit}
+              // type='number'
+              autoComplete="one-time-code"
+              inputMode="numeric"
+              value={digit} 
               maxLength={1}
               onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(index, e.target.value)}
               onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => handleKeyPress(index, e)}

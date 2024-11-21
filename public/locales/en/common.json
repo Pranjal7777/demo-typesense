@@ -76,7 +76,7 @@
           "placeholder": "Search Places"
         },
         "button":"Search",
-        "popularSearch": "Buy & Sell products from users around you. Le-Offer also provides shipping services and secure escrowed payments to provide the safest buy and sell experience to all users."
+        "popularSearch": "Buy & Sell products from users around you. Kwibal also provides shipping services and secure escrowed payments to provide the safest buy and sell experience to all users."
       }
     },
     "categoriesSection": {
@@ -226,7 +226,7 @@
     },
     "button":"View More",
     "flowSection": {
-      "title": "Sell and buy every kinda thing on le-Offers",
+      "title": "Sell and buy every kinda thing on Kwibal",
       "section": [
         {
           "heading": "Sell and declutter",
@@ -316,7 +316,7 @@
       ]
     },
     "sellAndBuySection":{
-      "title":"Buy & Sell every kind of thing on Le-Offer",
+      "title":"Buy & Sell every kind of thing on Kwibal",
       "items":[
         {
           "image":"https://leoffer-images.s3.ap-south-1.amazonaws.com/thumbnail_Frame_1171281931_7a2f88df33.png",
@@ -336,7 +336,7 @@
       ]
     },
     "guidesAndTipsSection":{
-      "title":"le-Offers Guides & Tips",
+      "title":"Kwibal Guides & Tips",
       "description":"Gallery of the moment keys are handed over for your equipment. Use #PurchasedOnLe-Offers for a chance to be featured in our happy equipment's gallery.",
       "items":[
         {
@@ -346,12 +346,12 @@
         },
         {
           "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/guides_and_tipes_3_9e53904345.webp",
-          "title":"What kind of equipments are sold by le-Offers ?",
+          "title":"What kind of equipments are sold by Kwibal ?",
           "description":"Learn More"
         },
         {
           "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/guides_and_tipes_2_730bec9053.webp",
-          "title":"Buying An Equipment On le-Offers Tutorial",
+          "title":"Buying An Equipment On Kwibal Tutorial",
           "description":"Learn More"
         }
       ]
@@ -363,19 +363,19 @@
         {
           "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282174_9e1a047177.png",
           "question":"How to create your dealer store ?",
-          "description":" Follow our best practice guide to clear dealer stores on Le-Offer for bests conversion",
+          "description":" Follow our best practice guide to clear dealer stores on Kwibal for bests conversion",
           "btnText":"Learn More"
         },
         {
           "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282175_be1cc79204.png",
-          "question":"How to list your products on Le-Offer ?",
-          "description":" Le-Offer allows bulk listings of all your inventory or manual listing for each of your products from your seller portal",
+          "question":"How to list your products on Kwibal ?",
+          "description":" Kwibal allows bulk listings of all your inventory or manual listing for each of your products from your seller portal",
           "btnText":"Learn More"
         },
         {
           "image":"https://leoffer-media.s3.ap-south-1.amazonaws.com/Frame_1171282176_7f074e5579.png",
-          "question":" How do you get paid by Le-Offer ?",
-          "description":"Link your bank account securely with Le-Offer. Money  earned is deposited into your secure cash wallet which you can withdraw to your bank account",
+          "question":" How do you get paid by Kwibal ?",
+          "description":"Link your bank account securely with Kwibal. Money  earned is deposited into your secure cash wallet which you can withdraw to your bank account",
           "btnText":"Learn More"
         }
       ]
@@ -385,11 +385,11 @@
       "questions":[
         {
           "question":"Why is my account banned/suspended?",
-          "answer":"If you find that you are receiving a notification that your account is banned/suspended, this means that you've either breached one of our Posting rules or there is a non-compliant activity as per our Trust and Safety rules relating to your account. Business Users in case of Account banned/suspended are requested to contact the administrator For any support feel free to Le-Offer Customer Services Team"
+          "answer":"If you find that you are receiving a notification that your account is banned/suspended, this means that you've either breached one of our Posting rules or there is a non-compliant activity as per our Trust and Safety rules relating to your account. Business Users in case of Account banned/suspended are requested to contact the administrator For any support feel free to Kwibal Customer Services Team"
         },
         {
           "question":"How to edit/delete an ad?",
-          "answer":"If you wish to modify or delete an existing Ad, you can do so by following the below steps: - 1. After you have logged in to Le-Offer account, Go to Profile - My Ads 2 Click on the Ad, you will find Edit and Delete buttons on the Ad update screen 3. Click on edit to edit the Ad and click on Delete button to remove your ad"
+          "answer":"If you wish to modify or delete an existing Ad, you can do so by following the below steps: - 1. After you have logged in to Kwibal account, Go to Profile - My Ads 2 Click on the Ad, you will find Edit and Delete buttons on the Ad update screen 3. Click on edit to edit the Ad and click on Delete button to remove your ad"
         },
         {
           "question":"How do I delete my account?",
@@ -406,7 +406,7 @@
       ]
     },
     "appDownloadSection": {
-      "heading": "Everyone Wins on Le.Offer",
+      "heading": "Everyone Wins on Kwibal",
       "subHeading": "Unlock exclusive features when you download theEquipnow app today!",
       "phoneNumberTitle":"Enter Your Phone Number",
       "phonePlaceHolder": "Phone Number",
@@ -576,7 +576,7 @@
         "itemName": "About",
         "categories": [
           {
-            "displayName":"About Le-Offer",
+            "displayName":"About Kwibal",
             "link":"/about"
           },
           {
@@ -601,9 +601,9 @@
       "title": "Connect With Us",
       "tollFree": "Toll-free",
       "newsLetterTitle": "Subscribe To our Newsletter",
-      "newsLetterInputPlaceholder": "hi@le-offer.com",
+      "newsLetterInputPlaceholder": "hi@Kwibal.com",
       "newsLetterSubmitBtnText": "Submit",
-      "copyright":"Le-Offer All Rights Reserved @ Appscrip"
+      "copyright":"Kwibal All Rights Reserved @ Appscrip"
     },
     "menuOptions":[
       {"item": "Profile"},

@@ -498,20 +498,21 @@ const Header: FC<Props> = ({
                 !(minThreshold && theme !== true) ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'
               }`}
             />
-            <Link className="pl-6 rtl:pl-0 rtl:pr-6" href="/">
+            <Link className="pl-5 rtl:pl-0 rtl:pr-6" href="/">
               <PrimaryLogo
                 height={28}
                 width={99}
                 primaryColor={`${
                   stickyHeaderWithSearchBox
-                    ? 'var(--brand-color)'
-                    : theme
-                    ? minThreshold
-                      ? 'var(--brand-color)'
-                      : 'var(--icon-primary-dark)'
-                    : minThreshold
-                    ? 'var(--brand-color)'
-                    : 'var(--icon-primary-dark)'
+                    ? theme
+                    ? 'var(--icon-primary-dark)'
+                    : 'var(--icon-primary-light)' :
+                     theme ?
+                       minThreshold ?
+                         'var(--icon-primary-dark)'
+                        : 'var(--icon-primary-dark)'
+                      : minThreshold ? 'var(--icon-primary-light)' : 'var(--icon-primary-dark)'
+                    
                 }`}
               />
             </Link>

@@ -99,7 +99,6 @@ const OTPForm: React.FC = () => {
 
   useEffect(() => {
     if (isCompleted) {
-      console.log('new in useEffect');
       handleSubmit();
     }
   }, [otp]);
@@ -111,6 +110,9 @@ const OTPForm: React.FC = () => {
   };
 
   const handleChange = (index: number, value: string) => {
+    if (!/^\d$/.test(value) && isNaN(Number(value))) {
+      return;
+    }
     if (value.length > 1) {
       value = value.slice(0, 1); // Limit to one character
     }
@@ -166,9 +168,6 @@ const OTPForm: React.FC = () => {
         typeof window !== 'undefined' && localStorage.getItem('otpData')
           ? JSON.parse(localStorage.getItem('otpData')!)
           : null;
-
-      console.log('loginType', loginType);
-
       // try {
       //   const reqPayloadForLogin: RequestLoginPaylodWithEmail = {
       //     // password: formData.password,
@@ -296,8 +295,7 @@ const OTPForm: React.FC = () => {
             if (data) {
               localStorage.removeItem('timer');
               localStorage.removeItem('signUpData');
-              // console.log(data);
-              
+
               // setUserDetailsDispatch(data);
 
               setTimeout(() => {
@@ -329,7 +327,6 @@ const OTPForm: React.FC = () => {
           ? JSON.parse(localStorage.getItem('otpData')!)
           : null;
       const password = otp.join('');
-      console.log('loginType', loginType);
 
       if (loginType === 1) {
         const reqPayloadForLogin: RequestLoginPayload = {
@@ -358,7 +355,6 @@ const OTPForm: React.FC = () => {
           setIsLoading(false);
         }
       } else if (loginType === 2) {
-        console.log('inside else if 2');
         const reqPayloadForLogin: RequestLoginPaylodWithEmail = {
           // countryCode: countryCode,
           // phoneNumber: phoneNumber || emailOrPhone,
@@ -375,13 +371,8 @@ const OTPForm: React.FC = () => {
           deviceModel: platform.version as string,
         };
 
-        console.log(reqPayloadForLogin);
-
         try {
-          console.log('inside try');
           const { data } = await login(reqPayloadForLogin).unwrap();
-          console.log('data', data);
-
           if (data) {
             setUserDetailsDispatch(data);
             localStorage.removeItem('auth_email');
@@ -445,8 +436,10 @@ const OTPForm: React.FC = () => {
               // autoFocus={index == 0 && true}
               key={index}
               ref={refs[index]}
-              type="number"
-              value={digit}
+              // type='number'
+              autoComplete="one-time-code"
+              inputMode="numeric"
+              value={digit} 
               maxLength={1}
               onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(index, e.target.value)}
               onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => handleKeyPress(index, e)}

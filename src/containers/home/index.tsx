@@ -34,6 +34,7 @@ import { useRouter } from 'next/router';
 import Layout from '@/components/layout';
 import WhatAreYouLookingForSkeleton from '@/components/ui/what-you-looking-skeleton';
 import ProductCard from '@/components/ui/product-card';
+import { PROJECT_NAME } from '@/config';
 
 export type highlightSection = {
   title: string;
@@ -132,7 +133,7 @@ const HomePage: FC<HomeProps> = ({
   const userInfo = useAppSelector((state: RootState) => state.auth.userInfo);
 
   const recommendedSection = t('page.recommendedSection', { returnObjects: true }) as RecommendedSection;
-  const sellAndBuySection = t('page.sellAndBuySection', { returnObjects: true }) as SellAndBuySection;
+  const sellAndBuySection = t('page.sellAndBuySection', { returnObjects: true, projectName: PROJECT_NAME }) as SellAndBuySection;
   const dealersSection = t('page.dealersSection', { returnObjects: true }) as DealersSection;
   const newAndUsedBannerSection = t('page.newAndUsedBannerSection', { returnObjects: true }) as NewAndUsedBannerSection;
   console.log(newAndUsedBannerSection, 'mir newAndUsedBannerSection');

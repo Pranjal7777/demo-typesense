@@ -13,12 +13,12 @@
                 "link": "/"
             },
             {
-                "name": "À propos de Le-Offer",
+                "name": "À propos de {{projectName}}",
                 "link": "/about"
             }
         ],
         "aboutSection": {
-            "aboutSectionTitle": "À propos de Le-Offer",
+            "aboutSectionTitle": "À propos de {{projectName}}",
             "items": {
                 "title": "À propos de nous",
                 "desc": [

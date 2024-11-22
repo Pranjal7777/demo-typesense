@@ -14,6 +14,7 @@ import AboutTextContent from '@/components/sections/about-text-content';
 import { HeroSectionType } from './privacy-policy';
 import CustomHeader from '@/components/ui/custom-header';
 import formatArrayToStrings from '@/helper/functions/format-array-strings';
+import { PROJECT_NAME } from '@/config';
 
 type AboutSection = {
   aboutSectionTitle: string;
@@ -146,8 +147,8 @@ const About: FC<Props> = ({ aboutData }) => {
   const joinedString = formatArrayToStrings(keywords);
   const { t } = useTranslation('about');
   // const headerBennerSection: HeaderBennerSection = t('page.headerBennerSection', { returnObjects: true });
-  const breadcrumbLinks = t('page.breadcrumbLinks', { returnObjects: true }) as BreadcrumbLinks[];
-  const aboutSection = t('page.aboutSection', { returnObjects: true }) as AboutSection;
+  const breadcrumbLinks = t('page.breadcrumbLinks', { returnObjects: true, projectName: PROJECT_NAME }) as BreadcrumbLinks[];
+  const aboutSection = t('page.aboutSection', { returnObjects: true, projectName: PROJECT_NAME }) as AboutSection;
   // const ourServiceSection: OurServiceSection = t('page.ourServiceSection', { returnObjects: true });
   // const meetourTeamSection: MeetourTeamSection = t('page.meetourTeamSection', { returnObjects: true });
   const strapiSeoData = aboutData.attributes.seoProperties;

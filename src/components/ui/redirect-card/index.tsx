@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React from 'react';
 
 type RedirectCardProps = {
@@ -9,8 +10,14 @@ type RedirectCardProps = {
 };
 
 const RedirectCard: React.FC<RedirectCardProps> = ({ linkUrl, label, labelIcon, actionIcon }) => {
+  const router = useRouter()
+  const onCardClick = ()=>{
+    if(linkUrl){
+      router.push(linkUrl)
+    }
+  }
   return (
-    <div className='flex items-center justify-between px-4 lg:px-1 font-semibold py-4 lg:py-2 hover:bg-bg-tertiary-light dark:hover:bg-bg-tertiary-dark'> 
+    <div onClick={onCardClick} className='flex items-center justify-between px-4 lg:px-1 font-semibold py-4 lg:py-2 hover:bg-bg-tertiary-light dark:hover:bg-bg-tertiary-dark'> 
       {linkUrl ?  <Link href={linkUrl}>
         <div className='flex  items-center gap-2'>
           <div>{labelIcon}</div>

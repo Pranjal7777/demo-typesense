@@ -38,7 +38,7 @@ const SoldContainer: FC<SoldContainerProps> = ({
     <>
     {
       ((!data && !isPurchaseDetailsFetching) || !data?.data
-      .filter((item) => item.orderType == 'SOLD')?.length) ? <div className='flex-1 flex gap-3 items-center justify-center flex-col mb-[20%]'>
+      .filter((item) => item.orderType == 'PENDING')?.length) ? <div className='flex-1 flex gap-3 items-center justify-center flex-col mb-[20%]'>
       <ImageContainer className='h-[168px] w-[168px] md:h-[200px] md:w-[200px]' height={200} width={200} alt='no data' src= {NO_SALE}/>
       <h3 className=' font-semibold'>No Sales to Show Yet!</h3>
       <p className=' text-xs md:text-sm text-text-tertiary-light dark:text-text-septenary-light'>List your items and watch them appear here once they’re sold!</p>
@@ -47,7 +47,7 @@ const SoldContainer: FC<SoldContainerProps> = ({
       {data &&
         !isPurchaseDetailsFetching &&
         data?.data
-          .filter((item) => item.orderType == 'SOLD')
+          .filter((item) => item.orderType == 'PENDING')
           .map((item) => (
             <PurchaseCard
               cardClass={currenOrderId == item?.orderId ? 'border border-brand-color' : ''}

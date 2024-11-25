@@ -161,8 +161,8 @@ export const IMAGES = {
   LOGOUT_ICON_WHITE: 'logout-icon-white.svg',
   LOGOUT_ICON_BLACK: 'logout-icon-black.svg',
 
-  PAGE_NOT_FOUND: '404_b53b4ee6a2.svg',
-  SERVER_ERROR: '500_fe8e08a929.svg',
+  PAGE_NOT_FOUND: 'https://ideal-excitement-d2904ea8a5.media.strapiapp.com/404_40e1786c9d.webp',
+  SERVER_ERROR: 'https://ideal-excitement-d2904ea8a5.media.strapiapp.com/500_25fdbd6263.webp',
   UNDER_MAINTENANCE: 'under_maintenance_ca8d3841a3.svg',
 
   // Fall back images

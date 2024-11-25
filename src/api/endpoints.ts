@@ -35,6 +35,7 @@ export const BLOGS_POST = 'blog';
 
 // FAQ section
 export const FAQ_SECTION = 'faq-section';
+export const GET_ALL_FAQ_QA = 'v1/faq';
 
 // profile end point
 

@@ -128,7 +128,7 @@ const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
               userName={sellerProfileData.username}
               profilePic={sellerProfileData.profilePic || ''}
               ratingValue={sellerProfileData.totalAvgRating || 0}
-              ratingText={`${sellerProfileData.totalAvgRating}`}
+              ratingText={`${sellerProfileData.totalAvgRating.toFixed(2)}`}
               ratingTextClass="text-xs text-text-tertiary-light"
               buttonType={isFollow ? 'quinary' : 'primary'}
               buttonText={isFollow ? 'Following' : 'Follow'}

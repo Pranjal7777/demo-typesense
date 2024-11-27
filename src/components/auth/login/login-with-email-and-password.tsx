@@ -183,7 +183,7 @@ const LoginWithEmailAndPassword: React.FC = () => {
         setOtpVerificationDetailsDispatch(otpVerificationPayload);
 
         setIsLoading(false);
-
+        localStorage.setItem('auth_email', formData?.email);
         router.push(`${SIGN_IN_PAGE}?step=3`);
       }
     } catch (e) {

@@ -89,7 +89,7 @@ const ReviewCard: FC<Props> = ({
           starContainerClass={starContainerClass}
           wrapperClass={ratingWrapperClass}
           itemClassName={ratingTextClass}
-          text={`${userReview.rating}`}
+          text={`${userReview.rating.toFixed(2)}`}
         />
         {userReview.review ? (
           <p className={appClsx('text-text-quaternary-dark text-sm md:text-[16px]', commentClass)}>

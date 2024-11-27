@@ -21,12 +21,14 @@ const DownloadCard: React.FC = () => {
   const appDownloadSection = t('page.appDownloadSection', { returnObjects: true, projectName: PROJECT_NAME }) as AppDownloadSection;
 
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [countryCode, setCountryCode]  = useState('');
   const [phoneNumberError, setPhoneNumberError] = useState('');
 
   const handlePhoneNumberChange = (value: string, data: { dialCode: string; name: string }) => {
     const countryCode = `+${data.dialCode}`;
     const phoneNumber = value.substring(countryCode.length - 1);
     setPhoneNumber(`${countryCode}${phoneNumber}`);
+    setCountryCode(countryCode);
     setPhoneNumberError('');
   };
 
@@ -40,8 +42,8 @@ const DownloadCard: React.FC = () => {
       setPhoneNumberError('Please enter a valid phone number.');
       return;
     }
-
-    setPhoneNumber('');
+    
+    setPhoneNumber(countryCode);
     toast.success('Thank you for downloading!');
   };
 

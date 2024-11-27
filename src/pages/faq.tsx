@@ -83,8 +83,7 @@ export interface FaqProps {
 }
 
 const Faq: React.FC<FaqProps> = ({ faqData }) => {
-  console.log(faqData, 'faq data');
-  
+
   const { t } = useTranslation('faq');
   // const headerBennerSection: HeaderBennerSection = t('page.headerBennerSection', { returnObjects: true });
   const breadcrumbLinks = t('page.breadcrumbLinks', { returnObjects: true }) as BreadcrumbLinks[];
@@ -212,9 +211,6 @@ export async function getStaticProps({ locale }: { locale: string }) {
   try {
     const response = await fetch('https://strapi.le-offers.com/api/faq-section?populate=deep');
     // const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/${FAQ_SECTION}?populate=deep`);
-    console.log(response, 'mir faq');
-    
-
     if (!response.ok) {
       throw new Error('Failed to fetch data');
     }

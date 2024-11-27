@@ -19,8 +19,6 @@ const FAQ = () => {
   const faqSection= t('page.faqSection',{returnObjects:true, projectName:PROJECT_NAME}) as FaqSection;
 
   const {data} = faqApi.useGetAllFaqQaQuery();
-  console.log(data, 'mir faq');
-  
 
   const [openCard,setOpenCard]=useState<number>(0);
 

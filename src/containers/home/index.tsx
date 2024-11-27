@@ -136,7 +136,6 @@ const HomePage: FC<HomeProps> = ({
   const sellAndBuySection = t('page.sellAndBuySection', { returnObjects: true, projectName: PROJECT_NAME }) as SellAndBuySection;
   const dealersSection = t('page.dealersSection', { returnObjects: true }) as DealersSection;
   const newAndUsedBannerSection = t('page.newAndUsedBannerSection', { returnObjects: true }) as NewAndUsedBannerSection;
-  console.log(newAndUsedBannerSection, 'mir newAndUsedBannerSection');
   
   const brandLogoSection = t('page.brandLogoSection', { returnObjects: true }) as BrandLogoSection;
 
@@ -164,9 +163,6 @@ const HomePage: FC<HomeProps> = ({
     longitude: myLocation?.longitude,
     country: myLocation?.country,
   });
-
-  console.log(highlightedProducts, 'mir highlightedProducts in home');
-  
 
   const [allHighlightedProducts, setAllHighlightedProducts] = useState<Product[]>([]);
   useEffect(() => {

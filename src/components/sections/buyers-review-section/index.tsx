@@ -20,7 +20,7 @@ const BuyersReviewSection = ({accountId}:{accountId:string}) => {
         {
           !isBuyerRatingsFetching && <SingleStarReviewCard
             ratingHeading={`${buyerRatings?.data?.ratingCount || 0} Reviews`}
-            ratingText={`${buyerRatings?.data?.avgRating || '0.0'}`}
+            ratingText={`${buyerRatings?.data?.avgRating?.toFixed(2) || '0.0'}`}
           />
         }
         {

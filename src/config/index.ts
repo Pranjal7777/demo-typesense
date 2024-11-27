@@ -2,9 +2,11 @@
 
 // NOTE: API CONFIG
 export const PROJECT_NAME = 'Kwibal';
+export const HIDE_SELLER_FLOW = true;
 export const WEB_DOMAIN = process.env.NEXT_PUBLIC_WEB_DOMAIN;
 export const WEB_URL = WEB_DOMAIN + '/';
 export const GUMLET_API_URL = process.env.NEXT_PUBLIC_GUMLET_API_URL;
+export const STRAPI_STATIC_IMAGE_URL = 'https://ideal-excitement-d2904ea8a5.media.strapiapp.com';
 
 export const STATIC_IMAGE_URL = process.env.NEXT_PUBLIC_STATIC_IMAGE_URL;
 export const STATIC_VIDEO_URL='https://asset.le-offers.com';

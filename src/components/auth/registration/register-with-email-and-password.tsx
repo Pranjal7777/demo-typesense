@@ -178,11 +178,14 @@ const RegisterWithEmailAndPassword: React.FC = () => {
       setFormData({ ...formData, email: email });
       localStorage.removeItem('auth_email');
     }
+    localStorage.removeItem('signUpData');
   }, []);
 
   const handleSignInClick = useCallback(() => {
     router.push(SIGN_IN_PAGE);
   }, [router]);
+
+
 
   return (
     <>

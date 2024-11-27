@@ -34,7 +34,7 @@ import { useRouter } from 'next/router';
 import Layout from '@/components/layout';
 import WhatAreYouLookingForSkeleton from '@/components/ui/what-you-looking-skeleton';
 import ProductCard from '@/components/ui/product-card';
-import { PROJECT_NAME } from '@/config';
+import { HIDE_SELLER_FLOW, PROJECT_NAME } from '@/config';
 
 export type highlightSection = {
   title: string;
@@ -136,7 +136,6 @@ const HomePage: FC<HomeProps> = ({
   const sellAndBuySection = t('page.sellAndBuySection', { returnObjects: true, projectName: PROJECT_NAME }) as SellAndBuySection;
   const dealersSection = t('page.dealersSection', { returnObjects: true }) as DealersSection;
   const newAndUsedBannerSection = t('page.newAndUsedBannerSection', { returnObjects: true }) as NewAndUsedBannerSection;
-  console.log(newAndUsedBannerSection, 'mir newAndUsedBannerSection');
   
   const brandLogoSection = t('page.brandLogoSection', { returnObjects: true }) as BrandLogoSection;
 
@@ -238,11 +237,11 @@ const HomePage: FC<HomeProps> = ({
 
         {/* @ todo  */}
         <div className="relative custom-container mx-auto sm:px-16 mobile:px-4 ">
-          {categories ? (
+          {!HIDE_SELLER_FLOW && (categories ? (
             <WhatAreYouLookingFor allCategoriesIcon={IMAGES.CATEGORY_GRID_ICON} categories={categories} />
           ) : (
             <WhatAreYouLookingForSkeleton />
-          )}
+          ))}
           {/* <WhatAreYouLookingFor
             allCategoriesIcon={IMAGES.CATEGORY_GRID_ICON}
             categories={categories}
@@ -268,7 +267,7 @@ const HomePage: FC<HomeProps> = ({
 
 
           {/*Highlight Product Sections*/}
-          <div className="mx-auto ">
+          {!HIDE_SELLER_FLOW && <div className="mx-auto ">
             {(!isFetching && highlightedProducts?.result==null) ? null:  <SectionTitle className="sm:mt-12 sm:mb-8 mt-8 mb-4 ">Featured Products</SectionTitle> }
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-x-3 gap-y-4 md:gap-x-4 md:gap-y-7">
@@ -304,9 +303,10 @@ const HomePage: FC<HomeProps> = ({
                 </button>
               ) : null}
             </div>
-          </div>
+          </div>}
           {/*Highlight Product Sections Ends*/}
           {/** Banner Section Starts */}
+         {!HIDE_SELLER_FLOW && <>
           {isErrorBannersAndRecommendedProducts ? (
             <h2>{convertRTKQueryErrorToString(errorBannersAndRecommendedProducts)}</h2>
           ) : bannersAndRecommendedProducts?.result !== undefined ? (
@@ -321,6 +321,7 @@ const HomePage: FC<HomeProps> = ({
               </div>
             )
           }
+          </>}
           {/** Banner Section Ends */}
 
           {/* Recommended Product Sections */}

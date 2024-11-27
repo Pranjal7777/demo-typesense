@@ -196,80 +196,7 @@ const Header: FC<Props> = ({
       >
         <div className=" max-w-[1440px] px-[64px] m-auto h-full flex items-center justify-between">
           <div className="flex items-center h-full w-[65%]">
-            <Link className="" href="/">
-              {/* {stickyHeaderWithSearchBox ? (
-                theme ? (
-                  !(windowScroll > 0 && !theme) ? (
-                    <Image
-                      width={135}
-                      height={38}
-                      className="min-w-[126px] h-[38px]"
-                      src={IMAGES.PRIMARY_LOGO_WHITE}
-                      alt="images/main-logo-white"
-                      loader={gumletLoader}
-                    />
-                  ) : (
-                    <Image
-                      width={135}
-                      height={38}
-                      className="min-w-[135px] h-[38px]"
-                      src={IMAGES.PRIMARY_LOGO_BLACK}
-                      alt="main-logo-blue"
-                      loader={gumletLoader}
-                    />
-                  )
-                ) : windowScroll > 0 && !theme && !stickyHeaderWithSearchBox ? (
-                  <Image
-                    width={135}
-                    height={38}
-                    className="min-w-[135px] h-[38px]"
-                    src={IMAGES.PRIMARY_LOGO_WHITE}
-                    alt="images/main-logo-white"
-                    loader={gumletLoader}
-                  />
-                ) : (
-                  <Image
-                    width={135}
-                    height={38}
-                    className="min-w-[135px] h-[38px]"
-                    src={IMAGES.PRIMARY_LOGO_BLACK}
-                    alt="main-logo-blue"
-                    loader={gumletLoader}
-                  />
-                )
-              ) : !(windowScroll > 0) ? (
-                <Image
-                  width={135}
-                  height={38}
-                  className="min-w-[135px] h-[38px]"
-                  src={IMAGES.FOOTER_LOGO_WHITE}
-                  alt="images/main-logo-white"
-                  loader={gumletLoader}
-                />
-              ) : (
-                <Image
-                  width={135}
-                  height={38}
-                  className="min-w-[135px] h-[38px]"
-                  src={IMAGES.PRIMARY_LOGO_BLACK}
-                  alt="main-logo-blue"
-                  loader={gumletLoader}
-                />
-              )} */}
-              {/* 
-              <PrimaryLogo
-                primaryColor={`${
-                  stickyHeaderWithSearchBox
-                    ? 'var(--brand-color)'
-                    : theme
-                    ? minThreshold
-                      ? 'var(--brand-color)'
-                      : 'var(--icon-primary-dark)'
-                    : minThreshold
-                    ? 'var(--brand-color)'
-                    : 'var(--icon-primary-dark)'
-                }`}
-              /> */}
+            <Link className="sm:mb-2" href="/">            
               <PrimaryLogo
                 primaryColor={`${
                   stickyHeaderWithSearchBox
@@ -498,7 +425,7 @@ const Header: FC<Props> = ({
                 !(minThreshold && theme !== true) ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'
               }`}
             />
-            <Link className="pl-5 rtl:pl-0 rtl:pr-6" href="/">
+            <Link className="pl-5 rtl:pl-0 rtl:pr-6 mb-[5px]" href="/">
               <PrimaryLogo
                 height={28}
                 width={99}

@@ -11,6 +11,8 @@ import CrossIconWhite from '../../../public/images/cross_icon_white.svg';
 import { useRouter } from 'next/router';
 import { routeToCategories } from '@/store/utils/route-helper';
 import keyDownHandler from '@/helper/key-down-handler';
+import SearchIcon from '../../../public/assets/svg/search-icon';
+import { useTheme } from '@/hooks/theme';
 type CategoriesDrawerProps = {
   changMenu: () => void;
   isSearchCategoriesDrower: boolean;
@@ -22,6 +24,7 @@ const CategoriesDrawer: React.FC<CategoriesDrawerProps> = ({ isSearchCategoriesD
   const [filteredData, setFilteredData] = useState<categories[]>([]);
   const { categoriesWithChildren } = useSelector((state: RootState) => state.auth);
   const router = useRouter();
+  const {theme} = useTheme();
 
   const categoryRoute = (categoryId: string) => {
     if (onCategorySelect) {
@@ -126,7 +129,7 @@ const CategoriesDrawer: React.FC<CategoriesDrawerProps> = ({ isSearchCategoriesD
 
           {/* Search Input */}
           <div className="w-full relative flex items-center px-[24px]">
-            <Image
+            {/* <Image
               width={17}
               height={17}
               className="absolute left-9 rtl:right-9 dark:hidden inline"
@@ -141,7 +144,8 @@ const CategoriesDrawer: React.FC<CategoriesDrawerProps> = ({ isSearchCategoriesD
               src={IMAGES.SEARCH_ICON_WHITE}
               loader={gumletLoader}
               alt="location-icon"
-            />
+            /> */}
+            <SearchIcon primaryColor={theme ? '#FFF' : '#57585A'} width={17} height={17} className="absolute left-9 rtl:right-9 " />
             <input
               onChange={onSearchChange}
               className="w-full pl-9 rtl:pr-9 pr-2 h-11 outline-none dark:text-text-primary-dark dark:bg-bg-quinary-dark dark:border-border-tertiary-dark border-border-tertiary-light bg-bg-tertiary-light focus:border-2 focus:border-brand-color rounded"
@@ -152,7 +156,7 @@ const CategoriesDrawer: React.FC<CategoriesDrawerProps> = ({ isSearchCategoriesD
         </div>
 
         {/* Categories List */}
-        <div className="w-full  border h-[80%] overflow-y-scroll divide-y divide-border-tertiary-light dark:divide-border-tertiary-dark px-2 md:px-[24px]">
+        <div className="w-full  h-[80%] overflow-y-scroll divide-y divide-border-tertiary-light dark:divide-border-tertiary-dark px-2 md:px-[24px]">
           {/* Conditional Rendering based on filteredData */}
           {filteredData.length === 0 ? (
             <div className="text-center py-4 text-gray-500">NO RESULTS FOUND</div>

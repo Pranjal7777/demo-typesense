@@ -3,6 +3,7 @@ import React, { FC } from 'react';
 import DownArrowRoundedEdge from '../../../../public/assets/svg/down-arrow-rounded-edge';
 import { useTheme } from '@/hooks/theme';
 import UpArrowRoundedEdge from '../../../../public/assets/svg/up-arrow-rounded-edge';
+import Link from 'next/link';
 
 type InfoSection = {
     title: string,
@@ -41,14 +42,14 @@ const InfoCard:FC<InfoCardProps> = ({val,isOpen,id,onClick}) => {
           )
         }
       </div>
-      <div className={` sm:flex flex-wrap ${id === 0 ? 'flex mobile:flex-col' : ''} ${isOpen ? 'flex flex-row flex-wrap' : 'hidden'}  `}>
+      <div className={` sm:flex flex-wrap gap-2 ${id === 0 ? 'flex mobile:flex-col' : ''} ${isOpen ? 'flex flex-row flex-wrap' : 'hidden'}  `}>
         {
           val.items.map((innerItem, k) => (
-            <div key={k} className={`mobile:p-1  flex items-center  text-xs mobile:text-sm font-normal ${id === 0 ? 'text-text-primary-light  lg:border-r-[1.5px] lg:mr-2 lg:pr-2 mobile:mt-2 border-border-senary-light dark:border-border-primary-dark dark:text-text-primary-dark' : 'text-text-quaternary-dark dark:text-text-tertiary-dark'}`}>
-              <span className="mobile:truncate ">{innerItem}</span>
+            <div key={k} className={`mobile:p-1  flex items-center  text-xs mobile:text-sm font-normal ${id === 0 ? 'text-text-primary-light  sm:border-r-[1.5px]  sm:pr-2 mobile:mt-2 border-border-senary-light dark:border-border-primary-dark dark:text-text-primary-dark' : 'text-text-quaternary-dark dark:text-text-tertiary-dark'}`}>
+              <Link href={'https://demo-typesense-7clh.vercel.app/'} target='_blank' className="mobile:truncate ">{innerItem}</Link>
               {
                 id !== 0 ? (
-                  <span className="mobile:!my-2 mx-1.5 text-base  text-text-tertiary-light mobile:hidden">•</span>
+                  <span className="mobile:!my-2 ml-1.5 text-base  text-text-tertiary-light mobile:hidden">•</span>
                 ) : null
               }
             </div>

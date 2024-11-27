@@ -603,7 +603,7 @@
       "newsLetterTitle": "Subscribe To our Newsletter",
       "newsLetterInputPlaceholder": "hi@{{projectName}}.com",
       "newsLetterSubmitBtnText": "Submit",
-      "copyright":"{{projectName}} All Rights Reserved @ Appscrip"
+      "copyright":"{{projectName}} All Rights Reserved"
     },
     "menuOptions":[
       {"item": "Profile"},

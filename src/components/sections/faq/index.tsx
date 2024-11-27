@@ -2,6 +2,8 @@ import { useTranslation } from 'next-i18next';
 import React, { useState } from 'react';
 import SectionTitle from '@/components/ui/section-title';
 import FaqCard from './faq-card';
+import { PROJECT_NAME } from '@/config';
+import { faqApi } from '@/store/api-slices/faq/faq-api';
 
 
 interface FaqSection{
@@ -14,7 +16,9 @@ interface FaqSection{
 
 const FAQ = () => {
   const { t } = useTranslation('common');
-  const faqSection= t('page.faqSection',{returnObjects:true}) as FaqSection;
+  const faqSection= t('page.faqSection',{returnObjects:true, projectName:PROJECT_NAME}) as FaqSection;
+
+  const {data} = faqApi.useGetAllFaqQaQuery();
 
   const [openCard,setOpenCard]=useState<number>(0);
 
@@ -37,8 +41,8 @@ const FAQ = () => {
       </SectionTitle>
       <div className=' max-w-[792px] w-full'>
         {
-          faqSection.questions.map((item,id)=>(
-            <FaqCard key={id} id={id} onClick={handleCardClick} isOpen={id===openCard} question={item.question} answer={item.answer}/>
+          data?.data?.map((item,id)=>(
+            <FaqCard key={id} id={id} onClick={handleCardClick} isOpen={id===openCard} question={item.title} answer={item.htmlContent}/>
           ))
         }
       </div>

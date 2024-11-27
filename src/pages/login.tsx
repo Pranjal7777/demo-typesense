@@ -1,7 +1,7 @@
 
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect } from 'react';
 const LoginWithEmailAndPassword = dynamic(() => import('@/components/auth/login/login-with-email-and-password'), {
   ssr: false,
 });
@@ -57,6 +57,9 @@ const Auth = () => {
   const backIconHandler = ()=>{
     router.back();
   };
+  useEffect(()=>{
+    localStorage.removeItem('auth_email');
+  },[])
   return (
     <>
       <CustomHeader />

@@ -137,6 +137,7 @@ const OTPForm: React.FC = () => {
   };
 
   const resendVerificationCode = async () => {
+    setSignupError('');
     setIsCompleted(false);
     setOTP(['', '', '', '']);
     if (router.pathname.includes(SIGN_UP_PAGE)) {

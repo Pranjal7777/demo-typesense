@@ -14,7 +14,7 @@ import FilterBarIcon from '../../../public/assets/svg/filter-bar-icon';
 import FilterPopup from '@/components/ui/filter-popup';
 import { useTheme } from '@/hooks/theme';
 
-const tabs = ['Purchased', 'Sold'];
+const tabs = ['Purchased', 'Pending'];
 const MyPurchases = () => {
   const router = useRouter();
   const {theme} = useTheme()
@@ -187,7 +187,7 @@ const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
         <div
           className={`tab-content text-text-primary-light dark:text-text-secondary-light ${showPurchaseDetailsMobile ? 'mt-0' : 'mt-3'} ${
-            currenTab == 'Sold' ? 'mt-3' : ''
+            currenTab == 'Pending' ? 'mt-3' : ''
           } md:mt-5 flex gap-4 flex-1 overflow-y-scroll`}
         >
           {currenTab == 'Purchased' ? (
@@ -199,7 +199,7 @@ const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
               showPurchaseDetailsMobile={showPurchaseDetailsMobile}
               setShowPurchaseDetailsMobile={setShowPurchaseDetailsMobile}
             />
-          ) : currenTab == 'Sold' ? (
+          ) : currenTab == 'Pending' ? (
             <SoldContainer
             setShowOrderId={setShowOrderId}
             isMobile={isMobile}

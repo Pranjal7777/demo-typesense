@@ -46,7 +46,7 @@ const Footer = () => {
   const footerSectionText: string = t('page.footerSectionText');
   const footerSection = t('page.footerSection', { returnObjects: true, projectName: PROJECT_NAME }) as FooterSection;
 
-  const connectSection = t('page.connectSection', { returnObjects: true }) as ConnectSection;
+  const connectSection = t('page.connectSection', { returnObjects: true, projectName: PROJECT_NAME }) as ConnectSection;
 
   return (
     <div className=' w-full bg-bg-primary-light text-text-secondary-light'>

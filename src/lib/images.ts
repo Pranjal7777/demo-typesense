@@ -1,3 +1,5 @@
+import { STRAPI_STATIC_IMAGE_URL } from "@/config";
+
 export const IMAGES = {
   PRIMARY_LOGO_WHITE: 'Frame_1171282405_94405167fe.webp',
   PRIMARY_LOGO_BLACK: 'Frame_1171282405_94405167fe.webp',
@@ -7,7 +9,7 @@ export const IMAGES = {
 
   PRIMARY_LOGO_WHITE_OTHER: 'Frame_1171282390_1_750d5a6b8a.webp',
 
-  PRIMARY_BANNER: 'https://ideal-excitement-d2904ea8a5.media.strapiapp.com/header_hero_image_641d579655.webp',
+  PRIMARY_BANNER: `${STRAPI_STATIC_IMAGE_URL}/header_hero_image_641d579655.webp`,
 
   // Favicon & Main Logo icon
   WEBSITE_FAVICON: '/images/banner/fav.svg',
@@ -16,11 +18,11 @@ export const IMAGES = {
 
   //Footer section
 
-  FACEBOOK_LOGO_BLACK: 'https://ideal-excitement-d2904ea8a5.media.strapiapp.com/facebook_black_icon_9f7a05d524.webp',
-  LINKEDIN_LOGO_BLACK: 'https://ideal-excitement-d2904ea8a5.media.strapiapp.com/linkedln_black_cc29d1cab1.webp',
-  TWITTER_LOGO_BLACK: 'https://ideal-excitement-d2904ea8a5.media.strapiapp.com/twitter_black_a9df55952e.webp',
-  YOUTUBE_LOGO_BLACK: 'https://ideal-excitement-d2904ea8a5.media.strapiapp.com/youtube_black_1658fed43e.webp',
-  INSTAGRAM_LOGO_BLACK: 'https://ideal-excitement-d2904ea8a5.media.strapiapp.com/instagram_black_2817ff3e4d.webp',
+  FACEBOOK_LOGO_BLACK: `${STRAPI_STATIC_IMAGE_URL}/facebook_black_icon_9f7a05d524.webp`,
+  LINKEDIN_LOGO_BLACK: `${STRAPI_STATIC_IMAGE_URL}/linkedln_black_cc29d1cab1.webp`,
+  TWITTER_LOGO_BLACK: `${STRAPI_STATIC_IMAGE_URL}/twitter_black_a9df55952e.webp`,
+  YOUTUBE_LOGO_BLACK: `${STRAPI_STATIC_IMAGE_URL}/youtube_black_1658fed43e.webp`,
+  INSTAGRAM_LOGO_BLACK: `${STRAPI_STATIC_IMAGE_URL}/instagram_black_2817ff3e4d.webp`,
 
   ORDER_SUCCESS:'/images/success.png',
 
@@ -59,8 +61,8 @@ export const IMAGES = {
   // Download Section
 
   LEFT_BG_IMAGE: 'Frame_1171281390_1_1_e118a866f1.webp',
-  GOOGLE_LOGO: 'https://ideal-excitement-d2904ea8a5.media.strapiapp.com/google_icon_dc0de416e7.webp',
-  FACEBOOK_LOGO: 'https://ideal-excitement-d2904ea8a5.media.strapiapp.com/facebbook_icon_97896fddad.webp',
+  GOOGLE_LOGO: `${STRAPI_STATIC_IMAGE_URL}/google_icon_dc0de416e7.webp`,
+  FACEBOOK_LOGO:`${STRAPI_STATIC_IMAGE_URL}/facebbook_icon_97896fddad.webp`,
   PASSWORD_HIDE_ICON_BLACK: 'password_hide_icon_black_a6f60c9308.svg',
   PASSWORD_HIDE_ICON_WHITE: 'password_hide_icon_white_2d38d0118c.svg',
   PASSWORD_SHOW_ICON_BLACK: 'password_show_icon_black_a3c7905cb7.svg',
@@ -71,7 +73,7 @@ export const IMAGES = {
   MOBILE_PHONE_ICON_WHITE: 'mobile_phone_icon_aa3670df53.svg',
   HONE_ICON: '/assets/images/phone_icon.svg',
   THANK_YOU_LOGO: 'thankyou_logo_528601771b.svg',
-  THANK_YOU_PAGE_BG_IMAGE: 'https://ideal-excitement-d2904ea8a5.media.strapiapp.com/Signup_76bf8f73fe.webp',
+  THANK_YOU_PAGE_BG_IMAGE: `${STRAPI_STATIC_IMAGE_URL}/Signup_76bf8f73fe.webp`,
   RESET_PASSWORD_LOGO: '/assets/images/reset_password_icon.svg',
 
   MOBILE_MOCKUPS: '/mobile_dummy_0d581f7648.webp',
@@ -161,8 +163,8 @@ export const IMAGES = {
   LOGOUT_ICON_WHITE: 'logout-icon-white.svg',
   LOGOUT_ICON_BLACK: 'logout-icon-black.svg',
 
-  PAGE_NOT_FOUND: '404_b53b4ee6a2.svg',
-  SERVER_ERROR: '500_fe8e08a929.svg',
+  PAGE_NOT_FOUND: `${STRAPI_STATIC_IMAGE_URL}/404_40e1786c9d.webp`,
+  SERVER_ERROR: `${STRAPI_STATIC_IMAGE_URL}/500_25fdbd6263.webp`,
   UNDER_MAINTENANCE: 'under_maintenance_ca8d3841a3.svg',
 
   // Fall back images

@@ -47,10 +47,10 @@ const PageBanner: FC<PageBannerProps> = ({
         </div>
       ) : null}
       <div className="mobile:px-[14px] absolute mobile:text-center max-w-[787px] inset-0 sm:left-16 flex flex-col mobile:items-center justify-center text-text-secondary-light space-y-2">
-        <PageMainHeading className="!leading-[66px] mobile:leading-[42px] md:max-w-[580px]">
+        <PageMainHeading className="">
           {headerText}
         </PageMainHeading>
-        <PageDescription className="mt-5 ">{headerDescription}</PageDescription>
+        <PageDescription className="mt-5 text-sm md:text-[20px] md:leading-8">{headerDescription}</PageDescription>
         {headerDescriptionForMobile ? (
           <PageDescription className="mt-5 mobile:inline hidden !leading-4">{headerDescriptionForMobile}</PageDescription>
         ) : null}

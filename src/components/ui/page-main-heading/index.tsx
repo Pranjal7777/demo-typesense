@@ -7,7 +7,7 @@ type PageMainHeadingProps={
 
 const PageMainHeading:FC<PageMainHeadingProps> = ({children,className}) => {
   return (
-    <h1 className={appClsx('dark:text-text-primary-dark  mobile:text-[28px]  sm:text-lg lg:text-2xl xl:text-[44px] font-bold mobile:font-semibold ',className)}>{children}</h1>
+    <h1 className={appClsx('dark:text-text-primary-dark text-[28px] md:text-[44px] leading-10 md:leading-[66px] ',className)}>{children}</h1>
   );
 };
 

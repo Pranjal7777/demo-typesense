@@ -74,7 +74,9 @@ const PrivacyPolicy: FC<Props> = ({ PrivacyData,htmlContent }) => {
   const headerBennerSection = t('page.headerBennerSection', { returnObjects: true }) as HeaderBennerSection;
   const breadcrumbLinks = t('page.breadcrumbLinks', { returnObjects: true }) as BreadcrumbLinks[];
   // const privacyPolicySection: PrivacyPolicySection = t('page.privacyPolicySection', { returnObjects: true });
-  const strapiSeoData = PrivacyData.attributes.seoProperties;
+  console.log();
+  
+  const strapiSeoData = PrivacyData?.attributes?.seoProperties;
   const keywords = PrivacyData?.attributes?.seoProperties?.keywords;
   const joinedString = formatArrayToStrings(keywords);
   // const {data:htmlContent,isFetching,isError }=productsApi.useGetPrivacyPolicyDataQuery();
@@ -138,10 +140,13 @@ export async function getServerSideProps({ locale ,req}: { locale: string ,req: 
     const cookies = cookie.parse(req.headers.cookie || '');
     accessToken = cookies.accessToken?.replace(/"/g, '') || null;
   }
+console.log(`${STRAPI_BASE_API_URL}${API}${STRAPI_PRIVACY_POLICY}?populate=deep`, 'ballu');
+console.log(`${BASE_API_URL}${AUTH_URL_V1}${GET_PRIVACY_POLICY_DATA}?userType=1&type=1&lan=en`, 'ballu');
+
 
   try {
     const promises = [
-      fetch(`${STRAPI_BASE_API_URL}${API}${STRAPI_PRIVACY_POLICY}?populate=deep`),
+      fetch(`${STRAPI_BASE_API_URL}${STRAPI_PRIVACY_POLICY}?populate=deep`),
       fetch(`${BASE_API_URL}${AUTH_URL_V1}${GET_PRIVACY_POLICY_DATA}?userType=1&type=1&lan=en`, {
         method: 'GET',
         headers: {

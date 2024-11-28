@@ -86,7 +86,7 @@ function Blogs({ posts }: blogsProps) {
   // const breadcrumbLinks: BreadcrumbLinks[] = t('page.breadcrumbLinks', { returnObjects: true });
   // const blogSection: BlogSection = t('page.blogSection', { returnObjects: true });
 
-  const [search, setSearch] = useState('');
+  // const [search, setSearch] = useState('');
 
   return (
     <Layout excludeHeroSection={true} stickyHeader={true}>
@@ -102,10 +102,10 @@ function Blogs({ posts }: blogsProps) {
 
         <div className='py-12 mobile:pb-0 mobile:pt-9 flex mobile:flex-col mobile:items-center justify-between  border-error'>
           <ContentSectionPageTitle className='mobile:mb-6'>Blog</ContentSectionPageTitle>
-          <div className='relative max-h-[44px] mobile:h-[44px] max-w-[430px] w-full flex items-center'>
+          {/* <div className='relative max-h-[44px] mobile:h-[44px] max-w-[430px] w-full flex items-center'>
             <Image width={17} height={17} className={'absolute left-6'} src={IMAGES.SEARCH_ICON_BLACK} loader={gumletLoader} alt={'search_icon'} priority quality={75} />
             <input className='h-full w-full pl-12 pr-3 bg-bg-tertiary-light dark:bg-bg-quinary-dark outline-none rounded-lg' value={search} onChange={(e) => setSearch(e.target.value)} type='search' placeholder="Search" />
-          </div>
+          </div> */}
         </div>
 
         <div className='py-12 pt-0 mobile:pb-[71px] mobile:pt-0 flex flex-col items-center  border-error'>

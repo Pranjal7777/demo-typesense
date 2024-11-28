@@ -1,6 +1,6 @@
 
 import dynamic from 'next/dynamic';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { IMAGES } from '@/lib/images';
 import { convertRTKQueryErrorToString } from '@/helper/convert-rtk-query-error-to-string';
@@ -194,7 +194,6 @@ const HomePage: FC<HomeProps> = ({
     longitude: myLocation?.longitude,
     country: myLocation?.country,
   });
-
   const [recommendedProducts, setRecommendedProducts] = useState<Product[]>([]);
   useEffect(() => {
     if (bannersAndRecommendedProducts?.result) {
@@ -222,8 +221,8 @@ const HomePage: FC<HomeProps> = ({
       event.preventDefault();
       router.push('/productList');
     }
-  };
-
+  };  
+  
   return (
     <>
       <Layout
@@ -237,7 +236,7 @@ const HomePage: FC<HomeProps> = ({
 
         {/* @ todo  */}
         <div className="relative custom-container mx-auto sm:px-16 mobile:px-4 ">
-          {!HIDE_SELLER_FLOW && (categories ? (
+          {HIDE_SELLER_FLOW && (categories ? (
             <WhatAreYouLookingFor allCategoriesIcon={IMAGES.CATEGORY_GRID_ICON} categories={categories} />
           ) : (
             <WhatAreYouLookingForSkeleton />
@@ -306,7 +305,7 @@ const HomePage: FC<HomeProps> = ({
           </div>}
           {/*Highlight Product Sections Ends*/}
           {/** Banner Section Starts */}
-         {!HIDE_SELLER_FLOW && <>
+          <>
           {isErrorBannersAndRecommendedProducts ? (
             <h2>{convertRTKQueryErrorToString(errorBannersAndRecommendedProducts)}</h2>
           ) : bannersAndRecommendedProducts?.result !== undefined ? (
@@ -321,7 +320,7 @@ const HomePage: FC<HomeProps> = ({
               </div>
             )
           }
-          </>}
+          </>
           {/** Banner Section Ends */}
 
           {/* Recommended Product Sections */}
@@ -417,10 +416,10 @@ const HomePage: FC<HomeProps> = ({
                       </div>
 
                       <span
-                        onClick={() => router.push('/categories')}
-                        onKeyDown={handleKeyDown}
-                        tabIndex={0}
-                        role="button"
+                        // onClick={() => router.push('/categories')}
+                        // onKeyDown={handleKeyDown}
+                        // tabIndex={0}
+                        // role="button"
                         className="bg-bg-secondary-light rounded px-3 py-2 flex items-center gap-3 justify-between mobile:justify-around w-fit mobile:h-[44px]"
                       >
                         <span className="text-sm font-bold leading-5 text-brand-color">{_item.btnText}</span>
@@ -560,9 +559,12 @@ const HomePage: FC<HomeProps> = ({
         {/* App Download Starts Here*/}
 
         {/* start */}
-        <div className=" relative custom-container mx-auto sm:px-16 mobile:px-4 ">
+        {
+          !HIDE_SELLER_FLOW &&  <div className=" relative custom-container mx-auto sm:px-16 mobile:px-4 ">
           <InfoSection />
         </div>
+        }
+       
       </Layout>
 
       {/* <CategoriesDrawer

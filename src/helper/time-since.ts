@@ -2,7 +2,6 @@ export function timeSince(timestamp: number): string {
   const now = new Date();
   const postDate = new Date(timestamp * 1000);
   const secondsPast = (now.getTime() - postDate.getTime()) / 1000;
-
   if (secondsPast < 60) {
     return `${Math.floor(secondsPast)} seconds ago`;
   } else if (secondsPast < 3600) {

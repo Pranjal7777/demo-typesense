@@ -25,9 +25,10 @@ const ImgSlider: FC<Props> = ({ banners }) => {
     slidesToShow: totalSlidesToshow,
     slidesToScroll: 1,
     autoplay: true,
+    arrows: false,
   };
   const router = useRouter();
-  const handleClick = (type: number, url: string | undefined) => {
+  const handleClick = (type: number, url: string | undefined) => {    
     switch(type) {
     case 1: 
       router.push('/');
@@ -38,7 +39,10 @@ const ImgSlider: FC<Props> = ({ banners }) => {
       router.push('/categories');
       break;
     case 5:
-      window.open(url, '_blank');
+      if (url) {
+        const validUrl = url.startsWith('http://') || url.startsWith('https://') ? url : `https://${url}`;
+        window.open(validUrl, '_blank');
+      }
       break;
 
     case 6:

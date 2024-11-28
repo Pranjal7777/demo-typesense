@@ -162,7 +162,7 @@ const RegisterWithEmailAndPassword: React.FC = () => {
 
         // ShowToastWithCountdown("Redirecting to SignIn page", countdownDuration, `${SIGN_IN_PAGE}?step=4`);
 
-        toast.info('Redirecting to SignIn page', {
+        toast.info('Redirecting to Login page', {
           duration: 5000,
           onAutoClose: () => {
             router.push(`${SIGN_IN_PAGE}?step=4`);

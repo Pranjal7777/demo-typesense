@@ -21,10 +21,6 @@ const useTypesenseSearch = ({
   time = Math.floor(Date.now() / 1000),
 }: UseTypesenseSearchProps) => {
   const typesenseAdapter = useMemo(() => {
-    if (!searchItem?.trim()) {
-      return null;
-    }
-
     const filterBy = selectedOption === 'Items'
           ? `statusCode:[1,3] && sold:=false && expiredTs:>=${time}`
           : `status:ACTIVE${accountId ? ` && id:!=${accountId}` : ''}`;
@@ -46,7 +42,7 @@ const useTypesenseSearch = ({
       },
       additionalSearchParameters: {
         // @ts-ignore
-        q: searchItem.trim(),
+        q: searchItem?.trim() || '',
         query_by: queryBy,
         filter_by: filterBy,
         sort_by: sortBy,
@@ -63,18 +59,7 @@ const useTypesenseSearch = ({
     });
   }, [searchItem, queryBy, selectedOption, time, accountId, skip, limit]);
 
-  const searchClient = useMemo(() => 
-    typesenseAdapter?.searchClient || {
-      search: () => Promise.resolve({
-        results: [{ hits: [] }]
-      }),
-      addAlgoliaAgent: () => {},
-      clearCache: () => {}
-    }, 
-    [typesenseAdapter]
-  );
-  
-  return { searchClient };
+  return { searchClient: typesenseAdapter?.searchClient };
 };
 
 export default useTypesenseSearch;

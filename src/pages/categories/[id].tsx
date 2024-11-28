@@ -390,7 +390,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
       ...provided,
       width: '100%',
       outline: 'none',
-      minHeight: '44px',
       border: theme.theme ? '1px solid #433934' : `1px solid var(--border-tertiary-light)`,
       borderRadius: '0.775rem',
       backgroundColor: theme.theme ? 'var(--bg-primary-dark)' : '#FFF',
@@ -426,7 +425,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
     }),
     indicatorsContainer: (provided) => ({
       ...provided,
-      padding: '0px 12px 0px 0px',
+      padding: '0px 0px 0px 0px',
     }),
   };
 
@@ -542,7 +541,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
                     <SectionTitle>All Products</SectionTitle>
                     <div className="ml-auto mr-[24px] relative inline-flex items-center gap-2">
                       <Select
-                        className="w-[200px] mobile:text-sm text-[14px]"
+                        className="w-fit mobile:text-sm text-[14px]"
                         onChange={(option) => {
                           updateFilters({ sort: option?.value });
                         }}
@@ -554,7 +553,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
                         ]}
                         defaultValue={{ value: 'newest', label: 'Newest First' }}
                         formatOptionLabel={({ label }, { context }) => (
-                          context === 'value' ? `Sort by: ${label}` : label
+                          <span className="pl-2">{label}</span>
                         )}
                         styles={customStyles}
                         theme={(theme) => ({

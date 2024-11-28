@@ -20,3 +20,24 @@ export interface SchemaItem {
   };
   sameAs: string;
 }
+
+export interface SearchHit {
+  title: {
+    en: string;
+  };
+  categories: Array<{
+    id: string;
+    title: string;
+  }>;
+  id: string;
+}
+
+export interface SearchResult {
+  hits: SearchHit[];
+  nbHits: number;
+  page: number;
+}
+
+export interface SearchResponse {
+  results: SearchResult[];
+}

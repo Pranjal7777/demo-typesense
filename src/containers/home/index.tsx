@@ -416,10 +416,10 @@ const HomePage: FC<HomeProps> = ({
                       </div>
 
                       <span
-                        onClick={() => router.push('/categories')}
-                        onKeyDown={handleKeyDown}
-                        tabIndex={0}
-                        role="button"
+                        // onClick={() => router.push('/categories')}
+                        // onKeyDown={handleKeyDown}
+                        // tabIndex={0}
+                        // role="button"
                         className="bg-bg-secondary-light rounded px-3 py-2 flex items-center gap-3 justify-between mobile:justify-around w-fit mobile:h-[44px]"
                       >
                         <span className="text-sm font-bold leading-5 text-brand-color">{_item.btnText}</span>
@@ -559,9 +559,12 @@ const HomePage: FC<HomeProps> = ({
         {/* App Download Starts Here*/}
 
         {/* start */}
-        <div className=" relative custom-container mx-auto sm:px-16 mobile:px-4 ">
+        {
+          !HIDE_SELLER_FLOW &&  <div className=" relative custom-container mx-auto sm:px-16 mobile:px-4 ">
           <InfoSection />
         </div>
+        }
+       
       </Layout>
 
       {/* <CategoriesDrawer

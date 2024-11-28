@@ -1,5 +1,3 @@
-// import { gumletLoader } from '@/lib/gumlet';
-// import { IMAGES } from '@/lib/images';
 import Image from 'next/image';
 import React, { ChangeEvent, ReactNode, useEffect, useState } from 'react';
 import { RootState } from '@/store/store';
@@ -72,9 +70,6 @@ const CategoriesDrawer: React.FC<CategoriesDrawerProps> = ({ isSearchCategoriesD
         onKeyDown={(e) => keyDownHandler(e, () => categoryRoute(item.id))}
       >
         <CategoriesCard data={item} changMenu={changMenu}/>
-        {/* {(searchField.length > 0 && !onCategorySelect && Array.isArray(item.child)) && (
-          <div className="ml-4">{renderCategories(item.child)}</div>
-        )} */}
       </div>
     ));
   };

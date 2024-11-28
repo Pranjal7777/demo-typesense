@@ -32,6 +32,7 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
       : imageUrl.url?.includes('https')
         ? imageUrl?.url
         : `${STATIC_IMAGE_URL}/${imageUrl?.url}`;
+        
   return (
     <>
       <div

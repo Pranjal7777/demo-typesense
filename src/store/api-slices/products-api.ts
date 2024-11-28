@@ -30,9 +30,9 @@ export const productsApi = rootApi.injectEndpoints({
       { page: number; latitude: string; longitude: string; country: string }
     >({
       query: ({ page, latitude, longitude, country }) => ({
-        url: `${AUTH_URL_V2}/${GET_ALL_BANNERS_AND_PRODUCTS_URL}/?page=${page}&lat=${
+        url: `${AUTH_URL_V3}/${GET_ALL_BANNERS_AND_PRODUCTS_URL}/?page=${page}&lat=${
           latitude || DEFAULT_LOCATION.latitude
-        }&long=${longitude || DEFAULT_LOCATION.longitude}&limit=10&country=${country || DEFAULT_LOCATION.country}`,
+        }&long=${longitude || DEFAULT_LOCATION.longitude}&limit=10&country=${country || DEFAULT_LOCATION.countryName}`,
         method: 'GET',
         // body:getGuestTokenConfig,
       }),

@@ -1,5 +1,5 @@
-import { gumletLoader } from '@/lib/gumlet';
-import { IMAGES } from '@/lib/images';
+// import { gumletLoader } from '@/lib/gumlet';
+// import { IMAGES } from '@/lib/images';
 import Image from 'next/image';
 import React, { ChangeEvent, ReactNode, useEffect, useState } from 'react';
 import { RootState } from '@/store/store';
@@ -22,16 +22,15 @@ type CategoriesDrawerProps = {
 const CategoriesDrawer: React.FC<CategoriesDrawerProps> = ({ isSearchCategoriesDrower, changMenu, onCategorySelect }) => {
   const [searchField, setSearchField] = useState('');
   const [filteredData, setFilteredData] = useState<categories[]>([]);
-  const { categoriesWithChildren } = useSelector((state: RootState) => state.auth);
+  const { categories } = useSelector((state: RootState) => state.auth);
   const router = useRouter();
   const {theme} = useTheme();
-
   const categoryRoute = (categoryId: string) => {
+    router.push(routeToCategories({ category: { id: categoryId } }));  
     if (onCategorySelect) {
-      onCategorySelect(categoryId);
+      onCategorySelect(categoryId); 
       changMenu();
     } else {
-      router.push(routeToCategories({ category: { id: categoryId } }));
     }
   };
 
@@ -55,9 +54,9 @@ const CategoriesDrawer: React.FC<CategoriesDrawerProps> = ({ isSearchCategoriesD
       }, [] as categories[]);
     };
 
-    const newFilteredData = filterCategories(categoriesWithChildren?.data, searchField.toLowerCase());
+    const newFilteredData = filterCategories(categories?.data, searchField.toLowerCase());
     setFilteredData(newFilteredData);
-  }, [searchField, categoriesWithChildren]);
+  }, [searchField, categories]);
 
   const onSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSearchField(event.target.value.toLowerCase());
@@ -69,13 +68,13 @@ const CategoriesDrawer: React.FC<CategoriesDrawerProps> = ({ isSearchCategoriesD
         key={index}
         tabIndex={0}
         role="button"
-        onClick={() => categoryRoute(item._id)}
-        onKeyDown={(e) => keyDownHandler(e, () => categoryRoute(item._id))}
+        onClick={() => categoryRoute(item.id)}
+        onKeyDown={(e) => keyDownHandler(e, () => categoryRoute(item.id))}
       >
         <CategoriesCard data={item} changMenu={changMenu}/>
-        {(searchField.length > 0 && !onCategorySelect && Array.isArray(item.child)) && (
+        {/* {(searchField.length > 0 && !onCategorySelect && Array.isArray(item.child)) && (
           <div className="ml-4">{renderCategories(item.child)}</div>
-        )}
+        )} */}
       </div>
     ));
   };
@@ -129,22 +128,6 @@ const CategoriesDrawer: React.FC<CategoriesDrawerProps> = ({ isSearchCategoriesD
 
           {/* Search Input */}
           <div className="w-full relative flex items-center px-[24px]">
-            {/* <Image
-              width={17}
-              height={17}
-              className="absolute left-9 rtl:right-9 dark:hidden inline"
-              src={IMAGES.SEARCH_ICON_BLACK}
-              loader={gumletLoader}
-              alt="location-icon"
-            />
-            <Image
-              width={17}
-              height={17}
-              className="absolute left-9 rtl:right-9 dark:inline hidden"
-              src={IMAGES.SEARCH_ICON_WHITE}
-              loader={gumletLoader}
-              alt="location-icon"
-            /> */}
             <SearchIcon primaryColor={theme ? '#FFF' : '#57585A'} width={17} height={17} className="absolute left-9 rtl:right-9 " />
             <input
               onChange={onSearchChange}
@@ -156,7 +139,7 @@ const CategoriesDrawer: React.FC<CategoriesDrawerProps> = ({ isSearchCategoriesD
         </div>
 
         {/* Categories List */}
-        <div className="w-full  h-[80%] overflow-y-scroll divide-y divide-border-tertiary-light dark:divide-border-tertiary-dark px-2 md:px-[24px]">
+        <div className="w-full  h-[79%] overflow-y-scroll divide-y divide-border-tertiary-light dark:divide-border-tertiary-dark px-2  md:px-[24px]">
           {/* Conditional Rendering based on filteredData */}
           {filteredData.length === 0 ? (
             <div className="text-center py-4 text-gray-500">NO RESULTS FOUND</div>

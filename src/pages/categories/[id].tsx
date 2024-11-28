@@ -22,7 +22,7 @@ import { GetAllSubCategoriesByCategoryId } from '@/helper/categories-data-from-s
 import { Category, Product } from '@/store/types';
 import dynamic from 'next/dynamic';
 import cookie from 'cookie';
-import { API, STRAPI_BASE_API_URL } from '@/config';
+import { API, HIDE_SELLER_FLOW, STRAPI_BASE_API_URL } from '@/config';
 import { STRAPI_CATEGORIES_PLP } from '@/api/endpoints';
 import CategorySlider from '@/components/sections/category-slider';
 import { RootState } from '@/store/store';
@@ -449,7 +449,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
         <div className=" relative custom-container mx-auto sm:px-16 mobile:px-4 ">
           {/* start */}
           {/* subcategories card section start */}
-          {subCategories.length > 0 && (
+          {!HIDE_SELLER_FLOW  && subCategories.length > 0 && (
             <Slider className="pt-5 sm:py-8 lg:py-12  border-error">
               <SectionTitle className="mb-4 sm:mb-3">Shop by category</SectionTitle>
               <CategorySlider className="border-error" data={subCategories} />
@@ -644,12 +644,14 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
         <div className="border-b border-border-tertiary-light dark:border-border-tertiary-dark mt-12"></div>
         <div className=" relative custom-container mx-auto sm:px-16 mobile:px-4 ">
           <div className=" flex flex-col items-center justify-center ">
-            <div className=" mobile:mb-[42px] flex flex-col w-full border-error">
+            <div className=" mobile:mb-[42px] pb-8 flex flex-col w-full border-error">
               <AboutUs data={aboutUs} />
               <Accordion data={accordion} />
             </div>
           </div>
-          <InfoSection />
+          {
+            ! HIDE_SELLER_FLOW &&  <InfoSection />
+          }
         </div>
       </Layout>
     </>

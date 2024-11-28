@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux';
 import { categories } from '@/store/types';
 import CrossIcon from '../../../public/images/cross-icon.svg';
 import CrossIconWhite from '../../../public/images/cross_icon_white.svg';
-import { useRouter } from 'next/router';
 import SelectCategoryTile from './select-category-tile';
 import { toggleScrollLock } from '@/utils/scroll-lock';
 type CategoriesDrawerProps = {
@@ -26,8 +25,6 @@ const SelectCategoryDrawer: React.FC<CategoriesDrawerProps> = ({
   const [searchField, setSearchField] = useState('');
   const [filteredData, setFilteredData] = useState<categories[]>([]);
   const { categoriesWithChildren } = useSelector((state: RootState) => state.auth);
-  const router = useRouter();
-
   useEffect(() => {
     const filterCategories = (data: any | undefined, search: string): categories[] => {
       if (!data) return [];
@@ -47,7 +44,7 @@ const SelectCategoryDrawer: React.FC<CategoriesDrawerProps> = ({
         return filtered;
       }, [] as categories[]);
     };
-
+console.log(categoriesWithChildren,"categoriesWithChildren?.data")
     const newFilteredData = filterCategories(categoriesWithChildren?.data, searchField.toLowerCase());
     setFilteredData(newFilteredData);
   }, [searchField, categoriesWithChildren]);

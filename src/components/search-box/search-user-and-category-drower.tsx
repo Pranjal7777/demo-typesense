@@ -22,6 +22,7 @@ import { InstantSearch } from 'react-instantsearch-dom';
 import { Hits } from 'react-instantsearch-dom';
 import SearchResults from '../typesense/SearchResults';
 import { CustomSearchResults } from '../ui/search-box/custom-hits';
+import { productsApi } from '@/store/api-slices/products-api';
 
 interface PlacePredictions {
   place_id: string;
@@ -123,6 +124,7 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
   const router = useRouter();
   const [isUserOrItem, setIsUserOrItem] = useState(true);
   const [isLocationTextBoxFocused, setIsLocationTextBoxFocused] = useState(true);
+  const [triggerSingleProductSearch] = productsApi.useLazyAddRecentSearchDataWithSingleProductQuery();
 
   // please do not remove this -> this code is for removing user location form redux
   // const removeLocation = () => {
@@ -469,8 +471,12 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
                             tabIndex={0}
                             role="button"
                             key={hit.id}
-                               // @ts-ignore
-                            onClick={() => categoryRoute(hit.categories[0].id , hit.title.en)}
+                            onClick={() => {
+                              // @ts-ignore
+                              categoryRoute(hit.categories[0]?.id , hit.title.en);
+                              // @ts-ignore
+                              triggerSingleProductSearch({assetId:hit.id,search:hit.title.en})
+                            }}
                             // onKeyDown={(e) => keyDownHandler(e, ()=>categoryRoute(hit.categoryPath[0].id as string))}
                           >
                             {/* @ts-ignore */}

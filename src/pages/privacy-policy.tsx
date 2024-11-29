@@ -116,7 +116,7 @@ const PrivacyPolicy: FC<Props> = ({ PrivacyData,htmlContent }) => {
           data={PrivacyData}
         /> */}
 
-        <div className='my-8' dangerouslySetInnerHTML={{ __html: htmlContent }} />
+        <div className='my-8 dark:text-text-primary-dark text-text-primary-light' dangerouslySetInnerHTML={{ __html: htmlContent }} />
 
         {/* <div className="py-12 mobile:pb-0 mobile:pt-9 border-error">
           <ContentSectionPageTitle className="">{privacyPolicySection.title}</ContentSectionPageTitle>

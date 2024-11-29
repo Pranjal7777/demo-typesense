@@ -10,6 +10,8 @@ import { useRouter } from 'next/router';
 import UserPlaceholderIcon from '../../../../public/assets/svg/user-placeholder-icon';
 import Link from 'next/link';
 import keyDownHandler from '@/helper/key-down-handler';
+import {  formatPriceWithoutCents } from '@/utils/price-formatter';
+
 interface ProductCardProps {
   product: Product;
   showProfilePic?: boolean;
@@ -99,7 +101,7 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
           </span>
           {/* </div> */}
           <div className="text-sm sm:text-[16px] sm:leading-6 font-semibold text-text-primary-light dark:text-text-primary-dark leading-5">
-            USD ${product?.price}
+            {formatPriceWithoutCents(product?.price)}
           </div>
           <div className=" flex justify-between ">
             <div className="flex items-center">

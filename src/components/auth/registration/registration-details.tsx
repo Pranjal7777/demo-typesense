@@ -63,7 +63,7 @@ const RegistrationDetails: React.FC = () => {
     country: '',
     companyName: '',
     email: '',
-    inviteReferralCode:''
+    inviteReferralCode: '',
   });
 
   const [individualData, setIndividualData] = useState({
@@ -94,7 +94,8 @@ const RegistrationDetails: React.FC = () => {
   const [phoneNumberValidation] = authApi.useValidatePhoneNumberMutation();
   const [validateUserName] = authApi.useValidateUserNameMutation();
   const [validateReferralCode] = authApi.useLazyValidateReferralCodeQuery();
-  
+  const [validateEmail] = authApi.useValidateEmailMutation();
+
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -204,10 +205,10 @@ const RegistrationDetails: React.FC = () => {
   const handleSubmit = () => {
     if (isIndividualOrCompany) {
       //company
-      const email = localStorage.getItem('email');
+      localStorage.removeItem('email');
       const reqPayloadForLogin: RequestPayloadForSignUp = {
         ...individualData,
-        email,
+        // email,
         ...(inviteReferralCode && { inviteReferralCode }),
         deviceId: generateDeviceId(),
         deviceMake: platform.name,
@@ -223,10 +224,10 @@ const RegistrationDetails: React.FC = () => {
       localStorage.setItem('signUpData', JSON.stringify(reqPayloadForLogin));
     } else {
       //individual
-      const email = localStorage.getItem('email');
+      localStorage.removeItem('email');
       const reqPayloadForLogin: RequestPayloadForSignUp = {
         ...companyData,
-        email,
+        // email,
         ...(inviteReferralCode && { inviteReferralCode }),
         deviceId: generateDeviceId(),
         deviceMake: platform.name,
@@ -263,22 +264,37 @@ const RegistrationDetails: React.FC = () => {
       if (isMissing) {
         return;
       }
+      /// add db  validation for all field (individualData) start
 
+      setIsLoading(true);
       if (individualData.username) {
         try {
-          setIsLoading(true);
           const data = await validateUserName(individualData.username).unwrap();
-          setIsLoading(false);
           if (data) {
             setErrorState((prevState) => ({ ...prevState, username: '' }));
           }
         } catch (e) {
-          setIsLoading(false);
           const error = e as { data: { message: string } };
           if (error.data && error.data.message) {
             setErrorState((prevState) => ({ ...prevState, username: `${error.data.message}` }));
           } else {
             setErrorState((prevState) => ({ ...prevState, username: `Unexpected error` }));
+          }
+          isError = true;
+        }
+      }
+      if (individualData.email) {
+        try {
+          const data = await validateEmail({ email: individualData.email }).unwrap();
+          if (data) {
+            setErrorState((prevState) => ({ ...prevState, email: '' }));
+          }
+        } catch (e) {
+          const error = e as { data: { message: string } };
+          if (error.data && error.data.message) {
+            setErrorState((prevState) => ({ ...prevState, email: `${error.data.message}` }));
+          } else {
+            setErrorState((prevState) => ({ ...prevState, email: `Unexpected error` }));
           }
           isError = true;
         }
@@ -293,12 +309,10 @@ const RegistrationDetails: React.FC = () => {
               phoneNumber: individualData.phoneNumber,
             };
             const data = await phoneNumberValidation(requesPayloadForValidPhoneNumber).unwrap();
-            setIsLoading(false);
             if (data) {
               setErrorState((prevState) => ({ ...prevState, phoneNumber: '' }));
             }
           } catch (e) {
-            setIsLoading(false);
             const error = e as { data: { message: string } };
             if (error.data && error.data.message) {
               setErrorState((prevState) => ({ ...prevState, phoneNumber: `${error.data.message}` }));
@@ -308,23 +322,17 @@ const RegistrationDetails: React.FC = () => {
             isError = true;
           }
         } else {
-          setIsLoading(false);
           setErrorState((prevState) => ({ ...prevState, phoneNumber: PHONE_NUMBER_INVALID_MESSAGE }));
           isError = true;
         }
       }
       if (inviteReferralCode) {
         try {
-          setIsLoading(true);
           const data = await validateReferralCode(inviteReferralCode).unwrap();
-          console.log(data, 'mir inviteReferralCode success');
-          
-          setIsLoading(false);
           if (data) {
             setErrorState((prevState) => ({ ...prevState, inviteReferralCode: '' }));
           }
         } catch (e) {
-          setIsLoading(false);
           console.log(e, 'mir inviteReferralCode error');
           const error = e as { data: { message: string } };
           if (error.data && error.data.message) {
@@ -335,6 +343,9 @@ const RegistrationDetails: React.FC = () => {
           isError = true;
         }
       }
+
+      setIsLoading(false);
+      /// add db  validation for all field (individualData) end
       if (isError) {
         return;
       }
@@ -358,16 +369,15 @@ const RegistrationDetails: React.FC = () => {
       if (isMissing) {
         return;
       }
+
+      setIsLoading(true);
       if (companyData.username) {
         try {
-          setIsLoading(true);
           const data = await validateUserName(companyData.username).unwrap();
-          setIsLoading(false);
           if (data) {
             setErrorState((prevState) => ({ ...prevState, username: '' }));
           }
         } catch (e) {
-          setIsLoading(false);
           const error = e as { data: { message: string } };
           if (error.data && error.data.message) {
             setErrorState((prevState) => ({ ...prevState, username: `${error.data.message}` }));
@@ -378,22 +388,36 @@ const RegistrationDetails: React.FC = () => {
         }
       }
 
+      if (companyData.email) {
+        try {
+          const data = await validateEmail({ email: companyData.email }).unwrap();
+          if (data) {
+            setErrorState((prevState) => ({ ...prevState, email: '' }));
+          }
+        } catch (e) {
+          const error = e as { data: { message: string } };
+          if (error.data && error.data.message) {
+            setErrorState((prevState) => ({ ...prevState, email: `${error.data.message}` }));
+          } else {
+            setErrorState((prevState) => ({ ...prevState, email: `Unexpected error` }));
+          }
+          isError = true;
+        }
+      }
+
       if (companyData.phoneNumber) {
         const isPhoneValid = validatePhoneNumber(`${companyData.countryCode}${companyData.phoneNumber}`);
         if (isPhoneValid) {
-          setIsLoading(true);
           try {
             const requesPayloadForValidPhoneNumber = {
               countryCode: companyData.countryCode,
               phoneNumber: companyData.phoneNumber,
             };
             const data = await phoneNumberValidation(requesPayloadForValidPhoneNumber).unwrap();
-            setIsLoading(false);
             if (data) {
               setErrorState((prevState) => ({ ...prevState, phoneNumber: '' }));
             }
           } catch (e) {
-            setIsLoading(false);
             isError = true;
             const error = e as { data: { message: string } };
             if (error.data && error.data.message) {
@@ -411,14 +435,11 @@ const RegistrationDetails: React.FC = () => {
 
       if (inviteReferralCode) {
         try {
-          setIsLoading(true);
-          const data = await validateReferralCode(inviteReferralCode).unwrap();       
-          setIsLoading(false);
+          const data = await validateReferralCode(inviteReferralCode).unwrap();
           if (data) {
             setErrorState((prevState) => ({ ...prevState, inviteReferralCode: '' }));
           }
         } catch (e) {
-          setIsLoading(false);
           const error = e as { data: { message: string } };
           if (error.data && error.data.message) {
             setErrorState((prevState) => ({ ...prevState, inviteReferralCode: `${error.data.message}` }));
@@ -429,7 +450,9 @@ const RegistrationDetails: React.FC = () => {
         }
       }
 
-      if(isError){
+      setIsLoading(false);
+
+      if (isError) {
         return;
       }
       // validation of company form Data end
@@ -624,10 +647,10 @@ const RegistrationDetails: React.FC = () => {
                 placeholder="Enter your Email"
                 required
                 label={CompleteSignUp.emailPlaceholder}
-                error={errorState.email && 'Email is missing'}
+                error={errorState.email}
                 type="email"
                 name="email"
-                disabled={true}
+                // disabled={true}
                 value={individualData.email}
                 onChange={(e) => onIndividualChange(e)}
               />

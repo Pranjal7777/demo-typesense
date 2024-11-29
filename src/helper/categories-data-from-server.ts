@@ -2,8 +2,6 @@ import { GET_SUB_CATEGORIES_BY_ID_URL } from '@/api/endpoints';
 import { AUTH_URL_V1, AUTH_URL_V2, BASE_API_URL } from '@/config';
 
 export const CategoriesDataFromServer = (accessToken: string) => {
-  console.log('accessTokenmine', accessToken);
-
   return fetch(`${BASE_API_URL + AUTH_URL_V2}/categories/?&limit=100&set=0&status=1`, {
     method: 'GET',
     headers: {
@@ -20,8 +18,6 @@ export const CategoriesDataFromServer = (accessToken: string) => {
     // body: JSON.stringify(getGuestTokenConfig), // Pass the request body as JSON
   })
     .then((response) => {
-      console.log('newresponse', response);
-
       if (!response.ok) {
         // If the response is not OK, throw an error
         throw new Error('Network response was not ok.');
@@ -38,6 +34,7 @@ export const CategoriesDataFromServer = (accessToken: string) => {
 };
 
 export const CategoriesDataWithChildCategoriesFromServer = (accessToken: string) => {
+  
   return fetch(`${BASE_API_URL + AUTH_URL_V1}/python/categories/`, {
     method: 'GET',
     headers: {
@@ -89,8 +86,6 @@ export const GetAllSubCategoriesByCategoryId = (accessToken: string, parentId: s
     }
   )
     .then((response) => {
-      console.log('newresponse', response);
-
       if (!response.ok) {
         // If the response is not OK, throw an error
         throw new Error('Network response was not ok.');

@@ -297,8 +297,6 @@ export async function getServerSideProps({ req, res, locale }: { req: GetServerS
     const listingApiReponses = await Promise.allSettled(promises);
     // blogData =  listingApiReponses[0].status === 'fulfilled' && listingApiReponses[0].value;
     const categories = listingApiReponses[0].status === 'fulfilled' && listingApiReponses[0].value ;
-
-    
     const categoriesWithChildCategories =
     listingApiReponses[1].status === 'fulfilled' && listingApiReponses[1].value ;
     const translatedStrings = listingApiReponses[2].status === 'fulfilled' && listingApiReponses[2].value ;

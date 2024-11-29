@@ -1,8 +1,6 @@
 import React, { FC, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { gumletLoader } from '@/lib/gumlet';
-import { IMAGES } from '@/lib/images';
 import Button from '../../ui/button';
 import { useTranslation } from 'next-i18next';
 import { useWindowResize } from '@/hooks/use-window-resize';
@@ -33,7 +31,6 @@ import HamburgerMenuIcon from '../../../../public/assets/svg/hamburger-icon';
 import ChatIcon from '../../../../public/assets/svg/chat-icon1';
 import FeedsIcon from '../../../../public/assets/svg/feed-icon';
 import NotificationIcon from '../../../../public/assets/svg/notification-icon';
-import MessageIcon from '../../../../public/assets/svg/message-icon';
 import { removeCookie } from '@/utils/cookies';
 import LeftArrowIcon from '../../../../public/assets/svg/left-arrow-icon';
 export type loginOrUserName = {
@@ -68,7 +65,7 @@ const Header: FC<Props> = ({
   const maxThreshold = useNewWindowScroll(130);
   const windowWidth = useWindowResize();
 
-  const { categoriesWithChildren } = useAppSelector((state: RootState) => state.auth);
+  const { categories } = useAppSelector((state: RootState) => state.auth);
   // const {data,isLoading,isError}=categoriesApi.useGetAllCategoriesQuery();
 
   const { t } = useTranslation('common');
@@ -218,7 +215,7 @@ const Header: FC<Props> = ({
                 {
                   // isLoading ? "Loading..." : isError ? "error" :
                   // data && (
-                  categoriesWithChildren?.data
+                    categories?.data
                     ?.slice(
                       0,
                       windowWidth > 1440

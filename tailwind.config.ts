@@ -31,7 +31,7 @@ const config: Config = {
       colors: {
         // brand color
         'brand-color': 'var(--brand-color)', // blue
-        'brand-color-hover': '#f1ecf9', // blue
+        'brand-color-hover': '#1FD18E1A', // blue
         'brand-color-hover-dark': '#2b213c', // blue
 
         'gradient-color-from': 'rgba(199, 168, 255, 0.2)',

@@ -331,7 +331,7 @@ const HomePage: FC<HomeProps> = ({
               </div>
             ) : null}
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-x-3 gap-y-4 md:gap-x-4 md:gap-y-7">
+            <div className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-x-3 gap-y-4 md:gap-x-4 md:gap-y-7 ${isFetchingBannersAndRecommendedProducts ? 'mt-6' : ''}`}>
               {
   
                 isErrorBannersAndRecommendedProducts ? null : (bannersAndRecommendedProducts?.result !== undefined && bannersAndRecommendedProducts?.Totalcount !== 0 ) ? ( // <h2>{convertRTKQueryErrorToString(errorBannersAndRecommendedProducts)}</h2>

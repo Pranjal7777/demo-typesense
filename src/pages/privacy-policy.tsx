@@ -74,8 +74,6 @@ const PrivacyPolicy: FC<Props> = ({ PrivacyData,htmlContent }) => {
   const headerBennerSection = t('page.headerBennerSection', { returnObjects: true }) as HeaderBennerSection;
   const breadcrumbLinks = t('page.breadcrumbLinks', { returnObjects: true }) as BreadcrumbLinks[];
   // const privacyPolicySection: PrivacyPolicySection = t('page.privacyPolicySection', { returnObjects: true });
-  console.log();
-  
   const strapiSeoData = PrivacyData?.attributes?.seoProperties;
   const keywords = PrivacyData?.attributes?.seoProperties?.keywords;
   const joinedString = formatArrayToStrings(keywords);
@@ -140,10 +138,6 @@ export async function getServerSideProps({ locale ,req}: { locale: string ,req: 
     const cookies = cookie.parse(req.headers.cookie || '');
     accessToken = cookies.accessToken?.replace(/"/g, '') || null;
   }
-console.log(`${STRAPI_BASE_API_URL}${API}${STRAPI_PRIVACY_POLICY}?populate=deep`, 'ballu');
-console.log(`${BASE_API_URL}${AUTH_URL_V1}${GET_PRIVACY_POLICY_DATA}?userType=1&type=1&lan=en`, 'ballu');
-
-
   try {
     const promises = [
       fetch(`${STRAPI_BASE_API_URL}${STRAPI_PRIVACY_POLICY}?populate=deep`),
@@ -163,8 +157,6 @@ console.log(`${BASE_API_URL}${AUTH_URL_V1}${GET_PRIVACY_POLICY_DATA}?userType=1&
     if (!response1 || !response2) {
       return { notFound: true };
     }
-    console.log(response2);
-    
     const data = await response1.json();  
     const data2 = await response2.json();
     const htmlContent = data2.data.pageContent;

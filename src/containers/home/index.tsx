@@ -124,7 +124,6 @@ const HomePage: FC<HomeProps> = ({
   categories,
   categoriesWithChildCategories,
   myLocationFromServer,
-  // posts,
 }) => {
   const router = useRouter();
 

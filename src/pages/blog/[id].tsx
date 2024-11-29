@@ -12,6 +12,9 @@ import Button, { BUTTON_TYPE_CLASSES } from '@/components/ui/button';
 
 import { BlogSectionTypes } from '.';
 import { LinksTypes } from '../faq';
+import SvgWrapper from '@/components/ui/svg-wrapper';
+import SVG_PATH from '@/lib/svg-path';
+import { useTheme } from '@/hooks/theme';
 
 export interface blogs_detailsProps {
   post: {
@@ -26,6 +29,8 @@ export interface blogs_detailsProps {
 }
 
 function BlogsDetails({ post, id }: blogs_detailsProps) {
+  const {theme} = useTheme();
+
   const [slugData, setSlugData] = useState<BlogSectionTypes[]>([]);
   const scrollToHeading = (id: string) => {
     const element = document.getElementById(id);
@@ -60,14 +65,7 @@ function BlogsDetails({ post, id }: blogs_detailsProps) {
                   <p className="ml-4 text-text-tertiary-light flex-nowrap text-nowrap">{slugData[0]?.posted_date}</p>
                   <p className="ml-4 text-text-tertiary-light flex-nowrap text-nowrap">{slugData[0]?.equipment}</p>
                   <div className="ml-4 flex items-center flex-nowrap text-nowrap ">
-                    <Image
-                      width={18}
-                      height={13}
-                      className=""
-                      src={IMAGES.EYE_ICON_BLACK}
-                      loader={gumletLoader}
-                      alt="eye_icon"
-                    />
+                    <SvgWrapper primaryColor= {theme ? '#929293' : '#57585A'} viewBox="0 0 20 15" path={SVG_PATH.EYE_ICON_BLACK}/>
                     <p className="ml-2 text-text-tertiary-light flex-nowrap text-nowrap">{slugData[0]?.views} views</p>
                   </div>
                 </div>

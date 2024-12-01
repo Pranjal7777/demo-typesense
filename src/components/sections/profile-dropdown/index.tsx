@@ -32,7 +32,7 @@ const ProfileDropdown: FC<Props> = ({ menuOptions, signOut }) => {
             <RedirectCard
               label={menuOptions[0].item}
               labelIcon={<ProfileIcon primaryColor={theme ? '#fff' : '#000'} />}
-              linkUrl={'/'}
+              linkUrl={'/profile'}
               actionIcon={<RightArrowRoundedEdge primaryColor={theme ? '#fff' : '#000'} height="11" width="7" />}
             />
 

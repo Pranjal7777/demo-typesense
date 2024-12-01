@@ -172,6 +172,7 @@ export const IMAGES = {
   FALLBACK_IMAGE_DARK: '/assets/images/fallback-dark.svg',
 
   PROFILE_PLACEHOLDER_IMAGE_LIGHT: '/assets/images/profile_placeholder_light.svg',
-  PROFILE_PLACEHOLDER_IMAGE_DARK: '/assets/images/profile_placeholder_dark.svg'
+  PROFILE_PLACEHOLDER_IMAGE_DARK: '/assets/images/profile_placeholder_dark.svg',
+  EDIT_PENCIL_ICON: '/assets/images/edit_pencil_icon.svg'
 };
 // public\images\filter-icon-light.svg

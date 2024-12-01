@@ -6,6 +6,7 @@ type DownArrowIconProps = {
   height?: string;
   primaryColor?: string;
   className?: string;
+  onClick?: () => void;
 };
 
 const DownArrowIcon: FC<DownArrowIconProps> = ({

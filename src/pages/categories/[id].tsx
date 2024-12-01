@@ -36,6 +36,8 @@ import { useSearchParams } from 'next/navigation';
 import Select from 'react-select';
 import { useTheme } from '@/hooks/theme';
 import { StylesConfig } from 'react-select';
+import PageHeaderWithBreadcrumb from '@/components/ui/page-header-with-breadcrumb';
+import Breadcrumb from '@/components/ui/breadcrumb';
 
 export type filteredProducts = {
   userName: string;
@@ -97,19 +99,19 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
 
   const router = useRouter();
 
-  const { id } = router.query;
+  const { id, selectedCategory } = router.query;
   const searchParams = useSearchParams();
 
   const initialFilters = {
-    type: searchParams.get("type") || '',
-    condition: searchParams.get("condition") || '',
-    postedWithin: searchParams.get("postedWithin") || '',
-    zipcode: searchParams.get("zipcode") || '',
-    pendingOffer: searchParams.get("pendingOffer") || '',
-    price: searchParams.get("price") || '',
-    distance: searchParams.get("distance") || '',
-    address: searchParams.get("address") || '',
-    category:{title:searchParams.get("categoryTitle") || '',_id:searchParams.get("categoryId") || ''}
+    type: searchParams.get('type') || '',
+    condition: searchParams.get('condition') || '',
+    postedWithin: searchParams.get('postedWithin') || '',
+    zipcode: searchParams.get('zipcode') || '',
+    pendingOffer: searchParams.get('pendingOffer') || '',
+    price: searchParams.get('price') || '',
+    distance: searchParams.get('distance') || '',
+    address: searchParams.get('address') || '',
+    category: { title: searchParams.get('categoryTitle') || '', _id: searchParams.get('categoryId') || '' },
   };
 
   const [filtersDrawer, setFilterDrawer] = useState(false);
@@ -160,27 +162,26 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
     const updatedFeaturedFilters = { ...selectedItemsFromFilterSection };
     if (key === 'category') {
       updatedFeaturedFilters.category = { title: '', _id: '' };
-    } 
-    else {
+    } else {
       (updatedFeaturedFilters as any)[key] = '';
     }
 
     setSelectedItemsFromFilterSection(updatedFeaturedFilters);
     addFiltersToQuery(updatedFeaturedFilters);
-    
+
     let typesenseFilters = transformFilters(updatedFeaturedFilters);
-    if(!typesenseFilters?.address){
-      typesenseFilters.address = ""
+    if (!typesenseFilters?.address) {
+      typesenseFilters.address = '';
     }
-    if(!typesenseFilters?.type){
-      typesenseFilters.type =''
+    if (!typesenseFilters?.type) {
+      typesenseFilters.type = '';
     }
     updateFilters(typesenseFilters);
   };
 
   const selectedItemsFromFiltersSectionList = () => {
-    return Object.entries(selectedItemsFromFilterSection).map(
-      ([key, value]) => {
+    return Object.entries(selectedItemsFromFilterSection)
+      .map(([key, value]) => {
         // Skip rendering if it's the distance filter
         if (key === 'distance') return null;
         if (!value) return null;
@@ -192,20 +193,16 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
 
         return (
           <div key={key} className="mb-2">
-            <SelectedFilterCard 
+            <SelectedFilterCard
               label={
-                typeof value === 'string' 
-                  ? value 
-                  : 'title' in value 
-                    ? value.title 
-                    : `$${value.min} - $${value.max}`
-              } 
-              onDelete={() => removeFilter(key)} 
+                typeof value === 'string' ? value : 'title' in value ? value.title : `$${value.min} - $${value.max}`
+              }
+              onDelete={() => removeFilter(key)}
             />
           </div>
         );
-      }
-    ).filter(Boolean);
+      })
+      .filter(Boolean);
   };
   const handleFilterDrawer = () => {
     setFilterDrawer(true);
@@ -309,7 +306,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
       price: getQueryParam(router.query.price),
       distance: getQueryParam(router.query.distance),
       address: getQueryParam(router.query.address),
-      category:{title:searchParams.get("categoryTitle") || '',_id:searchParams.get("categoryId") || ''}
+      category: { title: searchParams.get('categoryTitle') || '', _id: searchParams.get('categoryId') || '' },
     };
     setSelectedItemsFromFilterSection(updatedFilters);
   }, [router.query]);
@@ -329,11 +326,9 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
     country: 'India',
   });
 
-
-  useEffect(()=>{
-    resetFilters()
-  },[id])
-
+  useEffect(() => {
+    resetFilters();
+  }, [id]);
 
   const hasActiveFilters = () => {
     return Object.entries(selectedItemsFromFilterSection).some(([key, value]) => {
@@ -362,26 +357,26 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
 
     return {
       ...cleanedFilters,
-      price: filters.price ? (
-        typeof filters.price === 'string' 
+      price: filters.price
+        ? typeof filters.price === 'string'
           ? (() => {
               const [min, max] = filters.price.replace(/\$/g, '').split(' - ');
               return {
                 min: parseInt(min),
-                max: parseInt(max)
+                max: parseInt(max),
               };
             })()
           : filters.price
-      ) : undefined,
+        : undefined,
     };
   };
 
   useEffect(() => {
     const initialFilters = { ...selectedItemsFromFilterSection };
     const typesenseFilters = transformFilters(initialFilters);
-    console.log(typesenseFilters,selectedItemsFromFilterSection,"typesenseFilters")
+    console.log(typesenseFilters, selectedItemsFromFilterSection, 'typesenseFilters');
     updateFilters(typesenseFilters);
-  }, []); 
+  }, []);
 
   const theme = useTheme();
 
@@ -396,17 +391,21 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
       fontSize: '14px',
       color: theme.theme ? 'var(--bg-secondary-dark)' : 'var(--bg-primary-light)',
       fontWeight: '400',
-      cursor: 'pointer'
+      cursor: 'pointer',
     }),
     option: (provided, state) => ({
       ...provided,
-      backgroundColor: state.isFocused 
-        ? (theme.theme ? '#2D3748' : '#EDF2F7') 
-        : theme.theme ? 'var(--bg-primary-dark)' : '#FFF',
+      backgroundColor: state.isFocused
+        ? theme.theme
+          ? '#2D3748'
+          : '#EDF2F7'
+        : theme.theme
+        ? 'var(--bg-primary-dark)'
+        : '#FFF',
       color: theme.theme ? '#fff' : 'var(--bg-primary-light)',
       fontSize: '14px',
       fontWeight: '400',
-      cursor: 'pointer'
+      cursor: 'pointer',
     }),
     menu: (provided) => ({
       ...provided,
@@ -417,7 +416,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
       color: theme.theme ? '#fff' : 'var(--bg-primary-light)',
     }),
     indicatorSeparator: () => ({
-      display: 'none'
+      display: 'none',
     }),
     valueContainer: (provided) => ({
       ...provided,
@@ -448,7 +447,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
         <div className=" relative custom-container mx-auto sm:px-16 mobile:px-4 ">
           {/* start */}
           {/* subcategories card section start */}
-          {!HIDE_SELLER_FLOW  && subCategories.length > 0 && (
+          {!HIDE_SELLER_FLOW && subCategories.length > 0 && (
             <Slider className="pt-5 sm:py-8 lg:py-12  border-error">
               <SectionTitle className="mb-4 sm:mb-3">Shop by category</SectionTitle>
               <CategorySlider className="border-error" data={subCategories} />
@@ -463,12 +462,13 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
           )}
 
           {/* subcategories brand section end  */}
+          <Breadcrumb isLinkDisable={true} className='!pl-0 md:!pl-0 my-5' steps={[{name:'Categories'}, {name:getQueryParam(selectedCategory)}]}></Breadcrumb>
           {/* categories section starts */}
-          <div className=" ">
+          <div className="mobile:pb-9">
             {allHighlightedProducts.length > 0 && (
               <div className=" w-full pt-9 sm:py-8 lg:py-12 flex flex-col items-center justify-center">
                 <div className=" flex  w-full justify-between">
-                  <SectionTitle>Featured Products</SectionTitle>   
+                  <SectionTitle>Featured Products</SectionTitle>
                   {/* <button className="flex cursor-pointer justify-between " 
                   onClick={handleFilterDrawer}>
                     <div>
@@ -549,12 +549,10 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
                           { value: 'newest', label: 'Newest First' },
                           { value: 'oldest', label: 'Oldest First' },
                           { value: 'price_asc', label: 'Low to High' },
-                          { value: 'price_desc', label: 'High to Low' }
+                          { value: 'price_desc', label: 'High to Low' },
                         ]}
                         defaultValue={{ value: 'newest', label: 'Newest First' }}
-                        formatOptionLabel={({ label }, { context }) => (
-                          <span className="pl-2">{label}</span>
-                        )}
+                        formatOptionLabel={({ label }, { context }) => <span className="pl-2">{label}</span>}
                         styles={customStyles}
                         theme={(theme) => ({
                           ...theme,
@@ -569,7 +567,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
                     </div>
                     <button className="flex cursor-pointer justify-between items-center" onClick={handleFilterDrawer}>
                       <div>
-                        
                         <img
                           className=" inline-block mobile:hidden"
                           width={28}
@@ -579,7 +576,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
                           alt="dollar_coin_icon"
                           // loader={gumletLoader}
                         />
-                            <img
+                        <img
                           className=" mobile:block hidden"
                           width={20}
                           height={18}
@@ -606,7 +603,9 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
                         <h2 className="text-center text-red-500">{errorTypesense}</h2>
                       </div>
                     ) : products.length > 0 ? (
-                      products.map((product, index) => <ProductCard key={`${product?.id}-${index}`} product={product} isTypeSenseData={true} />)
+                      products.map((product, index) => (
+                        <ProductCard key={`${product?.id}-${index}`} product={product} isTypeSenseData={true} />
+                      ))
                     ) : !isLoading ? (
                       <div className="col-span-full text-center py-8 dark:text-white">
                         <h2>No products found</h2>
@@ -640,18 +639,20 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
             )}
           </div>
         </div>
-        <div className="border-b border-border-tertiary-light dark:border-border-tertiary-dark mt-12"></div>
-        <div className=" relative custom-container mx-auto sm:px-16 mobile:px-4 ">
-          <div className=" flex flex-col items-center justify-center ">
-            <div className=" mobile:mb-[42px] pb-8 flex flex-col w-full border-error">
-              <AboutUs data={aboutUs} />
-              <Accordion data={accordion} />
+        {!HIDE_SELLER_FLOW && (
+          <>
+            <div className="border-b border-border-tertiary-light dark:border-border-tertiary-dark mt-12"></div>
+            <div className=" relative custom-container mx-auto sm:px-16 mobile:px-4 ">
+              <div className=" flex flex-col items-center justify-center ">
+                <div className=" mobile:mb-[42px] pb-8 flex flex-col w-full border-error">
+                  <AboutUs data={aboutUs} />
+                  <Accordion data={accordion} />
+                </div>
+              </div>
+              <InfoSection />
             </div>
-          </div>
-          {
-            ! HIDE_SELLER_FLOW &&  <InfoSection />
-          }
-        </div>
+          </>
+        )}
       </Layout>
     </>
   );

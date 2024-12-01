@@ -23,8 +23,8 @@ const CategoriesDrawer: React.FC<CategoriesDrawerProps> = ({ isSearchCategoriesD
   const { categories } = useSelector((state: RootState) => state.auth);
   const router = useRouter();
   const {theme} = useTheme();
-  const categoryRoute = (categoryId: string) => {
-    router.push(routeToCategories({ category: { id: categoryId } }));  
+  const categoryRoute = (categoryId: string, name: string) => {
+    router.push(routeToCategories({ category: { id: categoryId,name:name } }));  
     if (onCategorySelect) {
       onCategorySelect(categoryId); 
       changMenu();
@@ -66,8 +66,8 @@ const CategoriesDrawer: React.FC<CategoriesDrawerProps> = ({ isSearchCategoriesD
         key={index}
         tabIndex={0}
         role="button"
-        onClick={() => categoryRoute(item.id)}
-        onKeyDown={(e) => keyDownHandler(e, () => categoryRoute(item.id))}
+        onClick={() => categoryRoute(item.id, item.title)}
+        onKeyDown={(e) => keyDownHandler(e, () => categoryRoute(item.id, item.title))}
       >
         <CategoriesCard data={item} changMenu={changMenu}/>
       </div>

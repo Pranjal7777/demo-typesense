@@ -20,7 +20,7 @@ const SellersReviewSection = ({accountId}:{accountId:string}) => {
         !isRatingsFetching &&  <ReviewWrapper>
           <SingleStarReviewCard
             ratingHeading={`${sellerRatings?.data.ratingCount || 0} Reviews`}
-            ratingText={`${sellerRatings?.data.avgRating || '0.0'}`}
+            ratingText={`${sellerRatings?.data.avgRating || '0'}`}
           />
           {
             sellerRatings &&  <div className='flex flex-col gap-2'>
@@ -32,7 +32,7 @@ const SellersReviewSection = ({accountId}:{accountId:string}) => {
         </ReviewWrapper>
       }
 
-      <div className='flex flex-col gap-3 md:gap-6 mt-4 md:m-5 mr-0 pt-5 border-t overflow-hidden'>
+      <div className='flex flex-col gap-3 md:gap-6 mt-4 md:m-5 mr-0 pt-5 border-t border-border-tertiary-light dark:border-border-tertiary-dark overflow-hidden'>
         {
           data && data?.data.userReviews.map((userReview)=><ReviewCard key={userReview._id} userReview={userReview}/>)
         }

@@ -5,12 +5,13 @@ import React, { FC } from 'react';
 export type Props = {
   steps: {
     name: string;
-    link: string;
+    link?: string;
   }[];
   className?: string;
+  isLinkDisable?: boolean;
 };
 
-const Breadcrumb: FC<Props> = ({ steps, className }) => {
+const Breadcrumb: FC<Props> = ({ steps, className, isLinkDisable = false }) => {
   return (
     <ol
       className={appClsx(
@@ -20,12 +21,19 @@ const Breadcrumb: FC<Props> = ({ steps, className }) => {
     >
       {steps.map((step, index) => (
         <li key={index} className="">
-          <Link
-            href={step.link}
+          {
+            isLinkDisable ? <span
+            className={`rtl:ml-2 ${index === steps.length - 1 ? 'text-brand-color ' : 'text-gray-500'} `}
+          >
+            {step.name}&nbsp;
+          </span> : <Link
+            href={step.link || '#'}
             className={`rtl:ml-2 ${index === steps.length - 1 ? 'text-brand-color ' : 'text-gray-500'} `}
           >
             {step.name}&nbsp;
           </Link>
+          }
+          
           {index < steps.length - 1 && <span className="">&gt;</span>}
         </li>
       ))}

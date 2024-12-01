@@ -65,19 +65,20 @@ const NewProfileCard: FC<Props> = ({
 
       <strong
         className={appClsx(
-          'text-[20px] mt-2 md:mt-3 text-text-primary-light font-semibold leading-[30px]',
+          'text-[20px] mt-2 md:mt-3 text-text-primary-light dark:text-text-primary-dark font-semibold leading-[30px]',
           fullNameClass
         )}
       >
         {fullName}
       </strong>
-      <span className={appClsx('text-text-tertiary-light text-[14px] leading-[21px] ', userNameClass)}>{userName}</span>
+      <span className={appClsx('text-text-tertiary-light dark:text-text-septenary-light text-[14px] leading-[21px] ', userNameClass)}>{userName}</span>
       <Rating
         value={ratingValue}
         itemClassName={ratingTextClass}
         color={starColor}
         className={ratingClass}
         text={ratingText}
+        
       />
 
       {!HIDE_SELLER_FLOW && (

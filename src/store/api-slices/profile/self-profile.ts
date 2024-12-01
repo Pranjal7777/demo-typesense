@@ -8,6 +8,7 @@ import {
   ResponseSendVerificationCodePayload,
   ResponseValidVerificationCodePayload,
 } from '@/store/types';
+import { SendVerificationForChangeNumber } from '@/store/types/profile-type';
 
 // import { ResponseAddress } from '@/store/types';
 
@@ -44,11 +45,9 @@ export const selfProfileApi = rootApi.injectEndpoints({
         body,
       }),
     }),
-    sendVerificationCode: builder.mutation<
-      ResponseSendVerificationCodePayload,
-      | RequestSendVerificationCodePayload
-      | RequestSendVerificationCodeForLoginWithPhone
-      | RequestSendVerificationCodeForLoginWithEmail
+    sendVerificationCodeForChangeNumber: builder.mutation<
+      any,
+      SendVerificationForChangeNumber
     >({
       query: (data) => ({
         url: `${AUTH_URL_V1}/${GET_VERIFICATION_CODE}`,

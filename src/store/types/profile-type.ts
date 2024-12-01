@@ -46,3 +46,11 @@ export interface AddressAttributeResponse {
   data: AddressAttribute[];
 }
 
+export interface SendVerificationForChangeNumber {
+  phoneNumber: string;
+  countryCode: string; 
+  trigger: number; 
+  userId: string; 
+};
+
+

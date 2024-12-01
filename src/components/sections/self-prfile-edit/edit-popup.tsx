@@ -5,10 +5,13 @@ import { appClsx } from '@/lib/utils';
 import React, { ChangeEvent, FC, useState } from 'react';
 import ImageUploader from '@/components/ui/image-upload';
 import { EditErrorStateType, EditFormDataType, ErrorMessages } from '.';
+import LeftArrowIcon from '../../../../public/assets/svg/left-arrow-icon';
+import { useTheme } from '@/hooks/theme';
 
 type EditPopupProps = {
   currentEditField: string | null;
   updateButtonHandler: () => void;
+  showLeftArrow?: boolean;
   leftArrowClickHandler?: () => void;
   containerClassName?: string;
   changeFormData: (_e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
@@ -35,8 +38,11 @@ const EditPopup: FC<EditPopupProps> = ({
   errorState,
   formInputClassName,
   setEditProfilePicUrl,
-  setShowCongratulationModal
+  setShowCongratulationModal,
+  showLeftArrow,
+  leftArrowClickHandler
 }) => {
+  const {theme} = useTheme();
   const [isProfilePicUploadSuccess, setIsProfilePicUploadSuccess] = useState(false);
   console.log(isProfilePicUploadSuccess, 'mir error messages in edit popup');
 
@@ -53,10 +59,13 @@ const EditPopup: FC<EditPopupProps> = ({
   const onProfilePicUploadCancel = () => {
     setIsProfilePicUploadSuccess(false);
   };
+  const onLeftArrowClick = ()=>{
+    leftArrowClickHandler?.();
+  }
 
   return (
     <div className={appClsx('text-text-primary-light dark:text-text-primary-dark ', containerClassName)}>
-      <h3 className="text-xl mb-8 font-semibold text-center">{`Change ${
+      <h3 className="text-xl mb-8 font-semibold text-center flex items-center justify-center">{`Change ${
         currentEditField == 'username'
           ? 'User Name'
           : currentEditField == 'email'
@@ -64,7 +73,16 @@ const EditPopup: FC<EditPopupProps> = ({
             : currentEditField == 'profilePic'
               ? 'Profile Picture'
               : 'Phone Number'
-      }`}</h3>
+      }`}
+      {
+        showLeftArrow &&  <LeftArrowIcon
+        primaryColor={theme ? '#FFF' : '#202020'}
+        onClick={onLeftArrowClick}
+        className="absolute left-5 cursor-pointer"
+      />
+      }
+  
+      </h3>
       <div className="w-full flex-1 flex md:block flex-col">
         {currentEditField === 'username' ? (
           <FormInput

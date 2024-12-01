@@ -108,6 +108,9 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
 
   const [editProfileFormData, setEditProfileFormData] = useState<EditFormDataType>(initialEditProfileFormData);
   console.log(editProfileFormData, 'mir edit profile form data');
+  const [verificationData, setVerificationData] = useState(null);
+  console.log(verificationData, 'verificationdata');
+  
 
   const changeFormData = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -140,7 +143,7 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
   };
 
   console.log(editProfileFormData, 'mir lol');
-  
+
   const onPhoneChange = (value: string, data: { dialCode: string; name: string }) => {
     const countryCode = `+${data.dialCode}`;
     const phoneNumber = value.substring(countryCode.length - 1);
@@ -164,11 +167,12 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
   const [updateUserName] = selfProfileApi.useUpdateUserNameMutation();
   const [updateEmail] = selfProfileApi.useUpdateEmailMutation();
   const [updatePhoneNumber] = selfProfileApi.useUpdatePhoneNumberMutation();
+  const [sendVerificationCodeForChangeNumber] = selfProfileApi.useSendVerificationCodeForChangeNumberMutation()
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentEditField, setCurrentEditField] = useState<string | null>(null);
   const [showCongratulationModal, setShowCongratulationModal] = useState(false);
   console.log(congratulationMsg, 'mir congratulationMsg');
-  
+
   const openModal = (field: string) => {
     setIsModalOpen(true);
     setCurrentEditField(field);
@@ -233,9 +237,15 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
           countryCode: editProfileFormData.countryCode,
           phoneNumber: editProfileFormData.phoneNumber,
         };
-        const data = await phoneNumberValidation(requesPayloadForValidPhoneNumber).unwrap();
-        await updatePhoneNumber(requesPayloadForValidPhoneNumber);
-        console.log(data, 'mir data ');
+        await phoneNumberValidation(requesPayloadForValidPhoneNumber).unwrap();
+        const requestPayloadForSendVerificationCode = {
+          countryCode: editProfileFormData.countryCode,
+          phoneNumber: editProfileFormData.phoneNumber,
+          trigger: 3,
+          userId: profileData?._id || '',
+        };
+        const verificationData = await sendVerificationCodeForChangeNumber(requestPayloadForSendVerificationCode);
+        setVerificationData(verificationData.data.data);
         // setInitialEditProfileFormData((prevState) => ({ ...prevState, phoneNumber: editProfileFormData.phoneNumber,countryCode:editProfileFormData.countryCode }));
         // setUpdatedFields((prevState) => [...prevState, 'phoneNumber']);
       } catch (error) {
@@ -292,7 +302,14 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
         <LeftArrowIcon
           onClick={leftArrowClickHandler}
           primaryColor={theme ? '#fff' : '#202020'}
-          className="cursor-pointer absolute left-0"
+          className="cursor-pointer absolute left-0 md:hidden"
+        />
+        <LeftArrowIcon
+          onClick={leftArrowClickHandler}
+          primaryColor={theme ? '#fff' : '#202020'}
+          height="22"
+          width="22"
+          className="cursor-pointer absolute left-0 hidden md:block"
         />
         <p className="md:ml-10 ml-0">Edit Profile</p>
       </div>
@@ -424,7 +441,7 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
               label="Country"
               options={countries.data}
               selectedValue={editProfileFormData.country}
-              onSelect={(e)=>changeFormData(e)}
+              onSelect={(e) => changeFormData(e)}
               id="country-selector"
               name="country"
               mainClassName="mb-0"
@@ -459,20 +476,12 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
               />
               <h3 className="text-2xl font-semibold">Congratulations</h3>
               <p className="text-center text-text-quaternary-dark dark:text-text-septenary-light">
-                {congratulationMsg ? congratulationMsg:currentEditField == 'profilePic'
-                  ? `you have successfully changed your Profile picture. Please save your changes to update your profile picture.` : `you have successfully changed your ${currentEditField} please check your email address to get updated`}
-                
-                {/* {`you have successfully changed your ${
-                  currentEditField == 'profilePic'
-                    ? `profile picture. Please save your changes to update your profile picture.`
-                    : currentEditField == 'phoneNumber'
-                      ? 'phone number.'
-                      : currentEditField == 'email'
-                        ? 'email address please check your  email address to get updated'
-                        : currentEditField == 'username'
-                          ? 'username please check your email to get updated'
-                          : currentEditField
-                }`} */}
+                {congratulationMsg
+                  ? congratulationMsg
+                  : currentEditField == 'profilePic'
+                  ? `you have successfully changed your Profile picture. Please save your changes to update your profile picture.`
+                  : `you have successfully changed your ${currentEditField} please check your email address to get updated`}
+
               </p>
             </div>
           ) : (
@@ -500,12 +509,9 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
           className=" text-text-primary-light dark:text-text-primary-dark dark:bg-bg-primary-dark  rounded-[0px] flex flex-col min-w-screen min-h-screen p-5"
           onClose={closeModal}
         >
-          <LeftArrowIcon
-            primaryColor={theme ? '#FFF' : '#202020'}
-            onClick={closeModal}
-            className="absolute left-5 top-5 cursor-pointer"
-          />
           <EditPopup
+            showLeftArrow={true}
+            leftArrowClickHandler={closeModal}
             setEditProfilePicUrl={setEditProfilePicUrl}
             setShowCongratulationModal={setShowCongratulationModal}
             containerClassName="flex-1 flex flex-col"
@@ -535,10 +541,12 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
                   src={SUCCESS_UPDATE}
                 />
                 <h3 className="text-2xl font-semibold">Congratulations</h3>
-                <p
-                  className="text-center text-text-tertiary-light dark:text-text-septenary-light">
-                  {congratulationMsg ? congratulationMsg:currentEditField == 'profilePic'
-                    ? `you have successfully changed your Profile picture. Please save your changes to update your profile picture.` : `you have successfully changed your ${currentEditField} please check your email address to get updated`}
+                <p className="text-center text-text-tertiary-light dark:text-text-septenary-light">
+                  {congratulationMsg
+                    ? congratulationMsg
+                    : currentEditField == 'profilePic'
+                    ? `you have successfully changed your Profile picture. Please save your changes to update your profile picture.`
+                    : `you have successfully changed your ${currentEditField} please check your email address to get updated`}
                 </p>
               </div>
             </Model>

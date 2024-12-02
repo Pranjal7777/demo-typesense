@@ -186,7 +186,7 @@ export default function SecureCheckout({
               <span>Checkout</span>
             </div>
           </div>
-          <div className="lg:flex items-center absolute left-1/2 transform -translate-x-1/2  hidden">
+          <div className="lg:flex items-center absolute left-1/2 transform -translate-x-1/2  hidden cursor-pointer" onClick={()=> router.push("/")}>
             <PrimaryLogo height={150} width={160} className="text-b mr-2" primaryColor="var(--brand-color)" />
           </div>
         </div>

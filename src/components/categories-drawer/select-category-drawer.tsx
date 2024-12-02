@@ -24,7 +24,9 @@ const SelectCategoryDrawer: React.FC<CategoriesDrawerProps> = ({
 }) => {
   const [searchField, setSearchField] = useState('');
   const [filteredData, setFilteredData] = useState<categories[]>([]);
-  const { categoriesWithChildren } = useSelector((state: RootState) => state.auth);
+  const { categoriesWithChildren,categories } = useSelector((state: RootState) => state.auth);
+
+  
   useEffect(() => {
     const filterCategories = (data: any | undefined, search: string): categories[] => {
       if (!data) return [];
@@ -44,10 +46,10 @@ const SelectCategoryDrawer: React.FC<CategoriesDrawerProps> = ({
         return filtered;
       }, [] as categories[]);
     };
-console.log(categoriesWithChildren,"categoriesWithChildren?.data")
-    const newFilteredData = filterCategories(categoriesWithChildren?.data, searchField.toLowerCase());
+
+    const newFilteredData = filterCategories(categories?.data, searchField.toLowerCase());
     setFilteredData(newFilteredData);
-  }, [searchField, categoriesWithChildren]);
+  }, [searchField, categories]);
 
   const renderCategories = (data: any): ReactNode => {
     return data.map((item: any, index: any) => (
@@ -78,7 +80,6 @@ console.log(categoriesWithChildren,"categoriesWithChildren?.data")
         className={`z-50 mobile:hidden transition-opacity ease-in duration-200 ${
           isSearchCategoriesDrower ? 'opacity-100 inline-block' : 'opacity-0 pointer-events-none hidden'
         } fixed w-full h-full inset-0`}
-        style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
         onClick={changMenu}
         role="button"
         tabIndex={0}

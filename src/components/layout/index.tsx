@@ -187,12 +187,13 @@ const Layout: FC<Props> = ({
         })();
       }
     }
-
-    // if (categories ) {
-    if (categories && categoriesWithChildCategories) {
+    if (categories ) {
       setMyCategoriesDispatch(categories);
+    }
+    if(categoriesWithChildCategories){
       setMyCategoriesWithChildrenDispatch(categoriesWithChildCategories);
     }
+    
   }, [ipAddress]);
 
   return (

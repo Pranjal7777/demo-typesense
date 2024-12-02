@@ -2,7 +2,8 @@
 import React, { ChangeEvent, FC, KeyboardEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { useActions, useAppSelector } from '@/store/utils/hooks';
-import { GOOGLE_MAPS_KEY, STATIC_IMAGE_URL } from '@/config';
+import { GOOGLE_MAPS_KEY } from '@/config';
+import isUserAuthenticated from '@/helper/validation/check-user-authentication';
 import { productsApi } from '@/store/api-slices/products-api';
 import { SearchItems, SearchUsers } from '@/store/types';
 import { useDebounce } from '@/hooks/use-debounce';
@@ -120,6 +121,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
   const [searchResults, setSearchResults] = useState([]);
   const [showRecentSearchResultsFromTypesense, setShowRecentSearchResultsFromTypesense] = useState(false);
   const [hasValidSearchResults, setHasValidSearchResults] = useState(false);
+  const isUserLogin = isUserAuthenticated();
 
   useEffect(() => {
     setFormData((prevState) => ({
@@ -174,7 +176,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
     router.push({
       pathname: routeSellerProfile(userId),
       query: { 
-        search: searchText
+        search: searchText,
       }
     });
   };
@@ -471,7 +473,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
               onBlur={() => setTimeout(() => setIsOpen(false), 300)}
               className={` border-error ${stickyHeaderWithSearchBox && 'dark:!text-text-primary-dark'} ${
                 minThreshold ? 'dark:text-text-primary-dark' : 'dark:text-text-secondary-dark'
-              }  hover:bg-bg-tertiary-light dark:hover:hover:bg-menu-hover dark:hover:text-text-secondary-dark rtl:rounded-r rtl:rounded-l-none rounded-l w-full h-full outline-none flex items-center justify-center`}
+              }  hover:bg-bg-tertiary-light dark:hover:bg-bg-octonary-dark dark:hover:text-text-secondary-dark rtl:rounded-r rtl:rounded-l-none rounded-l w-full h-full outline-none flex items-center justify-center`}
             >
               {selectedOption === 'Items'
                 ? heroSection?.searchUserandItem?.items
@@ -630,15 +632,10 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                               className="w-full flex dark:hover:text-text-primary-dark text-text-secondary-light dark:text-text-primary-dark border-border-tertiary-light h-14 items-center cursor-pointer hover:bg-bg-octonary-light dark:hover:bg-bg-duodenary-dark"
                               onClick={async () => {
                                 const fullName = `${hit.first_name} ${hit.last_name}`;
-                                // selectItemOrUserToSearch(fullName);
-                                // await addUserToRecentSearch(hit.id);
-                                
-                                // call this to triiger the mutation
-                                // productsApi.useAddUserDataToRecentSearchMutation();
-                                // triggerAddUserDataToRecentSearch({clickeduserId:hit.id}).unwrap();``
-                                sellerProfileRoute(hit.id, fullName);
+                                sellerProfileRoute(hit.id, fullName)
                               }}
                             >
+                              
                               <div className="truncate ml-3 flex">
                                 <div className="border-3 font-medium text-sm text-text-primary-light dark:text-text-primary-dark">
                                   {hit.first_name} {hit.last_name}
@@ -812,7 +809,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
               </>
             ) : null} */}
 
-            {isRecentSearchOpen === true && !formData.search ? (
+            {isUserLogin && isRecentSearchOpen === true && !formData.search ? (
               <div 
                 className="absolute top-[48px] shadow-2xl bg-bg-secondary-light dark:bg-bg-secondary-dark left-0 right-0 rounded-b-md max-h-[263px] no-scrollbar"
                 style={{ 
@@ -902,7 +899,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                   stickyHeaderWithSearchBox &&
                   ' !bg-bg-tertiary-light dark:!bg-bg-quinary-dark dark:!text-text-primary-dark dark:hover:!text-text-primary-dark'
                 } dark:hover:bg-bg-octonary-dark hover:bg-bg-tertiary-light  cursor-text h-full w-full pl-11 pr-9 rtl:pr-11 outline-none ${
-                  minThreshold ? 'dark:bg-bg-secondary-dark dark:!text-text-primary-dark  bg-bg-tertiary-light' : ''
+                  minThreshold ? 'dark:bg-bg-secondary-dark dark:!text-text-primary-dark dark:hover:!text-black  bg-bg-tertiary-light' : ''
                 }`}
                 placeholder={heroSection?.searchPlace?.placeholder}
                 autoComplete="off"

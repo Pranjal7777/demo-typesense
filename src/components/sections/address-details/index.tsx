@@ -171,12 +171,10 @@ const AddressDetails: FC<Props> = ({
         />
 
         <LableWithTextArea
-          error={errorState.note ? 'Comment Field is missing' : ''}
           value={formData.note}
           changeEvent={(e) => changeFormData(e)}
           labelClassName="text-[12px] lg:text-[14px]"
           mainClassName=" my-0 lg:col-start-1 lg:col-end-3"
-          required={true}
           label={'Comments'}
           name="note"
         />

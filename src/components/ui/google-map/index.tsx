@@ -2,6 +2,11 @@ import React, { FC } from 'react';
 import { useJsApiLoader, GoogleMap, MarkerF } from '@react-google-maps/api';
 import { GOOGLE_MAPS_KEY } from '@/config';
 import { MAP_MARKER } from '../../../../public/images/address-page';
+import { UserInfoType } from '@/store/types/profile-type';
+import { UserLocationType } from '@/pages/profile/address';
+import getAddressFromLatLng from '@/helper/get-address-by-lat-lng';
+import { getUserLocation } from '@/helper/get-location';
+import FullScreenSpinner from '../full-screen-spinner';
 type Props = {
   // eslint-disable-next-line no-undef
   setMap: React.Dispatch<React.SetStateAction<google.maps.Map | null>>;
@@ -18,6 +23,9 @@ type Props = {
   mapTypeControl?:boolean,
   fullscreenControl?:boolean,
   streetViewControl?:boolean,
+  setFormData: React.Dispatch<React.SetStateAction<UserInfoType>>;
+  setUserLocation: React.Dispatch<React.SetStateAction<UserLocationType>>;
+  showEditSection: boolean;
 };
 
 const GoogleMapComponent: FC<Props> = ({
@@ -30,6 +38,9 @@ const GoogleMapComponent: FC<Props> = ({
   mapTypeControl=true,
   fullscreenControl= true,
   streetViewControl = true,
+  setFormData,
+  setUserLocation,
+  showEditSection
 }) => {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: `${GOOGLE_MAPS_KEY}`,
@@ -38,11 +49,28 @@ const GoogleMapComponent: FC<Props> = ({
 
   const onLoad = (map: any) => {
     setMap(map);
+if(!showEditSection){
+  getUserLocation()
+  .then(userCurrentLocation => {
+    const lat = userCurrentLocation.latitude;
+    const lng = userCurrentLocation.longitude;
+    map?.panTo({lat,lng});
+    setUserLocation({
+      lat,
+      lng
+    });
+   
+    getAddressFromLatLng(lat,lng)
+      .then(address => {
+        setFormData((prevState) => ({ ...prevState, zipCode: address?.zipCode , addressLine1: `${address?.addressLine1}`, country: address?.country, countryShortForm: address?.countryCode, state: address?.state, city: address?.city,lat:lat, long:lng}));
+      });     
+  })
+}
     setIsMapLoaded(true);
   };
 
   if (!isLoaded) {
-    return <h1 className=' absolute text-text-primary-light top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] text-[24px] dark:text-text-secondary-light font-semibold'>Lading...</h1>;
+    return  <FullScreenSpinner/>
   }
 
   return (

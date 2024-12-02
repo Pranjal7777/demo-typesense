@@ -58,8 +58,13 @@ export type ErrorStateType = {
   aptNo: boolean;
   addressTypeAttribute:boolean;
   addressNotesAttributes:boolean;
-  note?: boolean;
+  // note?: boolean;
 };
+
+export type UserLocationType = {
+  lat:number;
+  lng: number;
+}
 
 function Address() {
   // const [addressData, setAddressData] = useState(initialAddressData);
@@ -79,7 +84,7 @@ function Address() {
     aptNo: false,
     addressTypeAttribute:false,
     addressNotesAttributes:false,
-    note:false,
+    // note:false,
   };
   const initialFormData: UserInfoType = { 
     addressLine1: '',
@@ -108,7 +113,7 @@ function Address() {
   const [errorState, setErrorState] = useState(initialErrorState);
   const [formData, setFormData] = useState<UserInfoType>(initialFormData);
   
-  const [userLocation, setUserLocation] = useState({ lat: 21.146633,lng: 79.08886,});
+  const [userLocation, setUserLocation] = useState<UserLocationType>({ lat: 21.146633,lng: 79.08886,});
 
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -218,7 +223,7 @@ function Address() {
           addressTypeAttribute:formData.addressTypeAttribute,
           addressNotesAttributes:formData.addressNotesAttributes,
           aptNo: formData.aptNo,
-          note : formData.note,
+          ...(formData.note && { note: formData.note }),
         }).unwrap();
 
         toast.success('Saved Successfully', {
@@ -340,7 +345,7 @@ function Address() {
           addressTypeAttribute:formData.addressTypeAttribute,
           addressNotesAttributes:formData.addressNotesAttributes,
           aptNo: formData.aptNo,
-          note: formData.note,
+          ...(formData.note && { note: formData.note }),
         }).unwrap();
 
         toast.success('Updated Successfully', {
@@ -381,23 +386,23 @@ function Address() {
     }
   },[setUserLocation,setFormData]);
 
-  useEffect(() => {
-    const location = getLocalStorageItem('myLocation');
-    if (location) {
-      const lat= Number(location.latitude);
-      const lng= Number(location.longitude);
+  // useEffect(() => {
+  //   const location = getLocalStorageItem('myLocation');
+  //   if (location) {
+  //     const lat= Number(location.latitude);
+  //     const lng= Number(location.longitude);
       
-      getAddressFromLatLng(lat, lng)
-        .then(address => {
-          setFormData((prevState) => ({ ...prevState, zipCode: address?.zipCode , addressLine1: `${address?.addressLine1}`, country: address?.country, countryShortForm: address?.countryCode, state: address?.state, city: address?.city,lat:lat, long:lng}));
-        });
+  //     getAddressFromLatLng(lat, lng)
+  //       .then(address => {
+  //         setFormData((prevState) => ({ ...prevState, zipCode: address?.zipCode , addressLine1: `${address?.addressLine1}`, country: address?.country, countryShortForm: address?.countryCode, state: address?.state, city: address?.city,lat:lat, long:lng}));
+  //       });
 
-      setUserLocation({
-        lat,
-        lng
-      });
-    }
-  }, []);
+  //     setUserLocation({
+  //       lat,
+  //       lng
+  //     });
+  //   }
+  // }, []);
 
 
   const locateMeHandler = () => {
@@ -424,28 +429,6 @@ function Address() {
         });
       });
     
-    /// using getUserLocation end
-
-    /// using local storage start
-    // const location = getLocalStorageItem('myLocation');
-    // if (location) {
-    //   const lat= Number(location.latitude);
-    //   const lng= Number(location.longitude);
-    //   console.log(lat,lng,'...l');
-    //   map?.panTo({lat,lng});
-      
-    //   getAddressFromLatLng(lat, lng)
-    //     .then(address => {
-    //       console.log(address, 'onselect by lat ...');
-    //       setFormData((prevState) => ({ ...prevState, zipCode: address?.zipCode , addressLine1: `${address?.addressLine1}`, country: address?.country, countryShortForm: address?.countryCode, state: address?.state, city: address?.city,lat:lat, long:lng}));
-    //     });
-
-    //   setUserLocation({
-    //     lat,
-    //     lng
-    //   });
-    // }
-    /// using local storage end
   };
 
   const onPlaceSelected = (place: any) => {
@@ -504,6 +487,9 @@ function Address() {
                 <>
                   <div className="w-[100vw] relative pt-[16px] h-[79vh] flex justify-center md:block sm:h-[77vh] overflow-y-scroll  bg-[#FFFFFF] dark:bg-bg-primary-dark">
                     <GoogleMapComponent
+                    showEditSection = {showEditSection}
+                      setUserLocation={setUserLocation}
+                      setFormData={setFormData}
                       setIsMapLoaded={setIsMapLoaded}
                       userLocation={userLocation}
                       setMap={setMap}
@@ -588,6 +574,9 @@ function Address() {
               </EnterAddressHeader>
               <div className="map-for-desktop h-[466px] w-full min-h-[456px] relative">
                 <GoogleMapComponent
+                showEditSection = {showEditSection}
+                 setUserLocation={setUserLocation}
+                 setFormData={setFormData}
                   setIsMapLoaded={setIsMapLoaded}
                   userLocation={userLocation}
                   setMap={setMap}

@@ -23,9 +23,10 @@ type Props = {
   mapTypeControl?:boolean,
   fullscreenControl?:boolean,
   streetViewControl?:boolean,
-  setFormData: React.Dispatch<React.SetStateAction<UserInfoType>>;
-  setUserLocation: React.Dispatch<React.SetStateAction<UserLocationType>>;
-  showEditSection: boolean;
+  setFormData?: React.Dispatch<React.SetStateAction<UserInfoType>>;
+  setUserLocation?: React.Dispatch<React.SetStateAction<UserLocationType>>;
+  showEditSection?: boolean;
+  isClickOnChange?: boolean;
 };
 
 const GoogleMapComponent: FC<Props> = ({
@@ -40,7 +41,8 @@ const GoogleMapComponent: FC<Props> = ({
   streetViewControl = true,
   setFormData,
   setUserLocation,
-  showEditSection
+  showEditSection,
+  isClickOnChange
 }) => {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: `${GOOGLE_MAPS_KEY}`,
@@ -49,7 +51,7 @@ const GoogleMapComponent: FC<Props> = ({
 
   const onLoad = (map: any) => {
     setMap(map);
-if(!showEditSection){
+if(!showEditSection && !isClickOnChange && setFormData && setUserLocation){
   getUserLocation()
   .then(userCurrentLocation => {
     const lat = userCurrentLocation.latitude;

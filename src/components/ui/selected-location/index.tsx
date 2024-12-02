@@ -8,9 +8,10 @@ import { GOOGLE_MAPS_KEY } from '@/config';
 type Props={
   formData:UserInfoType,
   pageType?:string,
+  setIsClickOnChange: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const SelectedLocation:FC<Props> = ({formData, pageType})=> {
+const SelectedLocation:FC<Props> = ({formData, pageType, setIsClickOnChange})=> {
   
   
   const router = useRouter();
@@ -34,6 +35,7 @@ const SelectedLocation:FC<Props> = ({formData, pageType})=> {
   });
 
   const onMapClick = ()=>{
+    setIsClickOnChange(true)
     router.replace({
       pathname: '/profile/address',
       query: getQuery(),
@@ -42,15 +44,24 @@ const SelectedLocation:FC<Props> = ({formData, pageType})=> {
 
   const changeBtnHandler = () => {
     const { chatId, sellerId, assetId } = router.query;
-    router.replace({
-      pathname: '/buy/select-address',
-      query: pageType === 'secure-checkout' ? {
-        ...(chatId && { chatId }),
-        ...(sellerId && { sellerId }),
-        ...(assetId && { assetId }),
-        ...getQuery(),
-      } : getQuery(),
-    });
+    if(router.pathname.includes('buy')){
+      router.replace({
+        pathname: '/buy/select-address',
+        query: pageType === 'secure-checkout' ? {
+          ...(chatId && { chatId }),
+          ...(sellerId && { sellerId }),
+          ...(assetId && { assetId }),
+          ...getQuery(),
+        } : getQuery(),
+      });
+    }
+    else{
+      setIsClickOnChange(true);
+      router.replace({
+        pathname: '/profile/address',
+        query: getQuery(),
+      });
+    }
   };
 
   return (

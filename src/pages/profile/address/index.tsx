@@ -126,6 +126,8 @@ function Address() {
   const {refetch} = addressApi.useGetAllSavedAddressQuery();
   const [updateAddress, {isLoading: isUpdating}] = addressApi.useUpdateAddressMutation();
 
+  const [isClickOnChange, setIsClickOnChange]  = useState<boolean>(false)
+
   // const [fetchUserLocationError, setFetchUserLocationError] = useState(false);
 
   const router = useRouter();
@@ -174,13 +176,16 @@ function Address() {
   };
 
   const continueButtonHandler = () => {
+    setIsClickOnChange(false)
     router.replace({
       pathname: '/profile/address',
       query: { showAddressDetailsWithMapInDessktop: 'true', showAddressDetailsInDesktop: 'true' },
     });
+
   };
 
   const closeIconHandler = () => {
+    setIsClickOnChange(false)
     router.replace({ pathname: '/profile/address' });
     setShowEditSection(false);
     setFormData(initialFormData);
@@ -487,6 +492,7 @@ function Address() {
                 <>
                   <div className="w-[100vw] relative pt-[16px] h-[79vh] flex justify-center md:block sm:h-[77vh] overflow-y-scroll  bg-[#FFFFFF] dark:bg-bg-primary-dark">
                     <GoogleMapComponent
+                    isClickOnChange = {isClickOnChange}
                     showEditSection = {showEditSection}
                       setUserLocation={setUserLocation}
                       setFormData={setFormData}
@@ -520,6 +526,7 @@ function Address() {
                 <>
                   <AddressContainer>
                     <AddressDetails
+                    setIsClickOnChange={setIsClickOnChange}
                       setErrorState={setErrorState}
                       setFormData = {setFormData}
                       errorState={errorState}
@@ -574,6 +581,7 @@ function Address() {
               </EnterAddressHeader>
               <div className="map-for-desktop h-[466px] w-full min-h-[456px] relative">
                 <GoogleMapComponent
+                isClickOnChange = {isClickOnChange}
                 showEditSection = {showEditSection}
                  setUserLocation={setUserLocation}
                  setFormData={setFormData}
@@ -619,6 +627,7 @@ function Address() {
                 {showEditSection ? UPDATE_ADDRESS : ADD_NEW_ADDRESS}
               </EnterAddressHeader>
               <AddressDetails
+              setIsClickOnChange={setIsClickOnChange}
                 setErrorState={setErrorState}
                 setFormData = {setFormData}
                 errorState={errorState}

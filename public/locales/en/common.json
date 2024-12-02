@@ -407,7 +407,7 @@
     },
     "appDownloadSection": {
       "heading": "Everyone Wins on {{projectName}}",
-      "subHeading": "Unlock exclusive features when you download theEquipnow app today!",
+      "subHeading": "Unlock exclusive features when you download {{projectName}} app today!",
       "phoneNumberTitle":"Enter Your Phone Number",
       "phonePlaceHolder": "Phone Number",
       "downloadBtn": "Download App",

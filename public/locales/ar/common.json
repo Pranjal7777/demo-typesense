@@ -399,7 +399,7 @@
       },
       "appDownloadSection": {
         "heading": "Everyone Wins on {{projectName}}",
-        "subHeading": "Unlock exclusive features when you download theEquipnow app today!",
+        "subHeading": "Unlock exclusive features when you download {{projectName}} app today!",
         "newsLetterTitle":"Subscribe To our Newsletter",
         "qrText": "Scan here"
       },

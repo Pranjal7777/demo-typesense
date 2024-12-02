@@ -21,6 +21,7 @@ type Props = {
   setErrorState: React.Dispatch<React.SetStateAction<ErrorStateType>>;
   setFormData: React.Dispatch<React.SetStateAction<UserInfoType>>;
   pageType?: string;
+  setIsClickOnChange: React.Dispatch<React.SetStateAction<boolean>>
 };
 interface AddressNote {
   value: string;
@@ -35,6 +36,7 @@ const AddressDetails: FC<Props> = ({
   setErrorState,
   setFormData,
   pageType,
+  setIsClickOnChange
 }) => {
   const { theme } = useTheme();
   const { data } = addressApi.useGetAddressAttributesQuery();
@@ -91,7 +93,7 @@ const AddressDetails: FC<Props> = ({
 
   return (
     <section className="w-full mt-3 sm:mt-0 leading-[21px] md:leading-[24px] text-text-primary-light  dark:text-text-primary-dark  address-details-section mobile:!px-4">
-      <SelectedLocation pageType={pageType} formData={formData} />
+      <SelectedLocation setIsClickOnChange={setIsClickOnChange} pageType={pageType} formData={formData} />
       <LableWithTextArea
         labelClassName="font-[600]"
         error={errorState.addressLine1 ? 'Address is missing' : ''}

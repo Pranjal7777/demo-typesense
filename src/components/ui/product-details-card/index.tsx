@@ -10,8 +10,9 @@ type ProductDetailsCardProps = {
   categoryTitle: string;
   postTimeStamp: number;
   price: string;
-  currency: string;
+  currency?: string;
   timestampLabel: string;
+  assetCondition?: string;
 };
 
 const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
@@ -21,6 +22,7 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
   price,
   currency,
   timestampLabel,
+  assetCondition
 }) => {
   const theme = useTheme();
   const currentTheme = theme.theme;
@@ -64,6 +66,9 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
         </span>
         <span className="text-xs md:text-base leading-[18px] md:leading-[24px] text-text-tertiary-light dark:text-text-tertiary-dark">
           {timestampLabel}: {postedTime}
+        </span>
+        <span className="text-xs md:text-base leading-[18px] md:leading-[24px] text-text-tertiary-light dark:text-text-tertiary-dark">
+          {assetCondition}
         </span>
       </div>
 

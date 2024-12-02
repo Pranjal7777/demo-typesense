@@ -60,7 +60,7 @@ const Footer = () => {
               </Link>
               <div className='text-sm font-normal mobile:text-center mobile:max-w-[300px] mt-5 mb-7 text-text-primary-dark'>{footerSectionText}</div>
               <div className="flex ">
-                <Link className="rtl:ml-4" target='_blank' href={'https://www.facebook.com/appscrip/'}>
+                <Link className="rtl:ml-4" target='_blank' href={'https://www.facebook.com/people/Kwibal/61557559127595/'}>
                   <Image
                     className="cursor-pointer "
                     width={32}
@@ -70,7 +70,7 @@ const Footer = () => {
                     // loader={gumletLoader}
                   />
                 </Link>
-                <Link href={'https://x.com/appscrip'} target='_blank' >
+                <Link href={'https://x.com/i/flow/login?redirect_after_login=%2FKwibalInfo'} target='_blank' >
                   <Image
                     className="ml-4 cursor-pointer"
                     width={32}
@@ -80,7 +80,7 @@ const Footer = () => {
                     // loader={gumletLoader}
                   />
                 </Link>
-                <Link href={'https://www.linkedin.com/company/appscrip?originalSubdomain=in'} target='_blank' >
+                <Link href={'https://www.linkedin.com/company/kwibal/'} target='_blank' >
 
                   <Image
                     className="ml-4 cursor-pointer"
@@ -102,7 +102,7 @@ const Footer = () => {
                     // loader={gumletLoader}
                   />
                 </Link>
-                <Link href={'https://www.youtube.com/channel/UC7U65c_o1hNwiwTkWXG32fg'} target='_blank' >
+                <Link href={'https://www.youtube.com/@johnzendejas'} target='_blank' >
 
                   <Image
                     className="ml-4 cursor-pointer"
@@ -152,7 +152,7 @@ const Footer = () => {
               </div>
             </div>
             <div className='mobile:mb-9 sm:mt-9 lg:mt-0 max-w-[360px] mobile:max-w-full w-full flex flex-col '>
-              <div className='mobile:order-1 mobile:mt-9 mobile:text-center'>
+              {/* <div className='mobile:order-1 mobile:mt-9 mobile:text-center'>
                 <div className='text-base font-bold mobile:mb-3'>{connectSection.title}</div>
 
                 <div className='text-sm font-normal'>
@@ -162,7 +162,7 @@ const Footer = () => {
                   <Link href={'tel:(866)856-5678'} className='hover:cursor-pointer text-brand-color '> (866)856-5678</Link>
                 </div>
 
-              </div>
+              </div> */}
               <div className='mobile:mt-0 mt-6'>
                 <div className='mb-3 mobile:text-center'>{connectSection.newsLetterTitle}</div>
                 <NewsLetterInput />

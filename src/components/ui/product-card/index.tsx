@@ -39,7 +39,7 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
     <>
       <div
         role="button"
-        className=" card flex flex-col gap-2 sm:gap-3 hover:scale-102 transition-all duration-300 ease-in hover:cursor-pointer mobile:max-w-[100%]  w-full h-full pb-[10px] max-w-[313px]"
+        className="card flex flex-col gap-2 sm:gap-3 hover:scale-102 transition-all duration-300 ease-in hover:cursor-pointer mobile:max-w-[100%] w-full h-full pb-[10px] max-w-[313px] hover:shadow-lg"
       >
         <Link href={`/seller-profile/${userAccountId}`}>
           {showProfilePic && (
@@ -66,7 +66,7 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
                     product.firstName?.slice(1) +
                     ' ' +
                     product.lastName[0].toUpperCase() +
-                    product?.firstName?.slice(1)}
+                    product?.lastName?.slice(1)}
                 </h5>
                 {/* here we can write time coming from api or we can calculate later */}
                 <p className="text-[#57585A] dark:text-[#929293] text-[10px] md:text-xs font-normal">
@@ -94,7 +94,7 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
             alt="eq.svg"
           />
         </div>
-        <div className="flex flex-col gap-[4px]">
+        <div className="flex flex-col gap-[4px] px-1">
           {/* <div> */}
           {/* this span will take image name from the api, product?.imageName  */}
           <span className="text-[10px] leading-[15px] md:text-sm font-normal text-[#202022] dark:text-white">

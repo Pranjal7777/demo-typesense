@@ -33,12 +33,6 @@ export const uploadToS3 = async (file: any) => {
     const url2 = `https://s3.${credentials.region}.amazonaws.com/${credentials.imageBucket}/${fileName}`;
     const url3 = `https://${credentials.imageBucket}.s3-${credentials.region}.amazonaws.com/${fileName}`;
     const url4 = `https://s3-${credentials.region}.amazonaws.com/${credentials.imageBucket}/${fileName}`;
-
-    console.log('URL Format 1:', url1);
-    console.log('URL Format 2:', url2);
-    console.log('URL Format 3:', url3);
-    console.log('URL Format 4:', url4);
-
     // Let's use url1 as default but you can try the others
     return { url1, url2, url3, url4 };
   } catch (error) {

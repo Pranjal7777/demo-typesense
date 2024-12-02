@@ -26,10 +26,6 @@ type Props = {
 };
 
 const Profile: FC<Props> = ({ profileData, followCountData }) => {
-//   const [isFollow, setIsFollow] = useState(profileData.isFollow);
-//   const [totalFollower, setTotalFollower] = useState(followCountData.totalFollower);
-  console.log(profileData, 'mir profile data');
-
   const router = useRouter();
   const { id } = router.query as { id?: string };
   const accountId = useMemo(() => id, [id]);
@@ -44,8 +40,6 @@ const Profile: FC<Props> = ({ profileData, followCountData }) => {
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  // const [profilePicUrl, setProfilePicUrl] = useState(profileData?.profilePic );
-
   const debouncedSetSearchTerm = debounce(setDebouncedSearchTerm, 100);
 
   const closeEditProfileModal = () => {
@@ -77,40 +71,6 @@ const Profile: FC<Props> = ({ profileData, followCountData }) => {
   const handleViewMore = () => {
     setPage((prevPage) => prevPage + 1);
   };
-  //   const [postFollow, { isLoading: isFollowPosting }] = sellerProfileApi.usePostFollowMutation();
-  //   const [postUnFollow, { isLoading: isUnFollowPosting }] = sellerProfileApi.usePostUnFollowMutation();
-
-  //   const followButtonHandler = useCallback(
-  //     async (id: string) => {
-  //       const isUserLogin = isUserAuthenticated();
-  //       if (!isUserLogin) {
-  //         router.push(SIGN_IN_PAGE);
-  //         return;
-  //       }
-  //       if (isFollow) {
-  //         try {
-  //           await postUnFollow(id).unwrap();
-  //           setIsFollow(false);
-  //           setTotalFollower(totalFollower - 1);
-  //           showToast({ message: `You are no longer following ${profileData?.username || ''}` });
-  //         } catch (error) {
-  //           const Error = error as AddressErrorType;
-  //           showToast({ message: `${Error?.data?.message || 'Something went wrong'}`, messageType: 'error' });
-  //         }
-  //       } else {
-  //         try {
-  //           await postFollow(id).unwrap();
-  //           setIsFollow(true);
-  //           setTotalFollower(totalFollower + 1);
-  //           showToast({ message: `You are now following ${profileData?.username || ''}` });
-  //         } catch (error) {
-  //           const Error = error as AddressErrorType;
-  //           showToast({ message: `${Error?.data?.message || 'Something went wrong'}`, messageType: 'error' });
-  //         }
-  //       }
-  //     },
-  //     [postFollow, postUnFollow, isFollow, totalFollower, isUserAuthenticated]
-  //   );
 
   const editProfileButtonHandler = () => {
     setIsEditProfileModalOpen(true);
@@ -161,7 +121,7 @@ const Profile: FC<Props> = ({ profileData, followCountData }) => {
                       buttonType={'primary'}
                       buttonText={'Edit'}
                       buttonClass="w-full sm:max-w-[343px] order-5 md:order-4 !h-9 md:w-[118px] md:h-[32px] flex justify-center items-center md:font-normal my-4"
-                      starColor="#FDB514"
+                      starColor="var(--brand-color)"
                       totalFollowers={followCountData.totalFollower}
                       totalFollowing={followCountData.totalFollowing}
                       followingSectionClass="order-4 md:order-5"
@@ -171,7 +131,7 @@ const Profile: FC<Props> = ({ profileData, followCountData }) => {
                 </div>
                 <div className="right flex-1">
                   <nav className="flex w-full border-b md:border-b-0 items-start justify-between">
-                    <ul className="flex text-sm md:text-[16px] w-full md:w-auto gap-[20px] text-[#57585A] leading-[24px]">
+                    <ul className="flex text-sm md:text-[16px] w-full md:w-auto gap-[20px] text-text-quaternary-dark leading-[24px]">
                       {tabs.map((item, index) => (
                         <li
                           key={index}
@@ -291,8 +251,6 @@ export default Profile;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { req, locale } = context;
-  const { isSelf } = context.query;
-  console.log(isSelf, 'mir is self');
 
   const cookies = cookie.parse(req.headers.cookie || '');
   const accessToken = cookies.accessToken?.replace(/"/g, '') || null;
@@ -305,8 +263,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     try {
       // First API call to fetch profile data
       const baseUrl = process.env.NEXT_PUBLIC_BASE_API_URL;
-      console.log(baseUrl, 'mir base url');
-      
       const profileRes = await fetch(`${baseUrl}/v1/profile`, {
         method: 'GET',
         headers: {
@@ -314,8 +270,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
           'Content-Type': 'application/json',
         },
       });
-
-      console.log(profileRes, 'mir profile res');
 
       if (profileRes.ok) {
         const profileDetails = await profileRes.json();

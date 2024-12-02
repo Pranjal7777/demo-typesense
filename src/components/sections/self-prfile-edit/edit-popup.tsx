@@ -141,11 +141,6 @@ const EditPopup: FC<EditPopupProps> = ({
           Update
         </Button>
       )}
-      {/* {currentEditField == 'profilePic' && isProfilePicUploadSuccess && (
-        <Button isLoading={isValidating} isDisabled={isValidating} onClick={updateButtonHandler} buttonType="primary" className="mt-2 mb-0">
-          Update
-        </Button>
-      )} */}
     </div>
   );
 };

@@ -82,36 +82,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   );
 
   React.useEffect(() => {
-    // uppy.on('upload', async(file) => {
-    //   const files = uppy.getFiles();
-    //   if(files.length > 0){
-    //     setIsUploaded(true);
-    //   }
-    //   console.log(file,'uppy on upload', files[0].data);
-    // const uploadResult = await uploadToS3(files[0].data);
-    // console.log(uploadResult, 'upload result');
-
-    // });
-    // uppy.on('upload-success', (file: any, response: any) => {
-    //   console.log(file,response, 'uppy on upload success');
-      
-    //   // if (onUploadSuccess) {
-    //   //   onUploadSuccess({
-    //   //     url: response.uploadURL || response.body?.url,
-    //   //     fileId: file.id,
-    //   //   });
-    //   // }
-    // });
-    // uppy.on('upload-progress', (file: any, progress: any) => {
-    //   console.log(file,progress, 'uppy on upload progress');
-    // });
-
-    // uppy.on('upload-error', (file: any, error: Error) => {
-    //   console.log(file,error, 'uppy on upload error');
-    //   if (onUploadError) {
-    //     onUploadError(error);
-    //   }
-    // });
 
     uppy.on('file-removed', (file) => {
       console.log('file-removed', file);
@@ -123,14 +93,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       onCancelAll?.();
     });
 
-    // return () => {
-    //   uppy.close();
-    // };
-    // return () => {
-    //   // Instead of close(), use removeAllFiles() and reset()
-    //   uppy.removeAllFiles();
-    //   uppy.reset();
-    // };
   }, [uppy, onUploadSuccess, onUploadError, onCancelAll]);
 
 

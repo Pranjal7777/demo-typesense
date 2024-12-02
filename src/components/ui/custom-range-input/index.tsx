@@ -1,20 +1,31 @@
 import React, { useState, ChangeEvent, useEffect } from 'react';
 
 type CustomRangeInputProps = {
-  // eslint-disable-next-line no-unused-vars
   handleDistance: (value: string) => void;
   presentValue: string | undefined;
+  value: number;
+  setValue: (value: number) => void;
 };
 
-const CustomRangeInput: React.FC<CustomRangeInputProps> = ({ handleDistance, presentValue }) => {
+const CustomRangeInput: React.FC<CustomRangeInputProps> = ({ 
+  handleDistance, 
+  presentValue,
+  value,
+  setValue 
+}) => {
   const steps: (number | string)[] = [50, 100, 150, 250, 500, 750, 1000, 1500, 'Country', 'Country', 'World'];
-  const [value, setValue] = useState<number>(0);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newValue = Number(event.target.value);
     setValue(newValue);
     handleDistance(steps[newValue].toString());
   };
+
+  useEffect(() => {
+    const defaultValue = presentValue ?? 'Country';
+    const index = steps.findIndex((step) => step.toString() === defaultValue.toString());
+    setValue(index >= 0 ? index : 8); // Default to index 8 ('Country') if not found
+  }, [presentValue, setValue]);
 
   const calculateLeftPosition = () => {
     const min = 0;
@@ -26,12 +37,6 @@ const CustomRangeInput: React.FC<CustomRangeInputProps> = ({ handleDistance, pre
     // Calculate the left position, considering thumb width and track width
     return `calc(${percent * trackWidth}% + (${percent - 0.5}) * ${thumbWidth}px)`;
   };
-
-  useEffect(() => {
-    const defaultValue = presentValue ?? '50';
-    const index = steps.findIndex((step) => step.toString() === defaultValue.toString());
-    setValue(index >= 0 ? index : 0);
-  }, [presentValue]);
 
   return (
     <div className="relative w-full my-8">

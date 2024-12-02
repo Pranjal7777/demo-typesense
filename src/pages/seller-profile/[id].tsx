@@ -259,23 +259,27 @@ const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
 export default SellerProfile;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { req, locale, params } = context;
-  const { id } = params as { id: string };
+  const { req, locale, query } = context;
+  const { id, search } = query as { id: string, search: string };
   const cookies = cookie.parse(req.headers.cookie || '');
   const accessToken = cookies.accessToken?.replace(/"/g, '') || null;
 
   let sellerProfileData = null;
   let followCountData = null;
-
   if (accessToken) {
     try {
       // First API call to fetch profile data
-      const profileRes = await fetch(`${BASE_API_URL}/v1/profile?accountId=${id}`, {
+      const url = search 
+        ? `${BASE_API_URL}/v1/profile?accountId=${id}&searchTag=${search}` 
+        : `${BASE_API_URL}/v1/profile?accountId=${id}`;
+      
+      const profileRes = await fetch(url, {
         method: 'GET',
         headers: {
           Authorization: `${accessToken}`,
           'Content-Type': 'application/json',
-        },
+          platform: '3'
+        }, 
       });
 
       if (profileRes.ok) {

@@ -33,6 +33,8 @@ import { useSearchParams } from 'next/navigation';
 import Select from 'react-select';
 import { useTheme } from '@/hooks/theme';
 import { StylesConfig } from 'react-select';
+import PageHeaderWithBreadcrumb from '@/components/ui/page-header-with-breadcrumb';
+import Breadcrumb from '@/components/ui/breadcrumb';
 import { getGuestTokenFromServer } from '@/helper/get-guest-token-from-server';
 
 export type filteredProducts = {
@@ -100,8 +102,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
 
   const router = useRouter();
 
-  
-  const { id } = router.query;
+  const { id, selectedCategory } = router.query;
   const searchParams = useSearchParams();
   
   const initialFilters = {
@@ -392,6 +393,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
   useEffect(() => {
     const initialFilters = { ...selectedItemsFromFilterSection };
     const typesenseFilters = transformFilters(initialFilters);
+    console.log(typesenseFilters, selectedItemsFromFilterSection, 'typesenseFilters');
     updateFilters(typesenseFilters);
   }, []);
 
@@ -472,7 +474,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
         <div className=" relative custom-container mx-auto sm:px-16 mobile:px-4 ">
           {/* start */}
           {/* subcategories card section start */}
-          {!HIDE_SELLER_FLOW  && subCategories.length > 0 && (
+          {!HIDE_SELLER_FLOW && subCategories.length > 0 && (
             <Slider className="pt-5 sm:py-8 lg:py-12  border-error">
               <SectionTitle className="mb-4 sm:mb-3">Shop by category</SectionTitle>
               <CategorySlider className="border-error" data={subCategories} />
@@ -485,6 +487,11 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
               <BrandSlider data={categoriesLogos} />
             </Slider>
           )}
+
+          {/* subcategories brand section end  */}
+          <Breadcrumb isLinkDisable={true} className='!pl-0 md:!pl-0 my-5' steps={[{name:'Categories'}, {name:getQueryParam(selectedCategory)}]}></Breadcrumb>
+          {/* categories section starts */}
+          <div className="mobile:pb-9">
           <div className=" ">
             {allHighlightedProducts.length > 0 && (
               <div className=" w-full pt-9 sm:py-8 lg:py-12 flex flex-col items-center justify-center">
@@ -630,17 +637,20 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
             </div>
           </div>
         </div>
-        <div className="border-b border-border-tertiary-light dark:border-border-tertiary-dark mt-12"></div>
-        <div className=" relative custom-container mx-auto sm:px-16 mobile:px-4 ">
-          <div className=" flex flex-col items-center justify-center ">
-            <div className=" mobile:mb-[42px] pb-8 flex flex-col w-full border-error">
-              <AboutUs data={aboutUs} />
-              <Accordion data={accordion} />
+        {!HIDE_SELLER_FLOW && (
+          <>
+            <div className="border-b border-border-tertiary-light dark:border-border-tertiary-dark mt-12"></div>
+            <div className=" relative custom-container mx-auto sm:px-16 mobile:px-4 ">
+              <div className=" flex flex-col items-center justify-center ">
+                <div className=" mobile:mb-[42px] pb-8 flex flex-col w-full border-error">
+                  <AboutUs data={aboutUs} />
+                  <Accordion data={accordion} />
+                </div>
+              </div>
+              <InfoSection />
             </div>
-          </div>
-          {
-            ! HIDE_SELLER_FLOW &&  <InfoSection />
-          }
+          </>
+        )}
         </div>
       </Layout>
       <style jsx>{`

@@ -15,8 +15,8 @@ type LeftArrowIconProps={
 
 
 const LeftArrowIcon:FC<LeftArrowIconProps> = ({
-  width = '22',
-  height = '22',
+  width = '15',
+  height = '15',
   primaryColor = '#202020',
   className,
   ...props

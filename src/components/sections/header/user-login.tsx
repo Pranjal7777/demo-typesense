@@ -73,12 +73,12 @@ const UserLogin: React.FC<UserLoginProps> = ({primaryColor}) => {
         className="relative md:flex md:text-sm sm:text-[12px] h-full"
       >
         <div className="h-full cursor-pointer px-2 flex  items-center justify-between">
-          <div className="border-2 w-[54px] h-8 flex items-center justify-center rounded-full text-lg text-center bg-bg-tertiary-light text-text-primary-light font-semibold">
+          <div className="border-2 w-[54px] h-[37px] flex items-center justify-center rounded-full text-lg text-center bg-bg-tertiary-light text-text-primary-light font-semibold">
             {(userInfo?.firstName?.[0] + '' + (userInfo?.lastName?.[0] || '')).toLocaleUpperCase()}
           </div>
           <div className="justify-center h-full flex w-full text-nowrap flex-nowrap items-center text-sm"   onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}>
-            {userInfo?.firstName?.slice(0, 6)}..
+            {`${userInfo?.firstName} ${userInfo?.lastName}`}
           </div>
           <div>
             {isHovered ? <UpArrowRoundedEdge primaryColor={primaryColor} /> : <DownArrowRoundedEdge primaryColor={primaryColor} />}

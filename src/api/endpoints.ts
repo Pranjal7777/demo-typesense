@@ -45,6 +45,7 @@ export const DELETE_ADDRESS = '?addressId=';
 export const DEFAULT_ADDRESS = '/default';
 export const GET_ADDRESS_ATTRIBUTES = 'v1/addressAttribute?type=1'
 export const GET_ADDRESS_TYPES = 'v1/addressAttribute?type=2'
+export const GET_VERIFICATION_CODE = 'sendVerificationCode';
 
 // seller-profile end point
 export const GET_ALL_SELLER_ASSETS = 'v2/python/userAssets/';
@@ -60,6 +61,7 @@ export const OFFSET  = 'offset';
 export const USER_RATING = 'v1/userRating';
 export const FOLLOW = 'v1/follow';
 export const UNFOLLOW = 'v1/unfollow';
+export const PROFILE = 'v1/profile';
 
 // my purchase
 export const GET_ALL_PURCHASE = 'v1/orders'

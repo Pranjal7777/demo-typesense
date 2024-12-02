@@ -120,8 +120,8 @@ const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
   return (
     <Layout stickyHeader={true} stickyHeroSection={true} excludeFooter={true}>
       {(isFollowPosting || isUnFollowPosting) && <FullScreenSpinner />}
-      <div className="profile min-h-screen w-full px-[4%] md:px-[64px] mx-auto max-w-[1440px] border-t py-[20px] flex flex-col md:flex-row gap-x-[16px]">
-        <div className="left w-full flex flex-col items-center md:w-[210px] text-text-secondary-dark">
+      <div className="profile text-text-primary-light dark:text-text-primary-dark min-h-screen w-full px-[4%] md:px-[64px] mx-auto max-w-[1440px] border-t py-[20px] flex flex-col md:flex-row gap-x-[16px]">
+        <div className="left w-full flex flex-col items-center md:w-[210px] text-text-primary-light dark:text-text-primary-dark ">
           {sellerProfileData && (
             <NewProfileCard
               fullName={`${sellerProfileData.firstName} ${sellerProfileData.lastName}`}
@@ -129,7 +129,7 @@ const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
               profilePic={sellerProfileData.profilePic || ''}
               ratingValue={sellerProfileData.totalAvgRating || 0}
               ratingText={`${sellerProfileData.totalAvgRating.toFixed(2)}`}
-              ratingTextClass="text-xs text-text-tertiary-light"
+              ratingTextClass="text-xs text-text-tertiary-light dark:text-text-septenary-light"
               buttonType={isFollow ? 'quinary' : 'primary'}
               buttonText={isFollow ? 'Following' : 'Follow'}
               buttonClass="w-full sm:max-w-[343px] order-5 md:order-4 !h-9 md:w-[118px] md:h-[32px] flex justify-center items-center md:font-normal my-4"
@@ -145,7 +145,7 @@ const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
         </div>
         <div className="right flex-1">
           <nav className="flex w-full border-b md:border-b-0 items-start justify-between">
-            <ul className="flex text-sm md:text-[16px] w-full md:w-auto gap-[20px] text-[#57585A] leading-[24px]">
+            <ul className="flex text-sm md:text-[16px] w-full md:w-auto gap-[20px] text-text-quaternary-dark dark:text-text-septenary-light leading-[24px]">
               {tabs.map((item, index) => (
                 <li
                   key={index}
@@ -159,7 +159,7 @@ const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
                     }
                   }}
                   className={
-                    (tab === item ? 'text-text-secondary-dark font-semibold  border-b-[3px] border-brand-color ' : '') +
+                    (tab === item ? 'text-text-secondary-dark dark:text-text-secondary-light font-semibold  border-b-[3px] border-brand-color ' : '') +
                     'flex justify-center px-[8px] py-[11px] w-[50%] md:w-auto'
                   }
                 >
@@ -168,18 +168,18 @@ const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
               ))}
             </ul>
           </nav>
-          <div className="content w-full md:pl-0 md:p-[20px] md:border mt-[20px] rounded-t-[12px]">
+          <div className="content w-full md:pl-0 md:p-[20px] md:border text-text-primary-light dark:text-text-primary-dark border-border-tertiary-light dark:border-border-tertiary-dark mt-[20px] rounded-t-[12px]">
             <div className="pb-[20px] flex justify-between items-center">
-              <h3 className="md:text-[20px]  md:pl-[20px] text-text-secondary-dark font-semibold ">{tab}</h3>
+              <h3 className="md:text-[20px] text-text-secondary-dark dark:text-text-secondary-light  md:pl-[20px] font-semibold ">{tab}</h3>
               {tab == 'Listing' && (
-                <div className="search-box w-[290px] h-[44px] hidden border md:flex gap-3 items-center px-[10px] bg-[#F3F3F3]">
+                <div className="search-box w-[290px] h-[44px] hidden md:flex gap-3 rounded-[4px] items-center px-[10px] bg-bg-septenary-light dark:bg-bg-secondary-dark ">
                   <SearchIcon className='h-[24px] w-[24px]'/>
                   <input
                     value={searchTerm}
                     onChange={handleSearch}
                     placeholder="Search product"
                     type="text"
-                    className="w-[100%] text-[14px] outline-none bg-[#F3F3F3] h-[100%]"
+                    className="w-full text-sm bg-bg-septenary-light dark:bg-bg-secondary-dark outline-none h-[100%]"
                   />
                 </div>
               )}
@@ -213,8 +213,8 @@ const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
               </>
             ) : (
               <div className="review">
-                <nav className="border-b md:pl-[20px]">
-                  <ul className="flex gap-[12px] text-sm md:text-[16px] text-[#57585A] leading-[24px]">
+                <nav className="border-b border-border-tertiary-light dark:border-border-tertiary-dark md:pl-[20px]">
+                  <ul className="flex gap-[12px] text-sm md:text-[16px] text-text-tertiary-light dark:text-text-septenary-light leading-[24px]">
                     {reviewTabs.map((item, index) => (
                       <li
                         key={index}
@@ -229,8 +229,8 @@ const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
                         }}
                         className={
                           (reviewTab === item
-                            ? ' text-text-secondary-dark font-semibold  border-b-[3px] border-brand-color '
-                            : '') + 'px-[8px] py-[11px]'
+                            ? ' text-text-secondary-dark dark:text-text-secondary-light font-semibold  border-b-[3px] border-brand-color '
+                            : '') + 'px-[8px] py-[11px] text-text-quaternary-dark dark:text-text-septenary-light'
                         }
                       >
                         {item}
@@ -287,6 +287,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         sellerProfileData = profileData.data;
       } else {
         console.error(`Failed to fetch profile data: ${profileRes.status} ${profileRes.statusText}`);
+        return {
+          redirect: {
+            destination: '/500',
+            permanent: false,
+          },
+        };
       }
       // Second API call to fetch follow count data
       if (sellerProfileData) {
@@ -306,6 +312,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
           followCountData = followData.data;
         } else {
           console.error(`Failed to fetch follow count data: ${followRes.status} ${followRes.statusText}`);
+          return {
+            redirect: {
+              destination: '/500',
+              permanent: false,
+            },
+          };
         }
       }
     } catch (error) {

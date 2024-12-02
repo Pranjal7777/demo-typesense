@@ -49,8 +49,8 @@ const WhatAreYouLookingFor: FC<Props> = ({ categories }) => {
     };
   }, []);
   
-  const categoryRoute=(categoryId:string)=>{
-    router.push(routeToCategories({category:{id:categoryId}}));
+  const categoryRoute=(categoryId:string, title: string)=>{
+    router.push(routeToCategories({category:{id:categoryId, name: title}}));
   };
 
   return (
@@ -80,10 +80,10 @@ const WhatAreYouLookingFor: FC<Props> = ({ categories }) => {
           <div className="mt-8 mobile:mt-4 text-text-primary-light dark:text-text-primary-dark border-primary-color h-full grid xl:grid-cols-6 2lg:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-3 mobile:grid-cols-4 gap-5 sm:gap-16 md:gap-6">
             {categories?.data?.slice(0, isMobile ? 7 : 6).map((item, index) => (
               <div
-                onClick={()=>categoryRoute(item.id)}
+                onClick={()=>categoryRoute(item.id, item.title)}
                 role="button"
                 tabIndex={0}
-                onKeyUp={(e) => keyDownHandler(e,()=>categoryRoute(item.id))}
+                onKeyUp={(e) => keyDownHandler(e,()=>categoryRoute(item.id, item.title))}
                 className="cursor-pointer mobile:h-full max-h-[224] md:h-[224px] flex items-center justify-center"
                 key={index}
               >
@@ -104,7 +104,7 @@ const WhatAreYouLookingFor: FC<Props> = ({ categories }) => {
               }}
             >
               <div className=" bg-bg-quattuordenary-light h-[60px] w-[60px] md:h-[203px] md:w-[203px] flex-wrap rounded-full md:rounded-lg flex justify-center items-center p-2 ">
-                <RightArrowRoundedEdge />
+                <RightArrowRoundedEdge primaryColor='var(--brand-color)' />
               </div>
               <h6 className="mt-6 sm:mt-5 text-xs text-primary md:text-base  font-primary font-normal text-center max-w-[154.6px]">
                 See All

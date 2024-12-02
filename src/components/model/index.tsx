@@ -1,9 +1,8 @@
-import { gumletLoader } from '@/lib/gumlet';
-import { IMAGES } from '@/lib/images';
 import { appClsx } from '@/lib/utils';
-import Image from 'next/image';
 import React, { CSSProperties, Dispatch, FC, ReactNode } from 'react';
 import ReactPortal from './react-portal';
+import CloseIcon from '../../../public/assets/svg/close-icon';
+import { useTheme } from '@/hooks/theme';
 
 export type Props = {
   children: ReactNode;
@@ -17,6 +16,9 @@ export type Props = {
   setVisible?: Dispatch<React.SetStateAction<boolean>>;
   backgroundClickClose?: boolean;
   onClose: () => void;
+  closeIconClassName?: string;
+  closeIconHeight?: string;
+  closeIconWidth?: string;
 };
 
 const Model: FC<Props> = ({
@@ -28,8 +30,12 @@ const Model: FC<Props> = ({
   setVisible,
   backgroundClickClose = false,
   onClose,
+  closeIconClassName,
+  closeIconHeight,
+  closeIconWidth
 }) => {
   // maxHeight="592px",maxWidth="488px" max-h-[592px]
+  const {theme} = useTheme();
 
   return (
     <ReactPortal wrapperId="react-portal-modal-container">
@@ -55,24 +61,7 @@ const Model: FC<Props> = ({
             )}
             style={style}
           >
-            <Image
-              className="absolute right-5 top-5 cursor-pointer hover:scale-105 dark:hidden inline"
-              width={13}
-              height={13}
-              src={IMAGES.CROSS_ICON}
-              alt="cross_icon"
-              loader={gumletLoader}
-              onClick={onClose}
-            />
-            <Image
-              className="absolute right-5 top-5 cursor-pointer hover:scale-105 dark:inline hidden"
-              width={13}
-              height={13}
-              src={IMAGES.CROSS_ICON_WHITE}
-              alt="cross_icon"
-              loader={gumletLoader}
-              onClick={onClose}
-            />
+            <CloseIcon height={closeIconHeight || '22'} width={closeIconWidth || '22'} className={closeIconClassName || ''  } primaryColor={theme ? '#fff' : '#202020'} onClick={onClose}/>
 
             {/* children starts */}
             {children}

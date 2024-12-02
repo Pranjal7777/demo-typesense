@@ -57,7 +57,7 @@ const PhoneNumberInput: FC<Props> = ({
           {required && '*'}
         </FormLabel>
       )}
-      <div className="mobile:mt-1 mt-2 w-full relative">
+      <div className="mobile:mt-1 mt-2 w-full h-11 relative">
         <PhoneInput
           country={country || 'us'}
           countryCodeEditable = {false}

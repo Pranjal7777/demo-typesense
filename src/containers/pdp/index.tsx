@@ -127,10 +127,10 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
     },
   ];
   const ToggleInfo = [
-    {
-      label: togglePanelText[0].toggleOne,
-      content: <UserProductList accoundId={sellerAccountId} page="1" />,
-    },
+    // {
+    //   label: togglePanelText[0].toggleOne,
+    //   content: <UserProductList accoundId={sellerAccountId} page="1" />,
+    // },
     {
       label: togglePanelText[0].toggleTwo,
       content: <SimilarProductsList assetId={assetId} categoryId={categoryId} />,

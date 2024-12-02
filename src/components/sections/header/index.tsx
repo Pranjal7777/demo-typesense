@@ -33,6 +33,7 @@ import FeedsIcon from '../../../../public/assets/svg/feed-icon';
 import NotificationIcon from '../../../../public/assets/svg/notification-icon';
 import { removeCookie } from '@/utils/cookies';
 import LeftArrowIcon from '../../../../public/assets/svg/left-arrow-icon';
+import { HIDE_SELLER_FLOW } from '@/config';
 export type loginOrUserName = {
   login: string;
   userName: string;
@@ -296,7 +297,8 @@ const Header: FC<Props> = ({
                       }`}
                     />
                   </div> */}
-                  <div className="cursor-pointer">
+                  {/* for like route */}
+                  {/* <div className="cursor-pointer">
                     <FeedsIcon
                       className="hover:scale-105"
                       primaryColor={`${
@@ -312,8 +314,9 @@ const Header: FC<Props> = ({
                           
                       }`}
                     />
-                  </div>
-                  <div className="cursor-pointer relative">
+                  </div> */}
+                  {
+                    !HIDE_SELLER_FLOW && <div className="cursor-pointer relative">
                     <NotificationIcon
                       className="hover:scale-105"
                       primaryColor={`${
@@ -330,6 +333,8 @@ const Header: FC<Props> = ({
                       }`}
                     />
                   </div>
+                  }
+              
                 </div>
               )}
 
@@ -444,7 +449,7 @@ const Header: FC<Props> = ({
           <div className={` flex items-center justify-evenly  h-full ${stickyHeaderWithSearchBox && 'mobile:hidden'} `}>
             <div className=" text-text-secondary-light flex-1 w-[40%]">
               <HydrationGuard>
-                {!userInfo ? (
+                {!userInfo && (
                   <Link
                     className={'rtl:mr-0 mr-4 flex items-center justify-center text-text-secondary-light'}
                     href={SIGN_IN_PAGE}
@@ -461,18 +466,7 @@ const Header: FC<Props> = ({
                       {loginOrUserName.login}
                     </span>
                   </Link>
-                ) : (
-                  <ChatIcon
-                    className="transition-all duration-300 hover:scale-110 cursor-pointer"
-                    primaryColor={
-                      minThreshold
-                        ? theme
-                          ? 'var(--icon-primary-dark)'
-                          : 'var(--icon-primary-light)'
-                        : 'var(--icon-primary-dark)'
-                    }
-                  />
-                )}
+                ) }
               </HydrationGuard>
             </div>
           </div>

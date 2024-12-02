@@ -1,6 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import InfoCard from '@/components/ui/info-card';
+import { HIDE_SELLER_FLOW } from '@/config';
 
 type InfoSectionProps = {
   title: string;
@@ -23,7 +24,7 @@ const InfoSection = () => {
 
   return (
     <div className="lg:mt-[48px] mobile:py-0 mobile:my-9">
-      {infoSection?.map((val, key) => (
+      {!HIDE_SELLER_FLOW && infoSection?.map((val, key) => (
         <InfoCard key={key} val={val} isOpen={openCard === key} onClick={handleCardClick} id={key} />
       ))}
     </div>

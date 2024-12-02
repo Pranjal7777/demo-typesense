@@ -16,8 +16,8 @@ const HeaderDropdown: FC<Props> = ({ item }) => {
   const currTheme = theme.theme;
   const router = useRouter();
 
-  const categoryRoute = (categoryId: string) => {
-    router.push(routeToCategories({ category: { id: categoryId } }));
+  const categoryRoute = (categoryId: string,title:string) => {
+    router.push(routeToCategories({ category: { id: categoryId, name:title} }));
   };
 
   return (
@@ -25,7 +25,7 @@ const HeaderDropdown: FC<Props> = ({ item }) => {
       <HydrationGuard>
         <li className="relative sm:hidden md:flex px-3 md:text-sm sm:text-[12px] h-full flex">
           <div >
-            <MenuButton onClick={() => categoryRoute(item.id)} className=" truncate h-full flex items-center">
+            <MenuButton onClick={() => categoryRoute(item.id,item.title)} className=" truncate h-full flex items-center">
               {item.title as string}
             </MenuButton>
           </div>

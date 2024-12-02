@@ -330,7 +330,7 @@ const HomePage: FC<HomeProps> = ({
               </div>
             ) : null}
 
-            <div className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-x-3 gap-y-4 md:gap-x-4 md:gap-y-7 ${isFetchingBannersAndRecommendedProducts ? 'mt-6' : ''}`}>
+            <div className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-x-3 gap-y-4 md:gap-x-4 md:gap-y-7 ${isFetchingBannersAndRecommendedProducts ? 'my-6' : ''}`}>
               {
   
                 isErrorBannersAndRecommendedProducts ? null : (bannersAndRecommendedProducts?.result !== undefined && bannersAndRecommendedProducts?.Totalcount !== 0 ) ? ( // <h2>{convertRTKQueryErrorToString(errorBannersAndRecommendedProducts)}</h2>
@@ -348,21 +348,21 @@ const HomePage: FC<HomeProps> = ({
               )}
             </div>
 
-            <div className=" mt-7 w-full flex items-center justify-center">
+            {
+              !isFetchingBannersAndRecommendedProducts && bannersAndRecommendedProducts?.result && (recommendedProducts.length < bannersAndRecommendedProducts?.Totalcount) && 
+              <div className=" mt-7 w-full flex items-center justify-center">
               {/* @todo this button should be one component */}
               <button
                 className={`border-2 text-sm font-medium px-4 py-2 rounded dark:text-text-primary-dark
-          ${
-    bannersAndRecommendedProducts &&
-            (recommendedProducts.length >= bannersAndRecommendedProducts?.Totalcount ? 'hidden' : '')
-    }
-          ${!bannersAndRecommendedProducts ? 'hidden' : ''}
           `}
                 onClick={() => handleBannersAndRecommendedProductsPageCount()}
               >
                 View more
               </button>
             </div>
+            }
+
+            
           </div>
           {/*Recommended Product Sections Ends*/}
           {/* brand logo section start */}

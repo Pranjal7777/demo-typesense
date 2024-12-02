@@ -18,14 +18,14 @@ const AllReviewsSection = ({accountId}:{accountId:string}) => {
       <ReviewWrapper >
         <SingleStarReviewCard
           ratingHeading={`${allRating?.data.fromBuyerRatingCount || 0} Reviews from Buyer`}
-          ratingText={`${allRating?.data.fromAvgBuyerRating || '0.0'}`}
+          ratingText={`${allRating?.data.fromAvgBuyerRating || '0'}`}
         />
         <SingleStarReviewCard
           ratingHeading={`${allRating?.data.fromSellerRatingCount || 0} Reviews from Seller`}
-          ratingText={`${allRating?.data.fromAvgSellerRating || '0.0'}`}
+          ratingText={`${allRating?.data.fromAvgSellerRating || '0'}`}
         />
       </ReviewWrapper>
-      <div className='flex flex-col gap-3 md:gap-6 mt-4 md:m-5 mr-0 pt-5 border-t overflow-hidden'>
+      <div className='flex flex-col gap-3 md:gap-6 mt-4 md:m-5 mr-0 pt-5 border-t border-border-tertiary-light dark:border-border-tertiary-dark overflow-hidden'>
         {
           data &&  data?.data.userReviews.map((userReview)=><ReviewCard key={userReview._id} userReview={userReview}/>)
         }

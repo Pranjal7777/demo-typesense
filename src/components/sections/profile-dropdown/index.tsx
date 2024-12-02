@@ -13,6 +13,7 @@ import HartSvg from '../../../../public/assets/svg/heart';
 import ShoppingBagIcon from '../../../../public/assets/svg/shopping-icon';
 import HomeIcon from '../../../../public/assets/svg/home-icon';
 import RedirectCard from '@/components/ui/redirect-card';
+import { HIDE_SELLER_FLOW } from '@/config';
 type Props = {
   menuOptions: {
     item: string;
@@ -31,7 +32,7 @@ const ProfileDropdown: FC<Props> = ({ menuOptions, signOut }) => {
             <RedirectCard
               label={menuOptions[0].item}
               labelIcon={<ProfileIcon primaryColor={theme ? '#fff' : '#000'} />}
-              linkUrl={'/'}
+              linkUrl={'/profile'}
               actionIcon={<RightArrowRoundedEdge primaryColor={theme ? '#fff' : '#000'} height="11" width="7" />}
             />
 
@@ -49,14 +50,16 @@ const ProfileDropdown: FC<Props> = ({ menuOptions, signOut }) => {
               actionIcon={<RightArrowRoundedEdge primaryColor={theme ? '#fff' : '#000'} height="11" width="7" />}
             />
 
-            <RedirectCard
+            {/* <RedirectCard
               label={menuOptions[5].item}
               labelIcon={<HartSvg height="24" width="24" color={theme ? '#fff' : '#000'} />}
               linkUrl={'/'}
               actionIcon={<RightArrowRoundedEdge primaryColor={theme ? '#fff' : '#000'} height="11" width="7" />}
-            />
+            /> */}
 
-            <RedirectCard
+            {
+              !HIDE_SELLER_FLOW && <>
+              <RedirectCard
               label={menuOptions[7].item}
               labelIcon={<WalletIcon primaryColor={theme ? '#fff' : '#000'} />}
               linkUrl={'/'}
@@ -69,6 +72,9 @@ const ProfileDropdown: FC<Props> = ({ menuOptions, signOut }) => {
               linkUrl={'/'}
               actionIcon={<RightArrowRoundedEdge primaryColor={theme ? '#fff' : '#000'} height="11" width="7" />}
             />
+              </>
+            }
+
 
             <div
               className="  items-center rounded-b-md hover:bg-bg-tertiary-light dark:hover:bg-bg-tertiary-dark"

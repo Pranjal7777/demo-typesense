@@ -10,13 +10,13 @@ type Props = {
     ratingTextClass?: string;
     starColor?: string;
 }
-const SingleStarReviewCard:FC<Props> = ({className,ratingHeading,ratingHeadingClass,ratingClass,ratingText,ratingTextClass,starColor='#FDB514'}) => {
+const SingleStarReviewCard:FC<Props> = ({className,ratingHeading,ratingHeadingClass,ratingClass,ratingText,ratingTextClass,starColor='var(--brand-color)'}) => {
   return (
     <div className={appClsx('flex flex-col gap-1 ', className)}>
       <strong className={appClsx('', ratingHeadingClass)}>{ratingHeading}</strong>
       <div className={appClsx('flex gap-[6px] text-sm', ratingClass)}>
-        <StarIcon color={ratingText == '0.0' ? '#DBDBDB' : starColor}/> 
-        <span className={appClsx('', ratingTextClass)}>{ratingText}</span>
+        <StarIcon color={ratingText == '0' ? '#DBDBDB' : starColor}/> 
+        <span className={appClsx('text-text-tertiary-light dark:text-text-septenary-light', ratingTextClass)}>{ratingText}</span>
       </div>
     </div>
   );

@@ -37,7 +37,8 @@ const nextConfig = {
       'photos.le-offers.com',
       'leoffer-images.s3.ap-south-1.amazonaws.com',
       'photos.platform.kwibal.com',
-      'ideal-excitement-d2904ea8a5.media.strapiapp.com'
+      'ideal-excitement-d2904ea8a5.media.strapiapp.com',
+      'kwibal-images.s3.us-west-2.amazonaws.com'
     ]
   },
   i18n,

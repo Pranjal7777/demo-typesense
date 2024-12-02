@@ -19,8 +19,7 @@ import { getLocationName, getUserLocation } from '@/helper/get-location';
 import TextWrapper from '../ui/text-wrapper';
 import PriceTab from '../ui/price-tab';
 import CustomRangeInput from '../ui/custom-range-input';
-import { productsApi } from '@/store/api-slices/products-api';
-import { FilterParameter } from '@/types/filter';
+import { FilterParameter, FilterParameterResponse } from '@/types/filter';
 import CrossIconWhite from '../../../public/images/cross_icon_white.svg';
 import CrossIcon from '../../../public/images/cross-icon.svg';
 import MyLocationIcon from '../../../public/images/location-icon.svg';
@@ -41,6 +40,9 @@ export type filterTypes = {
   distance: string;
   address: string;
   category: { title: string; _id: string };
+  latitude:string,
+  longitude:string,
+  country:string,
 };
 
 type FilterDrawerProps = {
@@ -51,6 +53,7 @@ type FilterDrawerProps = {
   setSelectedItemsFromFilterSection: React.Dispatch<React.SetStateAction<filterTypes>>;
   addFiltersToQuery: (_item: filterTypes) => void;
   updateFilters: (_item: any) => void;
+  filterParameters: FilterParameterResponse;
 };
 
 type pendingOffersTypes = {
@@ -86,9 +89,9 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
   setSelectedItemsFromFilterSection,
   addFiltersToQuery,
   updateFilters,
+  filterParameters
 }) => {
   const { theme } = useTheme();
-  const { data: filterParameters } = productsApi.useGetFilterParametersQuery();
   const [selectedFilters, setSelectedFilters] = useState<filterTypes>({
     category: { title: '', _id: '' },
     type: '',
@@ -99,13 +102,17 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
     price: '',
     distance: '',
     address: '',
+    latitude:'',
+    longitude:'',
+    country:''
   });
+  const searchParams = useSearchParams();
 
   const [types] = useState<pendingOffersTypes[]>(typeData);
   const [isSearchCategoriesDrower, setIsSearchCategoriesDrower] = useState(false);
 
   const [inputFocus, setInputFocus] = useState('');
-  const [selectedCountry, setSelectedCountry] = useState('India');
+  const [selectedCountry, setSelectedCountry] = useState(searchParams.get('country') || 'India');
   const [isAutoCompleteLocationBoxOpen, setIsAutoCompleteLocationBoxOpen] = useState(false);
   const { placesService, placePredictions, getPlacePredictions } = usePlacesService({
     apiKey: GOOGLE_MAPS_KEY,
@@ -115,7 +122,6 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
   const heroSection = t('page.header.heroSection', { returnObjects: true }) as heroSection;
   const address = useAppSelector((state) => state.auth.myLocation?.address);
   const [zipCode, setZipCode] = useState('');
-  const searchParams = useSearchParams();
   const [formData, setFormData] = useState({
     location: searchParams.get('address') || '',
     selectedLocation: searchParams.get('address') ? true : false,
@@ -128,6 +134,8 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
   const [minPrice, setMinPrice] = useState<number>(initialMinPrice);
   const [maxPrice, setMaxPrice] = useState<number>(initialMaxPrice);
   const filterRef = useRef<HTMLDivElement>(null);
+  const [rangeValue, setRangeValue] = useState<number>(8);
+
 
   useEffect(() => {
     if (priceFilter?.data?.[0]) {
@@ -353,14 +361,18 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
       zipcode: '',
       pendingOffer: '',
       price: '',
-      distance: '',
+      distance: 'Country',
       address: '',
       category: { title: '', _id: '' },
+      latitude:'',
+      longitude:'',
+      country:'India'
     };
     setSelectedFilters(initialData);
     setInputFocus('');
     setZipCode('');
     handleClearLocations();
+    setRangeValue(0);
   };
 
   const handleFilterClick = (filterType: keyof filterTypes, label: string) => {
@@ -557,7 +569,7 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
                   selectedValue={selectedCountry}
                   onSelect={(e) => {
                     handleCountryChange(e);
-                    changeItems({ country: selectedCountry });
+                    changeItems({ country: e.target.value });
                   }}
                   id="country-selector"
                   name="country"
@@ -697,7 +709,12 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
                 <TextWrapper className="text-base font-semibold leading-6 text-bg-primary-light">
                   Distance (mi)
                 </TextWrapper>
-                <CustomRangeInput handleDistance={handleDistance} presentValue={'Country'} />
+                <CustomRangeInput 
+                  handleDistance={handleDistance} 
+                  presentValue={selectedFilters.distance}
+                  value={rangeValue}
+                  setValue={setRangeValue}
+                />
               </div>
             </div>
           </>

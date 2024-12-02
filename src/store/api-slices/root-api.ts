@@ -30,11 +30,11 @@ const baseQuery = fetchBaseQuery({
       headers.set('Content-Type', 'application/json');
       headers.set('lan', 'en');
       headers.set('platform', '3');
-      headers.set('City', geoLocation.city || DEFAULT_LOCATION.city);
-      headers.set('Country', geoLocation.country || DEFAULT_LOCATION.country);
+      headers.set('City', geoLocation?.city || DEFAULT_LOCATION.city);
+      headers.set('Country', geoLocation?.country || DEFAULT_LOCATION.country);
       headers.set('Ipaddress', ipAddressHeader || DEFAULT_LOCATION.ip);
-      headers.set('Latitude', geoLocation.latitude || DEFAULT_LOCATION.latitude);
-      headers.set('Longitude', geoLocation.longitude || DEFAULT_LOCATION.longitude);
+      headers.set('Latitude', geoLocation?.latitude || DEFAULT_LOCATION.latitude);
+      headers.set('Longitude', geoLocation?.longitude || DEFAULT_LOCATION.longitude);
     }
     return headers;
   },

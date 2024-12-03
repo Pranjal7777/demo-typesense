@@ -119,7 +119,6 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
   const [triggerSingleProductSearch] = productsApi.useLazyAddRecentSearchDataWithSingleProductQuery();
   const [triggerAddUserDataToRecentSearch] = productsApi.useAddUserDataToRecentSearchMutation();
   const [searchResults, setSearchResults] = useState([]);
-  const [showRecentSearchResultsFromTypesense, setShowRecentSearchResultsFromTypesense] = useState(false);
   const [hasValidSearchResults, setHasValidSearchResults] = useState(false);
   const isUserLogin = isUserAuthenticated();
 
@@ -193,7 +192,6 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
       ...prevState,
       search: '',
     }));
-    setShowRecentSearchResultsFromTypesense(false);
     setIsOpen(false);
 
     // Store selection in cookie
@@ -201,7 +199,6 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
   };
 
   const handleRemoveSearchHelper = () => {
-    setShowRecentSearchResultsFromTypesense(false);
     setFormData({ ...formData, search: '' });
   };
 
@@ -230,7 +227,6 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     setIsUserOrProduct([]);
-    setShowRecentSearchResultsFromTypesense(false);
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
@@ -292,7 +288,6 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
         } else {
           sellerProfileRoute(hit.id, searchText);
         }
-        setShowRecentSearchResultsFromTypesense(false);
         setIsOpen(false);
       }
     } catch (error) {
@@ -301,6 +296,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
   };
 
   const handleSearchButtonClick = async () => {
+    setIsOpen(false);
     let searchText = formData.search.trim();
     
     // If no text is typed, use the first recent search
@@ -564,39 +560,8 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                 onKeyDownHandeler={handleSearchEnterKeyDown}
               />
 
-              {showRecentSearchResultsFromTypesense && (
-                <SearchResults>
-                  <div className="absolute top-[48px] shadow-2xl bg-bg-secondary-light dark:bg-bg-secondary-dark left-0 right-0 rounded-b-md overflow-hidden max-h-[263px]">
-                    {searchResults?.length ? (
-                      searchResults?.map((hit: Hit) => (
-                        <div
-                          className="flex dark:hover:text-text-primary-dark border-border-tertiary-light h-14 items-center cursor-pointer hover:bg-bg-octonary-light dark:hover:bg-bg-duodenary-dark"
-                          onClick={async () => {
-                            categoryRoute(hit.categories[0].id, hit.title.en);
-                            setShowRecentSearchResultsFromTypesense(false);
-                          }}
-                        >
-                          <div className="truncate ml-3 flex">
-                            <div className="font-medium text-sm text-text-primary-light dark:text-text-primary-dark">
-                              {hit?.title?.en}
-                            </div>
-                            <div className="font-semibold text-sm text-brand-color ml-1">in </div>
-                            <div className="font-medium text-sm text-text-primary-light dark:text-text-primary-dark ml-1">
-                              {hit.mainCategory}
-                            </div>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="flex items-center justify-center h-14 text-text-primary-light dark:text-text-primary-dark">
-                        No results found
-                      </div>
-                    )}
-                  </div>
-                </SearchResults>
-              )}
 
-              {!!formData?.search && !showRecentSearchResultsFromTypesense && formData.resultDropdown && (
+              {!!formData?.search  && formData.resultDropdown && (
                 <SearchResults>
                   <div className="absolute top-[48px] shadow-2xl bg-bg-secondary-light dark:bg-bg-secondary-dark left-0 right-0 rounded-b-md overflow-hidden max-h-[263px]">
                     <CustomSearchResults searchQuery={formData.search}>
@@ -610,7 +575,6 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                                 await addItemToRecentSearch(hit.id, hit.title.en);
                                 // @ts-ignore
                                 await selectItemOrUserToSearch(hit.title.en);
-                                setShowRecentSearchResultsFromTypesense(false);
                                 // @ts-ignore
                                 categoryRoute(hit.categories[0].id, hit.title.en);
                                 setIsOpen(false);

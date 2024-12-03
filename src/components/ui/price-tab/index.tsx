@@ -40,7 +40,7 @@ const PriceTab: React.FC<PriceTabProps> = ({
         <input
           type="number"
           name={inputFocus === focus ? 'input-min' : 'input-max'}
-          className="bg-transparent w-9 outline-none pl-1 font-medium text-center"
+          className="bg-transparent w-12  outline-none pl-1 font-medium text-center"
           value={price}
           onChange={handlePriceInputChange}
           disabled={true}

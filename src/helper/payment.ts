@@ -1,4 +1,4 @@
-import { AUTH_URL_V1, BASE_API_URL } from '@/config';
+import { AUTH_URL_V1, BASE_API_URL, DEFAULT_LOCATION } from '@/config';
 import Cookies from 'js-cookie';
 import { toast } from 'sonner';
 
@@ -42,11 +42,11 @@ export const getChatIdentifier = async ({
           'Authorization': `${accessToken}`,
           'Platform': '3',
           'Lan': 'en',
-          'City': userLocation.city || '',
-          'Country': userLocation.country || '',
-          'Ipaddress': userLocation.ip || '0.0.0.0',
-          'Latitude': userLocation.latitude || '',
-          'Longitude': userLocation.longitude || ''
+          'City': userLocation.city || DEFAULT_LOCATION.city,
+          'Country': userLocation.country || DEFAULT_LOCATION.country,
+          'Ipaddress': userLocation.ip || DEFAULT_LOCATION.ip,
+          'Latitude': userLocation.latitude || DEFAULT_LOCATION.latitude,
+          'Longitude': userLocation.longitude || DEFAULT_LOCATION.longitude
         },
       }
     );
@@ -81,11 +81,11 @@ export const getStripePaymentKeys = async (payload: any, userLocation: any) => {
         'Authorization': `${accessToken}`,
         'Platform': '3',
         'Lan': 'en',
-        'City': userLocation?.city || '',
-        'Country': userLocation?.country || '',
-        'Ipaddress': userLocation?.ip || '0.0.0.0',
-        'Latitude': userLocation?.latitude || '',
-        'Longitude': userLocation?.longitude || ''
+        'City': userLocation.city || DEFAULT_LOCATION.city,
+        'Country': userLocation.country || DEFAULT_LOCATION.country,
+        'Ipaddress': userLocation.ip || DEFAULT_LOCATION.ip,
+        'Latitude': userLocation.latitude || DEFAULT_LOCATION.latitude,
+        'Longitude': userLocation.longitude || DEFAULT_LOCATION.longitude
       },
       body: JSON.stringify(payload),
     });

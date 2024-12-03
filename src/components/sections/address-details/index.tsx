@@ -92,7 +92,7 @@ const AddressDetails: FC<Props> = ({
   };
 
   return (
-    <section className="w-full mt-3 sm:mt-0 leading-[21px] md:leading-[24px] text-text-primary-light  dark:text-text-primary-dark  address-details-section mobile:!px-4">
+    <section className="w-full mt-3 sm:mt-0 leading-[21px] md:leading-[24px] text-text-primary-light  dark:text-text-primary-dark  address-details-section">
       <SelectedLocation setIsClickOnChange={setIsClickOnChange} pageType={pageType} formData={formData} />
       <LableWithTextArea
         labelClassName="font-[600]"
@@ -104,7 +104,7 @@ const AddressDetails: FC<Props> = ({
         name="addressLine1"
       />
 
-      <form className="w-full lg:grid lg:grid-cols-2 gap-4">
+      <form className="w-full grid grid-cols-1 lg:grid-cols-2 sm:gap-4">
         <FormInput
           labelClassName="font-[600]"
           error={errorState.country ? 'Country Name is missing' : ''}
@@ -196,7 +196,7 @@ const AddressDetails: FC<Props> = ({
           ) : null}
         </div>
 
-        <div className="w-full mt-[12px] text-text-primary-light dark:text-text-secondary-light  mobile:!mb-3">
+        <div className="w-full lg:mt-0 text-text-primary-light dark:text-text-secondary-light  mobile:!mb-3">
           <label className="text-[12px] md:text-[14px] sm:font-semibold" htmlFor="Business">
             Address Type*
           </label>

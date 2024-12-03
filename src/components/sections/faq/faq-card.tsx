@@ -46,7 +46,7 @@ const FaqCard: FC<FaqCardProps> = ({ question, answer, id, isOpen, onClick }) =>
           )}
         </div>
         <div
-          className={`break-words ml-5 rtl:ml-0 rtl:mr-5 mobile:text-base  font-semibold text-xl text-text-primary-light dark:text-text-secondary-light`}
+          className={`break-words ml-5 rtl:ml-0 rtl:mr-5 mobile:text-base  font-semibold text-text-primary-light dark:text-text-secondary-light`}
         >
           {question}
         </div>
@@ -55,7 +55,7 @@ const FaqCard: FC<FaqCardProps> = ({ question, answer, id, isOpen, onClick }) =>
         className={appClsx(
           `${
             isOpen ? 'inline' : 'hidden'
-          } mobile:text-sm mt-2 mb-5 mobile:ml-0 ml-8 rtl:ml-0 rtl:mr-10 font-normal text-base text-text-tertiary-light dark:text-text-tertiary-dark`
+          } mobile:text-sm mt-2 mb-5 mobile:ml-0 ml-8 rtl:ml-0 rtl:mr-10 font-normal text-sm text-text-tertiary-light dark:text-text-tertiary-dark`
         )}
         dangerouslySetInnerHTML={{ __html: htmlContent }}
       />

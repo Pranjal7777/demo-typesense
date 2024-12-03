@@ -19,6 +19,7 @@ import SellersReviewSection from '@/components/sections/sellers-review-section';
 
 import SearchIcon from '../../../public/assets/svg/search-icon';
 import SelfProfileEditSection from '@/components/sections/self-prfile-edit';
+import { HIDE_SELLER_FLOW } from '@/config';
 
 type Props = {
   profileData: SellerProfileType;
@@ -51,7 +52,6 @@ const Profile: FC<Props> = ({ profileData, followCountData }) => {
   }, [searchTerm]);
 
   const { data, isLoading, isFetching } = sellerProfileApi.useGetAllProductsQuery({
-    accountId: accountId || '',
     page,
     search: debouncedSearchTerm,
   });
@@ -199,40 +199,46 @@ const Profile: FC<Props> = ({ profileData, followCountData }) => {
                       </>
                     ) : (
                       <div className="review">
-                        <nav className="border-b md:pl-[20px]">
-                          <ul className="flex gap-[12px] text-sm md:text-[16px] text-text-tertiary-light dark:text-text-septenary-light leading-[24px]">
-                            {reviewTabs.map((item, index) => (
-                              <li
-                                key={index}
-                                onClick={() => setReviewTab(item)}
-                                tabIndex={0}
-                                role="button"
-                                onKeyUp={(e) => {
-                                  if (e.key === 'Enter' || e.key === ' ') {
-                                    e.preventDefault();
-                                    setReviewTab(item);
+                        <AllReviewsSection accountId={accountId || ''} />
+                        {
+                          ! HIDE_SELLER_FLOW &&  <>
+                          <nav className="border-b md:pl-[20px]">
+                            <ul className="flex gap-[12px] text-sm md:text-[16px] text-text-tertiary-light dark:text-text-septenary-light leading-[24px]">
+                              {reviewTabs.map((item, index) => (
+                                <li
+                                  key={index}
+                                  onClick={() => setReviewTab(item)}
+                                  tabIndex={0}
+                                  role="button"
+                                  onKeyUp={(e) => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                      e.preventDefault();
+                                      setReviewTab(item);
+                                    }
+                                  }}
+                                  className={
+                                    (reviewTab === item
+                                      ? ' text-text-secondary-dark dark:text-text-secondary-light font-semibold  border-b-[3px] border-brand-color '
+                                      : '') + 'px-[8px] py-[11px] text-text-quaternary-dark dark:text-text-septenary-light'
                                   }
-                                }}
-                                className={
-                                  (reviewTab === item
-                                    ? ' text-text-secondary-dark dark:text-text-secondary-light font-semibold  border-b-[3px] border-brand-color '
-                                    : '') + 'px-[8px] py-[11px] text-text-quaternary-dark dark:text-text-septenary-light'
-                                }
-                              >
-                                {item}
-                              </li>
-                            ))}
-                          </ul>
-                        </nav>
-                        <div className="w-full text-text-primary-light dark:text-text-primary-dark">
-                          {reviewTab == 'All' ? (
-                            <AllReviewsSection accountId={accountId || ''} />
-                          ) : reviewTab == 'From Buyers' ? (
-                            <BuyersReviewSection accountId={accountId || ''} />
-                          ) : reviewTab == 'From Sellers' ? (
-                            <SellersReviewSection accountId={accountId || ''} />
-                          ) : null}
-                        </div>
+                                >
+                                  {item}
+                                </li>
+                              ))}
+                            </ul>
+                          </nav>
+                          <div className="w-full text-text-primary-light dark:text-text-primary-dark">
+                            {reviewTab == 'All' ? (
+                              <AllReviewsSection accountId={accountId || ''} />
+                            ) : reviewTab == 'From Buyers' ? (
+                              <BuyersReviewSection accountId={accountId || ''} />
+                            ) : reviewTab == 'From Sellers' ? (
+                              <SellersReviewSection accountId={accountId || ''} />
+                            ) : null}
+                          </div>
+                          </>
+                        }
+                        
                       </div>
                     )}
                   </div>

@@ -66,7 +66,7 @@ const SelectedLocation:FC<Props> = ({formData, pageType, setIsClickOnChange})=> 
 
   return (
     <div className="flex gap-[8px] dark:bg-bg-primary-dark text-text-primary-light  dark:text-text-primary-dark ">
-      <div className="img relative w-[45%] max-w-[240px] min-w-[96px] h-[96px] lg:h-[129px] rounded-[4px]">
+      <div className="img relative w-[45%] max-w-[240px] min-w-[96px] mobile:flex-1 lg:h-[129px] rounded-[4px]">
 
         { isLoaded ? <GoogleMap
           mapContainerStyle={{width: '100%', height: '100%'}}
@@ -97,14 +97,14 @@ const SelectedLocation:FC<Props> = ({formData, pageType, setIsClickOnChange})=> 
 
       </div>
 
-      <div className="details w-[100%] h-[96px] lg:h-[129px] p-[8px] lg:p-[12px] border dark:border-border-tertiary-dark border-border-tertiary-light rounded-[4px]">
+      <div className="details w-[100%] h-fit lg:h-[129px] p-[8px] lg:p-[12px] border dark:border-border-tertiary-dark border-border-tertiary-light rounded-[4px]">
         <p className="text-[12px] md:hidden leading-[18px] mobile:!text-[14px]">
           {formData.addressLine1?.length>64 ? `${formData.addressLine1.slice(0,80)}....` : `${formData.addressLine1}`}        
         </p>
         <p className=" hidden md:text-[14px] md:block lg:text-[16px] leading-[24px]">
           { `${formData.addressLine1?.length>64 ? `${formData.addressLine1.slice(0,120)}....` : `${formData.addressLine1}`}`}        
         </p>
-        <button onClick={changeBtnHandler} className="text-[12px] md:text-[14px] font-[600] tracking-[1px] text-[#6D3EC1] mt-[8px]">
+        <button onClick={changeBtnHandler} className="text-[12px] md:text-[14px] font-[600] tracking-[1px] text-brand-color mt-[8px]">
           Change
         </button>
       </div>

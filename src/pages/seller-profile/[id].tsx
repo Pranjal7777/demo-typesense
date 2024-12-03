@@ -25,7 +25,7 @@ import isUserAuthenticated from '@/helper/validation/check-user-authentication';
 import { SIGN_IN_PAGE } from '@/routes';
 import showToast from '@/helper/show-toaster';
 import SearchIcon from '../../../public/assets/svg/search-icon';
-import { BASE_API_URL } from '@/config';
+import { BASE_API_URL, HIDE_SELLER_FLOW } from '@/config';
 
 type Props = {
   sellerProfileData: SellerProfileType;
@@ -118,9 +118,10 @@ const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
   };
 
   return (
+    <div className='w-full min-h-screen text-text-primary-light dark:text-text-primary-dark'>
     <Layout stickyHeader={true} stickyHeroSection={true} excludeFooter={true}>
       {(isFollowPosting || isUnFollowPosting) && <FullScreenSpinner />}
-      <div className="profile text-text-primary-light dark:text-text-primary-dark min-h-screen w-full px-[4%] md:px-[64px] mx-auto max-w-[1440px] border-t py-[20px] flex flex-col md:flex-row gap-x-[16px]">
+      <div className="profile text-text-primary-light dark:text-text-primary-dark w-full px-[4%] md:px-[64px] mx-auto max-w-[1440px] border-t py-[20px] flex flex-col md:flex-row gap-x-[16px]">
         <div className="left w-full flex flex-col items-center md:w-[210px] text-text-primary-light dark:text-text-primary-dark ">
           {sellerProfileData && (
             <NewProfileCard
@@ -213,46 +214,53 @@ const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
               </>
             ) : (
               <div className="review">
-                <nav className="border-b border-border-tertiary-light dark:border-border-tertiary-dark md:pl-[20px]">
-                  <ul className="flex gap-[12px] text-sm md:text-[16px] text-text-tertiary-light dark:text-text-septenary-light leading-[24px]">
-                    {reviewTabs.map((item, index) => (
-                      <li
-                        key={index}
-                        onClick={() => setReviewTab(item)}
-                        tabIndex={0}
-                        role="button"
-                        onKeyUp={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            setReviewTab(item);
+                <AllReviewsSection accountId={accountId || ''} />
+                {
+                  !HIDE_SELLER_FLOW  && <>
+                  <nav className="border-b border-border-tertiary-light dark:border-border-tertiary-dark md:pl-[20px]">
+                    <ul className="flex gap-[12px] text-sm md:text-[16px] text-text-tertiary-light dark:text-text-septenary-light leading-[24px]">
+                      {reviewTabs.map((item, index) => (
+                        <li
+                          key={index}
+                          onClick={() => setReviewTab(item)}
+                          tabIndex={0}
+                          role="button"
+                          onKeyUp={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              setReviewTab(item);
+                            }
+                          }}
+                          className={
+                            (reviewTab === item
+                              ? ' text-text-secondary-dark dark:text-text-secondary-light font-semibold  border-b-[3px] border-brand-color '
+                              : '') + 'px-[8px] py-[11px] text-text-quaternary-dark dark:text-text-septenary-light'
                           }
-                        }}
-                        className={
-                          (reviewTab === item
-                            ? ' text-text-secondary-dark dark:text-text-secondary-light font-semibold  border-b-[3px] border-brand-color '
-                            : '') + 'px-[8px] py-[11px] text-text-quaternary-dark dark:text-text-septenary-light'
-                        }
-                      >
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </nav>
-                <div className="w-full">
-                  {reviewTab == 'All' ? (
-                    <AllReviewsSection accountId={accountId || ''} />
-                  ) : reviewTab == 'From Buyers' ? (
-                    <BuyersReviewSection accountId={accountId || ''} />
-                  ) : reviewTab == 'From Sellers' ? (
-                    <SellersReviewSection accountId={accountId || ''} />
-                  ) : null}
-                </div>
+                        >
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </nav>
+                  <div className="w-full">
+                    {reviewTab == 'All' ? (
+                      <AllReviewsSection accountId={accountId || ''} />
+                    ) : reviewTab == 'From Buyers' ? (
+                      <BuyersReviewSection accountId={accountId || ''} />
+                    ) : reviewTab == 'From Sellers' ? (
+                      <SellersReviewSection accountId={accountId || ''} />
+                    ) : null}
+                  </div>
+                  </>
+                }
+                
               </div>
             )}
           </div>
         </div>
       </div>
     </Layout>
+    </div>
   );
 };
 

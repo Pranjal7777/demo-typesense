@@ -39,7 +39,6 @@ const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
     { label: 'Last 2 months', value: '2' },
     { label: 'Last 3 Months', value: '3' },
     { label: 'Last 4 Months', value: '4' },
-    { label: 'Last 5 Months', value: '5' },
   ];
 
   useEffect(() => {

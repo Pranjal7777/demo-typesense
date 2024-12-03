@@ -5,6 +5,7 @@ import PurchaseDetailsCard from '@/components/ui/purchase-details-card';
 import { PurchaseResponse } from '@/store/types/my-purchase-types';
 import React, { FC, useEffect, useState } from 'react';
 import { NO_PURCHASE } from '../../../public/images/placeholder';
+import { formatPriceWithoutCents } from '@/utils/price-formatter';
 
 type PurchaseContainerProps = {
   showPurchaseDetailsMobile: boolean;
@@ -70,7 +71,7 @@ const PurchaseContainer: FC<PurchaseContainerProps> = ({
                 orderId={`${item?.orderId}`}
                 productImageSrc={`${item.image}` || ' '}
                 productName={`${item?.productName?.slice(0, 22)}${item?.productName?.length > 22 && '...'}` || ''}
-                amount={`${item?.currency || ''} ${item?.amount || ''}`}
+                amount= {formatPriceWithoutCents(item?.amount || 0)}
                 buyerName={item.buyerFullName}
                 orderType={item.orderType}
                 cardClickHandler={onCardClick}

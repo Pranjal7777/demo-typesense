@@ -21,7 +21,7 @@ type Props = {
   setErrorState: React.Dispatch<React.SetStateAction<ErrorStateType>>;
   setFormData: React.Dispatch<React.SetStateAction<UserInfoType>>;
   pageType?: string;
-  setIsClickOnChange: React.Dispatch<React.SetStateAction<boolean>>
+  setIsClickOnChange?: React.Dispatch<React.SetStateAction<boolean>>
 };
 interface AddressNote {
   value: string;

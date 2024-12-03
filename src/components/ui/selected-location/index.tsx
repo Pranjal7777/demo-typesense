@@ -8,7 +8,7 @@ import { GOOGLE_MAPS_KEY } from '@/config';
 type Props={
   formData:UserInfoType,
   pageType?:string,
-  setIsClickOnChange: React.Dispatch<React.SetStateAction<boolean>>
+  setIsClickOnChange?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const SelectedLocation:FC<Props> = ({formData, pageType, setIsClickOnChange})=> {
@@ -35,7 +35,9 @@ const SelectedLocation:FC<Props> = ({formData, pageType, setIsClickOnChange})=> 
   });
 
   const onMapClick = ()=>{
-    setIsClickOnChange(true)
+    if(setIsClickOnChange){
+      setIsClickOnChange(true)
+    }
     router.replace({
       pathname: '/profile/address',
       query: getQuery(),
@@ -56,7 +58,9 @@ const SelectedLocation:FC<Props> = ({formData, pageType, setIsClickOnChange})=> 
       });
     }
     else{
-      setIsClickOnChange(true);
+      if(setIsClickOnChange){
+        setIsClickOnChange(true);
+      }
       router.replace({
         pathname: '/profile/address',
         query: getQuery(),

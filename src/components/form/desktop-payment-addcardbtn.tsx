@@ -50,7 +50,7 @@ export default function DesktopPaymentAddCardBtn() {
         type="submit"
         isLoading={isLoading}
         isDisabled={!addressData}
-        className={`lg:w-[50%]  lg:mt-6 min-w-[250px] cursor-pointer bg-btn-bg-primary-light hover:bg-btn-bg-primary-light text-white !mb-0 mobile:fixed mobile:bottom-4 mobile:w-[90%] mobile:left-[50%] mobile:translate-x-[-50%] ${!addressData ? 'opacity-50 cursor-not-allowed' : ''}`}
+        className={`lg:w-[50%]  lg:mt-6 min-w-[250px] cursor-pointer bg-[#1FD18E]  text-white !mb-0 mobile:fixed mobile:bottom-4 mobile:w-[90%] mobile:left-[50%] mobile:translate-x-[-50%] ${!addressData ? 'opacity-50 cursor-not-allowed' : ''}`}
         onClick={handleSubmit}
       >
         {CONFIRMANDPAY}

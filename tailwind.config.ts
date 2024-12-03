@@ -123,7 +123,7 @@ const config: Config = {
         'btn-tertiary-light': '#FFFFFF',
         'btn-quaternary-light': '#008F79',
         'btn-quinary-light': '#016F5E',
-        'btn-bg-primary-light': '#6D3EC1',
+        'btn-bg-primary-light': '#1FD18E',
         //-------------------------------------
         'btn-primary-dark': '',
         'btn-secondary-dark': '',

@@ -11,6 +11,7 @@ import { uploadToS3 } from '@/lib/aws-sdk';
 import Button from '../button';
 import { Toaster } from 'sonner';
 import showToast from '@/helper/show-toaster';
+import { useTheme } from '@/hooks/theme';
 
 interface ImageUploaderProps {
   onUploadSuccess?: (_result: { url1: string; url2: string,url3:string,url4:string }) => void;
@@ -44,6 +45,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   onCancelAll,
 }) => {
   const [isUploading, setIsUploading] = useState(false);
+  const { theme } = useTheme();
   const [uppy] = useState(() =>
     new Uppy({
       id: 'imageUploader',
@@ -125,13 +127,20 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   return (
     <>
       <style>{`
+      .uppy-Dashboard-AddFiles{
+      position: relative;
+      }
         .uppy-Dashboard {  /* image selection box */
           height: ${imageBoxHeight} !important;
           width: ${imageBoxWidth} !important;
         }
+          .uppy-Dashboard-AddFiles-title{
+          position: absolute;
+          }
         .uppy-Dashboard-inner {
           height: 100% !important;
           width: 100% !important;
+          background-color: ${theme ? '#2d2c2c' : '#f4f4f4'} !important;
         }
           .uppy-Dashboard-Item {
           border: 0px  !important;
@@ -158,9 +167,9 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
           }
       `}</style>
       <Toaster />
-      <div className='h-full w-full flex flex-col'>
+      <div className="h-full w-full flex flex-col">
         <Dashboard
-          style={{flex:1}}
+          style={{ flex: 1 }}
           uppy={uppy}
           plugins={['ImageEditor']}
           width="100%"
@@ -170,7 +179,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
           proudlyDisplayPoweredByUppy={false}
           hideUploadButton
           hideCancelButton
-        // showProgressDetails={false} 
+          // showProgressDetails={false}
         />
         <Button disabled={isUploading} isLoading={isUploading} onClick={updateButtonHandler} buttonType="primary">
           Update

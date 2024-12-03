@@ -76,7 +76,6 @@ const Layout: FC<Props> = ({
         if (getLocation) {
           try {
             const placeName = await getLocationName(getLocation.latitude, getLocation.longitude);
-            // setLocationName(placeName)
             setMyLocationDispatch({
               address: String(placeName.address),
               latitude: String(getLocation.latitude),
@@ -152,7 +151,7 @@ const Layout: FC<Props> = ({
         latitude: String(myLocationFromServer.latitude),
         longitude: String(myLocationFromServer.longitude),
         city: String(myLocationFromServer.city),
-        country: String(myLocationFromServer.country),
+        country: String(myLocationFromServer.countryName),
       });
     } else {
       if (ipAddress && myLocation) {

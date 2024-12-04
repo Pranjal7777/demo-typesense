@@ -50,12 +50,12 @@ const ProfileDropdown: FC<Props> = ({ menuOptions, signOut }) => {
               actionIcon={<RightArrowRoundedEdge primaryColor={theme ? '#fff' : '#000'} height="11" width="7" />}
             />
 
-            {/* <RedirectCard
+            <RedirectCard
               label={menuOptions[5].item}
               labelIcon={<HartSvg height="24" width="24" color={theme ? '#fff' : '#000'} />}
-              linkUrl={'/'}
+              linkUrl={'/my-favorites'}
               actionIcon={<RightArrowRoundedEdge primaryColor={theme ? '#fff' : '#000'} height="11" width="7" />}
-            /> */}
+            />
 
             {
               !HIDE_SELLER_FLOW && <>

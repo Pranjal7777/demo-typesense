@@ -391,24 +391,6 @@ function Address() {
     }
   },[setUserLocation,setFormData]);
 
-  // useEffect(() => {
-  //   const location = getLocalStorageItem('myLocation');
-  //   if (location) {
-  //     const lat= Number(location.latitude);
-  //     const lng= Number(location.longitude);
-      
-  //     getAddressFromLatLng(lat, lng)
-  //       .then(address => {
-  //         setFormData((prevState) => ({ ...prevState, zipCode: address?.zipCode , addressLine1: `${address?.addressLine1}`, country: address?.country, countryShortForm: address?.countryCode, state: address?.state, city: address?.city,lat:lat, long:lng}));
-  //       });
-
-  //     setUserLocation({
-  //       lat,
-  //       lng
-  //     });
-  //   }
-  // }, []);
-
 
   const locateMeHandler = () => {
     /// using getUserLocation start

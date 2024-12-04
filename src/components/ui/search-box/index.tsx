@@ -161,11 +161,12 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
     triggerAddUserDataToRecentSearch({ clickeduserId });
   };
 
-  const categoryRoute = async (categoryId: string, search: string) => {
+  const categoryRoute = async (categoryId: string, search: string, hit?: Hit) => {
     const url = routeToCategories({ category: { id: categoryId } });
     router.push({
       pathname: url,
       query: { 
+        selectedCategory: hit?.title.en,
         search: search || undefined
       }
     });
@@ -284,7 +285,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
       if (results[0]?.hits?.length > 0) {
         const hit = results[0].hits[0];
         if (currentOption === 'Items') {
-          categoryRoute(hit.categories[0].id, hit.title.en);
+          categoryRoute(hit.categories[0].id, hit.title.en, hit);
         } else {
           sellerProfileRoute(hit.id, searchText);
         }
@@ -576,7 +577,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                                 // @ts-ignore
                                 await selectItemOrUserToSearch(hit.title.en);
                                 // @ts-ignore
-                                categoryRoute(hit.categories[0].id, hit.title.en);
+                                categoryRoute(hit.categories[0].id, hit.title.en, hit);
                                 setIsOpen(false);
                               }}
                             >

@@ -5,7 +5,7 @@ import Rating from '../rating';
 import { appClsx } from '@/lib/utils';
 import Button from '../button';
 import UserPlaceholderIcon from '../../../../public/assets/svg/user-placeholder-icon';
-import { STATIC_IMAGE_URL } from '@/config';
+import { HIDE_SELLER_FLOW, STATIC_IMAGE_URL } from '@/config';
 type Props = {
     cardClass?:string;
     fullNameClass? : string;
@@ -47,7 +47,7 @@ const NewProfileCard:FC<Props> = ({cardClass,fullNameClass,userNameClass,starCol
       <Rating value={ratingValue}  itemClassName = {ratingTextClass} color= {starColor}  className={ratingClass} text={ratingText}/>
       <Button onClick={followButtonHandler} buttonType={buttonType} className={buttonClass}>{buttonText}</Button>
       {
-        showFollowingSection && <div className={appClsx('w-full flex gap-4 justify-center md:justify-start text-sm font-medium text-text-secondary-dark dark:text-text-primary-dark' , followingSectionClass)}>
+       !HIDE_SELLER_FLOW && showFollowingSection && <div className={appClsx('w-full flex gap-4 justify-center md:justify-start text-sm font-medium text-text-secondary-dark dark:text-text-primary-dark' , followingSectionClass)}>
           <span>{`${totalFollowers || '0 '} followers`}</span>
           <span>{`${totalFollowing || '0 '} following`}</span>
         </div>

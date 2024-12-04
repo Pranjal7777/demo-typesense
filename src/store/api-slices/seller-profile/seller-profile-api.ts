@@ -5,45 +5,45 @@ import { AllRatingApiResponse, BuyerRatingApiResponse, ReviewApiResponse, Seller
 
 export const sellerProfileApi = rootApi.injectEndpoints({
   endpoints: (builder) => ({
-    getAllProducts: builder.query<SellerUserAssetResponse, { accountId: string; page: number; search: string}>({
+    getAllProducts: builder.query<SellerUserAssetResponse, { accountId?: string; page: number; search: string}>({
       query: ({ accountId, page,search }) => ({
-        url: `${GET_ALL_SELLER_ASSETS}?${SEARCH_QUERY}=${search}&page=${page}&accountId=${accountId}`,
+        url: `${GET_ALL_SELLER_ASSETS}?${SEARCH_QUERY}=${search}&page=${page}${accountId ? `&${ACCOUNT_ID}=${accountId}`:''}`,
         method: 'GET',
       }),
     }),
-    getAllReviews: builder.query<ReviewApiResponse, { accountId: string;}>({
+    getAllReviews: builder.query<ReviewApiResponse, { accountId?: string;}>({
       query: ({accountId}) => ({
-        url: `${USER_REVIEWS}?${SORT_BY}=1&${LINKED_WITH}=${ALL}&accountId=${accountId}&${OFFSET}=0`,
+        url: `${USER_REVIEWS}?${SORT_BY}=1&${LINKED_WITH}=${ALL}${accountId ? `&${ACCOUNT_ID}=${accountId}`:''}&${OFFSET}=0`,
         method: 'GET',
       }),
     }),
-    getBuyerReviews: builder.query<ReviewApiResponse, { accountId: string;}>({
+    getBuyerReviews: builder.query<ReviewApiResponse, { accountId?: string;}>({
       query: ({accountId}) => ({
-        url: `${USER_REVIEWS}?${SORT_BY}=1&${LINKED_WITH}=${BUYER}&${ACCOUNT_ID}=${accountId}&${OFFSET}=0`,
+        url: `${USER_REVIEWS}?${SORT_BY}=1&${LINKED_WITH}=${BUYER}${accountId ? `&${ACCOUNT_ID}=${accountId}`:''}&${OFFSET}=0`,
         method: 'GET',
       }),
     }),
-    getSellerReviews: builder.query<ReviewApiResponse, { accountId: string;}>({
+    getSellerReviews: builder.query<ReviewApiResponse, { accountId?: string;}>({
       query: ({accountId}) => ({
-        url: `${USER_REVIEWS}?${SORT_BY}=1&${LINKED_WITH}=${SELLER}&${ACCOUNT_ID}=${accountId}&${OFFSET}=0`,
+        url: `${USER_REVIEWS}?${SORT_BY}=1&${LINKED_WITH}=${SELLER}${accountId ? `&${ACCOUNT_ID}=${accountId}`:''}&${OFFSET}=0`,
         method: 'GET',
       }),
     }),
-    getAllRatings: builder.query<AllRatingApiResponse, { accountId: string;}>({
+    getAllRatings: builder.query<AllRatingApiResponse, { accountId?: string;}>({
       query: ({accountId}) => ({
-        url: `${USER_RATING}?${LINKED_WITH}=${ALL}&${ACCOUNT_ID}=${accountId}`,
+        url: `${USER_RATING}?${LINKED_WITH}=${ALL}${accountId ? `&${ACCOUNT_ID}=${accountId}`:''}`,
         method: 'GET',
       }),
     }),
-    getBuyerRatings: builder.query<BuyerRatingApiResponse, { accountId: string;}>({
+    getBuyerRatings: builder.query<BuyerRatingApiResponse, { accountId?: string;}>({
       query: ({accountId}) => ({
-        url: `${USER_RATING}?${LINKED_WITH}=${BUYER}&${ACCOUNT_ID}=${accountId}`,
+        url: `${USER_RATING}?${LINKED_WITH}=${BUYER}${accountId ? `&${ACCOUNT_ID}=${accountId}`:''}`,
         method: 'GET',
       }),
     }),
-    getSellerRatings: builder.query<BuyerRatingApiResponse, { accountId: string;}>({
+    getSellerRatings: builder.query<BuyerRatingApiResponse, { accountId?: string;}>({
       query: ({accountId}) => ({
-        url: `${USER_RATING}?${LINKED_WITH}=${SELLER}&${ACCOUNT_ID}=${accountId}`,
+        url: `${USER_RATING}?${LINKED_WITH}=${SELLER}${accountId ? `&${ACCOUNT_ID}=${accountId}`:''}`,
         method: 'GET',
       }),
     }),

@@ -37,18 +37,20 @@ const PurchaseCard: FC<PurchaseCardProps> = ({
       tabIndex={0}
       role="button"
       onKeyDown={(e) => {
-        keyDownHandler(e, ()=>cardClickHandler(orderId || ""));
+        keyDownHandler(e, () => cardClickHandler(orderId || ''));
       }}
-      onClick={()=>cardClickHandler(orderId || "")}
+      onClick={() => cardClickHandler(orderId || '')}
       className={appClsx(
         `p-3 border ${
-         ( currenOrderId == orderId && !showPurchaseDetailsMobile) ? 'border-brand-color' :'dark:border-border-tertiary-dark border-border-tertiary-light' 
+          currenOrderId == orderId && !showPurchaseDetailsMobile
+            ? 'border-brand-color'
+            : 'dark:border-border-tertiary-dark border-border-tertiary-light'
         } rounded-lg`,
         cardClass
       )}
     >
       <PurchaseProductDetails
-        containerClass="gap-2"
+        containerClass="gap-2 dark:bg-[#242424] p-2 rounded-lg"
         imageSrc={productImageSrc}
         details={`OID: ${orderId}`}
         description={productName}
@@ -73,8 +75,13 @@ const PurchaseCard: FC<PurchaseCardProps> = ({
               ? 'bg-[#00B533]'
               : orderType == 'EXCHANGE COMPLETED'
               ? 'bg-[#00B533]'
-              : orderType == 'SUBSCRIPTION PURCHASED'?'bg-bg-undenary-dark' :orderType == 'DEAL CANCELLED' ? 'bg-[#FF3B30]' : orderType == 'SOLD'
-              ? 'bg-[#00B533]':'bg-brand-color'
+              : orderType == 'SUBSCRIPTION PURCHASED'
+              ? 'bg-bg-undenary-dark'
+              : orderType == 'DEAL CANCELLED'
+              ? 'bg-[#FF3B30]'
+              : orderType == 'SOLD'
+              ? 'bg-[#00B533]'
+              : 'bg-brand-color'
           }   py-[2px] px-[10px] rounded-sm text-xs text-text-primary-dark`}
         >
           {orderType}

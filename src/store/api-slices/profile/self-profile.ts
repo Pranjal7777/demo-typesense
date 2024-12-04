@@ -2,10 +2,6 @@ import { GET_VERIFICATION_CODE, PROFILE } from '@/api/endpoints';
 import { rootApi } from '../root-api';
 import { AUTH_URL_V1 } from '@/config';
 import {
-  RequestSendVerificationCodeForLoginWithEmail,
-  RequestSendVerificationCodeForLoginWithPhone,
-  RequestSendVerificationCodePayload,
-  ResponseSendVerificationCodePayload,
   ResponseValidVerificationCodePayload,
 } from '@/store/types';
 import { SendVerificationForChangeNumber } from '@/store/types/profile-type';

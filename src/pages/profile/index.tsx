@@ -19,6 +19,8 @@ import SellersReviewSection from '@/components/sections/sellers-review-section';
 
 import SearchIcon from '../../../public/assets/svg/search-icon';
 import SelfProfileEditSection from '@/components/sections/self-prfile-edit';
+import { HIDE_SELLER_FLOW } from '@/config';
+import Placeholder from '@/containers/placeholder/placeholder';
 
 type Props = {
   profileData: SellerProfileType;
@@ -26,6 +28,7 @@ type Props = {
 };
 
 const Profile: FC<Props> = ({ profileData, followCountData }) => {
+  console.log('profileData', profileData);
   const router = useRouter();
   const { id } = router.query as { id?: string };
   const accountId = useMemo(() => id, [id]);
@@ -51,9 +54,9 @@ const Profile: FC<Props> = ({ profileData, followCountData }) => {
   }, [searchTerm]);
 
   const { data, isLoading, isFetching } = sellerProfileApi.useGetAllProductsQuery({
-    accountId: accountId || '',
     page,
     search: debouncedSearchTerm,
+    accountId: profileData.accountId,
   });
 
   useEffect(() => {
@@ -99,16 +102,27 @@ const Profile: FC<Props> = ({ profileData, followCountData }) => {
   }, []);
 
   return (
-    <div className='w-full min-h-screen text-text-primary-light dark:text-text-primary-dark'>
-      {
-        (isMobile && isEditProfileModalOpen) ? <div className='w-full px-[4%] pt-5 text-text-primary-light dark:text-text-primary-dark'>
-          <SelfProfileEditSection profileData={profileData} isMobile={isMobile}  leftArrowClickHandler={closeEditProfileModal}/>
-        </div> :
-          <Layout stickyHeader={true} stickyHeroSection={true} excludeFooter={true}>
-            {/* {(isFollowPosting || isUnFollowPosting) && <FullScreenSpinner />} */}
-            <div className="profile w-full px-[4%] md:px-[64px] mx-auto max-w-[1440px] border-t py-[20px] flex flex-col md:flex-row gap-x-[16px] text-text-primary-light dark:text-text-primary-dark">
-
-              {isEditProfileModalOpen ? <SelfProfileEditSection profileData={profileData} isMobile={isMobile}  leftArrowClickHandler={closeEditProfileModal}/> :   <>
+    <div className="w-full min-h-screen text-text-primary-light dark:text-text-primary-dark">
+      {isMobile && isEditProfileModalOpen ? (
+        <div className="w-full px-[4%] pt-5 text-text-primary-light dark:text-text-primary-dark">
+          <SelfProfileEditSection
+            profileData={profileData}
+            isMobile={isMobile}
+            leftArrowClickHandler={closeEditProfileModal}
+          />
+        </div>
+      ) : (
+        <Layout stickyHeader={true} stickyHeroSection={true} excludeFooter={true}>
+          {/* {(isFollowPosting || isUnFollowPosting) && <FullScreenSpinner />} */}
+          <div className="profile w-full px-[4%] md:px-[64px] mx-auto max-w-[1440px] border-t py-[20px] flex flex-col md:flex-row gap-x-[16px] text-text-primary-light dark:text-text-primary-dark">
+            {isEditProfileModalOpen ? (
+              <SelfProfileEditSection
+                profileData={profileData}
+                isMobile={isMobile}
+                leftArrowClickHandler={closeEditProfileModal}
+              />
+            ) : (
+              <>
                 <div className="left w-full flex flex-col items-center md:w-[210px] text-text-secondary-dark dark:text-text-secondary-light">
                   {profileData && (
                     <NewProfileCard
@@ -130,7 +144,7 @@ const Profile: FC<Props> = ({ profileData, followCountData }) => {
                   )}
                 </div>
                 <div className="right flex-1">
-                  <nav className="flex w-full border-b md:border-b-0 items-start justify-between">
+                  <nav className="flex w-full border-b border-border-tertiary-light dark:border-border-tertiary-dark md:border-b-0 items-start justify-between">
                     <ul className="flex text-sm md:text-[16px] w-full md:w-auto gap-[20px] text-text-quaternary-dark leading-[24px]">
                       {tabs.map((item, index) => (
                         <li
@@ -145,8 +159,9 @@ const Profile: FC<Props> = ({ profileData, followCountData }) => {
                             }
                           }}
                           className={
-                            (tab === item ? 'text-text-secondary-dark dark:text-text-secondary-light font-semibold border-b-[3px] border-brand-color ' : '') +
-                  'flex justify-center px-[8px] py-[11px] w-[50%] md:w-auto'
+                            (tab === item
+                              ? 'text-text-secondary-dark dark:text-text-secondary-light font-semibold border-b-[3px] border-brand-color '
+                              : '') + 'flex justify-center px-[8px] py-[11px] w-[50%] md:w-auto'
                           }
                         >
                           {item}
@@ -155,8 +170,10 @@ const Profile: FC<Props> = ({ profileData, followCountData }) => {
                     </ul>
                   </nav>
                   <div className="content w-full md:pl-0 md:p-[20px] md:border text-text-primary-light dark:text-text-primary-dark border-border-tertiary-light dark:border-border-tertiary-dark mt-[20px] rounded-t-[12px]">
-                    <div className="pb-[20px] flex justify-between items-center">
-                      <h3 className="md:text-[20px]  md:pl-[20px] text-text-secondary-dark dark:text-text-secondary-light font-semibold ">{tab}</h3>
+                    <div className="pb-[20px] md:flex justify-between items-center hidden">
+                      <h3 className="md:text-[20px]  md:pl-[20px] text-text-secondary-dark dark:text-text-secondary-light font-semibold ">
+                        {tab}
+                      </h3>
                       {tab == 'Listing' && (
                         <div className="search-box w-[290px] h-[44px] hidden rounded-[4px] md:flex gap-3 items-center px-[10px] bg-bg-septenary-light dark:bg-bg-secondary-dark">
                           <SearchIcon className="h-[24px] w-[24px]" />
@@ -175,15 +192,15 @@ const Profile: FC<Props> = ({ profileData, followCountData }) => {
                         <div className="product md:pl-[20px] w-full grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-2 md:gap-4 lg:grid-cols-3 xl:grid-cols-4">
                           {data && productList.length > 0
                             ? productList.map((product) => (
-                              <ProductCard showProfilePic={false} key={product._id} product={product} />
-                            ))
+                                <ProductCard showProfilePic={false} key={product._id} product={product} />
+                              ))
                             : null}
                           {(isLoading || isSearchLoading || isFetching) &&
-                  [...Array(6)].map((_, index) => <ProductCardSkeleton key={index} />)}
+                            [...Array(6)].map((_, index) => <ProductCardSkeleton key={index} />)}
                         </div>
 
                         {!isFetching && !isSearchLoading && productList.length < 1 ? (
-                          <div className=" flex justify-center text-xl font-semibold">No Product Found!</div>
+                          <Placeholder alt="no-products" title="No Product Found!" />
                         ) : null}
 
                         {!isLoading && !isSearchLoading && data?.result && productList.length < data?.Totalcount ? (
@@ -192,58 +209,63 @@ const Profile: FC<Props> = ({ profileData, followCountData }) => {
                               className={'border-2 text-sm font-medium px-4 py-2 rounded dark:text-text-primary-dark'}
                               onClick={handleViewMore}
                             >
-                    View more
+                              View more
                             </button>
                           </div>
                         ) : null}
                       </>
                     ) : (
                       <div className="review">
-                        <nav className="border-b md:pl-[20px]">
-                          <ul className="flex gap-[12px] text-sm md:text-[16px] text-text-tertiary-light dark:text-text-septenary-light leading-[24px]">
-                            {reviewTabs.map((item, index) => (
-                              <li
-                                key={index}
-                                onClick={() => setReviewTab(item)}
-                                tabIndex={0}
-                                role="button"
-                                onKeyUp={(e) => {
-                                  if (e.key === 'Enter' || e.key === ' ') {
-                                    e.preventDefault();
-                                    setReviewTab(item);
-                                  }
-                                }}
-                                className={
-                                  (reviewTab === item
-                                    ? ' text-text-secondary-dark dark:text-text-secondary-light font-semibold  border-b-[3px] border-brand-color '
-                                    : '') + 'px-[8px] py-[11px] text-text-quaternary-dark dark:text-text-septenary-light'
-                                }
-                              >
-                                {item}
-                              </li>
-                            ))}
-                          </ul>
-                        </nav>
-                        <div className="w-full text-text-primary-light dark:text-text-primary-dark">
-                          {reviewTab == 'All' ? (
-                            <AllReviewsSection accountId={accountId || ''} />
-                          ) : reviewTab == 'From Buyers' ? (
-                            <BuyersReviewSection accountId={accountId || ''} />
-                          ) : reviewTab == 'From Sellers' ? (
-                            <SellersReviewSection accountId={accountId || ''} />
-                          ) : null}
-                        </div>
+                        <AllReviewsSection accountId={profileData.accountId || ''} />
+                        {!HIDE_SELLER_FLOW && (
+                          <>
+                            <nav className="border-b md:pl-[20px]">
+                              <ul className="flex gap-[12px] text-sm md:text-[16px] text-text-tertiary-light dark:text-text-septenary-light leading-[24px]">
+                                {reviewTabs.map((item, index) => (
+                                  <li
+                                    key={index}
+                                    onClick={() => setReviewTab(item)}
+                                    tabIndex={0}
+                                    role="button"
+                                    onKeyUp={(e) => {
+                                      if (e.key === 'Enter' || e.key === ' ') {
+                                        e.preventDefault();
+                                        setReviewTab(item);
+                                      }
+                                    }}
+                                    className={
+                                      (reviewTab === item
+                                        ? ' text-text-secondary-dark dark:text-text-secondary-light font-semibold  border-b-[3px] border-brand-color '
+                                        : '') +
+                                      'px-[8px] py-[11px] text-text-quaternary-dark dark:text-text-septenary-light'
+                                    }
+                                  >
+                                    {item}
+                                  </li>
+                                ))}
+                              </ul>
+                            </nav>
+                            <div className="w-full text-text-primary-light dark:text-text-primary-dark">
+                              {reviewTab == 'All' ? (
+                                <AllReviewsSection accountId={accountId || ''} />
+                              ) : reviewTab == 'From Buyers' ? (
+                                <BuyersReviewSection accountId={accountId || ''} />
+                              ) : reviewTab == 'From Sellers' ? (
+                                <SellersReviewSection accountId={accountId || ''} />
+                              ) : null}
+                            </div>
+                          </>
+                        )}
                       </div>
                     )}
                   </div>
                 </div>
-              </>}
-      
-            </div>
-          </Layout>
-      }
+              </>
+            )}
+          </div>
+        </Layout>
+      )}
     </div>
-    
   );
 };
 

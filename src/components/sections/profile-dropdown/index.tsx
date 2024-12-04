@@ -28,7 +28,7 @@ const ProfileDropdown: FC<Props> = ({ menuOptions, signOut }) => {
     <>
       {userInfo?._id ? (
         <>
-          <div className="flex flex-col lg:w-[200px] rounded-none">
+          <div className="flex flex-col md:w-[200px] rounded-none">
             <RedirectCard
               label={menuOptions[0].item}
               labelIcon={<ProfileIcon primaryColor={theme ? '#fff' : '#000'} />}

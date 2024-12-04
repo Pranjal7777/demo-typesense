@@ -39,7 +39,7 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
     <>
       <div
         role="button"
-        className=" card flex flex-col gap-2 sm:gap-3 hover:scale-102 transition-all duration-300 ease-in hover:cursor-pointer mobile:max-w-[100%]  w-full h-full pb-[10px] max-w-[313px]"
+        className="card flex flex-col p-1 gap-2 sm:gap-3 hover:scale-102 transition-all duration-300 ease-in hover:cursor-pointer mobile:max-w-[100%] w-full h-full pb-[10px] max-w-[313px] hover:shadow-lg"
       >
         <Link href={`/seller-profile/${userAccountId}`}>
           {showProfilePic && (
@@ -66,10 +66,10 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
                     product.firstName?.slice(1) +
                     ' ' +
                     product.lastName[0].toUpperCase() +
-                    product?.firstName?.slice(1)}
+                    product?.lastName?.slice(1)}
                 </h5>
                 {/* here we can write time coming from api or we can calculate later */}
-                <p className="text-[#57585A] dark:text-[#929293] text-[10px] md:text-xs font-normal">
+                <p className="text-text-quaternary-dark dark:text-text-senary-dark text-[10px] md:text-xs font-normal">
                   {timeSince(product.creationTs)}
                 </p>
               </div>
@@ -106,8 +106,7 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
           </div>
           <div className=" flex justify-between ">
             <div className="flex items-center">
-              <LocationSvg height="12" width="12" color={theme ? '#929293' : '#D9D9D9'} />
-              {/* <LocationSvg height="13" width="11" color="var(--brand-color)" /> */}
+              <LocationSvg height="12" width="12" color={theme ? 'var(--text-light)' : 'var(--text-secondary-color)'} />
               <div className="ml-[2px] text-[10px] leading-[15px] md:text-xs font-normal md:ml-[6px] md:leading-[18px] dark:text-text-tertiary-dark">
                 {product.city + ', ' + product.zip}
               </div>

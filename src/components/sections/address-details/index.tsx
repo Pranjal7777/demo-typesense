@@ -21,6 +21,7 @@ type Props = {
   setErrorState: React.Dispatch<React.SetStateAction<ErrorStateType>>;
   setFormData: React.Dispatch<React.SetStateAction<UserInfoType>>;
   pageType?: string;
+  setIsClickOnChange?: React.Dispatch<React.SetStateAction<boolean>>
 };
 interface AddressNote {
   value: string;
@@ -35,6 +36,7 @@ const AddressDetails: FC<Props> = ({
   setErrorState,
   setFormData,
   pageType,
+  setIsClickOnChange
 }) => {
   const { theme } = useTheme();
   const { data } = addressApi.useGetAddressAttributesQuery();
@@ -90,8 +92,8 @@ const AddressDetails: FC<Props> = ({
   };
 
   return (
-    <section className="w-full mt-3 sm:mt-0 leading-[21px] md:leading-[24px] text-text-primary-light  dark:text-text-primary-dark  address-details-section mobile:!px-4">
-      <SelectedLocation pageType={pageType} formData={formData} />
+    <section className="w-full mt-3 sm:mt-0 leading-[21px] md:leading-[24px] text-text-primary-light  dark:text-text-primary-dark  address-details-section">
+      <SelectedLocation setIsClickOnChange={setIsClickOnChange} pageType={pageType} formData={formData} />
       <LableWithTextArea
         labelClassName="font-[600]"
         error={errorState.addressLine1 ? 'Address is missing' : ''}
@@ -102,7 +104,7 @@ const AddressDetails: FC<Props> = ({
         name="addressLine1"
       />
 
-      <form className="w-full lg:grid lg:grid-cols-2 gap-4">
+      <form className="w-full grid grid-cols-1 lg:grid-cols-2 sm:gap-4">
         <FormInput
           labelClassName="font-[600]"
           error={errorState.country ? 'Country Name is missing' : ''}
@@ -171,12 +173,10 @@ const AddressDetails: FC<Props> = ({
         />
 
         <LableWithTextArea
-          error={errorState.note ? 'Comment Field is missing' : ''}
           value={formData.note}
           changeEvent={(e) => changeFormData(e)}
           labelClassName="text-[12px] lg:text-[14px]"
           mainClassName=" my-0 lg:col-start-1 lg:col-end-3"
-          required={true}
           label={'Comments'}
           name="note"
         />
@@ -196,7 +196,7 @@ const AddressDetails: FC<Props> = ({
           ) : null}
         </div>
 
-        <div className="w-full mt-[12px] text-text-primary-light dark:text-text-secondary-light  mobile:!mb-3">
+        <div className="w-full lg:mt-0 text-text-primary-light dark:text-text-secondary-light  mobile:!mb-3">
           <label className="text-[12px] md:text-[14px] sm:font-semibold" htmlFor="Business">
             Address Type*
           </label>

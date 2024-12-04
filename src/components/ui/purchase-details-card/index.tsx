@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useRef, useState } from 'react';
+import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import PurchaseProductDetails from '../purchase-card/purchaseProductDetails';
 import { appClsx } from '@/lib/utils';
 import { getFormattedDate } from '@/helper/get-formatted-date';
@@ -12,6 +12,10 @@ import FilterPopup from '../filter-popup';
 import CloseIcon from '../../../../public/assets/svg/close-icon';
 import Button from '../button';
 import { useTheme } from '@/hooks/theme';
+import ConfirmationPopup from '../confirmation-popup';
+import { Toaster } from 'sonner';
+import showToast from '@/helper/show-toaster';
+import FullScreenSpinner from '../full-screen-spinner';
 type PurchaseDetailsCardProps = {
   cardClass?: string;
   currenOrderId: string;
@@ -20,25 +24,37 @@ const PurchaseDetailsCard: FC<PurchaseDetailsCardProps> = ({
   currenOrderId,
   cardClass,
 }) => {
-
   const [selectedCancelOption, setSelectedCancelOption] = useState<string[]>([]);
-  const otherOptionRef = useRef(null);
+  const [showConfirmationPopup, setShowConfirmationPopup] = useState<boolean>(false)
+  const [otherReason, setOtherReason] = useState<string>('')  
+  const [error, setError] = useState<string>('')
   const handleCancelOptionChange = (selectedValues: string[]) => {
     setSelectedCancelOption(selectedValues);
   };
+  
+  
+  const [postDealCancel, {isLoading: isPostDealCancelLoading}] = myPurchaseApi.usePostDealCancelMutation()
+const {data: dealCancelReasons} = myPurchaseApi.useGetDealCancelReasonsQuery()
+  const cancelOptions = useMemo(() => {
+    return (
+      [
+        ...(dealCancelReasons?.data?.map((reason) => ({
+          label: reason.reason,
+          value: reason.reason,
+        })) || []),
+        { label: 'Other', value: 'Other' },
+      ]
+    );
+  }, [dealCancelReasons]);
 
-  const cancelOptions = [
-    { label: 'Its not a real post', value: 'Its not a real post' },
-    { label: 'Its prohibited on kwibal', value: 'Its prohibited on kwibal' },
-    { label: 'It may be spam', value: 'It may be spam' },
-    { label: 'Other', value: 'Other' },
-  ];
   const router = useRouter();
   const {theme} = useTheme()
   const [showCancelPopup, setShowCancelPopup] = useState(false);
   const cancelPopupCloseHandler = () => {
     setShowCancelPopup(false);
     setSelectedCancelOption([]);
+    setOtherReason('')
+    setError('')
   };
   const cancelButtonHandler = () => {
     setShowCancelPopup(true);
@@ -60,11 +76,62 @@ const PurchaseDetailsCard: FC<PurchaseDetailsCardProps> = ({
     return '';
   }, [orderDetails]);
 
+  const applyCancelHandler = () => {
+    if(selectedCancelOption?.[0] == 'Other' && otherReason == ''){
+        setError('Please specify the reason')
+        return;
+    }
+    if(selectedCancelOption?.length == 0){
+      setError('Please select the reason')
+      return;
+    }
+    setError('')
+    setShowConfirmationPopup(true)
+    setShowCancelPopup(false)
+  };
+  const confirmationPopupCloseHandler = () => {
+    setShowConfirmationPopup(false)
+    setShowCancelPopup(true)
+  }
+  const confirmationPopupConfirmHandler = async () => {
+    const reason = selectedCancelOption?.[0] == 'Other' ? otherReason : selectedCancelOption?.[0]
+    try{
+      await postDealCancel({reason:reason, orderId:currenOrderId}).unwrap();
+      showToast({message:'Deal cancelled successfully', messageType:'success'})
+      setSelectedCancelOption([])
+      setOtherReason('')  
+      setError('')
+      setShowConfirmationPopup(false);
+      setShowCancelPopup(false);
+      refetch()
+    }catch(error){
+      showToast({message:'Something went wrong', messageType:'error'})
+    }
+  }
+
+  const handleOtherReasonChange = (e:React.ChangeEvent<HTMLTextAreaElement>) => {
+    setOtherReason(e.target.value)
+    if(e.target.value != ''){   
+      setError('')
+    } 
+  }
+
+  useEffect(() => {
+    if(selectedCancelOption?.length > 0 && error && selectedCancelOption?.[0] != 'Other'){
+      setError('')
+    }
+  }, [selectedCancelOption])
+
   return (
     <>
+      {isPostDealCancelLoading && <FullScreenSpinner />}
+      <Toaster />
       {!isFetching && orderDetails && (
         <div
-          className={appClsx('sm:p-5 md:rounded-t-xl  md:border h-full flex flex-col dark:border-border-tertiary-dark border-border-tertiary-light', cardClass)}
+          className={appClsx(
+            'sm:p-5 md:rounded-t-xl  md:border h-full flex flex-col dark:border-border-tertiary-dark border-border-tertiary-light',
+            cardClass
+          )}
         >
           <div className="flex flex-col-reverse gap-3 md:gap-0 md:flex-col">
             <div className={appClsx('flex justify-between items-center')}>
@@ -139,7 +206,7 @@ const PurchaseDetailsCard: FC<PurchaseDetailsCardProps> = ({
               </div>
             )}
             <div className="mt-4">
-              {orderDetails?.data?.paymentType && <h3 className="text-base font-semibold">Payment Through</h3>}   
+              {orderDetails?.data?.paymentType && <h3 className="text-base font-semibold">Payment Through</h3>}
               {orderDetails?.data?.orderType == 'SOLD' ? (
                 <>
                   <div className="flex justify-between items-center text-sm mt-3">
@@ -218,16 +285,16 @@ const PurchaseDetailsCard: FC<PurchaseDetailsCardProps> = ({
           )}
           {showCancelPopup && (
             <div className=" fixed inset-0 w-screen h-screen bg-[#00000080]">
-              <div className=" bg-bg-septenary-light dark:bg-bg-nonary-dark p-5 rounded-2xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+              <div className=" bg-bg-septenary-light w-[90%] max-w-[400px] dark:bg-bg-nonary-dark p-5 rounded-2xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                 <CloseIcon
                   onClick={cancelPopupCloseHandler}
-                  primaryColor={theme ? '#FFF' : '#202020'} 
+                  primaryColor={theme ? '#FFF' : '#202020'}
                   height="13"
                   width="13"
                   className=" absolute right-5 top-5"
                 />
                 <FilterPopup
-                  containerClass="static p-0 bg-[#FFF]"
+                  containerClass="static p-0 bg-bg-septenary-light w-full"
                   selectedValues={selectedCancelOption}
                   options={cancelOptions}
                   onSelectionChange={handleCancelOptionChange}
@@ -235,15 +302,28 @@ const PurchaseDetailsCard: FC<PurchaseDetailsCardProps> = ({
                 />
                 {selectedCancelOption?.[0] == 'Other' && (
                   <textarea
-                    ref={otherOptionRef}
-                    placeholder="Other reasons"
+                    onChange={handleOtherReasonChange}
+                    value={otherReason}
+                    placeholder="Please specify the reason"
                     className="w-full resize-none mt-5 h-[100px] outline-none dark:bg-bg-quinary-dark dark:text-text-primary-dark dark:border-border-tertiary-dark border-border-tertiary-light p-3 border rounded-[4px] text-sm"
                   ></textarea>
                 )}
-
-                <Button className="mt-6 !mb-0 text-base font-normal"> Apply </Button>
+                {error && <span className="text-red-500 text-sm">{error}</span>}
+                <Button onClick={applyCancelHandler} className="mt-6 !mb-0 text-base font-normal">
+                  {' '}
+                  Apply{' '}
+                </Button>
               </div>
             </div>
+          )}
+          {showConfirmationPopup && (
+            <ConfirmationPopup
+              containerClassName="inset-0"
+              isOpen={showConfirmationPopup}
+              onClose={confirmationPopupCloseHandler}
+              onConfirm={confirmationPopupConfirmHandler}
+              message="Are you sure you want to cancel the deal?"
+            />
           )}
         </div>
       )}

@@ -69,6 +69,8 @@ export const GET_PURCHASE_DETAILS = 'v1/orders/details'
 // privacy policy
 export const GET_PRIVACY_POLICY_DATA = '/htmlPage';
 
+// my favorites
+export const GET_ALL_FAVORITES = 'v1/likesDislikeAsset';
 
 //strapi api
 export const STRAPI_CATEGORIES_PLP='/categories-plp';

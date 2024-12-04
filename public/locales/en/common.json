@@ -286,7 +286,6 @@
         {"image":"https://leoffer-images.s3.ap-south-1.amazonaws.com/thumbnail_Toshiba_logo_2_845b31ca40.webp"},
         {"image":"https://leoffer-images.s3.ap-south-1.amazonaws.com/thumbnail_puma_logo_logo_d5408f9232.webp"},
         {"image":"https://leoffer-images.s3.ap-south-1.amazonaws.com/thumbnail_Vector_2_4fcff258a0.webp"},
-        {"image":"https://leoffer-images.s3.ap-south-1.amazonaws.com/thumbnail_Vector_2_4fcff258a0.webp"},
         {"image":"https://leoffer-images.s3.ap-south-1.amazonaws.com/thumbnail_google_logo_c73d9253fb.webp"},
         {"image":"https://leoffer-images.s3.ap-south-1.amazonaws.com/thumbnail_Group_37751aef22.webp"},
         {"image":"https://leoffer-images.s3.ap-south-1.amazonaws.com/thumbnail_Vector_1_62615ac4b4.webp"},
@@ -407,7 +406,7 @@
     },
     "appDownloadSection": {
       "heading": "Everyone Wins on {{projectName}}",
-      "subHeading": "Unlock exclusive features when you download theEquipnow app today!",
+      "subHeading": "Unlock exclusive features when you download {{projectName}} app today!",
       "phoneNumberTitle":"Enter Your Phone Number",
       "phonePlaceHolder": "Phone Number",
       "downloadBtn": "Download App",

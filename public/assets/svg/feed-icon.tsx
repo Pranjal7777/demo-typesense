@@ -6,6 +6,7 @@ type FeedIconProps = {
   height?: string;
   primaryColor?: string;
   className?: string;
+  onClick?: () => void;
 };
 
 const FeedIcon: FC<FeedIconProps> = ({

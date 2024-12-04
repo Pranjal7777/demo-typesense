@@ -20,7 +20,7 @@ const CloseIcon: FC<CloseIconProps> = ({
       width={width}
       height={height}
       {...props}
-      className={appClsx('', className)}
+      className={appClsx('cursor-pointer', className)}
       viewBox="0 0 12 12"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

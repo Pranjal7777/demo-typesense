@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Product } from '@/store/types';
 import { STATIC_IMAGE_URL } from '@/config';
 import LocationSvg from '../../../../public/assets/svg/location';
@@ -11,19 +11,32 @@ import UserPlaceholderIcon from '../../../../public/assets/svg/user-placeholder-
 import Link from 'next/link';
 import keyDownHandler from '@/helper/key-down-handler';
 import {  formatPriceWithoutCents } from '@/utils/price-formatter';
+import HartSvg from '../../../../public/assets/svg/heart';
+import { productsApi } from '@/store/api-slices/products-api';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
+import { Toaster } from 'sonner';
+import FullScreenSpinner from '../full-screen-spinner';
+import showToast from '@/helper/show-toaster';
+import { AddressErrorType } from '@/store/types/profile-type';
 
 interface ProductCardProps {
   product: Product;
   showProfilePic?: boolean;
   isTypeSenseData?: boolean;
+  showLikeIcon?: boolean;
+  onLikeClick?: (assetId: string) => void;
+  userID?: string;
 }
 
-const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isTypeSenseData = false  }) => {
+const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isTypeSenseData = false, showLikeIcon = false, onLikeClick, userID }) => {
+  const [likeAndDislikeProduct, { isLoading: isLikeAndDislikeLoading }] = productsApi.useLikeAndDislikeProductMutation();
+   const userId = useSelector((state: RootState) => state.auth.userInfo?._id);
   const { theme } = useTheme();
   const router = useRouter();
   const userAccountId = product.accountId;
   const handleProductClick = () => {
-    router.push(`/product/${isTypeSenseData ? product.id : product._id}`);
+    router.push(`/product/${isTypeSenseData ? product.id : product.assetId || product._id}`);
   };
   const imageUrl = product?.images?.[0];
   const src =
@@ -34,12 +47,28 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
       : imageUrl.url?.includes('https')
         ? imageUrl?.url
         : `${STATIC_IMAGE_URL}/${imageUrl?.url}`;
+
+  const [isLiked, setIsLiked] = useState(product.isLiked);
+
+  const handleLike = async () => {
+    try {
+      const result = await likeAndDislikeProduct({ assetid: product.assetId || '', like: !isLiked, userId: userID || userId || '' }).unwrap();
+      showToast({ message: result?.message, messageType: 'success', position: 'bottom-right' });
+      setIsLiked(!isLiked);
+      onLikeClick?.(product.assetId || '');
+    } catch (error) {
+      const errorData = error as AddressErrorType;
+      showToast({ message: errorData?.data?.message, messageType: 'error', position: 'bottom-right' });
+    }
+  };
+
         
   return (
     <>
+      {isLikeAndDislikeLoading && <FullScreenSpinner />}
       <div
         role="button"
-        className=" card flex flex-col gap-2 sm:gap-3 hover:scale-102 transition-all duration-300 ease-in hover:cursor-pointer mobile:max-w-[100%]  w-full h-full pb-[10px] max-w-[313px]"
+        className="card flex flex-col p-1 gap-2 sm:gap-3 hover:scale-102 transition-all duration-300 ease-in hover:cursor-pointer mobile:max-w-[100%] w-full h-full pb-[10px] max-w-[313px] hover:shadow-lg"
       >
         <Link href={`/seller-profile/${userAccountId}`}>
           {showProfilePic && (
@@ -66,10 +95,10 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
                     product.firstName?.slice(1) +
                     ' ' +
                     product.lastName[0].toUpperCase() +
-                    product?.firstName?.slice(1)}
+                    product?.lastName?.slice(1)}
                 </h5>
                 {/* here we can write time coming from api or we can calculate later */}
-                <p className="text-[#57585A] dark:text-[#929293] text-[10px] md:text-xs font-normal">
+                <p className="text-text-quaternary-dark dark:text-text-senary-dark text-[10px] md:text-xs font-normal">
                   {timeSince(product.creationTs)}
                 </p>
               </div>
@@ -106,12 +135,21 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
           </div>
           <div className=" flex justify-between ">
             <div className="flex items-center">
-              <LocationSvg height="12" width="12" color={theme ? '#929293' : '#D9D9D9'} />
-              {/* <LocationSvg height="13" width="11" color="var(--brand-color)" /> */}
+              <LocationSvg height="12" width="12" color={theme ? 'var(--text-light)' : 'var(--text-secondary-color)'} />
               <div className="ml-[2px] text-[10px] leading-[15px] md:text-xs font-normal md:ml-[6px] md:leading-[18px] dark:text-text-tertiary-dark">
-                {product.city + ', ' + product.zip}
+                {product.city + ', ' + (product.zip || product?.zipCode || '')}
               </div>
             </div>
+            {showLikeIcon && (
+              <HartSvg
+                onClick={handleLike}
+                borderColor={'var(--heart-border-color)'}
+                height="18"
+                width="18"
+                color="var(--heart-fill-color)"
+                isFilled={isLiked}
+              />
+            )}
           </div>
         </div>
       </div>

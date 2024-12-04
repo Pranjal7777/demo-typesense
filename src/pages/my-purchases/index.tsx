@@ -13,6 +13,7 @@ import debounce from 'lodash.debounce';
 import FilterBarIcon from '../../../public/assets/svg/filter-bar-icon';
 import FilterPopup from '@/components/ui/filter-popup';
 import { useTheme } from '@/hooks/theme';
+import Button from '@/components/ui/button';
 
 const tabs = ['Purchased', 'Pending'];
 const MyPurchases = () => {
@@ -28,6 +29,7 @@ const [showMobileFilterPopup, setShowMobileFilterPopup] = useState(false)
 const [isMobile, setIsMobile] = useState(false);
 const [showOrderId, setShowOrderId] = useState('');
 const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+const [page, setPage] = useState(1);
 
   const handleFilterChange = (selectedValues: string[]) => {
     setSelectedFilters(selectedValues);
@@ -39,7 +41,6 @@ const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
     { label: 'Last 2 months', value: '2' },
     { label: 'Last 3 Months', value: '3' },
     { label: 'Last 4 Months', value: '4' },
-    { label: 'Last 5 Months', value: '5' },
   ];
 
   useEffect(() => {
@@ -57,12 +58,12 @@ const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
     queryParams: buildQueryString({
       ...(debouncedSearchText && { searchText: debouncedSearchText }),
       ...(selectedFilters.length > 0 && selectedFilters[0] != 'ALL' && { timeFilter: selectedFilters[0] }),
+      orderType: currenTab == 'Purchased' ? '2' : '3',
+      limit: 20,
+      page,
     }),
   });
 
-  useEffect(() => {
-    refetch();
-  }, [selectedFilters]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -188,7 +189,7 @@ const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
         <div
           className={`tab-content text-text-primary-light dark:text-text-secondary-light ${showPurchaseDetailsMobile ? 'mt-0' : 'mt-3'} ${
             currenTab == 'Pending' ? 'mt-3' : ''
-          } md:mt-5 flex gap-4 flex-1 overflow-y-scroll`}
+          } md:mt-5 flex md:gap-4 flex-1 overflow-y-scroll`}
         >
           {currenTab == 'Purchased' ? (
             <PurchaseContainer
@@ -209,6 +210,7 @@ const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
               setShowSoldDetailsMobile={setShowSoldDetailsMobile}
             />
           ) : null}
+          {/* <Button onClick={()=>setPage(prev=>prev+1)}>Next</Button> */}
         </div>
       </div>
     </div>

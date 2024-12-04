@@ -123,5 +123,18 @@ export type PurchaseOrder = {
     message: string;
     data: PurchaseOrderDetails;
   };
+
+  export type Reasons = {
+    status: number;
+    statusMsg: string;
+    _id: string;
+    reason: string;
+    userType: number;
+  };
+
+  export type DealCancelReasonsResponse = {
+    message: string;
+    data: Reasons[];
+  };
   
   

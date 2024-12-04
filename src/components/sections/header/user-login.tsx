@@ -43,8 +43,6 @@ const UserLogin: React.FC<UserLoginProps> = ({primaryColor}) => {
         setRemoveUserDataDispatch();
         toast.success('You have logged out successfully.');
         const { data } = await getGuestToken().unwrap();
-        console.log(data);
-
         setGuestTokenDispatch(data?.token);
       }
 
@@ -88,7 +86,7 @@ const UserLogin: React.FC<UserLoginProps> = ({primaryColor}) => {
         <div
           className={`${
             isHovered ? 'block' : 'hidden'
-          } hover:cursor-pointer rounded-lg p-2 !font-semibold absolute sm:mt-[0px] md:mt-[69px] left-[-55px] bg-bg-secondary-light dark:bg-bg-nonary-dark text-text-primary-light dark:text-text-primary-dark`}
+          } hover:cursor-pointer rounded-lg p-2 !font-semibold fixed z-50 sm:mt-[0px] md:mt-[69px] right-[64px] bg-bg-secondary-light dark:bg-bg-nonary-dark text-text-primary-light dark:text-text-primary-dark`}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >

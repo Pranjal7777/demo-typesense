@@ -41,7 +41,8 @@ const PurchaseProductDetails: FC<PurchaseProductDetailsProps> = ({
     if(onDescriptionClick){
       onDescriptionClick()
     }
-  }
+  }  
+
   return (
     <div className={appClsx('flex items-center gap-1', containerClass)}>
       {imageSrc &&
@@ -66,7 +67,7 @@ const PurchaseProductDetails: FC<PurchaseProductDetailsProps> = ({
         {details && <span className={appClsx('', detailsClass)}>{details}</span>}
         {description && (
           <p onClick={descriptionClickHandler} className={appClsx('', descriptionClass)}>
-            {description} {strongText && <strong className={appClsx('text-sm', strongTextClass)}>{strongText}</strong>}
+            {description} {strongText ? <strong className={appClsx('text-sm', strongTextClass)}>{strongText}</strong> : ''}
           </p>
         )}
       </div>

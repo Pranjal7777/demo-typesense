@@ -23,6 +23,7 @@ import { useAppSelector } from '@/store/utils/hooks';
 import { setCheckoutProduct } from '@/store/slices/checkout-slice';
 import { useDispatch } from 'react-redux';
 import { getChatIdentifier } from '@/helper/payment';
+import { formatPriceWithoutCents } from '@/utils/price-formatter';
 export type filteredProducts = {
   userName: string;
   timeStamp: string;
@@ -191,9 +192,10 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
                   familyName={prodCategory}
                   categoryTitle={prodTitle}
                   postTimeStamp={prodTimeStamp}
-                  price={prodPrice}
+                  price={formatPriceWithoutCents(prodPrice)}
                   timestampLabel={postingLabel}
-                  currency={currencyCode}
+                  // currency={currencyCode}
+                  assetCondition={apidata.assetCondition}
                 />
                 <div className="mobile:hidden">
                   <PdpCta

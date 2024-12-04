@@ -66,6 +66,8 @@ export const PROFILE = 'v1/profile';
 // my purchase
 export const GET_ALL_PURCHASE = 'v1/orders'
 export const GET_PURCHASE_DETAILS = 'v1/orders/details'
+export const GET_DEAL_CANCEL_REASONS = 'v1/reasons?type=6';
+export const POST_DEAL_CANCEL = 'v1/orders/cancelDeal';
 // privacy policy
 export const GET_PRIVACY_POLICY_DATA = '/htmlPage';
 

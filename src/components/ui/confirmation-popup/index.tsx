@@ -1,17 +1,17 @@
+import { appClsx } from '@/lib/utils';
 import React, { FC } from 'react';
 type Props = {
     isOpen:boolean,
     message:string,
     onClose:()=>void,
     onConfirm:()=>void,
+    containerClassName?:string
 }
-const ConfirmationPopup:FC<Props> = ({ isOpen, message, onClose, onConfirm }) => {
+const ConfirmationPopup:FC<Props> = ({ isOpen, message, onClose, onConfirm, containerClassName }) => {
   return (
     <div
-      className={`fixed z-50 flex h-[100vh] w-[100vw] items-center justify-center bg-gray-700 bg-opacity-40 ${
-        isOpen ? '' : 'hidden'
-      }`}
-    >
+      className={appClsx(`fixed z-50 flex h-[100vh] w-[100vw] items-center justify-center bg-gray-700 bg-opacity-40 ${!isOpen ? 'hidden' : ''}`,containerClassName)}
+        >
       <div className="w-[95%] max-w-[480px] relative bg-white rounded-lg p-8 shadow-lg z-[200]">
         <h2 className="font-semibold mb-4">{message}</h2>
         <div className="flex justify-end">

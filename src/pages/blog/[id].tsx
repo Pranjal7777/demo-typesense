@@ -61,18 +61,22 @@ function BlogsDetails({ post, id }: blogs_detailsProps) {
               <PageMainHeading className="!leading-[54px]">{slugData[0]?.title}</PageMainHeading>
               <div className="flex mt-5 mobile:flex-col sm:flex-col lg:flex-row ">
                 <div className="flex flex-wrap justify-center sm:justify-start">
-                  <p className="text-text-tertiary-light flex-nowrap text-nowrap">By {slugData[0]?.posted_by}</p>
-                  <p className="ml-4 text-text-tertiary-light flex-nowrap text-nowrap">{slugData[0]?.posted_date}</p>
-                  <p className="ml-4 text-text-tertiary-light flex-nowrap text-nowrap">{slugData[0]?.equipment}</p>
+                  {/* <p className="text-text-tertiary-light flex-nowrap text-nowrap">By {slugData[0]?.posted_by}</p> */}
+                  <p className=" text-text-tertiary-light flex-nowrap text-nowrap">{slugData[0]?.posted_date}</p>
+                  {/* <p className="ml-4 text-text-tertiary-light flex-nowrap text-nowrap">{slugData[0]?.equipment}</p> */}
                   <div className="ml-4 flex items-center flex-nowrap text-nowrap ">
-                    <SvgWrapper primaryColor= {theme ? '#929293' : '#57585A'} viewBox="0 0 20 15" path={SVG_PATH.EYE_ICON_BLACK}/>
+                    <SvgWrapper
+                      primaryColor={theme ? '#929293' : '#57585A'}
+                      viewBox="0 0 20 15"
+                      path={SVG_PATH.EYE_ICON_BLACK}
+                    />
                     <p className="ml-2 text-text-tertiary-light flex-nowrap text-nowrap">{slugData[0]?.views} views</p>
                   </div>
                 </div>
                 {slugData[0]?.socialLinks?.length > 0 ? (
                   <div className="flex lg:ml-7 mt-4 lg:mt-0 mobile:justify-center sm:justify-start lg">
                     {slugData[0]?.socialLinks?.map((socialLink) => (
-                      <Link href={socialLink?.link} key={socialLink?.id} className="mx-2">
+                      <Link target="_blank" href={socialLink?.link} key={socialLink?.id} className="mx-2">
                         <Image
                           className="cursor-pointer border-2 rounded-full"
                           width={32}
@@ -93,25 +97,25 @@ function BlogsDetails({ post, id }: blogs_detailsProps) {
               <div className="flex-1 max-w-[654px] order-2 lg:order-1 mt-9 lg:mt-0">
                 {slugData[0]?.blog_section?.length > 0
                   ? slugData[0]?.blog_section?.map((blogDetail) => (
-                    <>
-                      {blogDetail.title ? (
-                        <h4
-                          id={blogDetail.title}
-                          className="font-poppins font-semibold text-2xl text-[#202020] py-3 dark:text-white"
-                        >
-                          {blogDetail.title}
-                        </h4>
-                      ) : null}
+                      <>
+                        {blogDetail.title ? (
+                          <h4
+                            id={blogDetail.title}
+                            className="font-poppins font-semibold text-2xl text-[#202020] py-3 dark:text-white"
+                          >
+                            {blogDetail.title}
+                          </h4>
+                        ) : null}
 
-                      {blogDetail?.slug_paragraphs?.length > 0
-                        ? blogDetail?.slug_paragraphs.map((slug, id) => (
-                          <p className="font-poppins font-normal text-base text-[#57585A] my-5" key={id}>
-                            {slug.paragraph}
-                          </p>
-                        ))
-                        : null}
-                    </>
-                  ))
+                        {blogDetail?.slug_paragraphs?.length > 0
+                          ? blogDetail?.slug_paragraphs.map((slug, id) => (
+                              <p className="font-poppins font-normal text-base text-[#57585A] my-5" key={id}>
+                                {slug.paragraph}
+                              </p>
+                            ))
+                          : null}
+                      </>
+                    ))
                   : null}
               </div>
               <div className="flex-2 lg:ml-12 mobile:w-full sm:w-full lg:w-fit order-1 lg:order-2">
@@ -129,13 +133,14 @@ function BlogsDetails({ post, id }: blogs_detailsProps) {
                   <div className="mt-3 text-base font-normal h-[140px] overflow-hidden text-text-tertiary-light dark:text-text-tertiary-dark">
                     {slugData[0]?.blog_section[0]?.slug_paragraphs[0]?.paragraph?.slice(0, 250)}
                   </div>
-
-                  <Button
-                    className="mt-4 text-text-secondary-light max-w-[166px]"
-                    buttonType={BUTTON_TYPE_CLASSES.primary}
-                  >
-                    Learn more
-                  </Button>
+                  <Link href="https://blog.kwibal.com/blog" target="_blank">
+                    <Button
+                      className="mt-4 text-text-secondary-light max-w-[166px]"
+                      buttonType={BUTTON_TYPE_CLASSES.primary}
+                    >
+                      Learn more
+                    </Button>
+                  </Link>
                 </div>
 
                 <div className="mt-12 mobile:mt-0 max-w-full lg:max-w-[440px] border dark:border-border-tertiary-dark rounded-xl w-full p-6 ">
@@ -143,27 +148,27 @@ function BlogsDetails({ post, id }: blogs_detailsProps) {
                   <ul className="list-disc">
                     {slugData[0]?.blog_section.length > 0
                       ? slugData[0]?.blog_section.map((blogTitle, id) =>
-                        blogTitle.title ? (
-                          <li
-                            key={id}
-                            className="ml-6 mt-5 underline hover:cursor-pointer dark:text-text-tertiary-dark"
-                          >
-                            <span
-                              tabIndex={0}
-                              role="button"
-                              onKeyUp={(e) => {
-                                if (e.key === 'Enter' || e.key === ' ') {
-                                  e.preventDefault();
-                                  scrollToHeading(blogTitle.title);
-                                }
-                              }}
-                              onClick={() => scrollToHeading(blogTitle.title)}
+                          blogTitle.title ? (
+                            <li
+                              key={id}
+                              className="ml-6 mt-5 underline hover:cursor-pointer dark:text-text-tertiary-dark"
                             >
-                              {blogTitle.title}
-                            </span>
-                          </li>
-                        ) : null
-                      )
+                              <span
+                                tabIndex={0}
+                                role="button"
+                                onKeyUp={(e) => {
+                                  if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    scrollToHeading(blogTitle.title);
+                                  }
+                                }}
+                                onClick={() => scrollToHeading(blogTitle.title)}
+                              >
+                                {blogTitle.title}
+                              </span>
+                            </li>
+                          ) : null
+                        )
                       : null}
                   </ul>
                 </div>

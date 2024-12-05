@@ -28,7 +28,7 @@ const ProfileDropdown: FC<Props> = ({ menuOptions, signOut }) => {
     <>
       {userInfo?._id ? (
         <>
-          <div className="flex flex-col md:w-[200px] rounded-none">
+          <div className="flex flex-col w-full rounded-none">
             <RedirectCard
               label={menuOptions[0].item}
               labelIcon={<ProfileIcon primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} />}
@@ -95,7 +95,7 @@ const ProfileDropdown: FC<Props> = ({ menuOptions, signOut }) => {
             </div>
           </div>
 
-          <div className="block lg:hidden font-bold p-4">
+          <div className="block sm:hidden font-bold p-4">
             <hr
               className={`mt-5border-[1px] ${theme ? 'border-border-tertiary-light' : 'border-border-senary-light'}`}
             />

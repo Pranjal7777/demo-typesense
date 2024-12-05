@@ -71,6 +71,8 @@ export const POST_DEAL_CANCEL = 'v1/orders/cancelDeal';
 // privacy policy
 export const GET_PRIVACY_POLICY_DATA = '/htmlPage';
 
+// my favorites
+export const GET_ALL_FAVORITES = 'v1/likesDislikeAsset';
 
 //strapi api
 export const STRAPI_CATEGORIES_PLP='/categories-plp';

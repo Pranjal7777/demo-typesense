@@ -88,8 +88,6 @@ const Header: FC<Props> = ({
   };
 
   const { userInfo } = useAppSelector((state: RootState) => state.auth);
-  // console.log('88888888888888888888888 user in', userInfo);
-
   const sellPage = () => {
     if (userInfo) {
       // write the code to route to sell page
@@ -150,11 +148,8 @@ const Header: FC<Props> = ({
   // }, []);
 
   const activeThemeChange = () => {
-    // setActiveTheme((prev) => !prev);
     toggleTheme();
   };
-
-  // console.log(showProfileDropdown, '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
 
   const handBurgerMenuClickHandler = () => {
     setShowProfileDropdown((prev) => !prev);
@@ -163,8 +158,6 @@ const Header: FC<Props> = ({
   const handleLogin = () => {
     router.push('/login');
   };
-  //// profile drop down data end
-  // console.log('do not re render');
 
   return (
     <>
@@ -194,19 +187,20 @@ const Header: FC<Props> = ({
       >
         <div className=" max-w-[1440px] px-[64px] m-auto h-full flex items-center justify-between">
           <div className="flex items-center h-full w-[65%]">
-            <Link className="sm:mb-2" href="/">            
+            <Link className="sm:mb-2" href="/">
               <PrimaryLogo
                 primaryColor={`${
                   stickyHeaderWithSearchBox
                     ? theme
-                    ? 'var(--icon-primary-dark)'
-                    : 'var(--icon-primary-light)' :
-                     theme ?
-                       minThreshold ?
-                         'var(--icon-primary-dark)'
-                        : 'var(--icon-primary-dark)'
-                      : minThreshold ? 'var(--icon-primary-light)' : 'var(--icon-primary-dark)'
-                    
+                      ? 'var(--icon-primary-dark)'
+                      : 'var(--icon-primary-light)'
+                    : theme
+                    ? minThreshold
+                      ? 'var(--icon-primary-dark)'
+                      : 'var(--icon-primary-dark)'
+                    : minThreshold
+                    ? 'var(--icon-primary-light)'
+                    : 'var(--icon-primary-dark)'
                 }`}
               />
             </Link>
@@ -216,7 +210,7 @@ const Header: FC<Props> = ({
                 {
                   // isLoading ? "Loading..." : isError ? "error" :
                   // data && (
-                    categories?.data
+                  categories?.data
                     ?.slice(
                       0,
                       windowWidth > 1440
@@ -260,14 +254,15 @@ const Header: FC<Props> = ({
                     color={`${
                       stickyHeaderWithSearchBox
                         ? theme
-                        ? 'var(--icon-primary-dark)'
-                        : 'var(--icon-primary-light)' :
-                         theme ?
-                           minThreshold ?
-                             'var(--icon-primary-dark)'
-                            : 'var(--icon-primary-dark)'
-                          : minThreshold ? 'var(--icon-primary-light)' : 'var(--icon-primary-dark)'
-                        
+                          ? 'var(--icon-primary-dark)'
+                          : 'var(--icon-primary-light)'
+                        : theme
+                        ? minThreshold
+                          ? 'var(--icon-primary-dark)'
+                          : 'var(--icon-primary-dark)'
+                        : minThreshold
+                        ? 'var(--icon-primary-light)'
+                        : 'var(--icon-primary-dark)'
                     }`}
                   />
 
@@ -280,7 +275,7 @@ const Header: FC<Props> = ({
           <div className=" h-full flex items-center justify-center gap-4">
             <HydrationGuard>
               {userInfo && (
-                <div className="hidden md:flex gap-6 mr-8">
+                <div className="hidden md:flex gap-6 ">
                   {/* <div className="cursor-pointer relative">
                     <MessageIcon
                       className="hover:scale-105"
@@ -298,43 +293,45 @@ const Header: FC<Props> = ({
                     />
                   </div> */}
                   {/* for like route */}
-                  {/* <div className="cursor-pointer">
+                  <div className="cursor-pointer">
                     <FeedsIcon
+                      onClick={() => router.push('/my-favorites')}
                       className="hover:scale-105"
                       primaryColor={`${
                         stickyHeaderWithSearchBox
                           ? theme
-                          ? 'var(--icon-primary-dark)'
-                          : 'var(--icon-primary-light)' :
-                           theme ?
-                             minThreshold ?
-                               'var(--icon-primary-dark)'
-                              : 'var(--icon-primary-dark)'
-                            : minThreshold ? 'var(--icon-primary-light)' : 'var(--icon-primary-dark)'
-                          
-                      }`}
-                    />
-                  </div> */}
-                  {
-                    !HIDE_SELLER_FLOW && <div className="cursor-pointer relative">
-                    <NotificationIcon
-                      className="hover:scale-105"
-                      primaryColor={`${
-                        stickyHeaderWithSearchBox
-                          ? theme
-                          ? 'var(--icon-primary-dark)'
-                          : 'var(--icon-primary-light)' :
-                           theme ?
-                             minThreshold ?
-                               'var(--icon-primary-dark)'
-                              : 'var(--icon-primary-dark)'
-                            : minThreshold ? 'var(--icon-primary-light)' : 'var(--icon-primary-dark)'
-                          
+                            ? 'var(--icon-primary-dark)'
+                            : 'var(--icon-primary-light)'
+                          : theme
+                          ? minThreshold
+                            ? 'var(--icon-primary-dark)'
+                            : 'var(--icon-primary-dark)'
+                          : minThreshold
+                          ? 'var(--icon-primary-light)'
+                          : 'var(--icon-primary-dark)'
                       }`}
                     />
                   </div>
-                  }
-              
+                  {!HIDE_SELLER_FLOW && (
+                    <div className="cursor-pointer relative">
+                      <NotificationIcon
+                        className="hover:scale-105"
+                        primaryColor={`${
+                          stickyHeaderWithSearchBox
+                            ? theme
+                              ? 'var(--icon-primary-dark)'
+                              : 'var(--icon-primary-light)'
+                            : theme
+                            ? minThreshold
+                              ? 'var(--icon-primary-dark)'
+                              : 'var(--icon-primary-dark)'
+                            : minThreshold
+                            ? 'var(--icon-primary-light)'
+                            : 'var(--icon-primary-dark)'
+                        }`}
+                      />
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -343,14 +340,15 @@ const Header: FC<Props> = ({
                   primaryColor={`${
                     stickyHeaderWithSearchBox
                       ? theme
-                      ? 'var(--icon-primary-dark)'
-                      : 'var(--icon-primary-light)' :
-                       theme ?
-                         minThreshold ?
-                           'var(--icon-primary-dark)'
-                          : 'var(--icon-primary-dark)'
-                        : minThreshold ? 'var(--icon-primary-light)' : 'var(--icon-primary-dark)'
-                      
+                        ? 'var(--icon-primary-dark)'
+                        : 'var(--icon-primary-light)'
+                      : theme
+                      ? minThreshold
+                        ? 'var(--icon-primary-dark)'
+                        : 'var(--icon-primary-dark)'
+                      : minThreshold
+                      ? 'var(--icon-primary-light)'
+                      : 'var(--icon-primary-dark)'
                   }`}
                 />
               ) : (
@@ -434,14 +432,15 @@ const Header: FC<Props> = ({
                 primaryColor={`${
                   stickyHeaderWithSearchBox
                     ? theme
-                    ? 'var(--icon-primary-dark)'
-                    : 'var(--icon-primary-light)' :
-                     theme ?
-                       minThreshold ?
-                         'var(--icon-primary-dark)'
-                        : 'var(--icon-primary-dark)'
-                      : minThreshold ? 'var(--icon-primary-light)' : 'var(--icon-primary-dark)'
-                    
+                      ? 'var(--icon-primary-dark)'
+                      : 'var(--icon-primary-light)'
+                    : theme
+                    ? minThreshold
+                      ? 'var(--icon-primary-dark)'
+                      : 'var(--icon-primary-dark)'
+                    : minThreshold
+                    ? 'var(--icon-primary-light)'
+                    : 'var(--icon-primary-dark)'
                 }`}
               />
             </Link>
@@ -466,7 +465,7 @@ const Header: FC<Props> = ({
                       {loginOrUserName.login}
                     </span>
                   </Link>
-                ) }
+                )}
               </HydrationGuard>
             </div>
           </div>

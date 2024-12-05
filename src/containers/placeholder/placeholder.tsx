@@ -40,7 +40,7 @@ const Placeholder: FC<Props> = ({
       {title && (
         <p
           className={appClsx(
-            'text-text-primary-light dark:text-text-primary-dark md:text-[28px] text-[20px] font-medium',
+            'text-text-primary-light dark:text-text-primary-dark md:text-[28px] text-[20px] text-center font-medium',
             titleClassName
           )}
         >
@@ -50,7 +50,7 @@ const Placeholder: FC<Props> = ({
       {description && (
         <p
           className={appClsx(
-            'text-text-quaternary-dark dark:text-text-senary-dark text-sm md:text-base font-medium',
+            'text-text-quaternary-dark dark:text-text-senary-dark text-sm md:text-base text-center',
             descriptionClassName
           )}
         >

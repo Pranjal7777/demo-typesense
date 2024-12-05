@@ -25,7 +25,7 @@ export type Props = {
 const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shareTitle, isProductLiked, setTotalLikeCount }) => {
   const route = useRouter();
   const { id } = route.query;
-  const [likeAndDislikeProduct] = productsApi.useLikeAndDislikeProductMutation();
+  const [likeAndDislikeProduct, { isLoading: isLikeAndDislikeLoading }] = productsApi.useLikeAndDislikeProductMutation();
   const [isLoading, setIsLoading] = useState(false);
   const [isHoveringCTAs, setIsHoveringCTAs] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -121,27 +121,17 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
 
   const handleLike = async () => {
     if (isLoggedIn) {
-      // Optimistically updating UI immediately
-      const newLikeState = !isLiked;
-      setIsLiked(newLikeState);
-      setTotalLikeCount(prev => newLikeState ? prev + 1 : prev - 1);
-
       try {
+        const newLikeState = !isLiked;
         if (typeof userID === 'string' && typeof id === 'string') {
           const userId: string = userID;
           const assetId: string = id;
           const result = await likeAndDislikeProduct({ assetid: assetId, like: newLikeState, userId }).unwrap();
+          setIsLiked(newLikeState);
+          setTotalLikeCount((prev) => (newLikeState ? prev + 1 : prev - 1));
           toast.success(result.message);
-        } else {
-          console.error(userID + 'or' + id + 'is not string');
-          // Reverting changes if validation fails
-          setIsLiked(!newLikeState);
-          setTotalLikeCount(prev => newLikeState ? prev - 1 : prev + 1);
         }
       } catch (error) {
-        // Reverting changes if API call fails
-        setIsLiked(!newLikeState);
-        setTotalLikeCount(prev => newLikeState ? prev - 1 : prev + 1);
         toast.error('Error updating like count');
       }
     } else {
@@ -170,6 +160,7 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
 
   return (
     <>
+      {isLikeAndDislikeLoading && <FullScreenSpinner />}
       <div
         className={appClsx(
           ' w-full gap-1 lg:h-full mobile:max-h-1/2 flex flex-col lg:flex-row-reverse justify-between',

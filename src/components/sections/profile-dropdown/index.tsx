@@ -28,53 +28,52 @@ const ProfileDropdown: FC<Props> = ({ menuOptions, signOut }) => {
     <>
       {userInfo?._id ? (
         <>
-          <div className="flex flex-col md:w-[200px] rounded-none">
+          <div className="flex flex-col w-full rounded-none">
             <RedirectCard
               label={menuOptions[0].item}
-              labelIcon={<ProfileIcon primaryColor={theme ? '#fff' : '#000'} />}
+              labelIcon={<ProfileIcon primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} />}
               linkUrl={'/profile'}
-              actionIcon={<RightArrowRoundedEdge primaryColor={theme ? '#fff' : '#000'} height="11" width="7" />}
+              actionIcon={<RightArrowRoundedEdge primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} height="11" width="7" />}
             />
 
             <RedirectCard
               label={menuOptions[2].item}
-              labelIcon={<HomeIcon primaryColor={theme ? '#fff' : '#000'} />}
+              labelIcon={<HomeIcon primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} />}
               linkUrl={'/profile/address'}
-              actionIcon={<RightArrowRoundedEdge primaryColor={theme ? '#fff' : '#000'} height="11" width="7" />}
+              actionIcon={<RightArrowRoundedEdge primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} height="11" width="7" />}
             />
 
             <RedirectCard
               label={menuOptions[3].item}
-              labelIcon={<ShoppingBagIcon primaryColor={theme ? '#fff' : '#000'} />}
+              labelIcon={<ShoppingBagIcon primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} />}
               linkUrl={'/my-purchases'}
-              actionIcon={<RightArrowRoundedEdge primaryColor={theme ? '#fff' : '#000'} height="11" width="7" />}
-            />
-
-            {/* <RedirectCard
-              label={menuOptions[5].item}
-              labelIcon={<HartSvg height="24" width="24" color={theme ? '#fff' : '#000'} />}
-              linkUrl={'/'}
-              actionIcon={<RightArrowRoundedEdge primaryColor={theme ? '#fff' : '#000'} height="11" width="7" />}
-            /> */}
-
-            {
-              !HIDE_SELLER_FLOW && <>
-              <RedirectCard
-              label={menuOptions[7].item}
-              labelIcon={<WalletIcon primaryColor={theme ? '#fff' : '#000'} />}
-              linkUrl={'/'}
-              actionIcon={<RightArrowRoundedEdge primaryColor={theme ? '#fff' : '#000'} height="11" width="7" />}
+              actionIcon={<RightArrowRoundedEdge primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} height="11" width="7" />}
             />
 
             <RedirectCard
-              label={menuOptions[6].item}
-              labelIcon={<DollarIcon primaryColor={theme ? '#fff' : '#000'} />}
-              linkUrl={'/'}
-              actionIcon={<RightArrowRoundedEdge primaryColor={theme ? '#fff' : '#000'} height="11" width="7" />}
+              label={menuOptions[5].item}
+              labelIcon={<HartSvg height="24" width="24" borderColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} />}
+              linkUrl={'/my-favorites'}
+              actionIcon={<RightArrowRoundedEdge primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} height="11" width="7" />}
             />
-              </>
-            }
 
+            {!HIDE_SELLER_FLOW && (
+              <>
+                <RedirectCard
+                  label={menuOptions[7].item}
+                  labelIcon={<WalletIcon primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} />}
+                  linkUrl={'/'}
+                  actionIcon={<RightArrowRoundedEdge primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} height="11" width="7" />}
+                />
+
+                <RedirectCard
+                  label={menuOptions[6].item}
+                  labelIcon={<DollarIcon primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} />}
+                  linkUrl={'/'}
+                  actionIcon={<RightArrowRoundedEdge primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} height="11" width="7" />}
+                />
+              </>
+            )}
 
             <div
               className="  items-center rounded-b-md hover:bg-bg-tertiary-light dark:hover:bg-bg-tertiary-dark"
@@ -90,13 +89,13 @@ const ProfileDropdown: FC<Props> = ({ menuOptions, signOut }) => {
             >
               <RedirectCard
                 label={menuOptions[9].item}
-                labelIcon={<SignOutIcon primaryColor={theme ? '#fff' : '#000'} />}
-                actionIcon={<RightArrowRoundedEdge primaryColor={theme ? '#fff' : '#000'} height="11" width="7" />}
+                labelIcon={<SignOutIcon primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} />}
+                actionIcon={<RightArrowRoundedEdge primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} height="11" width="7" />}
               />
             </div>
           </div>
 
-          <div className="block lg:hidden font-bold p-4">
+          <div className="block sm:hidden font-bold p-4">
             <hr
               className={`mt-5border-[1px] ${theme ? 'border-border-tertiary-light' : 'border-border-senary-light'}`}
             />

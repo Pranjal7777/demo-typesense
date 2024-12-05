@@ -165,10 +165,10 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
     const url = routeToCategories({ category: { id: categoryId } });
     router.push({
       pathname: url,
-      query: { 
-        selectedCategory: hit?.title.en,
-        search: search || undefined
-      }
+      query: {
+        selectedCategory: hit?.mainCategory,
+        search: search || undefined,
+      },
     });
   };
 

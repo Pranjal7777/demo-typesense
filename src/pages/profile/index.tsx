@@ -28,7 +28,6 @@ type Props = {
 };
 
 const Profile: FC<Props> = ({ profileData, followCountData }) => {
-  console.log('profileData', profileData);
   const router = useRouter();
   const { id } = router.query as { id?: string };
   const accountId = useMemo(() => id, [id]);

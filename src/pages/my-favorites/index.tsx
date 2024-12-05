@@ -13,6 +13,7 @@ import { useRouter } from 'next/router';
 import { useTheme } from '@/hooks/theme';
 import { Product } from '@/store/types';
 import Placeholder from '@/containers/placeholder/placeholder';
+import { NO_LIKES } from '../../../public/images/placeholder';
 
 const MyFavorites = ({ profileData }: { profileData: SellerProfileType }) => {
   const router = useRouter();
@@ -81,7 +82,7 @@ const MyFavorites = ({ profileData }: { profileData: SellerProfileType }) => {
         ) : null}
 
         {allFavorites.length === 0 && (
-          <Placeholder containerClassName="mt-20" title="You haven't saved anything yet!" description="Your favorite products will appear here as you like them." />
+          <Placeholder src={NO_LIKES} containerClassName="mt-20" title="You haven't added anything to your favorites!" description="Your favorite products will appear here as you like them." />
         )}
       </div>
     </div>

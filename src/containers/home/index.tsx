@@ -1,6 +1,6 @@
 
 import dynamic from 'next/dynamic';
-import React, { FC, useEffect, useLayoutEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { IMAGES } from '@/lib/images';
 import { convertRTKQueryErrorToString } from '@/helper/convert-rtk-query-error-to-string';

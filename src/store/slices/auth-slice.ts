@@ -32,8 +32,8 @@ export const authSlice = createSlice({
     setGuestTokenDispatch: (state: AuthInitialState, action: PayloadAction<Token>) => {
       state.token = action.payload;
       localStorage.setItem('token', JSON.stringify(action.payload));
-      setCookie(ACCESS_TOKEN, (action?.payload?.accessToken), { expires: 1 });
-      setCookie(REFRESH_ACCESS_TOKEN, (action?.payload?.refreshToken), { expires: 1 });
+      setCookie(ACCESS_TOKEN, action?.payload?.accessToken, { expires: 1 });
+      setCookie(REFRESH_ACCESS_TOKEN, action?.payload?.refreshToken, { expires: 1 });
     },
 
     setOtpVerificationDetailsDispatch: (
@@ -110,6 +110,17 @@ export const authSlice = createSlice({
       state.categoriesWithChildren = action.payload;
       localStorage.setItem('categoriesWithChildren', JSON.stringify(action.payload));
     },
+    setUpdateAccessTokenDispatch: (
+      state: AuthInitialState,
+      action: PayloadAction<{ accessToken: string; accessExpireAt: number }>
+    ) => {
+      setCookie(ACCESS_TOKEN, action.payload.accessToken, { expires: action.payload.accessExpireAt });
+      state.token = {
+        accessToken: action.payload.accessToken,
+        accessExpireAt: action.payload.accessExpireAt,  
+        refreshToken: state.token?.refreshToken || ''
+      };
+    },
 
     // logout: (state) => {
     //   state.userInfo = null;
@@ -117,4 +128,4 @@ export const authSlice = createSlice({
   },
 });
 
-export const { setRemoveUserDataDispatch,setGuestTokenDispatch } = authSlice.actions;
+export const { setRemoveUserDataDispatch,setGuestTokenDispatch, setUpdateAccessTokenDispatch } = authSlice.actions;

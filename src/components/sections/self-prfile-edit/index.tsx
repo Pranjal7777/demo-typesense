@@ -25,6 +25,7 @@ import showToast from '@/helper/show-toaster';
 import UserPlaceholderIcon from '../../../../public/assets/svg/user-placeholder-icon';
 import { STATIC_IMAGE_URL } from '@/config';
 import { selfProfileApi } from '@/store/api-slices/profile/self-profile';
+import OtpVerification from './otp-verification';
 
 type SelfProfileEditSectionProps = {
   profileData?: SellerProfileType;
@@ -55,10 +56,13 @@ export type ErrorMessages = {
   email: string;
   phoneNumber: string;
 };
+export type VerificationDataType = {
+  expiryTime: number;
+  verificationId :string;
+};
 
 const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, leftArrowClickHandler, isMobile }) => {
   const [editProfilePicUrl, setEditProfilePicUrl] = useState('');
-  console.log(editProfilePicUrl, 'mir profile url ');
   const { theme } = useTheme();
   const initialErrorState: EditErrorStateType = {
     firstName: false,
@@ -105,12 +109,10 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
   });
   const [isValidating, setIsValidating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [otpError, setOtpError] = useState('');
 
   const [editProfileFormData, setEditProfileFormData] = useState<EditFormDataType>(initialEditProfileFormData);
-  console.log(editProfileFormData, 'mir edit profile form data');
-  const [verificationData, setVerificationData] = useState(null);
-  console.log(verificationData, 'verificationdata');
-  
+  const [verificationData, setVerificationData] = useState<VerificationDataType | null>(null);
 
   const changeFormData = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -142,8 +144,6 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
     setEditProfileFormData((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  console.log(editProfileFormData, 'mir lol');
-
   const onPhoneChange = (value: string, data: { dialCode: string; name: string }) => {
     const countryCode = `+${data.dialCode}`;
     const phoneNumber = value.substring(countryCode.length - 1);
@@ -168,10 +168,11 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
   const [updateEmail] = selfProfileApi.useUpdateEmailMutation();
   const [updatePhoneNumber] = selfProfileApi.useUpdatePhoneNumberMutation();
   const [sendVerificationCodeForChangeNumber] = selfProfileApi.useSendVerificationCodeForChangeNumberMutation()
+  const [verifyVerificationCode] = selfProfileApi.useVerifyVerificationCodeMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentEditField, setCurrentEditField] = useState<string | null>(null);
   const [showCongratulationModal, setShowCongratulationModal] = useState(false);
-  console.log(congratulationMsg, 'mir congratulationMsg');
+  const [showOtpVerification, setShowOtpVerification] = useState(false);
 
   const openModal = (field: string) => {
     setIsModalOpen(true);
@@ -183,6 +184,8 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
     setEditProfileFormData(initialEditProfileFormData);
     setErrorState(initialErrorState);
     setCongratulationMsg('');
+    setShowOtpVerification(false);
+    setVerificationData(null);
   };
   const updateButtonHandler = async () => {
     if (currentEditField == 'username') {
@@ -195,14 +198,11 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
         };
         const updateUsernameMsg = await updateUserName(requestPayload);
         setCongratulationMsg(updateUsernameMsg?.data?.message || '');
-        // setInitialEditProfileFormData((prevState) => ({ ...prevState, username: editProfileFormData.username }));
-        // setUpdatedFields((prevState) => [...prevState, 'username']);
-        console.log(data, 'mir user validate data');
       } catch (error) {
         const errorData = error as { data: { message: string } };
         setErrorState((prevState) => ({ ...prevState, username: true }));
         setErrorMessages((prevState) => ({ ...prevState, username: errorData?.data?.message }));
-        console.log(errorData?.data?.message, 'mir user validate error');
+        console.log(errorData?.data?.message, 'user name validate error');
         return;
       } finally {
         setIsValidating(false);
@@ -219,7 +219,6 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
         // setUpdatedFields((prevState) => [...prevState, 'email']);
         const updateEmailMsg = await updateEmail({ newEmail: requestPayloadForValidEmail.email });
         setCongratulationMsg(updateEmailMsg?.data?.message || '');
-        console.log(data, 'mir email validate data');
       } catch (error) {
         const errorData = error as { data: { message: string } };
         setErrorState((prevState) => ({ ...prevState, email: true }));
@@ -244,12 +243,19 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
           trigger: 3,
           userId: profileData?._id || '',
         };
-        const verificationData = await sendVerificationCodeForChangeNumber(requestPayloadForSendVerificationCode);
-        setVerificationData(verificationData.data.data);
+          const verificationData = await sendVerificationCodeForChangeNumber(requestPayloadForSendVerificationCode);
+          if(verificationData.error){
+            const errorData = verificationData.error as { data: { message: string } };
+            setErrorState((prevState) => ({ ...prevState, phoneNumber: true }));
+            setErrorMessages((prevState) => ({ ...prevState, phoneNumber: errorData?.data?.message }));
+          }else{
+            setVerificationData(verificationData.data.data);
+            setShowOtpVerification(true);
+          }
+        
         // setInitialEditProfileFormData((prevState) => ({ ...prevState, phoneNumber: editProfileFormData.phoneNumber,countryCode:editProfileFormData.countryCode }));
         // setUpdatedFields((prevState) => [...prevState, 'phoneNumber']);
       } catch (error) {
-        console.log(error);
         const errorData = error as { data: { message: string } };
         setErrorState((prevState) => ({ ...prevState, phoneNumber: true }));
         setErrorMessages((prevState) => ({ ...prevState, phoneNumber: errorData?.data?.message }));
@@ -259,11 +265,12 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
         setIsValidating(false);
       }
     }
-    setShowCongratulationModal(true);
+    if(currentEditField !== 'phoneNumber'){
+      setShowCongratulationModal(true);
+    }
   };
 
   const saveButtonHandler = async () => {
-    console.log('mir save button handler');
     if (updatedFields.length == 0 && !editProfilePicUrl) {
       showToast({ message: 'Please select at least one field to update', messageType: 'info' });
       return;
@@ -281,7 +288,6 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
         ...requestPayload,
         ...(editProfilePicUrl && { profilePic: editProfilePicUrl }),
       }).unwrap();
-      console.log(data, 'mir update profile data');
       showToast({ message: 'Profile updated successfully', messageType: 'success' });
     } catch (error) {
       const errorData = error as { data: { message: string } };
@@ -289,11 +295,18 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
         message: errorData?.data?.message || 'Something went wrong please try after sometime',
         messageType: 'error',
       });
-      console.log(error);
     } finally {
       setIsUpdating(false);
     }
   };
+const onVerificationSuccess = () => {
+  setShowOtpVerification(false);
+  setShowCongratulationModal(true);
+  setVerificationData(null);
+}
+  // const verifyOtpHandler = async () => {
+  //   const data = await verifyVerificationCode({verificationId: verificationData?.verificationId || '', otp: otp}).unwrap();
+  // }
 
   return (
     <div className="text-text-primary-light dark:text-text-primary-dark w-full">
@@ -465,8 +478,17 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
           className=" text-text-primary-light dark:text-text-primary-dark dark:bg-bg-nonary-dark rounded-[10px] w-[95%] max-w-[456px] h-fit p-5"
           onClose={closeModal}
         >
-          {showCongratulationModal ? (
-            <div className="flex flex-col items-center gap-y-4 text-text-primary-light dark:text-text-primary-dark">
+          {showOtpVerification ? (
+            <OtpVerification
+              verificationData={verificationData}
+              setVerificationData={setVerificationData}
+              countryCode={editProfileFormData?.countryCode || ''}
+              phoneNumber={editProfileFormData?.phoneNumber || ''}
+              onVerificationSuccess={onVerificationSuccess}
+              setShowOtpVerification={setShowOtpVerification}
+            />
+          ) : showCongratulationModal ? (
+            <div className="flex flex-col dark:bg-bg-nonary-dark items-center gap-y-4 text-text-primary-light dark:text-text-primary-dark">
               <ImageContainer
                 className="h-[168px] w-[168px] md:h-[200px] md:w-[200px]"
                 height={200}
@@ -480,8 +502,9 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
                   ? congratulationMsg
                   : currentEditField == 'profilePic'
                   ? `you have successfully changed your Profile picture. Please save your changes to update your profile picture.`
-                  : `you have successfully changed your ${currentEditField} please check your email address to get updated`}
-
+                  : `you have successfully changed your ${currentEditField} ${
+                      currentEditField == 'phoneNumber' ? '' : 'please check your email address to get updated'
+                    }`}
               </p>
             </div>
           ) : (
@@ -509,30 +532,41 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
           className=" text-text-primary-light dark:text-text-primary-dark dark:bg-bg-primary-dark  rounded-[0px] flex flex-col min-w-screen min-h-screen p-5"
           onClose={closeModal}
         >
-          <EditPopup
-            showLeftArrow={true}
-            leftArrowClickHandler={closeModal}
-            setEditProfilePicUrl={setEditProfilePicUrl}
-            setShowCongratulationModal={setShowCongratulationModal}
-            containerClassName="flex-1 flex flex-col"
-            formInputClassName="dark:bg-bg-primary-dark"
-            isValidating={isValidating}
-            errorMessages={errorMessages}
-            onPhoneChange={onPhoneChange}
-            changeFormData={changeFormData}
-            errorState={errorState}
-            editProfileFormData={editProfileFormData}
-            currentEditField={currentEditField}
-            updateButtonHandler={updateButtonHandler}
-          />
+          {showOtpVerification ? (
+            <OtpVerification
+              setShowOtpVerification={setShowOtpVerification}
+              verificationData={verificationData}
+              setVerificationData={setVerificationData}
+              countryCode={editProfileFormData?.countryCode || ''}
+              phoneNumber={editProfileFormData?.phoneNumber || ''}
+              onVerificationSuccess={onVerificationSuccess}
+            />
+          ) : (
+            <EditPopup
+              showLeftArrow={true}
+              leftArrowClickHandler={closeModal}
+              setEditProfilePicUrl={setEditProfilePicUrl}
+              setShowCongratulationModal={setShowCongratulationModal}
+              containerClassName="flex-1 flex flex-col"
+              formInputClassName="dark:bg-bg-primary-dark"
+              isValidating={isValidating}
+              errorMessages={errorMessages}
+              onPhoneChange={onPhoneChange}
+              changeFormData={changeFormData}
+              errorState={errorState}
+              editProfileFormData={editProfileFormData}
+              currentEditField={currentEditField}
+              updateButtonHandler={updateButtonHandler}
+            />
+          )}
           {showCongratulationModal && (
             <Model
               modelClassName=""
               closeIconClassName="absolute right-5 top-5 cursor-pointer "
-              className=" text-text-primary-light dark:text-text-primary-dark rounded-[10px] w-[95%] max-w-[456px] h-fit p-5"
+              className=" text-text-primary-light dark:bg-bg-nonary-dark dark:text-text-primary-dark rounded-[10px] w-[95%] max-w-[456px] h-fit p-5"
               onClose={closeModal}
             >
-              <div className="flex flex-col items-center gap-y-4">
+              <div className="flex dark:bg-bg-nonary-dark flex-col items-center gap-y-4">
                 <ImageContainer
                   className="h-[168px] w-[168px] md:h-[200px] md:w-[200px]"
                   height={200}
@@ -546,7 +580,9 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
                     ? congratulationMsg
                     : currentEditField == 'profilePic'
                     ? `you have successfully changed your Profile picture. Please save your changes to update your profile picture.`
-                    : `you have successfully changed your ${currentEditField} please check your email address to get updated`}
+                    : `you have successfully changed your ${currentEditField} ${
+                        currentEditField == 'phoneNumber' ? '' : 'please check your email address to get updated'
+                      }`}
                 </p>
               </div>
             </Model>

@@ -298,6 +298,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         profileData = profileDetails.data;
       } else {
         console.error(`Failed to fetch profile data: ${profileRes.status} ${profileRes.statusText}`);
+         return {
+           props: {
+             ...(await serverSideTranslations(locale as string, ['common'])),
+          destination: '/500',
+          permanent: false,
+        },
+      };
       }
       // Second API call to fetch follow count data
       if (profileData) {

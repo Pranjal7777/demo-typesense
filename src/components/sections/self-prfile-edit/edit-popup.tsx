@@ -44,17 +44,13 @@ const EditPopup: FC<EditPopupProps> = ({
 }) => {
   const {theme} = useTheme();
   const [isProfilePicUploadSuccess, setIsProfilePicUploadSuccess] = useState(false);
-  console.log(isProfilePicUploadSuccess, 'mir error messages in edit popup');
-
   const onProfilePicUploadSuccess = (data:any) => {
     setIsProfilePicUploadSuccess(true);
     setEditProfilePicUrl(data.url1);
-    console.log('Upload successful:', data);
     setShowCongratulationModal(true);
   };
   const onProfilePicUploadFailed = (error: any) => {
     setIsProfilePicUploadSuccess(true);
-    console.error('Upload failed:', error);
   };
   const onProfilePicUploadCancel = () => {
     setIsProfilePicUploadSuccess(false);

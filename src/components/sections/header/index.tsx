@@ -474,7 +474,7 @@ const Header: FC<Props> = ({
             <>
               <div className=" relative w-12 h-12 flex items-center justify-center">
                 <Link className="relative w-12 h-12 flex items-center justify-center" href="/">
-                  <LeftArrowIcon height="15" width="15" primaryColor={theme ? '#FFFFFF' : '#202020'} />
+                  <LeftArrowIcon className='hover:cursor-pointer absolute left-0' height="18" width="18" primaryColor={theme ? '#FFFFFF' : '#202020'} />
                   {/* <Image
                     className="hover:cursor-pointer hover:scale-102 absolute left-1 dark:hidden"
                     width={15}

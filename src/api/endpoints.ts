@@ -77,3 +77,4 @@ export const GET_ALL_FAVORITES = 'v1/likesDislikeAsset';
 //strapi api
 export const STRAPI_CATEGORIES_PLP='/categories-plp';
 export const STRAPI_PRIVACY_POLICY='/privacy-policy';
+export const STRAPI_TERMS_OF_SERVICE = '/terms-of-service';

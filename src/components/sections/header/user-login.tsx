@@ -83,15 +83,17 @@ const UserLogin: React.FC<UserLoginProps> = ({primaryColor}) => {
           </div>
         </div>
 
-        <div
-          className={`${
-            isHovered ? 'block' : 'hidden'
-          } hover:cursor-pointer w-full max-w-[220px] rounded-lg p-2 !font-semibold fixed z-50 sm:mt-[0px] md:mt-[69px] right-[64px] bg-bg-secondary-light dark:bg-bg-nonary-dark text-text-primary-light dark:text-text-primary-dark`}
+        {
+          isHovered && (
+            <div
+          className={`hover:cursor-pointer !min-w-[230px] rounded-lg p-2 !font-semibold absolute z-50 sm:mt-[0px] md:mt-[69px] right-0 bg-bg-secondary-light dark:bg-bg-nonary-dark text-text-primary-light dark:text-text-primary-dark`}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          <ProfileDropdown menuOptions={menuOptions} signOut={signOut} />
-        </div>
+              <ProfileDropdown menuOptions={menuOptions} signOut={signOut} />
+            </div>
+          )
+        }
       </div>
     </>
   );

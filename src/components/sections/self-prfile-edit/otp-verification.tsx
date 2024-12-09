@@ -53,7 +53,6 @@ const OtpVerification: FC<OtpVerificationProps> = ({
   const [isCompleted, setIsCompleted] = useState(false);
   const [verifyVerificationCode, {isLoading}] = selfProfileApi.useVerifyVerificationCodeMutation();
   const [reSendVerificationCode, {isLoading: isResendLoading}] = selfProfileApi.useReSendVerificationCodeMutation();
-//   const [timer, setTimer] = useState(otpExpiryTime);
       const refs = [
         useRef<HTMLInputElement>(null),
         useRef<HTMLInputElement>(null),

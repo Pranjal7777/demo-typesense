@@ -181,7 +181,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
           hideCancelButton
           // showProgressDetails={false}
         />
-        <Button disabled={isUploading} isLoading={isUploading} onClick={updateButtonHandler} buttonType="primary">
+        <Button className='mb-0' disabled={isUploading} isLoading={isUploading} onClick={updateButtonHandler} buttonType="primary">
           Update
         </Button>
       </div>

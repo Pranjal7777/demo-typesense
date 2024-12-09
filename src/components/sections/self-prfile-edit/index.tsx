@@ -63,7 +63,6 @@ export type VerificationDataType = {
 
 const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, leftArrowClickHandler, isMobile }) => {
   const [editProfilePicUrl, setEditProfilePicUrl] = useState('');
-  console.log(editProfilePicUrl, 'mir profile url ');
   const { theme } = useTheme();
   const initialErrorState: EditErrorStateType = {
     firstName: false,
@@ -113,10 +112,7 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
   const [otpError, setOtpError] = useState('');
 
   const [editProfileFormData, setEditProfileFormData] = useState<EditFormDataType>(initialEditProfileFormData);
-  console.log(editProfileFormData, 'mir edit profile form data');
   const [verificationData, setVerificationData] = useState<VerificationDataType | null>(null);
-  console.log(verificationData, ' mirchul verificationdata');
-  
 
   const changeFormData = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -148,8 +144,6 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
     setEditProfileFormData((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  console.log(editProfileFormData, 'mir lol');
-
   const onPhoneChange = (value: string, data: { dialCode: string; name: string }) => {
     const countryCode = `+${data.dialCode}`;
     const phoneNumber = value.substring(countryCode.length - 1);
@@ -179,14 +173,12 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
   const [currentEditField, setCurrentEditField] = useState<string | null>(null);
   const [showCongratulationModal, setShowCongratulationModal] = useState(false);
   const [showOtpVerification, setShowOtpVerification] = useState(false);
-  console.log(congratulationMsg, 'mir congratulationMsg');
 
   const openModal = (field: string) => {
     setIsModalOpen(true);
     setCurrentEditField(field);
   };
   const closeModal = () => {
-    console.log('mir close modal');
     setIsModalOpen(false);
     setShowCongratulationModal(false);
     setEditProfileFormData(initialEditProfileFormData);
@@ -206,14 +198,11 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
         };
         const updateUsernameMsg = await updateUserName(requestPayload);
         setCongratulationMsg(updateUsernameMsg?.data?.message || '');
-        // setInitialEditProfileFormData((prevState) => ({ ...prevState, username: editProfileFormData.username }));
-        // setUpdatedFields((prevState) => [...prevState, 'username']);
-        console.log(data, 'mir user validate data');
       } catch (error) {
         const errorData = error as { data: { message: string } };
         setErrorState((prevState) => ({ ...prevState, username: true }));
         setErrorMessages((prevState) => ({ ...prevState, username: errorData?.data?.message }));
-        console.log(errorData?.data?.message, 'mir user validate error');
+        console.log(errorData?.data?.message, 'user name validate error');
         return;
       } finally {
         setIsValidating(false);
@@ -230,7 +219,6 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
         // setUpdatedFields((prevState) => [...prevState, 'email']);
         const updateEmailMsg = await updateEmail({ newEmail: requestPayloadForValidEmail.email });
         setCongratulationMsg(updateEmailMsg?.data?.message || '');
-        console.log(data, 'mir email validate data');
       } catch (error) {
         const errorData = error as { data: { message: string } };
         setErrorState((prevState) => ({ ...prevState, email: true }));
@@ -256,7 +244,6 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
           userId: profileData?._id || '',
         };
           const verificationData = await sendVerificationCodeForChangeNumber(requestPayloadForSendVerificationCode);
-          console.log(verificationData.error, 'mirchul verification1 data');
           if(verificationData.error){
             const errorData = verificationData.error as { data: { message: string } };
             setErrorState((prevState) => ({ ...prevState, phoneNumber: true }));
@@ -269,7 +256,6 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
         // setInitialEditProfileFormData((prevState) => ({ ...prevState, phoneNumber: editProfileFormData.phoneNumber,countryCode:editProfileFormData.countryCode }));
         // setUpdatedFields((prevState) => [...prevState, 'phoneNumber']);
       } catch (error) {
-        console.log(error, 'mirchul phone number error');
         const errorData = error as { data: { message: string } };
         setErrorState((prevState) => ({ ...prevState, phoneNumber: true }));
         setErrorMessages((prevState) => ({ ...prevState, phoneNumber: errorData?.data?.message }));
@@ -285,7 +271,6 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
   };
 
   const saveButtonHandler = async () => {
-    console.log('mir save button handler');
     if (updatedFields.length == 0 && !editProfilePicUrl) {
       showToast({ message: 'Please select at least one field to update', messageType: 'info' });
       return;
@@ -303,7 +288,6 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
         ...requestPayload,
         ...(editProfilePicUrl && { profilePic: editProfilePicUrl }),
       }).unwrap();
-      console.log(data, 'mir update profile data');
       showToast({ message: 'Profile updated successfully', messageType: 'success' });
     } catch (error) {
       const errorData = error as { data: { message: string } };
@@ -311,7 +295,6 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
         message: errorData?.data?.message || 'Something went wrong please try after sometime',
         messageType: 'error',
       });
-      console.log(error);
     } finally {
       setIsUpdating(false);
     }
@@ -503,7 +486,6 @@ const onVerificationSuccess = () => {
               phoneNumber={editProfileFormData?.phoneNumber || ''}
               onVerificationSuccess={onVerificationSuccess}
               setShowOtpVerification={setShowOtpVerification}
-              
             />
           ) : showCongratulationModal ? (
             <div className="flex flex-col dark:bg-bg-nonary-dark items-center gap-y-4 text-text-primary-light dark:text-text-primary-dark">
@@ -520,7 +502,9 @@ const onVerificationSuccess = () => {
                   ? congratulationMsg
                   : currentEditField == 'profilePic'
                   ? `you have successfully changed your Profile picture. Please save your changes to update your profile picture.`
-                  : `you have successfully changed your ${currentEditField} please check your email address to get updated`}
+                  : `you have successfully changed your ${currentEditField} ${
+                      currentEditField == 'phoneNumber' ? '' : 'please check your email address to get updated'
+                    }`}
               </p>
             </div>
           ) : (
@@ -549,30 +533,30 @@ const onVerificationSuccess = () => {
           onClose={closeModal}
         >
           {showOtpVerification ? (
-          <OtpVerification
-            setShowOtpVerification={setShowOtpVerification}
-            verificationData={verificationData}
-            setVerificationData={setVerificationData}
-            countryCode={editProfileFormData?.countryCode || ''}
+            <OtpVerification
+              setShowOtpVerification={setShowOtpVerification}
+              verificationData={verificationData}
+              setVerificationData={setVerificationData}
+              countryCode={editProfileFormData?.countryCode || ''}
               phoneNumber={editProfileFormData?.phoneNumber || ''}
               onVerificationSuccess={onVerificationSuccess}
             />
           ) : (
             <EditPopup
               showLeftArrow={true}
-            leftArrowClickHandler={closeModal}
-            setEditProfilePicUrl={setEditProfilePicUrl}
-            setShowCongratulationModal={setShowCongratulationModal}
-            containerClassName="flex-1 flex flex-col"
-            formInputClassName="dark:bg-bg-primary-dark"
-            isValidating={isValidating}
-            errorMessages={errorMessages}
-            onPhoneChange={onPhoneChange}
-            changeFormData={changeFormData}
-            errorState={errorState}
-            editProfileFormData={editProfileFormData}
-            currentEditField={currentEditField}
-            updateButtonHandler={updateButtonHandler}
+              leftArrowClickHandler={closeModal}
+              setEditProfilePicUrl={setEditProfilePicUrl}
+              setShowCongratulationModal={setShowCongratulationModal}
+              containerClassName="flex-1 flex flex-col"
+              formInputClassName="dark:bg-bg-primary-dark"
+              isValidating={isValidating}
+              errorMessages={errorMessages}
+              onPhoneChange={onPhoneChange}
+              changeFormData={changeFormData}
+              errorState={errorState}
+              editProfileFormData={editProfileFormData}
+              currentEditField={currentEditField}
+              updateButtonHandler={updateButtonHandler}
             />
           )}
           {showCongratulationModal && (
@@ -596,7 +580,9 @@ const onVerificationSuccess = () => {
                     ? congratulationMsg
                     : currentEditField == 'profilePic'
                     ? `you have successfully changed your Profile picture. Please save your changes to update your profile picture.`
-                    : `you have successfully changed your ${currentEditField} please check your email address to get updated`}
+                    : `you have successfully changed your ${currentEditField} ${
+                        currentEditField == 'phoneNumber' ? '' : 'please check your email address to get updated'
+                      }`}
                 </p>
               </div>
             </Model>

@@ -53,7 +53,6 @@ const OtpVerification: FC<OtpVerificationProps> = ({
   const [isCompleted, setIsCompleted] = useState(false);
   const [verifyVerificationCode, {isLoading}] = selfProfileApi.useVerifyVerificationCodeMutation();
   const [reSendVerificationCode, {isLoading: isResendLoading}] = selfProfileApi.useReSendVerificationCodeMutation();
-//   const [timer, setTimer] = useState(otpExpiryTime);
       const refs = [
         useRef<HTMLInputElement>(null),
         useRef<HTMLInputElement>(null),
@@ -77,7 +76,7 @@ const OtpVerification: FC<OtpVerificationProps> = ({
            return;
          }
          if (value.length > 1) {
-           value = value.slice(0, 1); // Limit to one character
+           value = value.slice(0, 1);
          }
 
          const newOTP = [...otp];
@@ -88,7 +87,6 @@ const OtpVerification: FC<OtpVerificationProps> = ({
            handleFocus(index + 1);
          }
 
-         // Check if all OTP digits are filled
          const isFilled = newOTP.every((digit) => digit.length === 1);
          setIsCompleted(isFilled);
        };

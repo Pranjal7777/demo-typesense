@@ -57,7 +57,7 @@ function BlogsDetails({ post, id }: blogs_detailsProps) {
             ></PageHeaderWithBreadcrumb>
           ) : null}
           <div className="   mt-[50px] sm:mt-[69px] relative custom-container mx-auto sm:px-16 mobile:px-4 ">
-            <div className="py-12 flex flex-col justify-between max-w-[787px] mobile:text-center  mobile:py-9 mobile:pt-32 border-error">
+            <div className="py-12 flex flex-col justify-between max-w-[787px] mobile:text-center  mobile:py-9 mobile:pt-6 border-error">
               <PageMainHeading className="!leading-[54px]">{slugData[0]?.title}</PageMainHeading>
               <div className="flex mt-5 mobile:flex-col sm:flex-col lg:flex-row ">
                 <div className="flex flex-wrap justify-center sm:justify-start">

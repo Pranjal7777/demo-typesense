@@ -5,16 +5,14 @@ import PageHeaderWithBreadcrumb from '@/components/ui/page-header-with-breadcrum
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import React, { FC } from 'react';
 import { useTranslation } from 'next-i18next';
-// import ContentSectionPageTitle from '@/components/Ui/ContentSectionPageTitle';
-// import ContentSection from '@/components/Sections/ContentSection';
+import cookie from 'cookie';
 import { HeroSectionType, qaSectionType } from './privacy-policy';
-import dynamic from 'next/dynamic';
 import { seoProperties } from './about';
 import CustomHeader from '@/components/ui/custom-header';
 import formatArrayToStrings from '@/helper/functions/format-array-strings';
-// import { description } from 'platform';
-// import QaSection from '@/components/Sections/QA';
-const QaSection = dynamic(() => import('@/components/sections/qa/index'),{ssr:true});
+import { AUTH_URL_V1, BASE_API_URL, STRAPI_BASE_API_URL } from '@/config';
+import { GET_PRIVACY_POLICY_DATA, STRAPI_TERMS_OF_SERVICE } from '@/api/endpoints';
+import { GetServerSidePropsContext } from 'next';
 
 type HeaderBennerSection={
     bannerUrlForMobile:string
@@ -24,20 +22,11 @@ type HeaderBennerSection={
     headerDescriptionForMobile:string
 }
 
-// type TermsOfServiceSection={
-//     title:string,
-//     items:{
-//         title:string,
-//         desc:string[]
-//     }[]
-// }
-
 type BreadcrumbLinks={
   name:string,
   link:string
 }
 
-///////////////////
 export interface termsDataAttributes {
   heroSection: HeroSectionType,
   termsOfServiceSection:{
@@ -54,22 +43,18 @@ export interface termsData {
 }
 export type Props = {
   termsOfServiceData: termsData;  
+  htmlContent:string
 };
-///////////////////
-
-const TermsAndService: FC<Props>= ({termsOfServiceData}) =>{
-  // console.log(termsOfServiceData);
-  
+const TermsAndService: FC<Props>= ({termsOfServiceData,htmlContent}) =>{
 
   const {t}=useTranslation('terms-of-service');
   const headerBennerSection = t('page.headerBennerSection', { returnObjects: true }) as HeaderBennerSection;
   const breadcrumbLinks = t('page.breadcrumbLinks', { returnObjects: true }) as BreadcrumbLinks[];
-  // const termsOfServiceSection: TermsOfServiceSection = t('page.termsOfServiceSection', { returnObjects: true });
   const strapiSeoData = termsOfServiceData.attributes.seoProperties;
   const keywords = termsOfServiceData?.attributes?.seoProperties?.keywords;
   const joinedString = formatArrayToStrings(keywords);
   return (
-    <Layout  excludeHeroSection={true} stickyHeader={true}>
+    <Layout excludeHeroSection={true} stickyHeader={true}>
       <CustomHeader
         title={strapiSeoData?.metaTitle}
         keywords={joinedString}
@@ -80,40 +65,18 @@ const TermsAndService: FC<Props>= ({termsOfServiceData}) =>{
         twitterTitle={strapiSeoData?.twitterCard?.twitterTitle}
         twitterURL={strapiSeoData?.twitterCard?.twitterURL}
       />
-      <PageHeaderWithBreadcrumb className='' steps={breadcrumbLinks}></PageHeaderWithBreadcrumb>
+      <PageHeaderWithBreadcrumb className="" steps={breadcrumbLinks}></PageHeaderWithBreadcrumb>
       <div className="mt-[50px] md:mt-[69px] relative custom-container mx-auto sm:px-16 mobile:px-4 ">
-        {/* <PageBanner 
-                bannerUrlForMobile={headerBennerSection.bannerUrlForMobile}
-                bannerUrlForWeb={headerBennerSection.bannerUrlForWeb}
-                headerText={headerBennerSection.headerText}
-                headerDescription={headerBennerSection.headerDescription}
-                headerDescriptionForMobile={headerBennerSection.headerDescriptionForMobile}
-            /> */}
-
-        {/* new page banner start */}
         <PageBanner
-          bannerUrlForMobile={termsOfServiceData?.attributes?.heroSection?.heroImage?.cover_image?.data?.attributes?.url}
+          bannerUrlForMobile={
+            termsOfServiceData?.attributes?.heroSection?.heroImage?.cover_image?.data?.attributes?.url
+          }
           bannerUrlForWeb={termsOfServiceData?.attributes?.heroSection?.heroImage?.cover_image?.data?.attributes?.url}
           headerText={termsOfServiceData?.attributes?.heroSection?.title}
           headerDescription={termsOfServiceData?.attributes?.heroSection?.subtitle}
           headerDescriptionForMobile={headerBennerSection.headerDescriptionForMobile}
         />
-        {/* new page banner end */}
-
-        <QaSection description={termsOfServiceData?.attributes?.termsOfServiceSection?.description} title={termsOfServiceData?.attributes?.termsOfServiceSection?.title} data={termsOfServiceData}/>
-
-        {/* <div className='py-12 mobile:pb-0 mobile:pt-9 border-error'>
-              <ContentSectionPageTitle className=''>{termsOfServiceSection.title}</ContentSectionPageTitle>
-                {
-                    termsOfServiceSection.items.map((item,key)=>(
-
-                        <ContentSection key={key} className=''
-                            title={item.title}
-                            desc={item.desc}
-                        />
-                    ))
-                }
-            </div> */}
+        <div className="my-8 dark:text-text-secondary-light text-text-secondary-dark" dangerouslySetInnerHTML={{ __html: htmlContent }} />
       </div>
     </Layout>
   );
@@ -121,13 +84,49 @@ const TermsAndService: FC<Props>= ({termsOfServiceData}) =>{
 
 export default TermsAndService;
 
-export async function getStaticProps({ locale }: { locale: string }) {
-  const res = await fetch('https://strapi.le-offers.com/api/terms-of-service?populate=deep');
-  const data = await res.json();
-  return {
-    props: {
-      ...(await serverSideTranslations(locale, ['common','terms-of-service'])),
-      termsOfServiceData: data.data,
-    },
-  };
+export async function getServerSideProps({ locale, req }: { locale: string; req: GetServerSidePropsContext['req'] }) {
+  let accessToken;
+  if (req.headers.cookie) {
+    const cookies = cookie.parse(req.headers.cookie || '');
+    accessToken = cookies.accessToken?.replace(/"/g, '') || null;
+  }
+  try {
+    const promises = [
+      fetch(`${STRAPI_BASE_API_URL}${STRAPI_TERMS_OF_SERVICE}?populate=deep`),
+      fetch(`${BASE_API_URL}${AUTH_URL_V1}${GET_PRIVACY_POLICY_DATA}?userType=1&type=2&lan=en`, {
+        method: 'GET',
+        headers: {
+          Authorization: `${accessToken}`,
+        },
+      }),
+    ];
+
+    const listingApiResponses = await Promise.allSettled(promises);
+
+    const response1 = listingApiResponses[0].status === 'fulfilled' ? listingApiResponses[0].value : null;
+    const response2 = listingApiResponses[1].status === 'fulfilled' ? listingApiResponses[1].value : null;
+
+    if (!response1 || !response2) {
+      return { notFound: true };
+    }
+    const data = await response1.json();
+    const data2 = await response2.json();
+    const htmlContent = data2.data.pageContent;
+    return {
+      props: {
+        ...(await serverSideTranslations(locale, ['common', 'terms-of-service'])),
+        termsOfServiceData: data.data,
+        htmlContent: htmlContent,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      props: {
+        ...(await serverSideTranslations(locale, ['common', 'terms-of-service'])),
+        destination: '/500',
+        permanent: false,
+      },
+    };
+  }
 }

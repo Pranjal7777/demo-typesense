@@ -110,7 +110,7 @@ function Blogs({ posts }: blogsProps) {
 
         <div className='py-12 pt-0 mobile:pb-[71px] mobile:pt-0 flex flex-col items-center  border-error'>
           {posts?.data?.attributes?.blog_data?.length > 0 ? posts?.data?.attributes?.blog_data?.map((item, key) => (
-            <Link href={`blog/${item?.id}`} key={key} className={`flex sm:flex-col mobile:flex-col gap-6 lg:flex-row  max-w-[1103px] max-h-[308px] mobile:max-h-full sm:max-h-full ${key === 0 && 'mobile:mt-0'} mobile:mt-5 p-9 mobile:p-0 rounded-[20px] hover:cursor-pointer hover:bg-brand-color-hover dark:hover:bg-brand-color-hover-dark items-center`}>
+            <Link href={`blog/${item?.id}`} key={key} className={`flex sm:flex-col mobile:flex-col gap-6 lg:flex-row  max-w-[1103px] max-h-[308px] mobile:max-h-full sm:max-h-full ${key === 0 && 'mobile:mt-0'} mobile:mt-5 p-9 mobile:p-0 rounded-[20px] hover:cursor-pointer hover:bg-brand-color-hover items-center`}>
               <div className='relative lg:w-[482px] h-[236px] w-full overflow-hidden rounded-xl'>
                 <Image
                   src={item?.cover_image?.data?.attributes?.url}

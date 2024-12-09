@@ -52,8 +52,8 @@ const getGuestTokenConfig: GetGuestTokenConfig = {
   browserVersion: platform.version as string,
 };
 const refreshTokenPayload:{ accessToken: string; refreshToken: string } = {
-  accessToken: Cookies.get(ACCESS_TOKEN) as string,
-  refreshToken: Cookies.get(REFRESH_ACCESS_TOKEN) as string,
+  accessToken: Cookies.get(ACCESS_TOKEN) || '',
+  refreshToken: Cookies.get(REFRESH_ACCESS_TOKEN) || '',
 };
 
 
@@ -85,9 +85,6 @@ const baseQueryWithAuth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQuery
     };
     // try {
         // const refreshResult = await baseQuery(refreshArgs, api, extraOptions);
-        console.log(refreshTokenPayload.accessToken, 'chull refreshTokenPayload');
-        
-
           const refreshResult = await fetch(`${BASE_API_URL}${AUTH_URL_V1}/${GUEST_REFRESH_TOKEN_URL}`, {
             method: 'POST',
             headers: {
@@ -96,8 +93,6 @@ const baseQueryWithAuth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQuery
             },
             body: JSON.stringify(refreshTokenPayload),
           });
-
-          console.log(refreshResult, 'chull refreshResult');
 
           if(!refreshResult.ok){
             setRemoveUserDataDispatch();
@@ -116,9 +111,7 @@ const baseQueryWithAuth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQuery
               },
               body: JSON.stringify(getGuestTokenConfig),
             });
-            console.log(guestTokenResponse, 'chull guestTokenResponse');
             const guestTokenResponseData = await guestTokenResponse.json();
-            console.log(guestTokenResponseData.data.token, 'chull guestTokenResponseData');
             setCookie(ACCESS_TOKEN, guestTokenResponseData.data.token?.accessToken, { expires: 1 });
             setCookie(REFRESH_ACCESS_TOKEN, guestTokenResponseData.data.token?.refreshToken, { expires: 1 });
             setGuestTokenDispatch(guestTokenResponseData.data.token);           
@@ -132,32 +125,8 @@ const baseQueryWithAuth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQuery
               accessExpireAt: data.data.accessExpireAt,
             });
             setCookie(ACCESS_TOKEN, JSON.stringify(data.data.accessToken), { expires: 2 });
-            console.log(data, 'chull data');
+            window.location.href = '/';
           }
-        
-   
-        // const data = await refreshResult.json();
-        // console.log(data,"chull data chull");
-
-        // if (data && data.data.token.accessToken) {
-        //   // store the new token
-        //   api.dispatch(setGuestTokenDispatch(data.data.token));
-
-        //   // retry the initial query
-        // result = await baseQuery(args, api, extraOptions);
-        // }
-    // } catch (error) {
-      
-      // setRemoveUserDataDispatch();
-      // const accessToken = Cookies.get(IS_USER_AUTH);
-      // if(accessToken){
-      //   // Cookies.remove(IS_USER_AUTH);
-      // }
-      // console.log(accessToken,"chull access token");
-      
-      // window.location.href = '/login';
-    // }
-  
   }
 
   return result;

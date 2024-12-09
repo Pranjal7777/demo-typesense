@@ -53,6 +53,7 @@ const OAuth = () => {
         };
        
         const { data } = await login(loginPayloadForFacebook).unwrap();
+
         
         if (data) {
           localStorage.removeItem('facebookUser');
@@ -63,14 +64,15 @@ const OAuth = () => {
       }
 
     } catch (e) {
-      console.log(e ,'face');
-      
       console.error('Error while facebook login', e);
       const error = e as { data: { message: string },status:number };
       if(error.status == 412 || error.status==413){
-        router.push(`${SIGN_IN_PAGE}?step=3`);
+         router.pathname === SIGN_UP_PAGE
+           ? router.push(`${SIGN_UP_PAGE}?step=2`)
+           : router.push(`${SIGN_IN_PAGE}?step=4`);
         return;
       }
+       router.pathname === SIGN_UP_PAGE ? router.push(`${SIGN_UP_PAGE}?step=2`) : router.push(`${SIGN_IN_PAGE}?step=4`);
     }
   };
 

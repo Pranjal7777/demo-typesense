@@ -22,7 +22,7 @@ const Rating: FC<Props> = ({ value = 0, color='#FDB514', text, itemClassName = '
   const disabledColorDark = '#2F2F2F';
 
   return (
-    <div className={appClsx('flex md:gap-2 items-center', wrapperClass)}>
+    <div className={appClsx('flex gap-2 items-center', wrapperClass)}>
       <div className={appClsx('flex gap-2',starContainerClass)}>
         {Array(5)
           .fill('')

@@ -32,11 +32,16 @@ const AddressCard: FC<Props> = ({
   };
 
   return (
-  
-    <div className="bg-[white] flex flex-col dark:bg-bg-primary-dark  border border-[#DBDBDB]  dark:border-[#3D3B45] p-[9px] rounded-[8px] max-w-[427px] min-w-[289px] ">
-      <div className="text-[#202020] dark:text-text-primary-dark font-[600] leading-[24px] ">
-        <strong className='text-[16px]'>{`${item.name}`} </strong>
-        <span className='text-[14px]'>{` (${item.addressTypeAttribute=='6617b871a86bb50e82fda3ce' ? 'Business' : item.addressTypeAttribute == '6617b87aa86bb50e82fda3cf'?'Residence':'Other'})`}</span>
+    <div className="bg-[white] flex flex-col dark:bg-bg-primary-dark  border border-[#DBDBDB]  dark:border-[#3D3B45] p-[9px] rounded-[8px] max-w-[427px] min-w-[340px] md:min-w-[289px] ">
+      <div className="text-[#202020] dark:text-text-primary-dark font-semibold leading-[24px] ">
+        <strong className="text-[16px]">{`${item.name}`} </strong>
+        <span className="text-[14px]">{` (${
+          item.addressTypeAttribute == '6617b871a86bb50e82fda3ce'
+            ? 'Business'
+            : item.addressTypeAttribute == '6617b87aa86bb50e82fda3cf'
+            ? 'Residence'
+            : 'Other'
+        })`}</span>
       </div>
       <p className="text-[#57585A] dark:text-[#929293] text-[12px] md:text-[14px] leading-[18px] md:leading-[21px] py-[15px]">
         {item.addressLine1}
@@ -48,7 +53,9 @@ const AddressCard: FC<Props> = ({
             defaultButtonHandler(item._id);
           }}
           className={
-            (item.isDefault ? 'bg-brand-color text-[#FFFFFF]' : 'text-brand-color  dark:bg-bg-primary-dark bg-[white]') +
+            (item.isDefault
+              ? 'bg-brand-color text-[#FFFFFF]'
+              : 'text-brand-color  dark:bg-bg-primary-dark bg-[white]') +
             ' border border-brand-color text-[12px] leading-[18px] rounded-[36px] py-[4px] px-[16px] '
           }
         >
@@ -56,7 +63,7 @@ const AddressCard: FC<Props> = ({
         </button>
         <div className="flex gap-[16px]">
           <EditIcon
-            className='hidden sm:inline-block'
+            className="hidden sm:inline-block"
             onClick={() => {
               editButtonHandler(item);
             }}
@@ -65,7 +72,7 @@ const AddressCard: FC<Props> = ({
           />
 
           <EditIcon
-            className='sm:hidden'
+            className="sm:hidden"
             onClick={() => {
               mobileEditBtn(item);
             }}
@@ -85,7 +92,6 @@ const AddressCard: FC<Props> = ({
         </div>
       </div>
     </div>
-  
   );
 };
 

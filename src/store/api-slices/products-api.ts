@@ -17,11 +17,12 @@ import {
   GET_ALL_HIGHLIGHTED_PRODUCTS_URL,
   GET_PRIVACY_POLICY_DATA,
   GET_RECENT_SEARCH_DATA_URL,
+  GET_REPORT_REASONS_URL,
   LIKE_AND_DISLIKE_PRODUCT_URL,
   SEARCH_PRODUCTS_AND_USERS_URL,
   SUBSCRIBE_TO_NEWS_LETTER_URL,
 } from '@/api/endpoints';
-import { FilterParameterResponse } from '@/types/filter';
+import { FilterParameterResponse, PostReportPayloadType, PostReportResponse, ProductReportReasonType, ProductReportReasonTypeResponse } from '@/types/filter';
 
 export const productsApi = rootApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -146,11 +147,11 @@ export const productsApi = rootApi.injectEndpoints({
         method: 'GET',
       }),
     }),
-    addUserDataToRecentSearch: builder.mutation<void, { clickeduserId:string}>({
+    addUserDataToRecentSearch: builder.mutation<void, { clickeduserId: string }>({
       query: ({ clickeduserId }) => ({
         url: `${AUTH_URL_V1}${ADD_USER_TO_RECENT_SEARCH_URL}`,
         method: 'POST',
-        body:{clickeduserId:clickeduserId}
+        body: { clickeduserId: clickeduserId },
       }),
     }),
     subscribeToNewsLetter: builder.mutation<{ message: string }, string>({
@@ -176,23 +177,27 @@ export const productsApi = rootApi.injectEndpoints({
     }),
     getAllHighlightedProductsForFilter: builder.query<
       ResponseGetAllHighlightedProductsPayload,
-      { page: number; latitude: string; longitude: string; country: string ,catId:string}
+      { page: number; latitude: string; longitude: string; country: string; catId: string }
     >({
-      query: ({ page, latitude, longitude, country,catId }) => ({
+      query: ({ page, latitude, longitude, country, catId }) => ({
         url: `${AUTH_URL_V2}/${GET_ALL_HIGHLIGHTED_PRODUCTS_URL}/?page=${page}&promoted=1&lat=${
           latitude || DEFAULT_LOCATION.latitude
-        }&long=${longitude || DEFAULT_LOCATION.longitude}&limit=10&country=${country || DEFAULT_LOCATION.country}&cat_id=${catId}`,
+        }&long=${longitude || DEFAULT_LOCATION.longitude}&limit=10&country=${
+          country || DEFAULT_LOCATION.country
+        }&cat_id=${catId}`,
         method: 'GET',
       }),
     }),
     getAllBannersAndProductsForFilter: builder.query<
       ResponseGetAllBannersAndProductsPayload,
-      { page: number; latitude: string; longitude: string; country: string,catId:string }
+      { page: number; latitude: string; longitude: string; country: string; catId: string }
     >({
-      query: ({ page, latitude, longitude, country ,catId}) => ({
+      query: ({ page, latitude, longitude, country, catId }) => ({
         url: `${AUTH_URL_V2}/${GET_ALL_BANNERS_AND_PRODUCTS_URL}/?page=${page}&lat=${
           latitude || DEFAULT_LOCATION.latitude
-        }&long=${longitude || DEFAULT_LOCATION.longitude}&limit=10&country=${country || DEFAULT_LOCATION.country}&cat_id=${catId}`,
+        }&long=${longitude || DEFAULT_LOCATION.longitude}&limit=10&country=${
+          country || DEFAULT_LOCATION.country
+        }&cat_id=${catId}`,
         method: 'GET',
       }),
     }),
@@ -200,6 +205,19 @@ export const productsApi = rootApi.injectEndpoints({
       query: () => ({
         url: `${AUTH_URL_V1}/filterParameter`,
         method: 'GET',
+      }),
+    }),
+    getReportReasons: builder.query<ProductReportReasonTypeResponse, void>({
+      query: () => ({
+        url: `${AUTH_URL_V1}/${GET_REPORT_REASONS_URL}`,
+        method: 'GET',
+      }),
+    }),
+    postReport: builder.mutation<PostReportResponse, PostReportPayloadType>({
+      query: (body) => ({
+        url: `${AUTH_URL_V1}/report`,
+        method: 'POST',
+        body: body,
       }),
     }),
   }),

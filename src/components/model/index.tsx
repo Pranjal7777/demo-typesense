@@ -61,7 +61,7 @@ const Model: FC<Props> = ({
             )}
             style={style}
           >
-            <CloseIcon height={closeIconHeight || '22'} width={closeIconWidth || '22'} className={closeIconClassName || ''  } primaryColor={theme ? '#fff' : '#202020'} onClick={onClose}/>
+            <CloseIcon height={closeIconHeight || '22'} width={closeIconWidth || '22'} className={appClsx(closeIconClassName, 'absolute top-5 right-5')} primaryColor={theme ? '#fff' : '#202020'} onClick={onClose}/>
 
             {/* children starts */}
             {children}

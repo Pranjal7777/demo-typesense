@@ -57,7 +57,7 @@ const PurchaseCard: FC<PurchaseCardProps> = ({
         strongText={amount}
       />
       <div className="flex justify-between items-center mt-3">
-        <div className="flex gap-[6px]">
+        <div className="flex items-center gap-[6px]">
           <ProfileImageContainer
             className="object-fill rounded-full"
             src={''}
@@ -65,7 +65,7 @@ const PurchaseCard: FC<PurchaseCardProps> = ({
             height={24}
             width={24}
           />
-          <span className="font-medium">{buyerName}</span>
+          <span className="font-medium text-sm md:text-base">{buyerName}</span>
         </div>
         <span
           className={`tag h-fit ${
@@ -82,7 +82,7 @@ const PurchaseCard: FC<PurchaseCardProps> = ({
               : orderType == 'SOLD'
               ? 'bg-[#00B533]'
               : 'bg-brand-color'
-          }   py-[2px] px-[10px] rounded-sm text-xs text-text-primary-dark`}
+          }   py-[2px] px-[10px] text-center rounded-sm text-xs text-text-primary-dark`}
         >
           {orderType}
         </span>

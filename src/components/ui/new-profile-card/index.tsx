@@ -26,8 +26,9 @@ type Props = {
     totalFollowers?: number;
     totalFollowing?: number;
     followButtonHandler?: ()=>void;
+    showFollowButton?: boolean;
 }
-const NewProfileCard:FC<Props> = ({cardClass,fullNameClass,userNameClass,starColor,ratingClass,ratingText,ratingTextClass,buttonClass,buttonType,profilePic,fullName,userName,buttonText,ratingValue=0,showFollowingSection=true,followingSectionClass,totalFollowers,totalFollowing,followButtonHandler}) => {
+const NewProfileCard:FC<Props> = ({cardClass,fullNameClass,userNameClass,starColor,ratingClass,ratingText,ratingTextClass,buttonClass,buttonType,profilePic,fullName,userName,buttonText,ratingValue=0,showFollowingSection=true,followingSectionClass,totalFollowers,totalFollowing,followButtonHandler,showFollowButton=true}) => {
   const profileSrc = profilePic ? profilePic.includes('http') ? profilePic : `${STATIC_IMAGE_URL}/${profilePic}` : '';
   return (
     <div className={appClsx('w-full flex flex-col items-center md:items-start gap-1', cardClass)}>
@@ -45,7 +46,7 @@ const NewProfileCard:FC<Props> = ({cardClass,fullNameClass,userNameClass,starCol
       <strong className={appClsx('text-[20px] mt-2 md:mt-3 text-text-primary-light dark:text-text-primary-dark font-semibold leading-[30px]', fullNameClass)}>{fullName}</strong>
       <span className={appClsx('text-text-tertiary-light dark:text-text-tertiary-dark text-[14px] leading-[21px] ', userNameClass)}>{userName}</span>
       <Rating value={ratingValue}  itemClassName = {ratingTextClass} color= {starColor}  className={ratingClass} text={ratingText}/>
-      <Button onClick={followButtonHandler} buttonType={buttonType} className={buttonClass}>{buttonText}</Button>
+      {showFollowButton && <Button onClick={followButtonHandler} buttonType={buttonType} className={buttonClass}>{buttonText}</Button>}
       {
        !HIDE_SELLER_FLOW && showFollowingSection && <div className={appClsx('w-full flex gap-4 justify-center md:justify-start text-sm font-medium text-text-secondary-dark dark:text-text-primary-dark' , followingSectionClass)}>
           <span>{`${totalFollowers || '0 '} followers`}</span>

@@ -276,7 +276,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const cookies = cookie.parse(req.headers.cookie || '');
   const accessToken = cookies.accessToken?.replace(/"/g, '') || null;
 
-
   let profileData = null;
   let followCountData = null;
 
@@ -294,36 +293,33 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
       if (profileRes.ok) {
         const profileDetails = await profileRes.json();
-
         profileData = profileDetails.data;
       } else {
-        console.error(`Failed to fetch profile data: ${profileRes.status} ${profileRes.statusText}`);
-         return {
-           props: {
-             ...(await serverSideTranslations(locale as string, ['common'])),
-          destination: '/500',
-          permanent: false,
-        },
-      };
+        if (profileRes.status === 401 || !profileRes.ok) {
+          return {
+            redirect: {
+              destination: '/500',
+              permanent: false,
+            },
+          };
+        }
       }
+
       // Second API call to fetch follow count data
       if (profileData) {
-        const followRes = await fetch(
-          `${baseUrl}/v1/follow/count`,
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `${accessToken}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        );
+        const followRes = await fetch(`${baseUrl}/v1/follow/count`, {
+          method: 'GET',
+          headers: {
+            Authorization: `${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+        });
 
         if (followRes.ok) {
           const followData = await followRes.json();
           followCountData = followData.data;
         } else {
-          console.error(`Failed to fetch follow count data: ${followRes.status} ${followRes.statusText}`);
+          console.log(`Failed to fetch follow count data: ${followRes.status} ${followRes.statusText}`);
         }
       }
     } catch (error) {
@@ -341,3 +337,4 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   };
 }
+

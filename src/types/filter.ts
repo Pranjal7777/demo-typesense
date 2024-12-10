@@ -24,3 +24,32 @@ export interface FilterParameter {
       message: string;
     };
   }
+
+  export interface ProductReportReasonType {
+    status: number;
+    statusMsg: string;
+    _id: string;
+    reason: string;
+    userType: number;
+  }
+  export type ProductReportReasonTypeResponse = {
+    data: ProductReportReasonType[];
+    message: string;
+  };
+
+  export interface PostReportResponse {
+    data: {
+      message: string;
+    };
+  }
+
+  export type PostReportPayloadType = {
+    reportedId: string;
+    city: string;
+    reportType: string;
+    reportReasonId: string;
+    reason: string;
+    country: string;
+    lat: string;
+    long: string;
+  };

@@ -51,11 +51,11 @@ const getGuestTokenConfig: GetGuestTokenConfig = {
   appVersion: 'v1',
   browserVersion: platform.version as string,
 };
-const refreshTokenPayload:{ accessToken: string; refreshToken: string } = {
-  accessToken: Cookies.get(ACCESS_TOKEN) || '',
-  refreshToken: Cookies.get(REFRESH_ACCESS_TOKEN) || '',
-};
-
+// const refreshTokenPayload: { accessToken: string; refreshToken: string } = {
+//   accessToken: Cookies.get(ACCESS_TOKEN) || 
+//     'Bearer eyJhbGciOiJSU0EtT0FFUCIsImN0eSI6IkpXVCIsImVuYyI6IkExMjhHQ00iLCJ0eXAiOiJKV1QifQ.puEvK9pJSMw4nVfw0Smm_uKD8lmcLQ6cv2EILv_PusnOlXJko1dLxK6H8EnLNNvvOAAytHfnfAtxwDDsuyhC-9KgqUPWcFI_YZ32TWEmf3dGJvuIy0UYJaoQzfK_jhE1VgpMw-4dc420s6Y4iYXTIZrMCJ6vqA4xR0N0VXOuoBI.Sjtb1sIeYJm6fVcv.GkeXS1J6Rkno2v74IzpTmv-2Sh7nVN0U836sRhY4YSHxSj24KuywTDCpXvsFju3m-fw4N8DfYe8L3m5PTx1bI56FkJiNCndopbsGp-9M_BasTgatl77xm7vdQ7Jf4epmwmVC9gEhD8F5Da6g91nUSPRpofU61KOMh0rdu8Fs3soShe0Ll9k3Y0woSfdDqnMn4nKn-jT5GdhsEdR2n_0EcVBIX3mlKoaF0a3tk5bQOFlSSkeFom8ZSgnUlIjTexsqdP2zdnPpH7g2ZDdw1HvfQgCk_gSBuWhEY3G3cfY-39ehlR5e5RH4_FR4BBOiAk1LH--FLDgluSOAppScI6wx64tIBKmicPdwFggSgnDEv-lp-BntreEcuMEnpJlBidcj4c0Hv4W5wPDDwLdlS1tA-g-hWbsEIyEaeCLQ9JAnNo1Bp1ASdx8bdTMc6USy7_pOFJz-dUaOD9YM1OY-IcKOaQF7wE-z_6OuZPmsmsTB_02DPXCdKZXZpDrF-4m0pHzHz3vhrNURnV492SwmfvYe_OTCGUbwUli0ALMuM9OstEj5B4j0V5AOPwi8oRANfLrQswVj4NXUAqiOXItwJUCcaIIawFRAhHtmoSd_9Y19URKY65TH5kKk40UBcceYyQUWxunophMHIn4BjxI0aj1rlyOlP40nl1L1EqaIZRVxAkGHuHQWiVKq1cQCGXLmUUxZe_Ir0s67f2H2lA8XS1cbTJ_bEFcXZ39W8-ugwPVKMazW-NbM83jjMfnfr7ekdwSo1--3gvnXQ0S3ILFqS2I2DEV24v5Z0MjRV2UAK4oLERgKRwwAsM6-p1mMPqzmytimDI_ZP6hi4G1-JSJoKRU9_fdro5Gde0s1lwfAZTvvpYvrz3UXqEJT07eJ4gVlM6Ub_U2wmZ1VMyo-3_QjGszwt63kI-2WVE340puN9xqU5a2sHgDdNXsvTDOC5wMXQEFFpqjsvnGRWf5xtxZCPAis2oosRU6tgI0ancr6z872scGuMa06HWHT24oWjg.4WXDocXAZ0Gf32Y1gPe7Ew',
+//   refreshToken: Cookies.get(REFRESH_ACCESS_TOKEN) || '6e46be9f-e23d-b0f9-6f75-5dbd447b6a3e',
+// };
 
 export const guestGeneratedToken = 'Basic ' + btoa(GUEST_TOKEN_DEFAULT_USER + ':' + GUEST_TOKEN_DEFAULT_PASS);
 const guestRefreshToken = Cookies.get(REFRESH_ACCESS_TOKEN);
@@ -75,16 +75,21 @@ const baseQueryWithAuth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQuery
 
     // Create the request options for the refresh token
     // const tokenForRefresh = 'Basic ' + btoa(GUEST_TOKEN_DEFAULT_USER + ':' + GUEST_TOKEN_DEFAULT_PASS);;
-    const refreshArgs: FetchArgs = {
-      url: `${BASE_API_URL}${AUTH_URL_V1}/${GUEST_REFRESH_TOKEN_URL}`,
-      method: 'POST',
-      body: refreshTokenPayload,
-      headers: {
-        Authorization: `${guestGeneratedToken}`,
-      },
-    };
+    // const refreshArgs: FetchArgs = {
+    //   url: `${BASE_API_URL}${AUTH_URL_V1}/${GUEST_REFRESH_TOKEN_URL}`,
+    //   method: 'POST',
+    //   body: refreshTokenPayload,
+    //   headers: {
+    //     Authorization: `${guestGeneratedToken}`,
+    //   },
+    // };
     // try {
         // const refreshResult = await baseQuery(refreshArgs, api, extraOptions);
+        const refreshTokenPayload: { accessToken: string; refreshToken: string } = {
+          accessToken: Cookies.get(ACCESS_TOKEN) || '',
+          refreshToken: Cookies.get(REFRESH_ACCESS_TOKEN) || '',
+        };
+
           const refreshResult = await fetch(`${BASE_API_URL}${AUTH_URL_V1}/${GUEST_REFRESH_TOKEN_URL}`, {
             method: 'POST',
             headers: {
@@ -115,7 +120,8 @@ const baseQueryWithAuth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQuery
             setCookie(ACCESS_TOKEN, guestTokenResponseData.data.token?.accessToken, { expires: 1 });
             setCookie(REFRESH_ACCESS_TOKEN, guestTokenResponseData.data.token?.refreshToken, { expires: 1 });
             setGuestTokenDispatch(guestTokenResponseData.data.token);           
-            window.location.href = '/login';
+              window.location.href = '/';
+              // return result;
             
           }
           else{
@@ -125,7 +131,8 @@ const baseQueryWithAuth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQuery
               accessExpireAt: data.data.accessExpireAt,
             });
             setCookie(ACCESS_TOKEN, JSON.stringify(data.data.accessToken), { expires: 2 });
-            window.location.href = '/';
+             window.location.href = '/';
+            //  return result;
           }
   }
 

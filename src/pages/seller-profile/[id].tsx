@@ -27,6 +27,7 @@ import showToast from '@/helper/show-toaster';
 import SearchIcon from '../../../public/assets/svg/search-icon';
 import { BASE_API_URL, HIDE_SELLER_FLOW } from '@/config';
 import Placeholder from '@/containers/placeholder/placeholder';
+import { useAppSelector } from '@/store/utils/hooks';
 
 type Props = {
   sellerProfileData: SellerProfileType;
@@ -34,6 +35,10 @@ type Props = {
 };
 
 const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
+  const userInfo = useAppSelector((state) => state.auth.userInfo);
+  console.log(userInfo, 'mirchul userInfo');
+  console.log(sellerProfileData, 'mirchul sellerProfileData');
+  
   const [isFollow, setIsFollow] = useState(sellerProfileData.isFollow);
   const [totalFollower, setTotalFollower] = useState(followCountData.totalFollower);
   const router = useRouter();
@@ -137,6 +142,7 @@ const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
                 buttonClass="w-full sm:max-w-[343px] order-5 md:order-4 !h-9 md:w-[118px] md:h-[32px] flex justify-center items-center md:font-normal my-4"
                 starColor="#FDB514"
                 totalFollowers={totalFollower}
+                showFollowButton={userInfo?.accountId !== sellerProfileData.accountId}
                 totalFollowing={followCountData.totalFollowing}
                 followingSectionClass="order-4 md:order-5"
                 followButtonHandler={() => {

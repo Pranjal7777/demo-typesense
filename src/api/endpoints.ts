@@ -29,6 +29,7 @@ export const ADD_RECENT_SEARCH_DATA_WITH_SINGLE_PRODUCT_SEARCH_URL = 'python/ass
 export const SUBSCRIBE_TO_NEWS_LETTER_URL = 'newsLetter/subscribe';
 export const LIKE_AND_DISLIKE_PRODUCT_URL = 'likesDislikeAsset';
 export const SIMILAR_PRODUCTS_URL = 'similarProducts';
+export const GET_REPORT_REASONS_URL = 'reasons?type=1';
 // strapi end points
 
 export const BLOGS_POST = 'blog';

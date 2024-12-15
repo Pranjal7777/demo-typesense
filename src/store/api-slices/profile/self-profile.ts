@@ -2,7 +2,9 @@ import { GET_VERIFICATION_CODE, PROFILE, RE_VERIFICATION_OTP_CODE_URL, VALIDATE_
 import { rootApi } from '../root-api';
 import { AUTH_URL_V1 } from '@/config';
 import {
+  RequestReSendVerificationCodePayload,
   RequestValidVerificationCodePayload,
+  ResponseSendVerificationCodePayload,
   ResponseValidVerificationCodePayload,
 } from '@/store/types';
 import { SendVerificationForChangeNumber } from '@/store/types/profile-type';
@@ -49,13 +51,15 @@ export const selfProfileApi = rootApi.injectEndpoints({
         body: data,
       }),
     }),
-    reSendVerificationCode: builder.mutation<any, SendVerificationForChangeNumber>({
-      query: (data) => ({
-        url: `${AUTH_URL_V1}/${RE_VERIFICATION_OTP_CODE_URL}`,
-        method: 'POST',
-        body: data,
-      }),
-    }),
+    reSendVerificationCode: builder.mutation<ResponseSendVerificationCodePayload, RequestReSendVerificationCodePayload>(
+      {
+        query: (data) => ({
+          url: `${AUTH_URL_V1}/${RE_VERIFICATION_OTP_CODE_URL}`,
+          method: 'POST',
+          body: data,
+        }),
+      }
+    ),
     verifyVerificationCode: builder.mutation<ResponseValidVerificationCodePayload, RequestValidVerificationCodePayload>(
       {
         query: (body) => ({

@@ -37,6 +37,10 @@ export type Props = {
   categoriesWithChildCategories?: ResponseGetAllCategoriesPayload;
   myLocationFromServer?: MyLocationFromIp;
   children: React.ReactNode;
+  mobileSearchBoxContainerClassName?: string;
+  headerContainerClassName?: string;
+  mobileHeaderContainerClassName?: string;
+  showBackArrowInSearchBox?: boolean;
 };
 
 // Define the type for the schema object
@@ -53,6 +57,10 @@ const Layout: FC<Props> = ({
   categoriesWithChildCategories,
   myLocationFromServer,
   containerClass,
+  mobileSearchBoxContainerClassName,
+  headerContainerClassName,
+  mobileHeaderContainerClassName,
+  showBackArrowInSearchBox = false,
 }) => {
   const { locale } = useRouter();
   const { token, myLocation, ipAddress } = useAppSelector((state: RootState) => state.auth);
@@ -207,6 +215,8 @@ const Layout: FC<Props> = ({
           <Header
             categoriesWithChildCategories={categoriesWithChildCategories}
             stickyHeaderWithSearchBox={stickyHeader}
+            containerClassName={appClsx(headerContainerClassName)}
+            mobileContainerClassName={appClsx(mobileHeaderContainerClassName)}
           />
         )}
 
@@ -217,6 +227,8 @@ const Layout: FC<Props> = ({
               // ${excludeDefaultPageHeaderForPlpPage.some((substring) => router.pathname.includes(substring)) &&
               //   'border-error sm:hidden mobile:inline'
               // }  please do not remove this for future use
+              mobileSearchBoxContainerClassName={appClsx(mobileSearchBoxContainerClassName)}
+              showBackArrowInSearchBox={showBackArrowInSearchBox}
               className={''}
               stickyHeaderWithSearchBox={stickyHeroSection}
               handleGetLocationHelper={handleGetLocationHelper}

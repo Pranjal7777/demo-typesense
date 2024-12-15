@@ -13,7 +13,6 @@ import { RootState } from '@/store/store';
 import CloseIcon from '../../../public/assets/svg/close-icon';
 import SearchIcon from '../../../public/assets/svg/search-icon';
 import LocationSvg from '../../../public/assets/svg/location';
-import LeftArrowRoundedEdgeIcon from '../../../public/assets/svg/left-arrow-rounded-edge';
 import { routeSellerProfile, routeToCategories } from '@/store/utils/route-helper';
 import keyDownHandler from '@/helper/key-down-handler';
 import { useRouter } from 'next/router';
@@ -23,6 +22,7 @@ import { Hits } from 'react-instantsearch-dom';
 import SearchResults from '../typesense/SearchResults';
 import { CustomSearchResults } from '../ui/search-box/custom-hits';
 import { productsApi } from '@/store/api-slices/products-api';
+import LeftArrowIcon from '../../../public/assets/svg/left-arrow-icon';
 
 interface PlacePredictions {
   place_id: string;
@@ -205,7 +205,7 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
         />
         <div className="sticky top-0 py-2  bg-bg-secondary-light dark:bg-bg-primary-dark">
           <div className="relative mx-4 flex items-center justify-center my-3 transition delay-0 ease-in duration-1000">
-            <LeftArrowRoundedEdgeIcon
+            <LeftArrowIcon
               primaryColor={`${theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}`}
               className="hover:cursor-pointer hover:scale-125 absolute left-1"
               onClick={() => {

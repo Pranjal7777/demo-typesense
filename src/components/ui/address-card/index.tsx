@@ -34,7 +34,7 @@ const AddressCard: FC<Props> = ({
   return (
     <div className="bg-[white] flex flex-col dark:bg-bg-primary-dark  border border-[#DBDBDB]  dark:border-[#3D3B45] p-[9px] rounded-[8px] max-w-[427px] min-w-[340px] md:min-w-[289px] ">
       <div className="text-[#202020] dark:text-text-primary-dark font-semibold leading-[24px] ">
-        <strong className="text-[16px]">{`${item.name}`} </strong>
+        <span className="text-sm font-semibold">{`${item.name}`} </span>
         <span className="text-[14px]">{` (${
           item.addressTypeAttribute == '6617b871a86bb50e82fda3ce'
             ? 'Business'

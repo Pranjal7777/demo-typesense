@@ -91,6 +91,8 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
   updateFilters,
   filterParameters
 }) => {
+  console.log(filterParameters,'mir filterParameters');
+  
   const { theme } = useTheme();
   const [selectedFilters, setSelectedFilters] = useState<filterTypes>({
     category: { title: '', _id: '' },

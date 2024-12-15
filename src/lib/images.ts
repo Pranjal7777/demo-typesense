@@ -24,7 +24,7 @@ export const IMAGES = {
   YOUTUBE_LOGO_BLACK: `${STRAPI_STATIC_IMAGE_URL}/youtube_black_1658fed43e.webp`,
   INSTAGRAM_LOGO_BLACK: `${STRAPI_STATIC_IMAGE_URL}/instagram_black_2817ff3e4d.webp`,
 
-  ORDER_SUCCESS:'/images/success.png',
+  ORDER_SUCCESS:'/images/check_circle.svg',
 
   // HOME CATEGORY IMAGES
 

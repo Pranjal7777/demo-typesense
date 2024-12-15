@@ -36,6 +36,7 @@ import Link from 'next/link';
 import { FormDataT } from '@/components/sections/hero-section';
   import { getCookie, setCookie } from '@/utils/cookies';
 import { SearchResponse } from '@/types';
+import LeftArrowIcon from '../../../../public/assets/svg/left-arrow-icon';
 
 export type NewSearchBoxProps = {
   windowWidth: number;
@@ -48,6 +49,8 @@ export type NewSearchBoxProps = {
   searchClient: any;
   formData: FormDataT;
   setFormData: React.Dispatch<React.SetStateAction<FormDataT>>;
+  mobileContainerClassName?: string;
+  showBackArrow?: boolean;
 };
 
 export type heroSection = {
@@ -82,6 +85,8 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
   setSelectedOption,
   formData,
   setFormData,
+  mobileContainerClassName,
+  showBackArrow = false,
 }) => {
   const { t } = useTranslation('common');
   const heroSection = t('page.header.heroSection', { returnObjects: true }) as heroSection;
@@ -476,15 +481,9 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                 ? heroSection?.searchUserandItem?.items
                 : heroSection?.searchUserandItem?.users}
               {isOpen ? (
-                <UpArrowRoundedEdge
-                  primaryColor={getPrimaryColor()}
-                  className="ml-2 rtl:ml-0 rtl:mr-2"
-                />
+                <UpArrowRoundedEdge primaryColor={getPrimaryColor()} className="ml-2 rtl:ml-0 rtl:mr-2" />
               ) : (
-                <DownArrowRoundedEdge
-                  primaryColor={getPrimaryColor()}
-                  className="ml-2 rtl:ml-0 rtl:mr-2"
-                />
+                <DownArrowRoundedEdge primaryColor={getPrimaryColor()} className="ml-2 rtl:ml-0 rtl:mr-2" />
               )}
             </button>
 
@@ -543,7 +542,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                 } dark:hover:bg-bg-octonary-dark hover:bg-bg-tertiary-light cursor-text h-full w-full outline-none pl-12 rtl:pr-12 ${
                   minThreshold ? 'dark:bg-bg-secondary-dark dark:!text-text-primary-dark bg-bg-tertiary-light' : ''
                 }
-                 ${ minThreshold && theme ? 'dark:bg-bg-secondary-dark dark:hover:!text-black bg-bg-tertiary-light' : '' }
+                 ${minThreshold && theme ? 'dark:bg-bg-secondary-dark dark:hover:!text-black bg-bg-tertiary-light' : ''}
                 `}
                 inputValue={formData.search}
                 name="search"
@@ -561,8 +560,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                 onKeyDownHandeler={handleSearchEnterKeyDown}
               />
 
-
-              {!!formData?.search  && formData.resultDropdown && (
+              {!!formData?.search && formData.resultDropdown && (
                 <SearchResults>
                   <div className="absolute top-[48px] shadow-2xl bg-bg-secondary-light dark:bg-bg-secondary-dark left-0 right-0 rounded-b-md overflow-hidden max-h-[263px]">
                     <CustomSearchResults searchQuery={formData.search}>
@@ -587,9 +585,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                                   {hit?.title?.en}
                                 </div>
                                 <div className="font-semibold text-sm text-brand-color ml-1">in </div>
-                                <div className="font-medium text-sm text-brand-color ml-1">
-                                  {hit.mainCategory}
-                                </div>
+                                <div className="font-medium text-sm text-brand-color ml-1">{hit.mainCategory}</div>
                               </div>
                             </div>
                           ) : (
@@ -597,10 +593,9 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                               className="w-full flex dark:hover:text-text-primary-dark text-text-secondary-light dark:text-text-primary-dark border-border-tertiary-light h-14 items-center cursor-pointer hover:bg-bg-octonary-light dark:hover:bg-bg-duodenary-dark"
                               onClick={async () => {
                                 const fullName = `${hit.first_name} ${hit.last_name}`;
-                                sellerProfileRoute(hit.id, fullName)
+                                sellerProfileRoute(hit.id, fullName);
                               }}
                             >
-                              
                               <div className="truncate ml-3 flex">
                                 <div className="border-3 font-medium text-sm text-text-primary-light dark:text-text-primary-dark">
                                   {hit.first_name} {hit.last_name}
@@ -775,14 +770,14 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
             ) : null} */}
 
             {isUserLogin && isRecentSearchOpen === true && !formData.search ? (
-              <div 
+              <div
                 className="absolute top-[48px] shadow-2xl bg-bg-secondary-light dark:bg-bg-secondary-dark left-0 right-0 rounded-b-md max-h-[263px] no-scrollbar"
-                style={{ 
+                style={{
                   overflowY: 'auto',
                   msOverflowStyle: 'none',
                   scrollbarWidth: 'none',
                 }}
-              > 
+              >
                 <div className="overflow-y-auto">
                   {isRecentSearchDataFetching ? (
                     <div className="flex items-center justify-center h-[120px]">
@@ -793,8 +788,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                       No Recent Searches
                     </div>
                   ) : (
-                    <> 
-                   
+                    <>
                       {selectedOption === 'Items' &&
                         recentSearchData?.data?.data?.map((search, index) => (
                           <div
@@ -802,13 +796,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                             key={index}
                             onClick={() => selectItemOrUserToSearch(`${search.searchText}`)}
                           >
-                             <Image
-                    src={HistoryIcon}
-                    alt={''}
-                    width={16}
-                    height={16}
-                    className="ml-3"
-                    />
+                            <Image src={HistoryIcon} alt={''} width={16} height={16} className="ml-3" />
                             <div className="truncate ml-3 flex">
                               <div className="font-medium text-sm text-text-primary-light dark:text-text-primary-dark">
                                 {search.searchText}
@@ -832,13 +820,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                             key={index}
                             onClick={() => selectItemOrUserToSearch(`${search.searchText}`)}
                           >
-                            <Image
-                              src={HistoryIcon}
-                              alt={''}
-                              width={16}
-                              height={16}
-                              className="ml-3"
-                            />
+                            <Image src={HistoryIcon} alt={''} width={16} height={16} className="ml-3" />
                             <div className="truncate ml-3 flex">
                               <div className="border-3 font-medium text-sm text-text-primary-light dark:text-text-primary-dark">
                                 {search.searchText}
@@ -864,7 +846,9 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                   stickyHeaderWithSearchBox &&
                   ' !bg-bg-tertiary-light dark:!bg-bg-quinary-dark dark:!text-text-primary-dark dark:hover:!text-text-primary-dark'
                 } dark:hover:bg-bg-octonary-dark hover:bg-bg-tertiary-light  cursor-text h-full w-full pl-11 pr-9 rtl:pr-11 outline-none ${
-                  minThreshold ? 'dark:bg-bg-secondary-dark dark:!text-text-primary-dark dark:hover:!text-black  bg-bg-tertiary-light' : ''
+                  minThreshold
+                    ? 'dark:bg-bg-secondary-dark dark:!text-text-primary-dark dark:hover:!text-black  bg-bg-tertiary-light'
+                    : ''
                 }`}
                 placeholder={heroSection?.searchPlace?.placeholder}
                 autoComplete="off"
@@ -958,14 +942,24 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
 
         {/* mobile search box start */}
         <div
-          className={` mobile:order-3 sm:hidden ${
-            stickyHeaderWithSearchBox && '!fixed top-[69px] bg-bg-secondary-light dark:bg-bg-secondary-dark'
-          }  z-49 sticky top-[69px] ${
-            minThreshold
-              ? '!fixed top-[69px] mobile:px-4 w-full bg-bg-secondary-light dark:bg-bg-primary-dark'
-              : 'max-w-[1083px] mobile:px-4'
-          } mobile:inline-block mx-5 relative w-full max-w-[638px] `}
+          className={appClsx(
+            ` mobile:order-3 sm:hidden ${
+              stickyHeaderWithSearchBox && '!fixed top-[69px] bg-bg-secondary-light dark:bg-bg-secondary-dark'
+            }  z-49 sticky top-[69px] ${
+              minThreshold
+                ? '!fixed top-[69px] mobile:px-4 w-full bg-bg-secondary-light dark:bg-bg-primary-dark'
+                : 'max-w-[1083px] mobile:px-4'
+            } mobile:inline-block mx-5 relative w-full max-w-[638px] `,
+            mobileContainerClassName
+          )}
         >
+          {showBackArrow && (
+            <LeftArrowIcon
+              onClick={() => router.back()}
+              primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
+              className="absolute top-6 left-4"
+            />
+          )}
           <button
             className={`relative  ${
               stickyHeaderWithSearchBox && 'hidden'

@@ -543,7 +543,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
                   <SectionTitle>All Products</SectionTitle>
                   <div className="ml-auto mr-[24px] relative inline-flex items-center gap-2">
                     <Select
-                      className="w-fit mobile:text-sm text-[14px]"
+                      className="w-fit min-w-[140px] max-w-[200px]  mobile:text-sm text-[14px] overflow-ellipsis"
                       onChange={(option) => {
                         updateFilters({ sort: option?.value });
                       }}

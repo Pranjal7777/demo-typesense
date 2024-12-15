@@ -31,6 +31,8 @@ export type HeroSectionProps = {
   handleRemoveLocationHelper: () => void;
   className?: string;
   imageClassName?: string;
+  mobileSearchBoxContainerClassName?: string;
+  showBackArrowInSearchBox?: boolean;
 };
 
 export type FormDataT = {
@@ -45,6 +47,8 @@ const HeroSection: FC<HeroSectionProps> = ({
   handleRemoveLocationHelper,
   className,
   imageClassName,
+  mobileSearchBoxContainerClassName,
+  showBackArrowInSearchBox = false,
 }) => {
   const maxThreshold = useNewWindowScroll(400);
   const minThreshold = useNewWindowScroll(180);
@@ -95,6 +99,8 @@ const HeroSection: FC<HeroSectionProps> = ({
           {heroSection.title}
         </h1>
         <NewSearchBox
+          showBackArrow={showBackArrowInSearchBox}
+          mobileContainerClassName={appClsx(mobileSearchBoxContainerClassName)}
           stickyHeaderWithSearchBox={stickyHeaderWithSearchBox}
           windowWidth={windowWidth}
           handleGetLocationHelper={handleGetLocationHelper}

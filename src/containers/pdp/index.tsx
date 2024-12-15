@@ -24,6 +24,7 @@ import { setCheckoutProduct } from '@/store/slices/checkout-slice';
 import { useDispatch } from 'react-redux';
 import { getChatIdentifier } from '@/helper/payment';
 import { formatPriceWithoutCents } from '@/utils/price-formatter';
+import LeftArrowIcon from '../../../public/assets/svg/left-arrow-icon';
 export type filteredProducts = {
   userName: string;
   timeStamp: string;
@@ -164,9 +165,19 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
     }
   };
 
+  console.log(apidata, 'mirchul apidata');
+  
+
   return (
-    <Layout stickyHeader={true} stickyHeroSection={true}>
-      <div className="mt-10 md:mt-5">
+    <Layout
+      containerClass="mobile:mt-[88px]"
+      mobileHeaderContainerClassName="mobile:!hidden"
+      mobileSearchBoxContainerClassName="mobile:top-0 !pl-[50px]"
+      stickyHeader={true}
+      stickyHeroSection={true}
+      showBackArrowInSearchBox={true}
+    >
+      <div className="mt-0 md:mt-5">
         <Breadcrumb steps={breadcrumbSteps} />
       </div>
 
@@ -189,6 +200,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
             <div>
               <div className="mobile:mt-5 w-full flex flex-col">
                 <ProductDetailsCard
+                  assetId={assetId}
                   familyName={prodCategory}
                   categoryTitle={prodTitle}
                   postTimeStamp={prodTimeStamp}

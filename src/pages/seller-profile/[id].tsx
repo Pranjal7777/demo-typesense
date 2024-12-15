@@ -28,6 +28,7 @@ import SearchIcon from '../../../public/assets/svg/search-icon';
 import { BASE_API_URL, HIDE_SELLER_FLOW } from '@/config';
 import Placeholder from '@/containers/placeholder/placeholder';
 import { useAppSelector } from '@/store/utils/hooks';
+import { getFormattedRating } from '@/helper';
 
 type Props = {
   sellerProfileData: SellerProfileType;
@@ -35,9 +36,9 @@ type Props = {
 };
 
 const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
+  console.log(sellerProfileData, 'mirchul sellerProfileData');
   const userInfo = useAppSelector((state) => state.auth.userInfo);
   console.log(userInfo, 'mirchul userInfo');
-  console.log(sellerProfileData, 'mirchul sellerProfileData');
   
   const [isFollow, setIsFollow] = useState(sellerProfileData.isFollow);
   const [totalFollower, setTotalFollower] = useState(followCountData.totalFollower);
@@ -135,12 +136,12 @@ const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
                 userName={sellerProfileData.username}
                 profilePic={sellerProfileData.profilePic || ''}
                 ratingValue={sellerProfileData.totalAvgRating || 0}
-                ratingText={`${sellerProfileData.totalAvgRating.toFixed(2)}`}
+                ratingText={`${getFormattedRating(sellerProfileData.totalAvgRating)}`}
                 ratingTextClass="text-xs text-text-tertiary-light dark:text-text-septenary-light"
                 buttonType={isFollow ? 'quinary' : 'primary'}
                 buttonText={isFollow ? 'Following' : 'Follow'}
                 buttonClass="w-full sm:max-w-[343px] order-5 md:order-4 !h-9 md:w-[118px] md:h-[32px] flex justify-center items-center md:font-normal my-4"
-                starColor="#FDB514"
+                starColor="var(--brand-color)"
                 totalFollowers={totalFollower}
                 showFollowButton={userInfo?.accountId !== sellerProfileData.accountId}
                 totalFollowing={followCountData.totalFollowing}
@@ -148,6 +149,7 @@ const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
                 followButtonHandler={() => {
                   followButtonHandler(sellerProfileData.accountId);
                 }}
+                bio={sellerProfileData.bio}
               />
             )}
           </div>

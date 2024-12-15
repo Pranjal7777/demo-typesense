@@ -21,13 +21,17 @@ import SearchIcon from '../../../public/assets/svg/search-icon';
 import SelfProfileEditSection from '@/components/sections/self-prfile-edit';
 import { HIDE_SELLER_FLOW } from '@/config';
 import Placeholder from '@/containers/placeholder/placeholder';
+import { getFormattedRating } from '@/helper';
 
 type Props = {
-  profileData: SellerProfileType;
+  userProfileData: SellerProfileType;
   followCountData: FollowCountDataType;
 };
 
-const Profile: FC<Props> = ({ profileData, followCountData }) => {
+const Profile: FC<Props> = ({ userProfileData, followCountData }) => {
+  console.log(userProfileData, 'mirchul profile data');
+  const [profileData, setProfileData] = useState<SellerProfileType>(userProfileData);
+
   const router = useRouter();
   const { id } = router.query as { id?: string };
   const accountId = useMemo(() => id, [id]);
@@ -106,6 +110,7 @@ const Profile: FC<Props> = ({ profileData, followCountData }) => {
         <div className="w-full px-[4%] pt-5 text-text-primary-light dark:text-text-primary-dark">
           <SelfProfileEditSection
             profileData={profileData}
+            setProfileData={setProfileData}
             isMobile={isMobile}
             leftArrowClickHandler={closeEditProfileModal}
           />
@@ -116,6 +121,7 @@ const Profile: FC<Props> = ({ profileData, followCountData }) => {
           <div className="profile w-full px-[4%] md:px-[64px] mx-auto max-w-[1440px] border-t py-[20px] flex flex-col md:flex-row gap-x-[16px] text-text-primary-light dark:text-text-primary-dark">
             {isEditProfileModalOpen ? (
               <SelfProfileEditSection
+                setProfileData={setProfileData}
                 profileData={profileData}
                 isMobile={isMobile}
                 leftArrowClickHandler={closeEditProfileModal}
@@ -125,11 +131,12 @@ const Profile: FC<Props> = ({ profileData, followCountData }) => {
                 <div className="left w-full flex flex-col items-center md:w-[210px] text-text-secondary-dark dark:text-text-secondary-light">
                   {profileData && (
                     <NewProfileCard
+                      profileLink = {profileData.profileLink}
                       fullName={`${profileData.firstName} ${profileData.lastName}`}
                       userName={profileData.username}
                       profilePic={profileData.profilePic || ''}
                       ratingValue={profileData.totalAvgRating || 0}
-                      ratingText={`${profileData.totalAvgRating}`}
+                      ratingText={`${getFormattedRating(profileData.totalAvgRating)}`}
                       ratingTextClass="text-xs text-text-tertiary-light"
                       buttonType={'primary'}
                       buttonText={'Edit'}
@@ -139,6 +146,7 @@ const Profile: FC<Props> = ({ profileData, followCountData }) => {
                       totalFollowing={followCountData.totalFollowing}
                       followingSectionClass="order-4 md:order-5"
                       followButtonHandler={editProfileButtonHandler}
+                      bio={profileData.bio}
                     />
                   )}
                 </div>
@@ -332,7 +340,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       ...(await serverSideTranslations(locale as string, ['common'])),
-      profileData,
+      userProfileData: profileData,
       followCountData,
     },
   };

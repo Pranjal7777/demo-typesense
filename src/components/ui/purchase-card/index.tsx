@@ -3,6 +3,8 @@ import PurchaseProductDetails from './purchaseProductDetails';
 import ProfileImageContainer from '../profile-image-container';
 import { appClsx } from '@/lib/utils';
 import keyDownHandler from '@/helper/key-down-handler';
+import ImageContainer from '../image-container';
+import { STATIC_IMAGE_URL } from '@/config';
 
 type PurchaseCardProps = {
   cardData?: any;
@@ -49,13 +51,25 @@ const PurchaseCard: FC<PurchaseCardProps> = ({
         cardClass
       )}
     >
-      <PurchaseProductDetails
-        containerClass="gap-2 dark:bg-[#242424] p-2 rounded-lg"
-        imageSrc={productImageSrc}
-        details={`OID: ${orderId}`}
-        description={productName}
-        strongText={amount}
-      />
+      <div className="w-full p-2 flex justify-between text-text-secondary-dark dark:text-text-primary-dark bg-bg-quinquedenary-light rounded-lg">
+        <div className="flex items-center gap-2">
+          <ImageContainer
+            height={48}
+            width={58}
+            src={`${STATIC_IMAGE_URL}/${productImageSrc}`}
+            className={appClsx('object-cover h-12')}
+            alt={productName || 'product'}
+          />
+          <div className="flex gap-1 flex-col justify-between">
+            <span className="text-xs">{productName}</span>
+            <span className="text-sm font-medium ">{amount}</span>
+          </div>
+        </div>
+        <div className=" flex justify-end">
+          <span className="text-xs">{`${orderId}`}</span>
+        </div>
+      </div>
+
       <div className="flex justify-between items-center mt-3">
         <div className="flex items-center gap-[6px]">
           <ProfileImageContainer

@@ -96,11 +96,11 @@ const config: Config = {
         'bg-denary-dark': '#3C3C3C',
         'bg-undenary-dark': '#202020',
         'bg-duodenary-dark': '#414141',
-        'bg-quattuordenary-dark':'#15392B',
-        'bg-quinquedenary-dark': '#242424', 
+        'bg-quattuordenary-dark': '#15392B',
+        'bg-quinquedenary-dark': '#242424',
         'bg-sexdenary-dark': '#343434',
-  
-        // border color 
+
+        // border color
         'border-primary-light': '#000000',
         'border-secondary-light': '#FFFFFF',
         'border-tertiary-light': '#DBDBDB',
@@ -109,9 +109,9 @@ const config: Config = {
         'border-senary-light': '#57585A',
         'border-septenary-light': '#DDDDDD',
         'border-octonary-light': '#363636',
-        'border-nonary-light': '#E5E5E5',  
-        'border-denary-light': '#e7e7e7',  
-        'border-undenary-light': '##DEE2E6',  
+        'border-nonary-light': '#E5E5E5',
+        'border-denary-light': '#e7e7e7',
+        'border-undenary-light': '##DEE2E6',
         //-------------------------------------
         'border-primary-dark': '#929293',
         'border-secondary-dark': '#242424',
@@ -129,7 +129,9 @@ const config: Config = {
         'btn-secondary-dark': '',
 
         // ratting color
-        'rating-primary-primary-dark': '#FDB514'
+        'rating-primary-primary-dark': '#FDB514',
+        //  link color
+        'link-primary': '#377DFF',
       },
     },
     fontFamily: {
@@ -168,8 +170,6 @@ const config: Config = {
     // --novemdenary-color: #8a6d3b; /* Novemdenary color */
     // --vigintenary-color: #5e5e5e; /* Vigintenary color */
   },
-  plugins: [
-    require('@tailwindcss/aspect-ratio'),
-  ],
+  plugins: [require('@tailwindcss/aspect-ratio')],
 };
 export default config;

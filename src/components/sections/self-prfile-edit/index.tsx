@@ -31,6 +31,7 @@ type SelfProfileEditSectionProps = {
   profileData?: SellerProfileType;
   leftArrowClickHandler: () => void;
   isMobile: boolean;
+  setProfileData: React.Dispatch<React.SetStateAction<SellerProfileType>>;
   // setProfilePicUrl: (_url: string) => void;
 };
 
@@ -61,7 +62,7 @@ export type VerificationDataType = {
   verificationId :string;
 };
 
-const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, leftArrowClickHandler, isMobile }) => {
+const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, leftArrowClickHandler, isMobile, setProfileData }) => {
   const [editProfilePicUrl, setEditProfilePicUrl] = useState('');
   const { theme } = useTheme();
   const initialErrorState: EditErrorStateType = {
@@ -72,25 +73,7 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
     phoneNumber: false,
     countryCode: false,
   };
-  // const initialEditProfileFormData:EditFormDataType = {
-  //   firstName: profileData?.firstName || '',
-  //   lastName: profileData?.lastName || '',
-  //   username: profileData?.username || '',
-  //   email: profileData?.email || '',
-  //   phoneNumber: profileData?.phoneNumber || '',
-  //   countryCode: profileData?.countryCode || '+91',
-  //   country: profileData?.country || 'India',
-  // };
 
-  // const [initialEditProfileFormData, setInitialEditProfileFormData] = useState<EditFormDataType>({
-  //   firstName: profileData?.firstName || '',
-  //   lastName: profileData?.lastName || '',
-  //   username: profileData?.username || '',
-  //   email: profileData?.email || '',
-  //   phoneNumber: profileData?.phoneNumber || '',
-  //   countryCode: profileData?.countryCode || '+91',
-  //   country: profileData?.country || 'India',
-  // });
   const initialEditProfileFormData = {
     firstName: profileData?.firstName || '',
     lastName: profileData?.lastName || '',
@@ -276,7 +259,7 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
       return;
     }
     if (updatedFields.includes('firstName') || updatedFields.includes('lastName')) {
-      if (errorState.firstName || errorState.lastName) return;
+      if (errorState.firstName || errorState.lastName) return;    
     }
     const requestPayload: Partial<EditFormDataType> = {};
     updatedFields.forEach((field) => {
@@ -289,6 +272,11 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
         ...(editProfilePicUrl && { profilePic: editProfilePicUrl }),
       }).unwrap();
       showToast({ message: 'Profile updated successfully', messageType: 'success' });
+      setProfileData((prevState) => ({
+        ...prevState,
+        ...(editProfilePicUrl && { profilePic: editProfilePicUrl }),
+        ...requestPayload
+      }));
     } catch (error) {
       const errorData = error as { data: { message: string } };
       showToast({
@@ -300,6 +288,11 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
     }
   };
 const onVerificationSuccess = () => {
+  setProfileData((prevState) => ({
+    ...prevState,
+    countryCode: editProfileFormData.countryCode,
+    phoneNumber: editProfileFormData.phoneNumber,
+  }));
   setShowOtpVerification(false);
   setShowCongratulationModal(true);
   setVerificationData(null);
@@ -334,7 +327,7 @@ const onVerificationSuccess = () => {
                 <Image
                   width={100}
                   height={100}
-                  className=" rounded-full h-full w-full object-cover"
+                  className=" rounded-full h-[88px] w-[88px] md:h-[100px] md:w-[100px]  object-cover"
                   // className="absolute  mobile:left-3 rtl:mobile:left-0 rtl:mobile:right-3 "
                   src={editProfilePicUrl}
                   alt="profile-image"
@@ -343,7 +336,7 @@ const onVerificationSuccess = () => {
                 <ProfileImageContainer
                   height={100}
                   width={100}
-                  className="rounded-full"
+                  className=" rounded-full h-[88px] w-[88px] md:h-[100px] md:w-[100px]  object-cover"
                   src={
                     profileData.profilePic.includes('http')
                       ? profileData.profilePic
@@ -480,6 +473,7 @@ const onVerificationSuccess = () => {
         >
           {showOtpVerification ? (
             <OtpVerification
+              setProfileData={setProfileData}
               verificationData={verificationData}
               setVerificationData={setVerificationData}
               countryCode={editProfileFormData?.countryCode || ''}
@@ -534,6 +528,7 @@ const onVerificationSuccess = () => {
         >
           {showOtpVerification ? (
             <OtpVerification
+              setProfileData={setProfileData}
               setShowOtpVerification={setShowOtpVerification}
               verificationData={verificationData}
               setVerificationData={setVerificationData}

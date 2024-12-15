@@ -12,6 +12,7 @@ import { useAppSelector } from '@/store/utils/hooks';
 import { RootState } from '@/store/store';
 import showToast from '@/helper/show-toaster';
 import { DEFAULT_LOCATION } from '@/config';
+import { getFormattedDateFromTimestamp } from '@/helper/get-formatted-date';
 
 type ProductDetailsCardProps = {
   familyName: string;
@@ -21,6 +22,7 @@ type ProductDetailsCardProps = {
   currency?: string;
   timestampLabel: string;
   assetCondition?: string;
+  assetId?: string;
 };
 
 const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
@@ -30,7 +32,8 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
   price,
   currency,
   timestampLabel,
-  assetCondition
+  assetCondition,
+  assetId
 }) => {
   const theme = useTheme();
   const currentTheme = theme.theme;
@@ -57,15 +60,14 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
 
   const handleOtherReasonChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setOtherReason(e.target.value);
+    setReportError('');
   };
 
    const handleReportOptionChange = (selectedValues: string[]) => {
      setSelectedReportOption(selectedValues);
    };
 
-  console.log(reportOptions, 'mirchul report options');
-
-  const postedTime = formatUNIXTimeStamp(postTimeStamp, ['year', 'month', 'day']);
+  const postedTime = getFormattedDateFromTimestamp(postTimeStamp);
   const router = useRouter();
   const isLoggedIn = getCookie('isUserAuth');
 
@@ -77,6 +79,13 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
     }
   };
 
+   const handleCloseReport = () => {
+     setShowReport(false);
+     setSelectedReportOption([]);
+     setOtherReason('');
+    setReportError('');
+  };
+
   const reportSubmitHandler = async () => {
     if(selectedReportOption?.[0] == 'Other' && otherReason == ''){
       setReportError('Please specify the reason')
@@ -86,20 +95,26 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
       setReportError('Please select the reason')
       return;
     }
+    const reason = selectedReportOption?.[0] == 'Other' ? otherReason : reportOptions.find(option => option.value === selectedReportOption?.[0])?.label || '';
     const payload = {
-      reportedId: '',
+      reportedId: assetId || '',
       city: myLocation?.city || DEFAULT_LOCATION.city,
       reportType: 'asset',
-      reportReasonId: selectedReportOption?.[0] == 'Other' ? otherReason : selectedReportOption?.[0],
-      reason: selectedReportOption?.[0] || '',
+      ...(selectedReportOption?.[0] !== 'Other' && { reportReasonId: selectedReportOption?.[0] }),
+      reason: reason,
       country: myLocation?.country || DEFAULT_LOCATION.countryName,
       lat: myLocation?.latitude || DEFAULT_LOCATION.latitude,
       long: myLocation?.longitude || DEFAULT_LOCATION.longitude,
     };
-    await postReport(payload).unwrap()
-    showToast({message:'Report submitted successfully', messageType:'success'})
-    setReportError('')
-    setShowReport(false)
+    try {
+      const res = await postReport(payload).unwrap();
+      showToast({ message: res?.message || 'Report submitted successfully', messageType: 'success' });
+      handleCloseReport();
+    } catch (error) {
+      const err = error as {status: number, data: {message: string}};
+      showToast({ message: err.data.message, messageType: 'error' });
+    }
+    
   }
 
   return (
@@ -162,7 +177,7 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
               ></textarea>
             )}
 
-            {reportError && <span className="text-red-500 text-sm">{reportError}</span>}
+            {reportError && <p className="text-red-500 text-sm mt-3">{reportError}</p>}
             <Button onClick={reportSubmitHandler} className="mt-6 !mb-0 text-base font-normal">
               Submit
             </Button>

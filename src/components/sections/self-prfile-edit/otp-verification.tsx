@@ -5,6 +5,7 @@ import { VerificationDataType } from '.';
 import { selfProfileApi } from '@/store/api-slices/profile/self-profile';
 import CloseIcon from '../../../../public/assets/svg/close-icon';
 import { useTheme } from '@/hooks/theme';
+import { SellerProfileType } from '@/store/types/seller-profile-type';
 type OtpVerificationProps = {
   title?: string;
   description?: string;
@@ -25,6 +26,7 @@ type OtpVerificationProps = {
   phoneNumber: string;
   onVerificationSuccess: () => void;
   setShowOtpVerification: React.Dispatch<React.SetStateAction<boolean>>;
+  setProfileData: React.Dispatch<React.SetStateAction<SellerProfileType>>;
 };
 const OtpVerification: FC<OtpVerificationProps> = ({
   title = 'Enter Verification Code',
@@ -45,7 +47,8 @@ const OtpVerification: FC<OtpVerificationProps> = ({
   countryCode,
   phoneNumber,
   onVerificationSuccess,
-  setShowOtpVerification
+  setShowOtpVerification,
+  setProfileData
 }) => {
   const {theme} = useTheme();
   const [otp, setOTP] = useState(['', '', '', '']);
@@ -157,7 +160,17 @@ const OtpVerification: FC<OtpVerificationProps> = ({
             trigger: 3,
             type: 1
           }
-          // await reSendVerificationCode(resendPayload);
+          try {
+            const res = await reSendVerificationCode(resendPayload).unwrap();
+            console.log(res, 'mirchul res in otp verification');
+            setVerificationData(res?.data);
+            setOTP(['', '', '', '']);
+            setError('');
+            handleFocus(0);
+          } catch (error) {
+            const err = error as Error;
+            setError(err.message);
+          }
         }
   return (
     <div className={appClsx('h-full relative w-full flex flex-col items-center gap-y-6 mt-4', containerClassName)}>
@@ -211,7 +224,7 @@ const OtpVerification: FC<OtpVerificationProps> = ({
           {Math.floor(verificationData?.expiryTime / 60)} min {verificationData?.expiryTime % 60} sec remaining
         </span>
       ) : (
-        <span className={appClsx('text-brand-color cursor-pointer', sendAgainClassName)}>{sendAgainText}</span>
+        <span onClick={resendButtonHandler} className={appClsx('text-brand-color cursor-pointer', sendAgainClassName)}>{sendAgainText}</span>
       )}
       <Button
         className={appClsx('mb-0 mt-6', verifyButtonClassName)}

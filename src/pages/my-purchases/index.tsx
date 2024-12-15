@@ -33,6 +33,7 @@ const [page, setPage] = useState(1);
 
   const handleFilterChange = (selectedValues: string[]) => {
     setSelectedFilters(selectedValues);
+    setShowMobileFilterPopup(false)
   };
 
   const filterOptions = [

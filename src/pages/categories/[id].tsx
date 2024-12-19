@@ -36,6 +36,8 @@ import { StylesConfig } from 'react-select';
 import PageHeaderWithBreadcrumb from '@/components/ui/page-header-with-breadcrumb';
 import Breadcrumb from '@/components/ui/breadcrumb';
 import { getGuestTokenFromServer } from '@/helper/get-guest-token-from-server';
+import { categoriesApi } from '@/store/api-slices/categories-api';
+import { useNewWindowScroll } from '@/hooks/new-use-window-scroll';
 
 export type filteredProducts = {
   userName: string;
@@ -122,6 +124,29 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
 
   const [filtersDrawer, setFilterDrawer] = useState(false);
   const [selectedItemsFromFilterSection, setSelectedItemsFromFilterSection] = useState<filterTypes>(initialFilters);
+  const [threshold, setThreshold] = useState(700);
+
+  const minThreshold = useNewWindowScroll(threshold);
+
+  useEffect(() => {
+    window.addEventListener('resize', () => {
+      setThreshold(window.innerWidth < 643 ? 540 : 700);
+    });
+    return () => {
+      window.removeEventListener('resize', () => {
+        setThreshold(window.innerWidth < 643 ? 540 : 700);
+      });
+    };
+  }, []);
+
+  const {
+    data: categoriesBannerData,
+    isLoading: categoriesBannerDataLoading,
+    error: categoriesBannerDataError,
+  } = categoriesApi.useGetCategoriesBannerByParentIdQuery({parentId:id as string});
+
+  console.log(categoriesBannerData, 'categoriesBannerData');
+  
 
   const closeFilter = () => {
     setFilterDrawer(false);
@@ -465,9 +490,10 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
       />
 
       <Layout
-      tokenFromServer={tokenFromServer}
-      myLocationFromServer={myLocationFromServer}
-      categories={categories}
+        tokenFromServer={tokenFromServer}
+        myLocationFromServer={myLocationFromServer}
+        categories={categories}
+        heroImageSrc={categoriesBannerData?.webBanner}
       >
         {/* header with image and search box */}
         {/* Section:- What are you looking for? */}
@@ -489,168 +515,179 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
           )}
 
           {/* subcategories brand section end  */}
-          <Breadcrumb isLinkDisable={true} className='!pl-0 md:!pl-0 my-5' steps={[{name:'Categories'}, {name:getQueryParam(selectedCategory)}]}></Breadcrumb>
+          <Breadcrumb
+            isLinkDisable={true}
+            className="!pl-0 md:!pl-0 my-5"
+            steps={[{ name: 'Categories' }, { name: getQueryParam(selectedCategory) }]}
+          ></Breadcrumb>
           {/* categories section starts */}
           <div className="mobile:pb-9">
-          <div className=" ">
-            {allHighlightedProducts.length > 0 && (
-              <div className=" w-full pt-9 sm:py-8 lg:py-12 flex flex-col items-center justify-center">
-                <div className=" flex  w-full justify-between">
-                  <SectionTitle>Featured Products</SectionTitle>
-                </div>
-                {hasActiveFilters() && (
-                  <div className="border-2 boreder-error flex gap-10 items-center w-full flex-wrap mt-5 mobile:overflow-x-scroll h-8 md:h-4 border-none">
-                    <div className="flex gap-3 overflow-x-auto scrollbar-hide">
-                      {selectedItemsFromFiltersSectionList()}
+            <div className=" ">
+              {allHighlightedProducts.length > 0 && (
+                <div className=" w-full pt-9 sm:py-8 lg:py-12 flex flex-col items-center justify-center">
+                  <div className=" flex  w-full justify-between">
+                    <SectionTitle>Featured Products</SectionTitle>
+                  </div>
+                  {hasActiveFilters() && (
+                    <div className="border-2 boreder-error flex gap-10 items-center w-full flex-wrap mt-5 mobile:overflow-x-scroll h-8 md:h-4 border-none">
+                      <div className="flex gap-3 overflow-x-auto scrollbar-hide">
+                        {selectedItemsFromFiltersSectionList()}
+                      </div>
+                    </div>
+                  )}{' '}
+                  <div className="mt-10 w-full">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-x-3 gap-y-4 md:gap-x-2 md:gap-y-7">
+                      {isError ? (
+                        <h2>{convertRTKQueryErrorToString(error)}</h2>
+                      ) : highlightedProducts?.result !== undefined ? (
+                        allHighlightedProducts.map((product, index) => <ProductCard key={index} product={product} />)
+                      ) : null}
+                      {isFetching && (
+                        <>
+                          {Array.from({ length: 10 }).map((_, index) => (
+                            <Skeleton key={index} />
+                          ))}
+                        </>
+                      )}
+                    </div>
+
+                    <div className=" mt-7 w-full flex items-center justify-center">
+                      {highlightedProducts ? (
+                        <button
+                          className={`border-2 text-sm font-medium px-4 py-2 rounded dark:text-text-primary-dark
+                    ${allHighlightedProducts.length >= highlightedProducts?.Totalcount ? 'hidden' : ''}
+                    
+                    `}
+                          onClick={() => handleHighlightedProductsPageCountPageCount()}
+                        >
+                          View more
+                        </button>
+                      ) : null}
                     </div>
                   </div>
-                )}{' '}
-                <div className="mt-10 w-full">
+                </div>
+              )}
+              <div className=" w-full pt-9 sm:py-8 lg:py-12 flex flex-col items-center justify-center">
+                <div
+                  className={`w-full ${
+                    minThreshold
+                      ? `fixed ${threshold < 700 ? 'top-[175px]' : 'top-[145px]'} left-0 right-0 z-30 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-5 mx-auto max-w-[1440px]`
+                      : ''
+                  }`}
+                >
+                  <div className=" flex  w-full justify-between filterselectContainer">
+                    <SectionTitle>All Products</SectionTitle>
+                    <div className="ml-auto mr-[24px] relative inline-flex items-center gap-2">
+                      <Select
+                        isSearchable={false}
+                        className="w-fit min-w-[140px]  mobile:text-sm text-[14px] overflow-ellipsis"
+                        onChange={(option) => {
+                          updateFilters({ sort: option?.value });
+                        }}
+                        autoFocus={false}
+                        options={[
+                          { value: 'newest', label: 'Newest First' },
+                          { value: 'oldest', label: 'Oldest First' },
+                          { value: 'price_asc', label: 'Low to High' },
+                          { value: 'price_desc', label: 'High to Low' },
+                        ]}
+                        defaultValue={{ value: 'newest', label: 'Newest First' }}
+                        formatOptionLabel={({ label }, { context }) => <span className="pl-2">{label}</span>}
+                        styles={customStyles}
+                        theme={(theme) => ({
+                          ...theme,
+                          borderRadius: 0,
+                          colors: {
+                            ...theme.colors,
+                            primary25: theme ? '#f1ecf9' : '#EDF2F7',
+                            primary: theme ? 'var(--brand-color)' : 'var(--brand-color-hover)',
+                          },
+                        })}
+                      />
+                    </div>
+                    <button className="flex cursor-pointer justify-between items-center" onClick={handleFilterDrawer}>
+                      <div>
+                        <img
+                          className=" inline-block mobile:hidden"
+                          width={28}
+                          height={24}
+                          src={'/images/filters_icon_white.svg'}
+                          alt="dollar_coin_icon"
+                        />
+                        <img
+                          className=" mobile:block hidden"
+                          width={20}
+                          height={18}
+                          src={'/images/filters_icon_white.svg'}
+                          alt="dollar_coin_icon"
+                        />
+                      </div>
+                    </button>
+                  </div>
+                  {hasActiveFilters() && (
+                    <div className="border-2 boreder-error flex gap-10 items-center w-full flex-wrap mt-5 mobile:overflow-x-scroll h-8 md:h-4 border-none mb-2">
+                      <div className="flex gap-3 overflow-x-auto scrollbar-hide">
+                        {selectedItemsFromFiltersSectionList()}
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <div className="mt-10 w-full mobile:mt-6">
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-x-3 gap-y-4 md:gap-x-2 md:gap-y-7">
-                    {isError ? (
-                      <h2>{convertRTKQueryErrorToString(error)}</h2>
-                    ) : highlightedProducts?.result !== undefined ? (
-                      allHighlightedProducts.map((product, index) => <ProductCard key={index} product={product} />)
+                    {errorTypesense ? (
+                      <div className="col-span-full">
+                        <h2 className="text-center text-red-500">{errorTypesense}</h2>
+                      </div>
+                    ) : products.length > 0 ? (
+                      products.map((product, index) => (
+                        <ProductCard key={`${product?.id}-${index}`} product={product} isTypeSenseData={true} />
+                      ))
+                    ) : !isLoading ? (
+                      <div className="col-span-full text-center py-8 dark:text-white">
+                        <h2>No products found</h2>
+                      </div>
                     ) : null}
-                    {isFetching && (
+
+                    {isLoading && (
                       <>
                         {Array.from({ length: 10 }).map((_, index) => (
-                          <Skeleton key={index} />
+                          <Skeleton key={`skeleton-${index}`} />
                         ))}
                       </>
                     )}
                   </div>
 
-                  <div className=" mt-7 w-full flex items-center justify-center">
-                    {highlightedProducts ? (
+                  {hasMore && (
+                    <div className="mt-7 w-full flex items-center justify-center">
                       <button
-                        className={`border-2 text-sm font-medium px-4 py-2 rounded dark:text-text-primary-dark
-                    ${allHighlightedProducts.length >= highlightedProducts?.Totalcount ? 'hidden' : ''}
-                    
-                    `}
-                        onClick={() => handleHighlightedProductsPageCountPageCount()}
-                      >
-                        View more
-                      </button>
-                    ) : null}
-                  </div>
-                </div>
-              </div>
-            )}
-            <div className=" w-full pt-9 sm:py-8 lg:py-12 flex flex-col items-center justify-center">
-              <div className=" w-full">
-                <div className=" flex  w-full justify-between filterselectContainer">
-                  <SectionTitle>All Products</SectionTitle>
-                  <div className="ml-auto mr-[24px] relative inline-flex items-center gap-2">
-                    <Select
-                      className="w-fit min-w-[140px] max-w-[200px]  mobile:text-sm text-[14px] overflow-ellipsis"
-                      onChange={(option) => {
-                        updateFilters({ sort: option?.value });
-                      }}
-                      autoFocus={false}
-                      options={[
-                        { value: 'newest', label: 'Newest First' },
-                        { value: 'oldest', label: 'Oldest First' },
-                        { value: 'price_asc', label: 'Low to High' },
-                        { value: 'price_desc', label: 'High to Low' },
-                      ]}
-                      defaultValue={{ value: 'newest', label: 'Newest First' }}
-                      formatOptionLabel={({ label }, { context }) => <span className="pl-2">{label}</span>}
-                      styles={customStyles}
-                      theme={(theme) => ({
-                        ...theme,
-                        borderRadius: 0,
-                        colors: {
-                          ...theme.colors,
-                          primary25: theme ? '#f1ecf9' : '#EDF2F7',
-                          primary: theme ? 'var(--brand-color)' : 'var(--brand-color-hover)',
-                        },
-                      })}
-                    />
-                  </div>
-                  <button className="flex cursor-pointer justify-between items-center" onClick={handleFilterDrawer}>
-                    <div>
-                      <img
-                        className=" inline-block mobile:hidden"
-                        width={28}
-                        height={24}
-                        src={'/images/filters_icon_white.svg'}
-                        alt="dollar_coin_icon"
-                      />
-                      <img
-                        className=" mobile:block hidden"
-                        width={20}
-                        height={18}
-                        src={'/images/filters_icon_white.svg'}
-                        alt="dollar_coin_icon"
-                      />
-                    </div>
-                  </button>
-                </div>
-                {hasActiveFilters() && (
-                  <div className="border-2 boreder-error flex gap-10 items-center w-full flex-wrap mt-5 mobile:overflow-x-scroll h-8 md:h-4 border-none mb-2">
-                    <div className="flex gap-3 overflow-x-auto scrollbar-hide">
-                      {selectedItemsFromFiltersSectionList()}
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className="mt-10 w-full mobile:mt-6">
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-x-3 gap-y-4 md:gap-x-2 md:gap-y-7">
-                  {errorTypesense ? (
-                    <div className="col-span-full">
-                      <h2 className="text-center text-red-500">{errorTypesense}</h2>
-                    </div>
-                  ) : products.length > 0 ? (
-                    products.map((product, index) => (
-                      <ProductCard key={`${product?.id}-${index}`} product={product} isTypeSenseData={true} />
-                    ))
-                  ) : !isLoading ? (
-                    <div className="col-span-full text-center py-8 dark:text-white">
-                      <h2>No products found</h2>
-                    </div>
-                  ) : null}
-
-                  {isLoading && (
-                    <>
-                      {Array.from({ length: 10 }).map((_, index) => (
-                        <Skeleton key={`skeleton-${index}`} />
-                      ))}
-                    </>
-                  )}
-                </div>
-
-                {hasMore && (
-                  <div className="mt-7 w-full flex items-center justify-center">
-                    <button
-                      className="border-2 text-sm font-medium px-4 py-2 rounded dark:text-text-primary-dark
+                        className="border-2 text-sm font-medium px-4 py-2 rounded dark:text-text-primary-dark
                           hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors
                           disabled:opacity-50 disabled:cursor-not-allowed"
-                      onClick={loadMore}
-                      disabled={isLoading}
-                    >
-                      {isLoading ? 'Loading...' : 'View more'}
-                    </button>
-                  </div>
-                )}
+                        onClick={loadMore}
+                        disabled={isLoading}
+                      >
+                        {isLoading ? 'Loading...' : 'View more'}
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        {!HIDE_SELLER_FLOW && (
-          <>
-            <div className="border-b border-border-tertiary-light dark:border-border-tertiary-dark mt-12"></div>
-            <div className=" relative custom-container mx-auto sm:px-16 mobile:px-4 ">
-              <div className=" flex flex-col items-center justify-center ">
-                <div className=" mobile:mb-[42px] pb-8 flex flex-col w-full border-error">
-                  <AboutUs data={aboutUs} />
-                  <Accordion data={accordion} />
+          {!HIDE_SELLER_FLOW && (
+            <>
+              <div className="border-b border-border-tertiary-light dark:border-border-tertiary-dark mt-12"></div>
+              <div className=" relative custom-container mx-auto sm:px-16 mobile:px-4 ">
+                <div className=" flex flex-col items-center justify-center ">
+                  <div className=" mobile:mb-[42px] pb-8 flex flex-col w-full border-error">
+                    <AboutUs data={aboutUs} />
+                    <Accordion data={accordion} />
+                  </div>
                 </div>
+                <InfoSection />
               </div>
-              <InfoSection />
-            </div>
-          </>
-        )}
+            </>
+          )}
         </div>
       </Layout>
       <style jsx>{`

@@ -1,4 +1,4 @@
-import { GET_VERIFICATION_CODE, PROFILE, RE_VERIFICATION_OTP_CODE_URL, VALIDATE_OTP_CODE_URL } from '@/api/endpoints';
+import { GET_VERIFICATION_CODE, PROFILE, RE_VERIFICATION_OTP_CODE_URL, UPDATE_USER_ACCOUNT, USER_ACCOUNT, VALIDATE_OTP_CODE_URL } from '@/api/endpoints';
 import { rootApi } from '../root-api';
 import { AUTH_URL_V1 } from '@/config';
 import {
@@ -18,6 +18,20 @@ export const selfProfileApi = rootApi.injectEndpoints({
         url: `${PROFILE}`,
         method: 'PATCH',
         body: updatedProfileData,
+      }),
+    }),
+    updateAccount: builder.mutation({
+      query: (updatedProfileData) => ({
+        url: `${UPDATE_USER_ACCOUNT}`,
+        method: 'PATCH',
+        body: updatedProfileData,
+      }),
+    }),
+    deleteAccount: builder.mutation({
+      query: (deleteAccountData) => ({
+        url: `${USER_ACCOUNT}`,
+        method: 'DELETE',
+        body: deleteAccountData,
       }),
     }),
     updateUserName: builder.mutation<ResponseValidVerificationCodePayload, { username: string }>({

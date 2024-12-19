@@ -29,6 +29,7 @@ type Props = {
 };
 
 const Profile: FC<Props> = ({ userProfileData, followCountData }) => {
+  
   console.log(userProfileData, 'mirchul profile data');
   const [profileData, setProfileData] = useState<SellerProfileType>(userProfileData);
 
@@ -131,9 +132,10 @@ const Profile: FC<Props> = ({ userProfileData, followCountData }) => {
                 <div className="left w-full flex flex-col items-center md:w-[210px] text-text-secondary-dark dark:text-text-secondary-light">
                   {profileData && (
                     <NewProfileCard
-                      profileLink = {profileData.profileLink}
+                      profileLink = {profileData.website}
+                      firstName={profileData.firstName}
+                      lastName={profileData.lastName}
                       fullName={`${profileData.firstName} ${profileData.lastName}`}
-                      userName={profileData.username}
                       profilePic={profileData.profilePic || ''}
                       ratingValue={profileData.totalAvgRating || 0}
                       ratingText={`${getFormattedRating(profileData.totalAvgRating)}`}

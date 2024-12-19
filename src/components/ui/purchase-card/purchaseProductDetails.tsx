@@ -43,13 +43,15 @@ const PurchaseProductDetails: FC<PurchaseProductDetailsProps> = ({
     }
   }  
 
+  const imageUrl = imageSrc?.includes('http') ? imageSrc : `${STATIC_IMAGE_URL}/${imageSrc}`;
+
   return (
     <div className={appClsx('flex items-center gap-1', containerClass)}>
       {imageSrc &&
         (isProfile ? (
           <ProfileImageContainer
             className={appClsx('object-fill rounded-full', imageClass)}
-            src={`${STATIC_IMAGE_URL}/${imageSrc}`}
+            src={imageUrl}
             alt="Profile Image"
             height={24}
             width={24}
@@ -58,7 +60,7 @@ const PurchaseProductDetails: FC<PurchaseProductDetailsProps> = ({
           <ImageContainer
             height={height}
             width={width}
-            src={`${STATIC_IMAGE_URL}/${imageSrc}`}
+            src={imageUrl}
             className={appClsx('object-cover h-12', imageClass)}
             alt={altText || 'product'}
           />

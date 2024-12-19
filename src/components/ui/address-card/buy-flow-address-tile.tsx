@@ -33,7 +33,7 @@ const BuyFlowAddressTile: FC<Props> = ({
             handleChangeClick('mobile');
           }}
           alt={'white_edit_icon'}
-          primaryColor={'#6D3EC1'}
+          primaryColor={'var(--brand-color)'}
           width='22'
           height='22'
         />

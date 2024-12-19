@@ -1,3 +1,4 @@
+import { error } from 'console';
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
@@ -39,6 +40,7 @@ const config: Config = {
 
         // error
         error: '#ff0000', //red
+        'error-dark': '#D20000', //red
         //menu hover
         'menu-hover': '#b6adb1',
 

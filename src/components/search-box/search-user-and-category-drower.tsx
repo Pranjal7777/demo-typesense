@@ -186,7 +186,7 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
   return (
     <div
       className={appClsx(
-        'z-[10] h-full overflow-y-scroll fixed flex-col dark:bg-bg-primary-dark dark:text-text-primary-dark bg-bg-secondary-light inset-0 flex ',
+        'z-50 h-full overflow-y-scroll fixed flex-col dark:bg-bg-primary-dark dark:text-text-primary-dark bg-bg-secondary-light inset-0 flex ',
         className
       )}
     >
@@ -424,7 +424,7 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
                 ></div>
               </div>
 
-              <div
+              {/* <div
                 className="h-[98%] w-[25%] flex flex-col items-center justify-center"
                 onClick={() => {
                   setIsUserOrItem(false);
@@ -452,10 +452,10 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
                     !isUserOrItem ? 'border-brand-color border-[3px] rounded-t-2xl' : ''
                   } w-full `}
                 ></div>
-              </div>
+              </div> */}
             </div>
 
-            <div className="h-full overflow-y-scroll border-primary px-4 divide-y-2 dark:divide-border-tertiary-dark divide-border-tertiary-light">
+            <div className="h-fit overflow-y-scroll border-primary px-4 divide-y-2 dark:divide-border-tertiary-dark divide-border-tertiary-light">
               {isSearchProductsAndUsersFetching ? (
                 <div className=" flex items-center justify-center h-[50%]">
                   <Spinner />

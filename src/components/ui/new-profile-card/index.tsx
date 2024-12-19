@@ -1,13 +1,11 @@
 import React, { FC } from 'react';
 // import { PROFILE_IMAGE } from '../../../../public/images/productcard';
-import Image from 'next/image';
 import Rating from '../rating';
 import { appClsx } from '@/lib/utils';
 import Button from '../button';
-import UserPlaceholderIcon from '../../../../public/assets/svg/user-placeholder-icon';
-import { HIDE_SELLER_FLOW, STATIC_IMAGE_URL } from '@/config';
-import { useTheme } from '@/hooks/theme';
+import { HIDE_SELLER_FLOW } from '@/config';
 import Link from 'next/link';
+import UserProfile from '../user-profile';
 type Props = {
   cardClass?: string;
   fullNameClass?: string;
@@ -30,6 +28,8 @@ type Props = {
   followButtonHandler?: () => void;
   showFollowButton?: boolean;
   bio?: string;
+  firstName?: string;
+  lastName?: string;
   profileLink?: string;
 };
 const NewProfileCard: FC<Props> = ({
@@ -55,12 +55,14 @@ const NewProfileCard: FC<Props> = ({
   showFollowButton = true,
   bio,
   profileLink,
+  firstName,
+  lastName,
 }) => {
-  const profileSrc = profilePic ? (profilePic.includes('http') ? profilePic : `${STATIC_IMAGE_URL}/${profilePic}`) : '';
-  const { theme } = useTheme();
+  // const profileSrc = profilePic ? (profilePic.includes('http') ? profilePic : `${STATIC_IMAGE_URL}/${profilePic}`) : '';
+  // const { theme } = useTheme();
   return (
     <div className={appClsx('w-full flex flex-col items-center md:items-start gap-1', cardClass)}>
-      {profilePic ? (
+      {/* {profilePic ? (
         <Image
           width={100}
           height={100}
@@ -76,7 +78,9 @@ const NewProfileCard: FC<Props> = ({
           width="100"
           className="rounded-full"
         />
-      )}
+      )} */}
+
+      <UserProfile className='w-[100px] h-[100px] md:w-[100px] md:h-[100px]' textContainerClassName='text-3xl md:text-3xl' firstName={firstName} lastName={lastName} profilePicUrl={profilePic} />
 
       <strong
         className={appClsx(
@@ -103,14 +107,14 @@ const NewProfileCard: FC<Props> = ({
       />
       <div className="w-full flex flex-col-reverse gap-3 mt-3">
         {showFollowButton && (
-          <Button onClick={followButtonHandler} buttonType={buttonType} className={appClsx(buttonClass, 'my-0')}>
+          <Button onClick={followButtonHandler} buttonType={buttonType} className={appClsx(buttonClass, 'my-0 sm:max-w-full')}>
             {buttonText}
           </Button>
         )}
         <div className="w-full">
           {profileLink && (
             <Link className="text-xs break-all text-link-primary word-break-all" target="_blank" href={profileLink}>
-              Go to Profile 
+              Visit Website
             </Link>
           )}
 
@@ -121,7 +125,7 @@ const NewProfileCard: FC<Props> = ({
       {HIDE_SELLER_FLOW && showFollowingSection && (
         <div
           className={appClsx(
-            'w-full flex gap-4 justify-center md:justify-start text-sm font-medium text-text-secondary-dark dark:text-text-primary-dark',
+            'w-full flex gap-4 mt-1 md:mt-2 text-sm font-medium text-text-secondary-dark dark:text-text-primary-dark',
             followingSectionClass
           )}
         >

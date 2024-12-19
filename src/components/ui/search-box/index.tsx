@@ -2,7 +2,7 @@
 import React, { ChangeEvent, FC, KeyboardEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { useActions, useAppSelector } from '@/store/utils/hooks';
-import { GOOGLE_MAPS_KEY } from '@/config';
+import { GOOGLE_MAPS_KEY, HIDE_SELLER_FLOW } from '@/config';
 import isUserAuthenticated from '@/helper/validation/check-user-authentication';
 import { productsApi } from '@/store/api-slices/products-api';
 import { SearchItems, SearchUsers } from '@/store/types';
@@ -34,9 +34,11 @@ import HistoryIcon from '../../../../public/images/history-icon.svg';
 import { CustomSearchResults } from './custom-hits';
 import Link from 'next/link';
 import { FormDataT } from '@/components/sections/hero-section';
-  import { getCookie, setCookie } from '@/utils/cookies';
+import { getCookie, setCookie } from '@/utils/cookies';
 import { SearchResponse } from '@/types';
 import LeftArrowIcon from '../../../../public/assets/svg/left-arrow-icon';
+import { getUserLocation } from '@/helper/get-location';
+import getAddressFromLatLng from '@/helper/get-address-by-lat-lng';
 
 export type NewSearchBoxProps = {
   windowWidth: number;
@@ -134,28 +136,29 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
     }));
   }, []);
 
-
-  
-
   useEffect(() => {
     const searchQuery = router.query.search as string;
     if (searchQuery) {
-      searchClient.search([{
-        indexName: selectedOption === 'Items' ? 'kwibal_asset' : 'kwibal_accounts',
-        params: {
-          query: searchQuery,
-          query_by: selectedOption === 'Items' ? 'title.en,description' : 'first_name,last_name',
-          hitsPerPage: 1,
-        },
-      }]).then(({ results }: SearchResponse) => {
-        console.log(results,"resultsassad")
-        setHasValidSearchResults(results[0]?.hits?.length > 0);
-        setFormData(prev => ({
-          ...prev,
-          search: searchQuery,
-          resultDropdown: false
-        }));
-      });
+      searchClient
+        .search([
+          {
+            indexName: selectedOption === 'Items' ? 'kwibal_asset' : 'kwibal_accounts',
+            params: {
+              query: searchQuery,
+              query_by: selectedOption === 'Items' ? 'title.en,description' : 'first_name,last_name',
+              hitsPerPage: 1,
+            },
+          },
+        ])
+        .then(({ results }: SearchResponse) => {
+          console.log(results, 'resultsassad');
+          setHasValidSearchResults(results[0]?.hits?.length > 0);
+          setFormData((prev) => ({
+            ...prev,
+            search: searchQuery,
+            resultDropdown: false,
+          }));
+        });
     }
   }, [router.query.search, selectedOption]);
 
@@ -180,9 +183,9 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
   const sellerProfileRoute = (userId: string, searchText: string) => {
     router.push({
       pathname: routeSellerProfile(userId),
-      query: { 
+      query: {
         search: searchText,
-      }
+      },
     });
   };
 
@@ -217,14 +220,16 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
     }));
 
     if (value.trim()) {
-      const { results } = await searchClient.search([{
-        indexName: selectedOption === 'Items' ? 'kwibal_asset' : 'kwibal_accounts',
-        params: {
-          query: value,
-          query_by: selectedOption === 'Items' ? 'title.en,description' : 'first_name,last_name',
-          hitsPerPage: 1,
+      const { results } = await searchClient.search([
+        {
+          indexName: selectedOption === 'Items' ? 'kwibal_asset' : 'kwibal_accounts',
+          params: {
+            query: value,
+            query_by: selectedOption === 'Items' ? 'title.en,description' : 'first_name,last_name',
+            hitsPerPage: 1,
+          },
         },
-      }]);
+      ]);
       setHasValidSearchResults(results[0]?.hits?.length > 0);
     } else {
       setHasValidSearchResults(!!router.query.search);
@@ -304,7 +309,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
   const handleSearchButtonClick = async () => {
     setIsOpen(false);
     let searchText = formData.search.trim();
-    
+
     // If no text is typed, use the first recent search
     if (!searchText) {
       searchText = getFirstAvailableRecentSearch() || '';
@@ -314,6 +319,23 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
       await selectItemOrUserToSearch(searchText);
     }
   };
+
+  useEffect(() => {
+    getUserLocation().then((userCurrentLocation) => {
+      const lat = userCurrentLocation.latitude;
+      const lng = userCurrentLocation.longitude;
+      getAddressFromLatLng(lat, lng).then((address) => {
+        const data = {
+          address: (address?.addressLine1 as string) || '',
+          city: (address?.city as string) || '',
+          country: (address?.country as string) || '',
+          latitude: lat.toString(),
+          longitude: lng.toString(),
+        };
+        setMyLocationDispatch(data);
+      });
+    });
+  }, []);
 
   const selectedAddressFromLocationBox = (key: number) => {
     setIsAutoCompleteLocationBoxOpen(false);
@@ -387,13 +409,13 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
 
   // Add this function to handle the first available recent search
   const getFirstAvailableRecentSearch = () => {
-   if(recentSearchData){
-    if (selectedOption === 'Items' && recentSearchData?.data?.data?.length > 0) {
-      return recentSearchData.data.data[0].searchText;
-    } else if (selectedOption === 'Users' && recentSearchData?.data?.user?.length > 0) {
-      return recentSearchData.data.user[0].searchText;
+    if (recentSearchData) {
+      if (selectedOption === 'Items' && recentSearchData?.data?.data?.length > 0) {
+        return recentSearchData.data.data[0].searchText;
+      } else if (selectedOption === 'Users' && recentSearchData?.data?.user?.length > 0) {
+        return recentSearchData.data.user[0].searchText;
+      }
     }
-   }
     return null;
   };
 
@@ -423,13 +445,13 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
 
   // Add this helper function at the top of the component
   const getPrimaryColor = () => {
-    const isSellerProfilePage = router.pathname.startsWith('/seller-profile/')  || 
-    router.pathname.startsWith('/product');
-    
+    const isSellerProfilePage =
+      router.pathname.startsWith('/seller-profile/') || router.pathname.startsWith('/product');
+
     if (isSellerProfilePage) {
       return theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)';
     }
-    
+
     return minThreshold && theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)';
   };
 
@@ -480,14 +502,18 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
               {selectedOption === 'Items'
                 ? heroSection?.searchUserandItem?.items
                 : heroSection?.searchUserandItem?.users}
-              {isOpen ? (
-                <UpArrowRoundedEdge primaryColor={getPrimaryColor()} className="ml-2 rtl:ml-0 rtl:mr-2" />
-              ) : (
-                <DownArrowRoundedEdge primaryColor={getPrimaryColor()} className="ml-2 rtl:ml-0 rtl:mr-2" />
-              )}
+              {
+                !HIDE_SELLER_FLOW && (
+                  isOpen ? (
+                    <UpArrowRoundedEdge primaryColor={getPrimaryColor()} className="ml-2 rtl:ml-0 rtl:mr-2" />
+                  ) : (
+                    <DownArrowRoundedEdge primaryColor={getPrimaryColor()} className="ml-2 rtl:ml-0 rtl:mr-2" />
+                  )
+                )
+              }
             </button>
 
-            {isOpen && (
+            { !HIDE_SELLER_FLOW && (isOpen && (
               <div
                 className={`flex flex-col ${
                   stickyHeaderWithSearchBox && 'dark:!text-text-primary-dark dark:bg-bg-quinary-dark'
@@ -503,16 +529,18 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                 >
                   {heroSection?.searchUserandItem?.items}
                 </button>
-                <button
-                  className={` border-error p-2 cursor-pointer hover:bg-bg-octonary-light
+                {!HIDE_SELLER_FLOW && (
+                  <button
+                    className={` border-error p-2 cursor-pointer hover:bg-bg-octonary-light
                     dark:text-text-primary-dark dark:hover:bg-menu-hover dark:hover:text-text-secondary-dark
                   hover:rounded-b-md `}
-                  onClick={() => handleOptionSelect('Users')}
-                >
-                  {heroSection?.searchUserandItem?.users}
-                </button>
+                    onClick={() => handleOptionSelect('Users')}
+                  >
+                    {heroSection?.searchUserandItem?.users}
+                  </button>
+                )}
               </div>
-            )}
+            ))}
           </div>
           <div
             className={

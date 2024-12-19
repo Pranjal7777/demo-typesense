@@ -41,6 +41,7 @@ export type Props = {
   headerContainerClassName?: string;
   mobileHeaderContainerClassName?: string;
   showBackArrowInSearchBox?: boolean;
+  heroImageSrc?: string;
 };
 
 // Define the type for the schema object
@@ -61,6 +62,7 @@ const Layout: FC<Props> = ({
   headerContainerClassName,
   mobileHeaderContainerClassName,
   showBackArrowInSearchBox = false,
+  heroImageSrc,
 }) => {
   const { locale } = useRouter();
   const { token, myLocation, ipAddress } = useAppSelector((state: RootState) => state.auth);
@@ -223,6 +225,7 @@ const Layout: FC<Props> = ({
         {
           !excludeHeroSection && (
             <HeroSection
+              heroImageSrc={heroImageSrc}
               // content={content}
               // ${excludeDefaultPageHeaderForPlpPage.some((substring) => router.pathname.includes(substring)) &&
               //   'border-error sm:hidden mobile:inline'

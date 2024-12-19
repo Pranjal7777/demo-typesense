@@ -5,16 +5,18 @@ type Props = {
     message:string,
     onClose:()=>void,
     onConfirm:()=>void,
-    containerClassName?:string
+    containerClassName?:string,
+      className?:string,
+    buttonContainerClassName?:string
 }
-const ConfirmationPopup:FC<Props> = ({ isOpen, message, onClose, onConfirm, containerClassName }) => {
+const ConfirmationPopup:FC<Props> = ({ isOpen, message, onClose, onConfirm, containerClassName,className,buttonContainerClassName }) => {
   return (
     <div
       className={appClsx(`fixed z-50 flex h-[100vh] w-[100vw] items-center justify-center bg-gray-700 bg-opacity-40 ${!isOpen ? 'hidden' : ''}`,containerClassName)}
         >
-      <div className="w-[95%] max-w-[480px] relative bg-white rounded-lg p-8 shadow-lg z-[200]">
+      <div className={appClsx("w-[95%] max-w-[480px] relative bg-white rounded-lg p-8 shadow-lg z-[200] ",className)}>
         <h2 className="font-semibold mb-4">{message}</h2>
-        <div className="flex justify-end">
+        <div className={appClsx("flex justify-end",buttonContainerClassName)}>
           <button
             onClick={onConfirm}
             className="px-4 py-2 bg-brand-color text-white rounded mr-3"

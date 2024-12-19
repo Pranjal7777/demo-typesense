@@ -150,6 +150,7 @@ const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
                   followButtonHandler(sellerProfileData.accountId);
                 }}
                 bio={sellerProfileData.bio}
+                profileLink = {sellerProfileData.website}
               />
             )}
           </div>

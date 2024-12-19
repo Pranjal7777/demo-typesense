@@ -34,6 +34,8 @@ import NotificationIcon from '../../../../public/assets/svg/notification-icon';
 import { removeCookie } from '@/utils/cookies';
 import LeftArrowIcon from '../../../../public/assets/svg/left-arrow-icon';
 import { HIDE_SELLER_FLOW } from '@/config';
+import HartSvg from '../../../../public/assets/svg/heart';
+import { appClsx } from '@/lib/utils';
 export type loginOrUserName = {
   login: string;
   userName: string;
@@ -48,11 +50,14 @@ export type Props = {
   stickyHeaderWithSearchBox?: boolean;
   showItems?: number;
   categoriesWithChildCategories?: ResponseGetAllCategoriesPayload;
+  containerClassName?: string;
+  mobileContainerClassName?: string;
 };
 
 ////////////////////////////////////////
 type menuOptions = {
   item: string;
+
 };
 ///////////////////////////////////////
 
@@ -60,6 +65,8 @@ const Header: FC<Props> = ({
   stickyHeaderWithSearchBox = false,
   showItems = 4,
   // categoriesWithChildCategories,
+  containerClassName,
+  mobileContainerClassName,
 }) => {
   const { theme, toggleTheme } = useTheme();
   const minThreshold = useNewWindowScroll(0);
@@ -172,18 +179,21 @@ const Header: FC<Props> = ({
 
       <nav
         // ${windowWidth <= 639 && 'hidden'}
-        className={`z-[2] mobile:hidden ${
-          maxThreshold && ' border-b border-border-tertiary-light dark:border-b-border-tertiary-dark'
-        }  
+        className={appClsx(
+          `z-[2] mobile:hidden ${
+            maxThreshold && ' border-b border-border-tertiary-light dark:border-b-border-tertiary-dark'
+          }  
          ${stickyHeaderWithSearchBox && 'border-b border-b-border-tertiary-light dark:border-b-border-tertiary-dark'} ${
-          minThreshold
-            ? stickyHeaderWithSearchBox
+            minThreshold
+              ? stickyHeaderWithSearchBox
+                ? 'text-text-primary-light dark:text-text-primary-dark bg-bg-secondary-light dark:bg-bg-primary-dark'
+                : 'text-text-primary-light dark:text-text-primary-dark bg-bg-secondary-light dark:bg-bg-primary-dark'
+              : stickyHeaderWithSearchBox
               ? 'text-text-primary-light dark:text-text-primary-dark bg-bg-secondary-light dark:bg-bg-primary-dark'
-              : 'text-text-primary-light dark:text-text-primary-dark bg-bg-secondary-light dark:bg-bg-primary-dark'
-            : stickyHeaderWithSearchBox
-            ? 'text-text-primary-light dark:text-text-primary-dark bg-bg-secondary-light dark:bg-bg-primary-dark'
-            : 'text-text-secondary-light dark:text-text-primary-dark'
-        } h-[69px] w-full fixed top-0 text-sm font-medium capitalize transition ease-in-out duration-2000`}
+              : 'text-text-secondary-light dark:text-text-primary-dark'
+          } h-[69px] w-full fixed top-0 text-sm font-medium capitalize transition ease-in-out duration-2000`,
+          containerClassName
+        )}
       >
         <div className=" max-w-[1440px] px-[64px] m-auto h-full flex items-center justify-between">
           <div className="flex items-center h-full w-[65%]">
@@ -294,10 +304,12 @@ const Header: FC<Props> = ({
                   </div> */}
                   {/* for like route */}
                   <div className="cursor-pointer">
-                    <FeedsIcon
+                    <HartSvg
+                      height="24"
+                      width="24"
                       onClick={() => router.push('/my-favorites')}
                       className="hover:scale-105"
-                      primaryColor={`${
+                      borderColor={`${
                         stickyHeaderWithSearchBox
                           ? theme
                             ? 'var(--icon-primary-dark)'
@@ -381,11 +393,12 @@ const Header: FC<Props> = ({
 
       {/* <CategoryDrower className={`sm:hidden mobile:inline-block ${searchCategoryDrower && "!hidden"} transition duration-700`} searchCategoryDrower={searchCategoryDrower} setsearchCategoryDrower={setsearchCategoryDrower}/> */}
       <nav
-        className={`z-[2] border-error ${
-          stickyHeaderWithSearchBox && 'bg-bg-secondary-light dark:bg-bg-secondary-dark'
-        } ${
-          minThreshold && 'dark:bg-bg-primary-dark bg-bg-secondary-light'
-        } mobile:inline-block sm:hidden h-[69px] w-full fixed top-0  flex items-center justify-center px-[16px]`}
+        className={appClsx(
+          `z-[2] border-error ${stickyHeaderWithSearchBox && 'bg-bg-secondary-light dark:bg-bg-secondary-dark'} ${
+            minThreshold && 'dark:bg-bg-primary-dark bg-bg-secondary-light'
+          } mobile:inline-block sm:hidden h-[69px] w-full fixed top-0  flex items-center justify-center px-[16px]`,
+          mobileContainerClassName
+        )}
       >
         <div className=" flex items-center justify-between h-full w-full max-w-[638px]">
           <div className={` flex items-center ${stickyHeaderWithSearchBox && 'mobile:hidden'} `}>
@@ -474,7 +487,12 @@ const Header: FC<Props> = ({
             <>
               <div className=" relative w-12 h-12 flex items-center justify-center">
                 <Link className="relative w-12 h-12 flex items-center justify-center" href="/">
-                  <LeftArrowIcon className='hover:cursor-pointer absolute left-0' height="18" width="18" primaryColor={theme ? '#FFFFFF' : '#202020'} />
+                  <LeftArrowIcon
+                    className="hover:cursor-pointer absolute left-0"
+                    height="18"
+                    width="18"
+                    primaryColor={theme ? '#FFFFFF' : '#202020'}
+                  />
                   {/* <Image
                     className="hover:cursor-pointer hover:scale-102 absolute left-1 dark:hidden"
                     width={15}

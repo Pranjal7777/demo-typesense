@@ -22,9 +22,11 @@ const SelectCategoryDrawer: React.FC<CategoriesDrawerProps> = ({
   onCategorySelect,
   handleSelectCategory,
 }) => {
+  console.log(filterParameters,'mir filterParameters in select category drawer');
   const [searchField, setSearchField] = useState('');
   const [filteredData, setFilteredData] = useState<categories[]>([]);
   const { categoriesWithChildren,categories } = useSelector((state: RootState) => state.auth);
+  console.log(categories, 'mir filterParameters in select category drawer 2');
 
   
   useEffect(() => {

@@ -373,9 +373,9 @@ export default function SecureCheckout({
                       alt="Product"
                       width={140}
                       height={140}
-                      className="rounded-md mr-4 mobile:h-[105px] h-[137px] object-cover object-center"
+                      className="rounded-md mr-4 h-[74px] w-[74px] object-cover object-center"
                     />
-                    <div className="flex flex-col py-1 lg:py-3 ">
+                    <div className="flex flex-col justify-around ">
                       <h3 className="dark:text-white">{checkoutProduct?.title}</h3>
                       <p className="text-sm text-gray-600 dark:text-gray-300">
                         Sold by <button onClick={() => router.push(`/seller-profile/${sealerAccountId}`)} className="text-brand-color border-b border-brand-color cursor-pointer">{sellerUserName}</button>

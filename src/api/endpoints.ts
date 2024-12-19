@@ -47,6 +47,9 @@ export const DEFAULT_ADDRESS = '/default';
 export const GET_ADDRESS_ATTRIBUTES = 'v1/addressAttribute?type=1'
 export const GET_ADDRESS_TYPES = 'v1/addressAttribute?type=2'
 export const GET_VERIFICATION_CODE = 'sendVerificationCode';
+export const USER_ACCOUNT = 'v1/accounts';
+export const UPDATE_USER_ACCOUNT = `${USER_ACCOUNT}/update`;
+
 
 // seller-profile end point
 export const GET_ALL_SELLER_ASSETS = 'v2/python/userAssets/';

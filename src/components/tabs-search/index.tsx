@@ -4,6 +4,7 @@ import SearchIcon from '../../../public/assets/svg/search-icon';
 import FilterIcon from '../../../public/assets/svg/filter-icon';
 import FilterPopup from '../ui/filter-popup';
 import { useTheme } from '@/hooks/theme';
+import CloseIcon from '../../../public/assets/svg/close-icon';
 type OptionType = {
   label: string;
   value: string;
@@ -33,6 +34,10 @@ type TabbedSearchProps = {
   filterContainerClass?: string;
   filterLabelClass?: string;
   inputClass?: string;
+  clearIconClass?: string;
+  showClearIcon?: boolean;
+  onClearSearch?: () => void;
+
 };
 
 const TabbedSearch: FC<TabbedSearchProps> = ({
@@ -60,6 +65,9 @@ const TabbedSearch: FC<TabbedSearchProps> = ({
   filterContainerClass,
   filterLabelClass,
   inputClass,
+  clearIconClass,
+  showClearIcon,
+  onClearSearch,
 }) => {
   const [showFilterPopup, setShowFilterPopup] = useState(false);
   const onFilterIconClick = (event: React.MouseEvent) => {
@@ -83,6 +91,10 @@ const TabbedSearch: FC<TabbedSearchProps> = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const handleClearSearch = () => {
+    onClearSearch?.();
+  };
 
   return (
     <div className={appClsx(' relative flex flex-col-reverse gap-3 md:flex-row md:justify-between', tabContainerClass)}>
@@ -120,7 +132,7 @@ const TabbedSearch: FC<TabbedSearchProps> = ({
         {searchValue != undefined && (
           <div
             className={appClsx(
-              'search-box w-full min-w-[290px] md:max-w-[290px] h-10 md:h-11 rounded-lg md:rounded  flex gap-3 items-center px-[10px] bg-bg-septenary-light dark:bg-bg-quinary-dark',
+              'search-box w-full min-w-[290px] relative md:max-w-[290px] h-10 md:h-11 rounded-lg md:rounded  flex gap-3 items-center px-[10px] bg-bg-septenary-light dark:bg-bg-quinary-dark',
               searchBoxClass
             )}
           >
@@ -132,6 +144,7 @@ const TabbedSearch: FC<TabbedSearchProps> = ({
               type="text"
               className={appClsx('w-[100%] text-[14px] outline-none bg-bg-septenary-light dark:bg-bg-quinary-dark h-[100%]', searchInputClass)}
             />
+            {showClearIcon && searchValue && <CloseIcon onClick={handleClearSearch} height='13px' width='13px' primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} className={appClsx('', clearIconClass)} />}
           </div>
         )}
 

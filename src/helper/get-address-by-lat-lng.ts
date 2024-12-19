@@ -4,9 +4,6 @@ const getAddressFromLatLng = async (lat:number, lng:number) => {
   try {
     const response = await fetch(url);
     const data = await response.json();
-    // console.log(data,'data000000000000000000');
-    // {"name":"Shreeseller Tandel","phoneNumber":"9979551237","countryCode":"+91","addressLine1":"9WRJ+547 Balitha","city":"Vapi","state":"GJ","country":"India","zipCode":"396145","lat":"20.390296224180904","long":"72.93030247092247","addressTypeAttribute":"6617b87aa86bb50e82fda3cf","addressNotesAttributes":["6617b83aa86bb50e82fda3ca"]}
-
     if (data.address) {
       const formattedAddress = {
         addressLine1: data.display_name,

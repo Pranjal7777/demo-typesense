@@ -80,6 +80,8 @@ const OAuth = () => {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
+      console.log(result, 'google-user');
+      
       const user = result.user;
       localStorage.setItem('googleUser', JSON.stringify(user));
       if (user) {

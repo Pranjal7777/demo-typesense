@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useState } from 'react';
+import React, { ChangeEvent, FC, useMemo, useState } from 'react';
 import LeftArrowIcon from '../../../../public/assets/svg/left-arrow-icon';
 import ProfileImageContainer from '@/components/ui/profile-image-container';
 import Image from 'next/image';
@@ -32,6 +32,9 @@ import PurchaseProductDetails from '@/components/ui/purchase-card/purchaseProduc
 import UserProfile from '@/components/ui/user-profile';
 import ConfirmationPopup from '@/components/ui/confirmation-popup';
 import FilterPopup from '@/components/ui/filter-popup';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth } from '../../../../firebase.config';
+import ReasonFilter from '@/components/ui/reason-filter';
 
 type SelfProfileEditSectionProps = {
   profileData?: SellerProfileType;
@@ -76,6 +79,7 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
   isMobile,
   setProfileData,
 }) => {
+  console.log(profileData, 'profile data in self profile edit');
   const [editProfilePicUrl, setEditProfilePicUrl] = useState('');
   const { theme } = useTheme();
   const initialErrorState: EditErrorStateType = {
@@ -326,19 +330,51 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
     setShowCongratulationModal(true);
     setVerificationData(null);
   };
-  // const verifyOtpHandler = async () => {
-  //   const data = await verifyVerificationCode({verificationId: verificationData?.verificationId || '', otp: otp}).unwrap();
-  // }
 
-  const [deleteAccount] = selfProfileApi.useDeleteAccountMutation();
+  const [verifySocialAccount] = selfProfileApi.useVerifySocialAccountMutation();
+  const googleVerify = async () => {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({
+      prompt: 'select_account',
+    });
+    const result = await signInWithPopup(auth, provider);
+    if (result.user) {
+      const payload = {
+        id: result.user.uid,
+        trigger: 2,
+      };
+      try {
+        await verifySocialAccount(payload).unwrap();
+        await updateProfile({
+          googleId: payload.id,
+        }).unwrap();
+        showToast({ message: 'Google account verified successfully', messageType: 'success' });
+      } catch (error) {
+        console.log(error, 'google-user-verify error');
+        const errorData = error as { data: { message: string } };
+        showToast({
+          message: errorData?.data?.message || 'Something went wrong please try after sometime',
+          messageType: 'error',
+        });
+      }
+    }
+  };
+
+ const [deleteAccount] = selfProfileApi.useDeleteAccountMutation();
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
   const [showDeleteReasons, setShowDeleteReasons] = useState(false);
   const [selectedDeleteReason, setSelectedDeleteReason] = useState<string[]>([]);
-  const deleteReasons = [
-    { label: 'Account is not working', value: 'account_not_working' },
-    { label: 'Account is not working', value: 'account_not_working' },
-    { label: 'Account is not working', value: 'account_not_working' },
-  ];
+  const { data: deleteAccountReasons } = selfProfileApi.useGetDeleteAccountReasonsQuery();
+  const deleteReasons = useMemo(() => {
+    return deleteAccountReasons?.data.map((reason) => ({
+      label: reason.reason,
+      value: reason._id,
+    }));
+  }, [deleteAccountReasons]);
+
+  const [deleteError, setDeleteError] = useState('');
+  const [deleteOtherReason, setDeleteOtherReason] = useState('');
+
   const handleDeleteReasonChange = (selectedValues: string[]) => {
     setSelectedDeleteReason(selectedValues);
   };
@@ -348,13 +384,55 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
   const onDeleteModalClose = () => {
     setShowDeleteAccountModal(false);
     setShowDeleteReasons(false);
+    setSelectedDeleteReason([]);
+    setDeleteOtherReason('');
   };
   const onDeleteConfirm = () => {
     setShowDeleteReasons(true);
   };
   const onDeleteCancel = () => {
     setShowDeleteAccountModal(false);
+    onDeleteModalClose();
   };
+
+    const handleDeleteReasonSubmit = async () => {
+      console.log(selectedDeleteReason, 'selectedDeleteReason');
+      if (selectedDeleteReason.length == 0) {
+        setDeleteError('Please select at least one reason');
+        return;
+      }
+      console.log(selectedDeleteReason, 'selectedDeleteReason 1');
+      if (selectedDeleteReason?.[0] == 'Other' && deleteOtherReason == '') {
+        setDeleteError('Please specify the reason');
+        return;
+      }
+      console.log(selectedDeleteReason, 'selectedDeleteReason 2');
+      const reason =
+        selectedDeleteReason?.[0] == 'Other'
+          ? deleteOtherReason
+          : deleteReasons?.find((option) => option.value === selectedDeleteReason?.[0])?.label || '';
+      const deleteAccountPayload = {
+        id: profileData?._id || '',
+        reason: reason,
+        deleteConfirmation: 'false',
+      };
+      try {
+        const data = await deleteAccount(deleteAccountPayload).unwrap();
+        showToast({
+          message: 'An email has been sent to your registered email address for account deletion confirmation.',
+          messageType: 'success',
+          duration: 5000,
+        });
+        onDeleteModalClose();
+      } catch (error) {
+        console.log(error, 'delete account error');
+        const errorData = error as { data: { message: string } };
+        showToast({
+          message: errorData?.data?.message || 'Something went wrong please try after sometime',
+          messageType: 'error',
+        });
+      }
+    };
 
   return (
     <div className="text-text-primary-light dark:text-text-primary-dark w-full">
@@ -379,14 +457,6 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
           <div className="profile-image-container w-[100px] h-[100px] relative">
             <>
               {editProfilePicUrl ? (
-                // <Image
-                //   width={100}
-                //   height={100}
-                //   className=" rounded-full h-[88px] w-[88px] md:h-[100px] md:w-[100px]  object-cover"
-                //   // className="absolute  mobile:left-3 rtl:mobile:left-0 rtl:mobile:right-3 "
-                //   src={editProfilePicUrl}
-                //   alt="profile-image"
-                // />
                 <UserProfile
                   firstName={profileData?.firstName}
                   lastName={profileData?.lastName}
@@ -538,7 +608,9 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
                 </div>
                 <div>
                   <p className="text-sm">Gmail account</p>
-                  <p className="text-xs text-brand-color cursor-pointer">Verified</p>
+                  <p onClick={googleVerify} className="text-xs text-brand-color cursor-pointer">
+                    Verified
+                  </p>
                 </div>
               </div>
               <div className="flex items-center gap-x-3">
@@ -578,6 +650,7 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
         >
           {showOtpVerification ? (
             <OtpVerification
+              profileData={profileData}
               setProfileData={setProfileData}
               verificationData={verificationData}
               setVerificationData={setVerificationData}
@@ -633,6 +706,7 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
         >
           {showOtpVerification ? (
             <OtpVerification
+              profileData={profileData}
               setProfileData={setProfileData}
               setShowOtpVerification={setShowOtpVerification}
               verificationData={verificationData}
@@ -691,21 +765,26 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
       )}
       {showDeleteAccountModal && (
         <Model
-          modelClassName=""
+          modelClassName="items-end md:items-center"
           closeIconClassName="absolute right-3 top-3 cursor-pointer "
-          className=" text-text-primary-light dark:text-text-primary-dark dark:bg-bg-nonary-dark rounded-[10px] w-[95%] max-w-[420px] h-fit px-5 py-10"
+          className=" text-text-primary-light dark:text-text-primary-dark dark:bg-bg-nonary-dark rounded-[10px] w-full max-w-full md:max-w-[420px] mobile:rounded-b-none mobile:rounded-t-2xl  h-fit px-4 md:px-6 py-5 bottom-0"
           onClose={onDeleteModalClose}
         >
           {showDeleteReasons ? (
-            <FilterPopup
-              containerClass="w-full w-fit h-fit static p-0 bg-white "
-              filterType="RADIO"
-              options={deleteReasons}
+            <ReasonFilter
+              showOtherOption={true}
+              filterDescription="Please select an option"
+              options={deleteReasons || []}
               selectedValues={selectedDeleteReason}
               onSelectionChange={handleDeleteReasonChange}
-              />
+              error={deleteError}
+              handleSubmit={handleDeleteReasonSubmit}
+              setOtherReason={setDeleteOtherReason}
+              otherReason={deleteOtherReason}
+            />
           ) : (
             <ConfirmationPopup
+              title="Delete Account"
               containerClassName="bg-transparent w-full h-full static"
               buttonContainerClassName="justify-center"
               className="bg-transparent shadow-none w-full max-w-full p-0"

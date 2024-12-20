@@ -26,7 +26,8 @@ type OtpVerificationProps = {
   phoneNumber: string;
   onVerificationSuccess: () => void;
   setShowOtpVerification: React.Dispatch<React.SetStateAction<boolean>>;
-  setProfileData: React.Dispatch<React.SetStateAction<SellerProfileType>>;
+  profileData?: SellerProfileType;
+  setProfileData?: React.Dispatch<React.SetStateAction<SellerProfileType>>;
 };
 const OtpVerification: FC<OtpVerificationProps> = ({
   title = 'Enter Verification Code',
@@ -48,8 +49,10 @@ const OtpVerification: FC<OtpVerificationProps> = ({
   phoneNumber,
   onVerificationSuccess,
   setShowOtpVerification,
+  profileData,
   setProfileData
 }) => {
+  console.log(profileData, 'profile data in otp verification in otp verification');
   const {theme} = useTheme();
   const [otp, setOTP] = useState(['', '', '', '']);
   const [error, setError] = useState(verificationError || '');
@@ -158,7 +161,8 @@ const OtpVerification: FC<OtpVerificationProps> = ({
             countryCode: countryCode,
             emailOrPhone: phoneNumber,
             trigger: 3,
-            type: 1
+            type: 1,
+            userId: profileData?._id
           }
           try {
             const res = await reSendVerificationCode(resendPayload).unwrap();

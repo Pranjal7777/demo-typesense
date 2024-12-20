@@ -53,6 +53,7 @@ export interface RequestReSendVerificationCodePayload {
     emailOrPhone:string,
     trigger:number,
     type:number,
+    userId?:string
 }
 
 

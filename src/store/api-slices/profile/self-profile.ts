@@ -1,4 +1,4 @@
-import { GET_VERIFICATION_CODE, PROFILE, RE_VERIFICATION_OTP_CODE_URL, UPDATE_USER_ACCOUNT, USER_ACCOUNT, VALIDATE_OTP_CODE_URL } from '@/api/endpoints';
+import { GET_REASONS, GET_VERIFICATION_CODE, PROFILE, RE_VERIFICATION_OTP_CODE_URL, UPDATE_USER_ACCOUNT, USER_ACCOUNT, VALIDATE_OTP_CODE_URL, VERIFY_SOCIAL_ACCOUNT } from '@/api/endpoints';
 import { rootApi } from '../root-api';
 import { AUTH_URL_V1 } from '@/config';
 import {
@@ -7,7 +7,7 @@ import {
   ResponseSendVerificationCodePayload,
   ResponseValidVerificationCodePayload,
 } from '@/store/types';
-import { SendVerificationForChangeNumber } from '@/store/types/profile-type';
+import { ReasonResponse, SendVerificationForChangeNumber } from '@/store/types/profile-type';
 
 // import { ResponseAddress } from '@/store/types';
 
@@ -83,6 +83,19 @@ export const selfProfileApi = rootApi.injectEndpoints({
         }),
       }
     ),
+    verifySocialAccount: builder.mutation<any, { id: string; trigger: number }>({
+      query: (body) => ({
+        url: `${AUTH_URL_V1}${VERIFY_SOCIAL_ACCOUNT}`,
+        method: 'POST',
+        body,
+      }),
+    }),
+    getDeleteAccountReasons: builder.query<ReasonResponse, void>({
+      query: () => ({
+        url: `${GET_REASONS}=3`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 

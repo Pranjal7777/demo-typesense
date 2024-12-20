@@ -54,3 +54,17 @@ export interface SendVerificationForChangeNumber {
 };
 
 
+export type ReasonData = {
+  _id: string;
+  userType: number;
+  status: number;
+  statusMsg: string;
+  reason: string;
+};
+
+export type ReasonResponse = {
+  message: string;
+  data: ReasonData[];
+};
+
+

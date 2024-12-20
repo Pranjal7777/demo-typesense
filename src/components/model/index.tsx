@@ -41,9 +41,12 @@ const Model: FC<Props> = ({
     <ReactPortal wrapperId="react-portal-modal-container">
       <>
         <div
-          className={`${modelClassName} ${
-            !visible && 'hidden'
-          } fixed w-full h-screen inset-0 z-50 flex bg-[#00000099] items-center justify-center`}
+          className={appClsx(
+            `${
+              !visible && 'hidden'
+            } fixed w-full h-screen inset-0 z-50 flex bg-[#00000099] items-center justify-center`,
+            modelClassName
+          )}
           onClick={backgroundClickClose ? () => setVisible?.(!visible) : undefined}
           tabIndex={0}
           role="button"

@@ -33,6 +33,11 @@ const [page, setPage] = useState(1);
 
   const handleFilterChange = (selectedValues: string[]) => {
     setSelectedFilters(selectedValues);
+    setShowMobileFilterPopup(false)
+  };
+  const onClearSearch = () => {
+    setSearchText('');
+    setDebouncedSearchText('');
   };
 
   const filterOptions = [
@@ -182,6 +187,8 @@ const [page, setPage] = useState(1);
               onSelectionChange={handleFilterChange}
               selectedFilters={selectedFilters}
               filterOptions={filterOptions}
+              onClearSearch={onClearSearch}
+              showClearIcon={true}
             />
           </div>
         )}

@@ -38,16 +38,14 @@ export interface FilterParameter {
   };
 
   export interface PostReportResponse {
-    data: {
-      message: string;
-    };
+    message: string;
   }
 
   export type PostReportPayloadType = {
     reportedId: string;
     city: string;
     reportType: string;
-    reportReasonId: string;
+    reportReasonId?: string;
     reason: string;
     country: string;
     lat: string;

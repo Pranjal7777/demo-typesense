@@ -12,14 +12,16 @@ import React, { ChangeEvent, FC } from 'react';
     errorClassName?: string,
     value?:string;
     changeEvent?: (_e: ChangeEvent<HTMLTextAreaElement>) => void;
+    showRequiredOrOptional?: boolean;
     
   }
 
-const LableWithTextArea: FC<Props> = ({label,required,labelClassName,className,mainClassName,name,value,changeEvent,error,errorClassName}) => {
+const LableWithTextArea: FC<Props> = ({label,required,labelClassName,className,mainClassName,name,value,changeEvent,error,errorClassName , showRequiredOrOptional = true}) => {
   return (
     <div className={appClsx('w-full my-[12px]', mainClassName)}>
       <label className={appClsx('text-[14px] sm:font-semibold dark:text-text-secondary-light', labelClassName)} htmlFor={name}>
-        {label}{required ? '*' : ' (Optional)'}
+        {label}
+        {showRequiredOrOptional && (required ? '*' : ' (Optional)')}
       </label>
       <textarea
         value={value}

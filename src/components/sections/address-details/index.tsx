@@ -11,6 +11,7 @@ import { ErrorStateType } from '@/pages/profile/address';
 import Select, { MultiValue, StylesConfig } from 'react-select';
 import { UserInfoType } from '@/store/types/profile-type';
 import { addressApi } from '@/store/api-slices/profile/address-api';
+import { useRouter } from 'next/router';
 
 type Props = {
   formData: UserInfoType;
@@ -41,6 +42,7 @@ const AddressDetails: FC<Props> = ({
   const { theme } = useTheme();
   const { data } = addressApi.useGetAddressAttributesQuery();
   const { data: addressType } = addressApi.useGetAddressTypesQuery();
+  const router = useRouter();
 
   const options = useMemo(() => {
     if (!data?.data) {
@@ -92,7 +94,7 @@ const AddressDetails: FC<Props> = ({
   };
 
   return (
-    <section className="w-full mt-3 sm:mt-0 leading-[21px] md:leading-[24px] text-text-primary-light  dark:text-text-primary-dark  address-details-section">
+    <section className={`w-full mt-3 sm:mt-0 leading-[21px] md:leading-[24px] text-text-primary-light  dark:text-text-primary-dark   address-details-section ${router.pathname.includes('buy') ? 'px-3' : ''}`}>
       <SelectedLocation setIsClickOnChange={setIsClickOnChange} pageType={pageType} formData={formData} />
       <LableWithTextArea
         labelClassName="font-[600]"

@@ -19,6 +19,7 @@ import { Toaster } from 'sonner';
 import FullScreenSpinner from '../full-screen-spinner';
 import showToast from '@/helper/show-toaster';
 import { AddressErrorType } from '@/store/types/profile-type';
+import UserProfile from '../user-profile';
 
 interface ProductCardProps {
   product: Product;
@@ -73,20 +74,7 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
         <Link href={`/seller-profile/${userAccountId}`}>
           {showProfilePic && (
             <div className="flex gap-1 md:gap-4 items-center">
-              {/* for profile image, in the src of next/image component we can add url from api  */}
-              {product?.profilePic && product?.profilePic.trim() !== '' ? (
-                <div className="relative h-[32px] w-[32px] sm:h-[36px] sm:w-[36px] overflow-hidden">
-                  <ImageContainer
-                    src={`${STATIC_IMAGE_URL}/${product?.profilePic}`}
-                    className="rounded-full object-cover"
-                    alt="profileimage"
-                  />
-                </div>
-              ) : (
-                <UserPlaceholderIcon
-                  secondaryColor={theme ? 'var(--icon-secondary-dark)' : 'var(--icon-secondary-light)'}
-                />
-              )}
+              <UserProfile firstName={product.firstName} lastName={product.lastName} profilePicUrl={product.profilePic} />
 
               <div>
                 {/* here we can add name coming form api as product?.name */}

@@ -41,16 +41,21 @@ const Model: FC<Props> = ({
     <ReactPortal wrapperId="react-portal-modal-container">
       <>
         <div
-          className={`${modelClassName} ${
-            !visible && 'hidden'
-          } fixed w-full h-screen inset-0 z-50 flex bg-[#00000099] items-center justify-center`}
+          className={appClsx(
+            `${
+              !visible && 'hidden'
+            } fixed w-full h-screen inset-0 z-50 flex bg-[#00000099] items-center justify-center`,
+            modelClassName
+          )}
           onClick={backgroundClickClose ? () => setVisible?.(!visible) : undefined}
           tabIndex={0}
-          role='button'
+          role="button"
           onKeyUp={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault(); 
-              {backgroundClickClose ? () => setVisible?.(!visible) : undefined;}
+              e.preventDefault();
+              {
+                backgroundClickClose ? () => setVisible?.(!visible) : undefined;
+              }
             }
           }}
         >
@@ -61,7 +66,13 @@ const Model: FC<Props> = ({
             )}
             style={style}
           >
-            <CloseIcon height={closeIconHeight || '22'} width={closeIconWidth || '22'} className={appClsx(closeIconClassName, 'absolute top-5 right-5')} primaryColor={theme ? '#fff' : '#202020'} onClick={onClose}/>
+            <CloseIcon
+              height={closeIconHeight || '16'}
+              width={closeIconWidth || '16'}
+              className={appClsx('absolute top-5 right-5 cursor-pointer', closeIconClassName)}
+              primaryColor={theme ? '#fff' : '#202020'}
+              onClick={onClose}
+            />
 
             {/* children starts */}
             {children}

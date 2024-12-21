@@ -1,1 +1,1 @@
-export const MAP_MARKER = '/images/address-page/location_on.png';
+export const MAP_MARKER = '/images/address-page/location_on.svg';

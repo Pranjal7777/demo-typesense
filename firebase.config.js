@@ -9,13 +9,15 @@ import { getAuth } from 'firebase/auth';
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: 'AIzaSyB02Yf2Gmyx0L0pTRBCrUo9Lr52oDeIHuA',
+  // apiKey: 'AIzaSyB02Yf2Gmyx0L0pTRBCrUo9Lr52oDeIHuA',
+  apiKey: 'AIzaSyDX4utP4j4Gro5MiL7x6xEUaxCsT0e7sT0',
   authDomain: 'kwibal.firebaseapp.com',
   projectId: 'kwibal',
   storageBucket: 'kwibal.appspot.com',
+  // storageBucket: 'kwibal.firebasestorage.app',
   messagingSenderId: '383077171790',
   appId: '1:383077171790:web:5c552bf0591807f03fb91f',
-  measurementId: 'G-EJ7MWNFQNY'
+  measurementId: 'G-EJ7MWNFQNY',
 };
 
 // Initialize Firebase

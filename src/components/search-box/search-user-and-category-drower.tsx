@@ -158,7 +158,7 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
     }
   };
 
-  const categoryRoute = (categoryId: string, search: string) => {
+  const categoryRoute = (categoryId: string, search: string, hit?: Hit) => {
     // router.push(routeToCategories({category:{id:categoryId}}));
 
     setFormData((prevState) => ({
@@ -167,7 +167,10 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
       resultDropdown: router?.pathname === '/categories/[id]' ? false : prevState.resultDropdown,
     }));
     const url = routeToCategories({ category: { id: categoryId } });
-    const query = search ? { search } : {};
+    const query = {
+        selectedCategory: hit?.mainCategory || '',
+        search: search || undefined,
+      };
     router.push({ pathname: url, query });
     setSearchItemAndUserDrower(!searchItemAndUserDrower);
   };
@@ -295,7 +298,7 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
 
                               // setShowRecentSearchResultsFromTypesense(false);
                               // @ts-ignore
-                              categoryRoute(hit.categories[0].id);
+                              categoryRoute(hit.categories[0].id, hit.title.en, hit);
                               // setIsOpen(false);
                             }}
                           >
@@ -473,7 +476,7 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
                             key={hit.id}
                             onClick={() => {
                               // @ts-ignore
-                              categoryRoute(hit.categories[0]?.id , hit.title.en);
+                              categoryRoute(hit.categories[0]?.id , hit.title.en, hit);
                               // @ts-ignore
                               triggerSingleProductSearch({assetId:hit.id,search:hit.title.en})
                             }}

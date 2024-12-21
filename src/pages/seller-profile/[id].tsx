@@ -132,6 +132,8 @@ const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
           <div className="left w-full flex flex-col items-center md:w-[210px] text-text-primary-light dark:text-text-primary-dark ">
             {sellerProfileData && (
               <NewProfileCard
+                firstName={sellerProfileData.firstName}
+                lastName={sellerProfileData.lastName}
                 fullName={`${sellerProfileData.firstName} ${sellerProfileData.lastName}`}
                 userName={sellerProfileData.username}
                 profilePic={sellerProfileData.profilePic || ''}

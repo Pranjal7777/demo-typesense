@@ -28,7 +28,7 @@ type ReasonFilterProps = {
   buttonText?: string;
   handleSubmit?: () => void;
   buttonClass?: string;
-  buttonLoading?: boolean;
+  isButtonLoading?: boolean;
 };
 const ReasonFilter = forwardRef<HTMLDivElement, ReasonFilterProps>(
   (
@@ -53,7 +53,7 @@ const ReasonFilter = forwardRef<HTMLDivElement, ReasonFilterProps>(
       buttonText,
       handleSubmit,
       buttonClass,
-      buttonLoading,
+      isButtonLoading,
     },
     ref
   ) => {
@@ -104,7 +104,7 @@ const ReasonFilter = forwardRef<HTMLDivElement, ReasonFilterProps>(
             ></textarea>
           )}
           {error && <p className="text-error text-sm">{error}</p>}
-          <Button isLoading={buttonLoading} className={appClsx("mt-2 !mb-0 text-sm font-semibold",buttonClass)} onClick={handleSubmit}>{buttonText || 'Submit'}</Button>
+          <Button isLoading={isButtonLoading} className={appClsx("mt-2 !mb-0 text-sm font-semibold",buttonClass)} onClick={handleSubmit}>{buttonText || 'Submit'}</Button>
         </div>
       </div>
     );

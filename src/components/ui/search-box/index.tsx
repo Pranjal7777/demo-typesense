@@ -174,7 +174,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
     router.push({
       pathname: url,
       query: {
-        selectedCategory: hit?.mainCategory,
+        selectedCategory: hit?.mainCategory || '',
         search: search || undefined,
       },
     });

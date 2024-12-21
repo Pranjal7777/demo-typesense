@@ -62,6 +62,7 @@ export type EditErrorStateType = {
   email: boolean;
   phoneNumber: boolean;
   countryCode: boolean;
+  country: boolean;
 };
 export type ErrorMessages = {
   username: string;
@@ -79,7 +80,6 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
   isMobile,
   setProfileData,
 }) => {
-  console.log(profileData, 'profile data in self profile edit');
   const [editProfilePicUrl, setEditProfilePicUrl] = useState('');
   const { theme } = useTheme();
   const initialErrorState: EditErrorStateType = {
@@ -89,6 +89,7 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
     email: false,
     phoneNumber: false,
     countryCode: false,
+    country: false,
   };
 
   const initialEditProfileFormData = {
@@ -117,6 +118,7 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
   const [verificationData, setVerificationData] = useState<VerificationDataType | null>(null);
 
   const changeFormData = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+
     const { name, value } = e.target;
     if (name == 'bio' || (name == 'website' && !updatedFields.includes(name))) {
       setUpdatedFields((prevState) => [...prevState, name]);
@@ -171,10 +173,8 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
   const [updateProfile] = selfProfileApi.useUpdateProfileMutation();
   const [updateUserName] = selfProfileApi.useUpdateUserNameMutation();
   const [updateEmail] = selfProfileApi.useUpdateEmailMutation();
-  const [updatePhoneNumber] = selfProfileApi.useUpdatePhoneNumberMutation();
   const [updateAccount] = selfProfileApi.useUpdateAccountMutation();
   const [sendVerificationCodeForChangeNumber] = selfProfileApi.useSendVerificationCodeForChangeNumberMutation();
-  const [verifyVerificationCode] = selfProfileApi.useVerifyVerificationCodeMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentEditField, setCurrentEditField] = useState<string | null>(null);
   const [showCongratulationModal, setShowCongratulationModal] = useState(false);
@@ -272,7 +272,6 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
   };
 
   const saveButtonHandler = async () => {
-    console.log(updatedFields, 'updatedFields');
     if (updatedFields.length == 0 && !editProfilePicUrl) {
       showToast({ message: 'Please select at least one field to update', messageType: 'info' });
       return;
@@ -310,6 +309,7 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
         ...requestPayload,
         ...accountPayload,
       }));
+      setUpdatedFields([]);
     } catch (error) {
       const errorData = error as { data: { message: string } };
       showToast({
@@ -318,6 +318,7 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
       });
     } finally {
       setIsUpdating(false);
+      setUpdatedFields([]);
     }
   };
   const onVerificationSuccess = () => {
@@ -337,30 +338,35 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
     provider.setCustomParameters({
       prompt: 'select_account',
     });
-    const result = await signInWithPopup(auth, provider);
-    if (result.user) {
-      const payload = {
-        id: result.user.uid,
-        trigger: 2,
-      };
-      try {
-        await verifySocialAccount(payload).unwrap();
-        await updateProfile({
-          googleId: payload.id,
-        }).unwrap();
-        showToast({ message: 'Google account verified successfully', messageType: 'success' });
-      } catch (error) {
-        console.log(error, 'google-user-verify error');
-        const errorData = error as { data: { message: string } };
-        showToast({
-          message: errorData?.data?.message || 'Something went wrong please try after sometime',
-          messageType: 'error',
-        });
-      }
+    try {
+      const result = await signInWithPopup(auth, provider);
+        if (result.user) {
+          const payload = {
+            id: result.user.uid,
+            trigger: 2,
+          };
+          try {
+            await verifySocialAccount(payload).unwrap();
+            await updateProfile({
+              googleId: payload.id,
+            }).unwrap();
+            showToast({ message: 'Google account verified successfully', messageType: 'success' });
+          } catch (error) {
+            console.log(error, 'google-user-verify error');
+            const errorData = error as { data: { message: string } };
+            showToast({
+              message: errorData?.data?.message || 'Something went wrong please try after sometime',
+              messageType: 'error',
+            });
+          }
+        }     
+    } catch (error) {
+      console.log(error, 'google-user-verify error');
     }
+  
   };
 
- const [deleteAccount] = selfProfileApi.useDeleteAccountMutation();
+ const [deleteAccount, {isLoading: isDeleting}] = selfProfileApi.useDeleteAccountMutation();
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
   const [showDeleteReasons, setShowDeleteReasons] = useState(false);
   const [selectedDeleteReason, setSelectedDeleteReason] = useState<string[]>([]);
@@ -386,6 +392,7 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
     setShowDeleteReasons(false);
     setSelectedDeleteReason([]);
     setDeleteOtherReason('');
+    setDeleteError('');
   };
   const onDeleteConfirm = () => {
     setShowDeleteReasons(true);
@@ -396,17 +403,14 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
   };
 
     const handleDeleteReasonSubmit = async () => {
-      console.log(selectedDeleteReason, 'selectedDeleteReason');
       if (selectedDeleteReason.length == 0) {
         setDeleteError('Please select at least one reason');
         return;
       }
-      console.log(selectedDeleteReason, 'selectedDeleteReason 1');
       if (selectedDeleteReason?.[0] == 'Other' && deleteOtherReason == '') {
         setDeleteError('Please specify the reason');
         return;
       }
-      console.log(selectedDeleteReason, 'selectedDeleteReason 2');
       const reason =
         selectedDeleteReason?.[0] == 'Other'
           ? deleteOtherReason
@@ -772,6 +776,7 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
         >
           {showDeleteReasons ? (
             <ReasonFilter
+              isButtonLoading={isDeleting}
               showOtherOption={true}
               filterDescription="Please select an option"
               options={deleteReasons || []}

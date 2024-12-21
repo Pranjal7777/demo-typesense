@@ -29,8 +29,6 @@ type Props = {
 };
 
 const Profile: FC<Props> = ({ userProfileData, followCountData }) => {
-  
-  console.log(userProfileData, 'mirchul profile data');
   const [profileData, setProfileData] = useState<SellerProfileType>(userProfileData);
 
   const router = useRouter();

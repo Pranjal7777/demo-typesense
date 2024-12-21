@@ -52,7 +52,6 @@ const OtpVerification: FC<OtpVerificationProps> = ({
   profileData,
   setProfileData
 }) => {
-  console.log(profileData, 'profile data in otp verification in otp verification');
   const {theme} = useTheme();
   const [otp, setOTP] = useState(['', '', '', '']);
   const [error, setError] = useState(verificationError || '');
@@ -166,7 +165,6 @@ const OtpVerification: FC<OtpVerificationProps> = ({
           }
           try {
             const res = await reSendVerificationCode(resendPayload).unwrap();
-            console.log(res, 'mirchul res in otp verification');
             setVerificationData(res?.data);
             setOTP(['', '', '', '']);
             setError('');
@@ -182,7 +180,7 @@ const OtpVerification: FC<OtpVerificationProps> = ({
         height={'18'}
         width={'18'}
         primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
-        className=" cursor-pointer absolute left-0 top-0 md:hidden"
+        className=" cursor-pointer absolute left-0 top-[-20px] md:hidden"
         onClick={closeModal}
       />
       <h3

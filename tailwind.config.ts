@@ -26,6 +26,9 @@ const config: Config = {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
+      overflow: {
+        overlay: 'overlay', // Adding overflow: overlay
+      },
       scale: {
         '102': '1.02',
       },
@@ -35,7 +38,7 @@ const config: Config = {
         'brand-color-hover': '#1FD18E1A', // blue
         'brand-color-hover-dark': '#2b213c', // blue
 
-        'gradient-color-from': 'rgba(199, 168, 255, 0.2)',
+        'gradient-color-from': '#E9FBF4',
         'gradient-color-to': 'rgba(109, 62, 193, 0.2)',
 
         // error

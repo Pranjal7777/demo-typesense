@@ -91,7 +91,6 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
   updateFilters,
   filterParameters
 }) => {
-  console.log(filterParameters,'mir filterParameters');
   
   const { theme } = useTheme();
   const [selectedFilters, setSelectedFilters] = useState<filterTypes>({
@@ -423,7 +422,6 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
   };
 
   useEffect(() => {
-    const price = console.log(selectedItemsFromFilterSection, 'asdkoasodk');
     setSelectedFilters({ ...selectedItemsFromFilterSection });
 
     // Handle price initialization from query
@@ -541,7 +539,6 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
         );
 
       case 20: // Condition
-        console.log(filter.data, 'filter.data==>');
         return (
           <div className="condition mt-[24px]">
             <TextWrapper className="text-base font-semibold leading-6 text-bg-primary-light">Condition</TextWrapper>

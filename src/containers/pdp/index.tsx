@@ -192,6 +192,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
               shareURL={shareLink}
               shareTitle={prodTitle}
               isProductLiked={apidata.isLiked}
+              productCondition={apidata.assetCondition}
             />
             <div className="lg:mt-5 md:mt-3 sm:mt-2 flex items-end justify-between mobile:hidden"></div>
           </div>
@@ -207,7 +208,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
                   price={formatPriceWithoutCents(prodPrice)}
                   timestampLabel={postingLabel}
                   // currency={currencyCode}
-                  assetCondition={apidata.assetCondition}
+                  assetCondition={`${apidata.city}, ${apidata.state}, ${apidata.country}`}
                 />
                 <div className="mobile:hidden">
                   <PdpCta

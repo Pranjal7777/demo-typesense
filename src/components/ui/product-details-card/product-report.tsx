@@ -7,6 +7,7 @@ import { DEFAULT_LOCATION } from '@/config';
 import showToast from '@/helper/show-toaster';
 import FilterPopup from '../filter-popup';
 import Model from '@/components/model';
+import ReasonFilter from '../reason-filter';
 type ProductReportProps = {
   assetId: string;
   handleCloseReport: () => void;    
@@ -24,16 +25,15 @@ const ProductReport = ({assetId, handleCloseReport}: ProductReportProps) => {
             label: reason.reason,
             value: reason._id,
           })) || []),
-          { label: 'Other', value: 'Other' },
         ];
       }, [reportReasons?.data]);
 
       const [otherReason, setOtherReason] = useState('');
 
-      const handleOtherReasonChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setOtherReason(e.target.value);
-        setReportError('');
-      };
+      // const handleOtherReasonChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      //   setOtherReason(e.target.value);
+      //   setReportError('');
+      // };
 
       const handleReportOptionChange = (selectedValues: string[]) => {
         setSelectedReportOption(selectedValues);
@@ -73,29 +73,25 @@ const ProductReport = ({assetId, handleCloseReport}: ProductReportProps) => {
     };
   return (
     <>
-      <Model onClose={() => handleCloseReport()} className="w-[90%] max-w-[420px] h-fit py-8 px-5 rounded-[15px]">
+      <Model onClose={() => handleCloseReport()} className="w-[90%] max-w-[420px] h-fit py-6 px-5 rounded-[15px]">
         <div className="w-full h-full">
-          <FilterPopup
+          <ReasonFilter
             filterHeaderText="Report"
+            filterDescription="Please select an option"
             containerClass="static p-0 bg-bg-septenary-light w-full bg-white"
             selectedValues={selectedReportOption}
             options={reportOptions}
             onSelectionChange={handleReportOptionChange}
-            filterType="RADIO"
+            handleSubmit={reportSubmitHandler}
+            buttonText="Submit"
+            isButtonLoading={isPostReportLoading}
+            error={reportError}
+            setError={setReportError}
+            showOtherOption={true}
+            otherReason={otherReason}
+            setOtherReason={setOtherReason}
+            otherReasonPlaceholder="Please specify the reason"
           />
-          {selectedReportOption?.[0] == 'Other' && (
-            <textarea
-              onChange={handleOtherReasonChange}
-              value={otherReason}
-              placeholder="Please specify the reason"
-              className="w-full resize-none mt-5 h-[100px] outline-none dark:bg-bg-quinary-dark dark:text-text-primary-dark dark:border-border-tertiary-dark border-border-tertiary-light p-3 border rounded-[4px] text-sm"
-            ></textarea>
-          )}
-
-          {reportError && <p className="text-red-500 text-sm mt-3">{reportError}</p>}
-          <Button disabled={isPostReportLoading} isLoading={isPostReportLoading} onClick={reportSubmitHandler} className="mt-6 !mb-0 text-base font-normal">
-            Submit
-          </Button>
         </div>
       </Model>
     </>

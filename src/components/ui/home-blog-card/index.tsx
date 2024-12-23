@@ -45,9 +45,6 @@ const HomeBlogCard: FC<HomeBlogCardProps> = ({ key, image, description, question
 
         <div className="mt-4 flex items-center dark:text-text-primary-dark justify-between text-base sm:text-xl font-semibold w-full">
           <span className="font-semibold">{question}</span>
-          <span className=' self-start mt-2'>
-            <UpArrowIconRight primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} />
-          </span>
         </div>
 
         <div className="mt-2 text-xs sm:text-[10px] md:text-sm font-normal text-text-tertiary-light dark:text-text-tertiary-dark">

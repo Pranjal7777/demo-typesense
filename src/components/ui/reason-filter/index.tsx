@@ -25,6 +25,7 @@ type ReasonFilterProps = {
   otherReasonClass?: string;
   optionClass?: string;
   error?: string;
+  setError?: React.Dispatch<React.SetStateAction<string>>;
   buttonText?: string;
   handleSubmit?: () => void;
   buttonClass?: string;
@@ -50,6 +51,7 @@ const ReasonFilter = forwardRef<HTMLDivElement, ReasonFilterProps>(
       setOtherReason,
       optionClass,
       error,
+      setError,
       buttonText,
       handleSubmit,
       buttonClass,
@@ -63,6 +65,7 @@ const ReasonFilter = forwardRef<HTMLDivElement, ReasonFilterProps>(
     const reasonOptions = showOtherOption ? [...options, { label: 'Other', value: 'Other' }] : options;
     const handleOtherReasonChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
       setOtherReason?.(e.target.value);
+      setError?.('');
     };
 
     return (

@@ -15,11 +15,11 @@ import FilterPopup from '@/components/ui/filter-popup';
 import { useTheme } from '@/hooks/theme';
 import Button from '@/components/ui/button';
 
-const tabs = ['Purchased', 'Pending'];
+const tabs = ['Purchases', 'Cancelled'];
 const MyPurchases = () => {
   const router = useRouter();
   const {theme} = useTheme()
-  const [currenTab, setCurrenTab] = useState('Purchased');
+  const [currenTab, setCurrenTab] = useState('Purchases');
   const [showPurchaseDetailsMobile, setShowPurchaseDetailsMobile] = useState<boolean>(false);
   const [showSoldDetailsMobile, setShowSoldDetailsMobile] = useState<boolean>(false);
   const [searchText, setSearchText] = useState('');
@@ -63,7 +63,7 @@ const [page, setPage] = useState(1);
     queryParams: buildQueryString({
       ...(debouncedSearchText && { searchText: debouncedSearchText }),
       ...(selectedFilters.length > 0 && selectedFilters[0] != 'ALL' && { timeFilter: selectedFilters[0] }),
-      orderType: currenTab == 'Purchased' ? '2' : '3',
+      orderType: currenTab == 'Purchases' ? 2 : 6,
       limit: 20,
       page,
     }),
@@ -195,10 +195,10 @@ const [page, setPage] = useState(1);
 
         <div
           className={`tab-content text-text-primary-light dark:text-text-secondary-light ${showPurchaseDetailsMobile ? 'mt-0' : 'mt-3'} ${
-            currenTab == 'Pending' ? 'mt-3' : ''
+            currenTab == 'Cancelled' ? 'mt-3' : ''
           } md:mt-5 flex md:gap-4 flex-1 overflow-y-scroll`}
         >
-          {currenTab == 'Purchased' ? (
+          {currenTab == 'Purchases' ? (
             <PurchaseContainer
             setShowOrderId = {setShowOrderId}
               isMobile={isMobile}
@@ -207,7 +207,7 @@ const [page, setPage] = useState(1);
               showPurchaseDetailsMobile={showPurchaseDetailsMobile}
               setShowPurchaseDetailsMobile={setShowPurchaseDetailsMobile}
             />
-          ) : currenTab == 'Pending' ? (
+          ) : currenTab == 'Cancelled' ? (
             <SoldContainer
             setShowOrderId={setShowOrderId}
             isMobile={isMobile}

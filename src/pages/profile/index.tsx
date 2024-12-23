@@ -130,7 +130,7 @@ const Profile: FC<Props> = ({ userProfileData, followCountData }) => {
                 <div className="left w-full flex flex-col items-center md:w-[210px] text-text-secondary-dark dark:text-text-secondary-light">
                   {profileData && (
                     <NewProfileCard
-                      profileLink = {profileData.website}
+                      profileLink={profileData.website}
                       firstName={profileData.firstName}
                       lastName={profileData.lastName}
                       fullName={`${profileData.firstName} ${profileData.lastName}`}
@@ -181,7 +181,7 @@ const Profile: FC<Props> = ({ userProfileData, followCountData }) => {
                       <h3 className="md:text-[20px]  md:pl-[20px] text-text-secondary-dark dark:text-text-secondary-light font-semibold ">
                         {tab}
                       </h3>
-                      {tab == 'Listing' && (
+                      {tab == 'Listing' && data && data?.result?.length > 0 && (
                         <div className="search-box w-[290px] h-[44px] hidden rounded-[4px] md:flex gap-3 items-center px-[10px] bg-bg-septenary-light dark:bg-bg-secondary-dark">
                           <SearchIcon className="h-[24px] w-[24px]" />
                           <input

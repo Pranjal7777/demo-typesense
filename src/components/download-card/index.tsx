@@ -48,7 +48,7 @@ const DownloadCard: React.FC = () => {
   };
 
   return (
-    <div className="relative w-full h-[618px] overflow-hidden lg:h-[388px] bg-gradient-to-b from-gradient-color-from to-gradient-color-to">
+    <div className="relative w-full h-[618px] overflow-hidden lg:h-[388px] bg-gradient-color-from">
       <div className="flex-col lg:flex-row flex custom-container mx-auto sm:px-16 mobile:px-4">
         <div className="mt-4 border-error lg:w-[50%] lg:my-12 flex flex-col items-center text-center lg:text-left dark:text-text-primary-dark">
           <div className="md:ml-[8%] items-center flex  flex-col lg:items-start mt-5 lg:mt-0">

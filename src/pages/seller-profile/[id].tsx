@@ -67,6 +67,9 @@ const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
     search: debouncedSearchTerm,
   });
 
+  console.log(data, 'mirchul data');
+  
+
   useEffect(() => {
     if (data) {
         if (page === 1) {
@@ -152,7 +155,7 @@ const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
                   followButtonHandler(sellerProfileData.accountId);
                 }}
                 bio={sellerProfileData.bio}
-                profileLink = {sellerProfileData.website}
+                profileLink={sellerProfileData.website}
               />
             )}
           </div>
@@ -187,7 +190,7 @@ const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
                 <h3 className="md:text-[20px] text-text-secondary-dark dark:text-text-secondary-light  md:pl-[20px] font-semibold ">
                   {tab}
                 </h3>
-                {tab == 'Listing' && (
+                {tab == 'Listing' && data && data?.result?.length > 0 && (
                   <div className="search-box w-[290px] h-[44px] hidden md:flex gap-3 rounded-[4px] items-center px-[10px] bg-bg-septenary-light dark:bg-bg-secondary-dark ">
                     <SearchIcon className="h-[24px] w-[24px]" />
                     <input

@@ -32,7 +32,7 @@ const AllReviewsSection = ({accountId}:{accountId:string}) => {
         </>
       )}
 
-      <div className="flex flex-col gap-3 md:gap-6 md:mr-5 mr-0 pt-5 md:border-t border-border-tertiary-light dark:border-border-tertiary-dark overflow-hidden">
+      <div className="flex flex-col gap-3 md:gap-6 md:mr-5 mr-0 pt-5 border-border-tertiary-light dark:border-border-tertiary-dark overflow-hidden">
         {data &&
           data?.data.userReviews.map((userReview) => <ReviewCard key={userReview._id} userReview={userReview} />)}
         {isFetching && <ReviewCardSkeleton value={6} />}

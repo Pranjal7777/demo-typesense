@@ -38,6 +38,7 @@ import Breadcrumb from '@/components/ui/breadcrumb';
 import { getGuestTokenFromServer } from '@/helper/get-guest-token-from-server';
 import { categoriesApi } from '@/store/api-slices/categories-api';
 import { useNewWindowScroll } from '@/hooks/new-use-window-scroll';
+import { IMAGES } from '@/lib/images';
 
 export type filteredProducts = {
   userName: string;
@@ -144,9 +145,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
     isLoading: categoriesBannerDataLoading,
     error: categoriesBannerDataError,
   } = categoriesApi.useGetCategoriesBannerByParentIdQuery({parentId:id as string});
-
-  console.log(categoriesBannerData, 'categoriesBannerData');
-  
 
   const closeFilter = () => {
     setFilterDrawer(false);
@@ -369,7 +367,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
     country: selectedItemsFromFilterSection.country,
   });
 
-
   useEffect(() => {
     resetFilters();
   }, [id]);
@@ -493,7 +490,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
         tokenFromServer={tokenFromServer}
         myLocationFromServer={myLocationFromServer}
         categories={categories}
-        heroImageSrc={categoriesBannerData?.webBanner}
+        heroImageSrc={categoriesBannerData?.webBanner || IMAGES.PRIMARY_BANNER}
       >
         {/* header with image and search box */}
         {/* Section:- What are you looking for? */}

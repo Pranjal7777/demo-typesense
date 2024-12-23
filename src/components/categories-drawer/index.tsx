@@ -11,6 +11,7 @@ import { routeToCategories } from '@/store/utils/route-helper';
 import keyDownHandler from '@/helper/key-down-handler';
 import SearchIcon from '../../../public/assets/svg/search-icon';
 import { useTheme } from '@/hooks/theme';
+import CloseIcon from '../../../public/assets/svg/close-icon';
 type CategoriesDrawerProps = {
   changMenu: () => void;
   isSearchCategoriesDrower: boolean;
@@ -58,6 +59,10 @@ const CategoriesDrawer: React.FC<CategoriesDrawerProps> = ({ isSearchCategoriesD
 
   const onSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSearchField(event.target.value.toLowerCase());
+  };
+
+  const clearSearch = (): void => {
+    setSearchField('');
   };
 
   const renderCategories = (data: any): ReactNode => {
@@ -126,10 +131,14 @@ const CategoriesDrawer: React.FC<CategoriesDrawerProps> = ({ isSearchCategoriesD
             <SearchIcon primaryColor={theme ? '#FFF' : '#57585A'} width={17} height={17} className="absolute left-9 rtl:right-9 " />
             <input
               onChange={onSearchChange}
-              className="w-full pl-9 rtl:pr-9 pr-2 h-11 outline-none dark:text-text-primary-dark dark:bg-bg-quinary-dark dark:border-border-tertiary-dark border-border-tertiary-light bg-bg-tertiary-light focus:border-2 focus:border-brand-color rounded"
-              type="search"
+              className="w-full pl-9 rtl:pr-9 pr-2 h-11 outline-none dark:text-text-primary-dark dark:bg-bg-quinary-dark dark:border-border-tertiary-dark border-border-tertiary-light bg-bg-tertiary-light focus:border-2 focus:border-brand-color dark:focus:border-brand-color rounded"
+              // type="search"
+              value={searchField}
               placeholder="Search"
             />
+            {searchField.length > 0 && (
+              <CloseIcon width={"12"} height={"12"} primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-secondary-light)'} className="absolute right-9 rtl:left-9" onClick={clearSearch} />
+            )}
           </div>
         </div>
 

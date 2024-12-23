@@ -590,6 +590,7 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
               id="country-selector"
               name="country"
               mainClassName="mb-0"
+              className="h-[46px]"
             />
           </div>
           <div className="w-full md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">

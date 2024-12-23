@@ -502,18 +502,15 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
               {selectedOption === 'Items'
                 ? heroSection?.searchUserandItem?.items
                 : heroSection?.searchUserandItem?.users}
-              {
-                !HIDE_SELLER_FLOW && (
-                  isOpen ? (
-                    <UpArrowRoundedEdge primaryColor={getPrimaryColor()} className="ml-2 rtl:ml-0 rtl:mr-2" />
-                  ) : (
-                    <DownArrowRoundedEdge primaryColor={getPrimaryColor()} className="ml-2 rtl:ml-0 rtl:mr-2" />
-                  )
-                )
-              }
+              {!HIDE_SELLER_FLOW &&
+                (isOpen ? (
+                  <UpArrowRoundedEdge primaryColor={getPrimaryColor()} className="ml-2 rtl:ml-0 rtl:mr-2" />
+                ) : (
+                  <DownArrowRoundedEdge primaryColor={getPrimaryColor()} className="ml-2 rtl:ml-0 rtl:mr-2" />
+                ))}
             </button>
 
-            { !HIDE_SELLER_FLOW && (isOpen && (
+            {!HIDE_SELLER_FLOW && isOpen && (
               <div
                 className={`flex flex-col ${
                   stickyHeaderWithSearchBox && 'dark:!text-text-primary-dark dark:bg-bg-quinary-dark'
@@ -540,7 +537,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                   </button>
                 )}
               </div>
-            ))}
+            )}
           </div>
           <div
             className={
@@ -813,10 +810,12 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                     </div>
                   ) : recentSearchData?.data.data.length === 0 ? (
                     <div className="px-4 py-3 text-sm text-text-primary-light dark:text-text-primary-dark">
-                      No Recent Searches
+                      <h3 className="text-sm pt-4 flex items-center px-3 font-semibold">Recent Searches</h3>
+                      <p className="text-sm font-normal">No Recent Searches</p>
                     </div>
                   ) : (
                     <>
+                      <h3 className="text-sm pt-4 flex items-center px-3 font-semibold">Recent Searches</h3>
                       {selectedOption === 'Items' &&
                         recentSearchData?.data?.data?.map((search, index) => (
                           <div

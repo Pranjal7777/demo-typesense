@@ -139,12 +139,10 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
   };
 
   const clearLocationFromLocationSearchBox = () => {
-    // setFormData({ ...formData, location: '' });
     setFormData((prevState) => ({
       ...prevState,
       location: '',
     }));
-    // handleRemoveLocationHelper()
   };
 
   const fetchCurrentLocation = async () => {
@@ -159,8 +157,6 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
   };
 
   const categoryRoute = (categoryId: string, search: string, hit?: Hit) => {
-    // router.push(routeToCategories({category:{id:categoryId}}));
-
     setFormData((prevState) => ({
       ...prevState,
       search: search,
@@ -212,7 +208,6 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
               primaryColor={`${theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}`}
               className="hover:cursor-pointer hover:scale-125 absolute left-1"
               onClick={() => {
-                // setSearchItemAndUserDrower(!searchItemAndUserDrower)
                 const { search, ...restQuery } = router.query;
                 router.push({
                   pathname: router.pathname,
@@ -231,14 +226,6 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
               primaryColor={`${theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}`}
               className="absolute left-4 rtl:right-4"
             />
-            {/* <input
-            className="truncate border-border-tertiary-light dark:border-border-tertiary-dark dark:bg-bg-quinary-dark focus:border-2 focus:!border-brand-color dark:text-bg-tertiary-light px-11 rtl:px-5 pr-9 rtl:pr-12 text-sm outline-none border rounded-md h-12 w-full focus:border-primary bg-bg-tertiary-light"
-            type="text"
-            name="search"
-            onFocus={() => setIsLocationTextBoxFocused(true)}
-            value={formData.search}
-            onChange={(e) => handleOnChange(e)}
-          /> */}
 
             <input
               className="truncate border-border-tertiary-light dark:border-border-tertiary-dark dark:bg-bg-quinary-dark focus:border-2 focus:!border-brand-color dark:text-bg-tertiary-light px-11 rtl:px-5 pr-9 rtl:pr-12 text-sm outline-none border rounded-md h-12 w-full focus:border-primary bg-bg-tertiary-light"
@@ -258,8 +245,6 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
                       <div
                         className="flex dark:hover:text-text-primary-dark border-border-tertiary-light h-14 items-center cursor-pointer hover:bg-bg-octonary-light dark:hover:bg-bg-duodenary-dark"
                         onClick={async () => {
-                          // categoryRoute(hit.categories[0].id);
-                          // setShowRecentSearchResultsFromTypesense(false);
                         }}
                       >
                         <div className="truncate ml-3 flex">
@@ -295,11 +280,8 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
                               await addItemToRecentSearch(hit.id, hit.title.en);
                               // @ts-ignore
                               await selectItemOrUserToSearch(hit.title.en);
-
-                              // setShowRecentSearchResultsFromTypesense(false);
                               // @ts-ignore
                               categoryRoute(hit.categories[0].id, hit.title.en, hit);
-                              // setIsOpen(false);
                             }}
                           >
                             <div className="truncate ml-3 flex">

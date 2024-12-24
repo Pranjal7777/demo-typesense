@@ -35,3 +35,5 @@ export const EDIT_ADDRESS = 'Edit Address';
 export const UPDATE_LOCATION = 'Update Location';
 export const CHANGE = 'Change';
 export const UNABLE_TO_FIND_LOCATION = 'Unable to fetch your location please try another way';
+export const CANCEL = 'Cancel';
+export const CONFIRM = 'Confirm';

@@ -28,8 +28,6 @@ const AddressCards: FC<Props> = ({
  
   const router = useRouter();
   const { data, error, isLoading } = addressApi.useGetAllSavedAddressQuery();
-  console.log(data, 'address-cards');
-
   useEffect(()=>{
     if(error){
       router.push('/500');

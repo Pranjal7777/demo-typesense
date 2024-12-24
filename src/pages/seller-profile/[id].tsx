@@ -36,10 +36,7 @@ type Props = {
 };
 
 const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
-  console.log(sellerProfileData, 'mirchul sellerProfileData');
-  const userInfo = useAppSelector((state) => state.auth.userInfo);
-  console.log(userInfo, 'mirchul userInfo');
-  
+  const userInfo = useAppSelector((state) => state.auth.userInfo);  
   const [isFollow, setIsFollow] = useState(sellerProfileData.isFollow);
   const [totalFollower, setTotalFollower] = useState(followCountData.totalFollower);
   const router = useRouter();
@@ -65,10 +62,7 @@ const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
     accountId: accountId || '',
     page,
     search: debouncedSearchTerm,
-  });
-
-  console.log(data, 'mirchul data');
-  
+  });  
 
   useEffect(() => {
     if (data) {

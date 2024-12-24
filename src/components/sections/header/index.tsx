@@ -74,10 +74,8 @@ const Header: FC<Props> = ({
   const windowWidth = useWindowResize();
 
   const { categories } = useAppSelector((state: RootState) => state.auth);
-  // const {data,isLoading,isError}=categoriesApi.useGetAllCategoriesQuery();
 
   const { t } = useTranslation('common');
-  // const categories:categories[] = t('page.header.categories', { returnObjects: true });
   const allcategories: string = t('page.header.allcategories');
   const router = useRouter();
 
@@ -146,13 +144,6 @@ const Header: FC<Props> = ({
   };
 
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
-  // const [activeTheme, setActiveTheme] = useState(false);
-
-  // useEffect(() => {
-  //   if (theme) {
-  //     setActiveTheme(true);
-  //   }
-  // }, []);
 
   const activeThemeChange = () => {
     toggleTheme();
@@ -174,8 +165,6 @@ const Header: FC<Props> = ({
         // data={categoriesWithChildren}
       />
       {/* // desktop,letop,tab screen  */}
-      {/* {
-        !(windowWidth<638) && ( */}
 
       <nav
         // ${windowWidth <= 639 && 'hidden'}
@@ -247,19 +236,6 @@ const Header: FC<Props> = ({
 
               <li className="flex mx-4 items-center justify-center">
                 <button className="flex items-center justify-center" onClick={() => changMenu()}>
-                  {/* <CategoriesIcon
-                    color={`${
-                      stickyHeaderWithSearchBox
-                        ? 'var(--icon-primary-light)'
-                        : theme
-                        ? minThreshold
-                          ? 'var(--icon-primary-dark)'
-                          : 'var(--icon-primary-dark)'
-                        : minThreshold
-                        ? 'var(--icon-primary-light)'
-                        : 'var(--icon-primary-dark)'
-                    }`}
-                  /> */}
                   <CategoriesIcon
                     color={`${
                       stickyHeaderWithSearchBox
@@ -286,22 +262,6 @@ const Header: FC<Props> = ({
             <HydrationGuard>
               {userInfo && (
                 <div className="hidden md:flex gap-6 ">
-                  {/* <div className="cursor-pointer relative">
-                    <MessageIcon
-                      className="hover:scale-105"
-                      primaryColor={`${
-                        stickyHeaderWithSearchBox
-                          ? 'var(--icon-primary-light)'
-                          : theme
-                          ? minThreshold
-                            ? 'var(--icon-primary-dark)'
-                            : 'var(--icon-primary-dark)'
-                          : minThreshold
-                          ? 'var(--icon-primary-light)'
-                          : 'var(--icon-primary-dark)'
-                      }`}
-                    />
-                  </div> */}
                   {/* for like route */}
                   <div className="cursor-pointer">
                     <HartSvg
@@ -371,20 +331,6 @@ const Header: FC<Props> = ({
                 // <div className=" mx-9" onClick={changeisLoginModalOpen}> {loginOrUserName.login}</div>
               )}
             </HydrationGuard>
-            {/* <Button
-              onClick={sellPage}
-              type="button"
-              className={'mb-0 rounded-lg py-2 w-24 h-[34px] text-center hover:scale-105 transition-all duration-200'}
-              // ${!(windowScroll > 0)
-              //   ? stickyHeaderWithSearchBox
-              //     ? '!text-text-secondary-light dark:text-text-secondary-dark'
-              //     : `text-text-primary-light dark:text-tes`
-              //   : stickyHeaderWithSearchBox
-              //   ? '!text-text-secondary-light dark:text-text-secondary-dark'
-              //   : `!text-text-secondary-light dark:text-text-secondary-dark`}
-            >
-              {btnText}
-            </Button> */}
           </div>
         </div>
       </nav>
@@ -402,35 +348,6 @@ const Header: FC<Props> = ({
       >
         <div className=" flex items-center justify-between h-full w-full max-w-[638px]">
           <div className={` flex items-center ${stickyHeaderWithSearchBox && 'mobile:hidden'} `}>
-            {
-              // stickyHeaderWithSearchBox ? (
-              //     !(theme!==true)
-              //     ? (<Image width={18} height={12} className='h-[12px] cursor-pointer w-[18px] min-h-3 hover:scale-110' onClick={()=>setsearchCategoryDrower(!searchCategoryDrower)} src={IMAGES.HAND_BURGER_MENU_ICON_WHITE} loader={gumletLoader} alt="hand-burger-menu-icon-white" />)
-              //     : (<Image width={18} height={12} className='h-[12px] cursor-pointer w-[18px] min-h-3 hover:scale-110' onClick={()=>setsearchCategoryDrower(!searchCategoryDrower)} src={IMAGES.HAND_BURGER_MENU_ICON_BLACK} loader={gumletLoader} alt="hand-burger-menu-icon-black" />)
-              // ) : (
-              // !(minThreshold && theme !== true)? (
-              //   <Image
-              //     onClick={handBurgerMenuClickHandler}
-              //     width={18}
-              //     height={12}
-              //     className="h-[12px] cursor-pointer w-[18px] min-h-3 hover:scale-110"
-              //     src={IMAGES.HAND_BURGER_MENU_ICON_WHITE}
-              //     loader={gumletLoader}
-              //     alt="hand-burger-menu-icon-white"
-              //   />
-              // ) : (
-              //   <Image
-              //     onClick={handBurgerMenuClickHandler}
-              //     width={18}
-              //     height={12}
-              //     className="h-[12px] cursor-pointer w-[18px] min-h-3 hover:scale-110"
-              //     src={IMAGES.HAND_BURGER_MENU_ICON_BLACK}
-              //     loader={gumletLoader}
-              //     alt="hand-burger-menu-icon-black"
-              //   />
-              // )
-              // )
-            }
             <HamburgerMenuIcon
               className="h-[12px] cursor-pointer w-[18px] min-h-3 hover:scale-110"
               onClick={handBurgerMenuClickHandler}
@@ -493,73 +410,8 @@ const Header: FC<Props> = ({
                     width="18"
                     primaryColor={theme ? '#FFFFFF' : '#202020'}
                   />
-                  {/* <Image
-                    className="hover:cursor-pointer hover:scale-102 absolute left-1 dark:hidden"
-                    width={15}
-                    height={15}
-                    src={IMAGES.BACK_ARROW_ICON_BLACK}
-                    alt="back-arrow-icon"
-                    loader={gumletLoader}
-                  />
-                  <Image
-                    className="hover:cursor-pointer hover:scale-102 absolute left-1 hidden dark:inline-block"
-                    width={15}
-                    height={15}
-                    src={IMAGES.BACK_ARROW_ICON_WHITE}
-                    alt="back-arrow-icon"
-                    loader={gumletLoader}
-                  /> */}
                 </Link>
               </div>
-
-              {/* <div className=" flex items-center justify-center ">
-                <div className="mr-9">
-                  <Image
-                    width={21}
-                    height={21}
-                    className=" cursor-pointer hover:scale-110 dark:hidden inline"
-                    src={IMAGES.CHAT_ICON_BLACK}
-                    loader={gumletLoader}
-                    alt="chat-icon-black"
-                  />
-                  <Image
-                    width={21}
-                    height={21}
-                    className=" cursor-pointer hover:scale-110 dark:inline hidden"
-                    src={IMAGES.CHAT_ICON_WHITE}
-                    loader={gumletLoader}
-                    alt="chat-icon-white"
-                  />
-                </div>
-                <div
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    e.preventDefault();
-                    if (e.key == 'Enter' || e.key == ' ') {
-                      handBurgerMenuClickHandler();
-                    }
-                  }}
-                  onClick={handBurgerMenuClickHandler}
-                >
-                  <Image
-                    width={18}
-                    height={12}
-                    className="h-[12px] cursor-pointer w-[18px] min-h-3 hover:scale-110 dark:inline hidden "
-                    src={IMAGES.HAND_BURGER_MENU_ICON_WHITE}
-                    loader={gumletLoader}
-                    alt="hand-burger-menu-icon-white"
-                  />
-                  <Image
-                    width={18}
-                    height={12}
-                    className="h-[12px] cursor-pointer w-[18px] min-h-3 hover:scale-110 dark:hidden inline"
-                    src={IMAGES.HAND_BURGER_MENU_ICON_BLACK}
-                    loader={gumletLoader}
-                    alt="hand-burger-menu-icon-black"
-                  />
-                </div>
-              </div> */}
             </>
           )}
         </div>

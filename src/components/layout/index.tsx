@@ -113,21 +113,6 @@ const Layout: FC<Props> = ({
   };
 
 
-  // const excludeDefaultFooter = ['auth', SIGN_IN_PAGE, SIGN_UP_PAGE, 'forgotpassword', '500', 'seller-profile'];
-
-
-  //in order to use 2 type of header on mentioned pages
-  // const stickyHeaderWithSearchBox =
-  //   // router.pathname.includes('categories') ||
-  //   router.pathname.includes('product') ||
-  //   router.pathname.includes('productDetails') ||
-  //   router.pathname.includes('about') ||
-  //   router.pathname.includes('terms-of-service') ||
-  //   router.pathname.includes('privacy-policy') ||
-  //   router.pathname.includes('faq') ||
-  //   router.pathname.includes('blog') ||
-  //   router.pathname.includes('seller-profile');
-
   const organizationSchema: SchemaItem = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -225,11 +210,7 @@ const Layout: FC<Props> = ({
         {
           !excludeHeroSection && (
             <HeroSection
-              heroImageSrc={heroImageSrc}
-              // content={content}
-              // ${excludeDefaultPageHeaderForPlpPage.some((substring) => router.pathname.includes(substring)) &&
-              //   'border-error sm:hidden mobile:inline'
-              // }  please do not remove this for future use
+              heroImageSrc={heroImageSrc}         
               mobileSearchBoxContainerClassName={appClsx(mobileSearchBoxContainerClassName)}
               showBackArrowInSearchBox={showBackArrowInSearchBox}
               className={''}

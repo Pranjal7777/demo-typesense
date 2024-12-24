@@ -1,3 +1,4 @@
+import { CANCEL, CONFIRM } from '@/constants/texts';
 import { appClsx } from '@/lib/utils';
 import React, { FC } from 'react';
 type Props = {
@@ -42,11 +43,16 @@ const ConfirmationPopup: FC<Props> = ({
       )}
     >
       <div className={appClsx('w-[95%] max-w-[480px] relative bg-white rounded-lg p-8 shadow-lg z-[200] ', className)}>
-        {title && (
-          <h2 className={appClsx('font-semibold mb-2 mobile:text-center text-xl', titleClassName)}>{title}</h2>
-        )}
+        {title && <h2 className={appClsx('font-semibold mb-2 mobile:text-center text-xl', titleClassName)}>{title}</h2>}
         {message && (
-          <p className={appClsx('text-sm md:text-base mobile:text-center mb-8 text-text-tertiary-light dark:text-text-septenary-light', messageClassName)}>{message}</p>
+          <p
+            className={appClsx(
+              'text-sm md:text-base mobile:text-center mb-8 text-text-tertiary-light dark:text-text-septenary-light',
+              messageClassName
+            )}
+          >
+            {message}
+          </p>
         )}
         <div className={appClsx('flex justify-between gap-4', buttonContainerClassName)}>
           <button
@@ -56,13 +62,13 @@ const ConfirmationPopup: FC<Props> = ({
               cancelButtonClassName
             )}
           >
-            {cancelButtonText || 'Cancel'}
+            {cancelButtonText || CANCEL}
           </button>
           <button
             onClick={onConfirm}
             className={appClsx('w-full h-11 bg-brand-color text-white rounded', confirmButtonClassName)}
           >
-            {confirmButtonText || 'Confirm'}
+            {confirmButtonText || CONFIRM}
           </button>
         </div>
       </div>

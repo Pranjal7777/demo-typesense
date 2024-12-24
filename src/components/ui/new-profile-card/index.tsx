@@ -62,24 +62,6 @@ const NewProfileCard: FC<Props> = ({
   // const { theme } = useTheme();
   return (
     <div className={appClsx('w-full flex flex-col items-center md:items-start gap-1', cardClass)}>
-      {/* {profilePic ? (
-        <Image
-          width={100}
-          height={100}
-          className=" rounded-full h-[100px] w-[100px] object-cover"
-          // className="absolute  mobile:left-3 rtl:mobile:left-0 rtl:mobile:right-3 "
-          src={profileSrc}
-          alt="profile-image"
-        />
-      ) : (
-        <UserPlaceholderIcon
-          secondaryColor={theme ? 'var(--icon-secondary-dark)' : 'var(--icon-secondary-light)'}
-          height="100"
-          width="100"
-          className="rounded-full"
-        />
-      )} */}
-
       <UserProfile className='w-[100px] h-[100px] md:w-[100px] md:h-[100px]' textContainerClassName='text-3xl md:text-3xl' firstName={firstName} lastName={lastName} profilePicUrl={profilePic} />
 
       <strong

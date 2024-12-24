@@ -1,9 +1,7 @@
 import { DATE_AND_TIME_FORMAT } from '@/constants/config-strings';
 import moment from 'moment'; 
 export const getFormattedDate = (date: string, formatType: string = DATE_AND_TIME_FORMAT): string => {
-    console.log(date, 'date format');
     if(date){
-        console.log(moment(date).local().format(formatType), 'date format 2');
         return moment(date).local().format(formatType);
     }
     return '';

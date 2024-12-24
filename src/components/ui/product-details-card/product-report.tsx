@@ -5,7 +5,6 @@ import { productsApi } from '@/store/api-slices/products-api';
 import { RootState } from '@/store/store';
 import { DEFAULT_LOCATION } from '@/config';
 import showToast from '@/helper/show-toaster';
-import FilterPopup from '../filter-popup';
 import Model from '@/components/model';
 import ReasonFilter from '../reason-filter';
 type ProductReportProps = {
@@ -29,11 +28,6 @@ const ProductReport = ({assetId, handleCloseReport}: ProductReportProps) => {
       }, [reportReasons?.data]);
 
       const [otherReason, setOtherReason] = useState('');
-
-      // const handleOtherReasonChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      //   setOtherReason(e.target.value);
-      //   setReportError('');
-      // };
 
       const handleReportOptionChange = (selectedValues: string[]) => {
         setSelectedReportOption(selectedValues);

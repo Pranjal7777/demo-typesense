@@ -164,8 +164,6 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
       setIsFirstButtonLoading(false);
     }
   };
-
-  console.log(apidata, 'mirchul apidata');
   
 
   return (

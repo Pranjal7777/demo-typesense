@@ -9,14 +9,12 @@ export const categoriesApi = rootApi.injectEndpoints({
       query: () => ({
         url: `${AUTH_URL_V2}${GET_ALL_GRAND_PARENT_CATEGORIES_URL}/?&limit=100&set=0&status=1`,
         method: 'GET',
-        // body:getGuestTokenConfig,
       }),
     }),
     getAllCategories: builder.query<ResponseGetAllCategoriesPayload, void>({
       query: () => ({
         url: `${AUTH_URL_V1}${GET_ALL_CATEGORIES_URL}`,
         method: 'GET',
-        // body:getGuestTokenConfig,
       }),
     }),
     getSubCategoriesByParentId: builder.query<ResponseGetSubCategoriesByParentIdPayload, { parentId: string }>({

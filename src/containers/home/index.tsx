@@ -273,7 +273,7 @@ const HomePage: FC<HomeProps> = ({
                 isError ? (
                   <h2>{convertRTKQueryErrorToString(error)}</h2>
                 ) : highlightedProducts?.result !== undefined ? (
-                  allHighlightedProducts.map((product, index) => <ProductCard key={index} product={product} />)
+                  allHighlightedProducts.map((product, index) => <ProductCard showLikeIcon={true} key={index} product={product} />)
                 ) : null
               }
               {isFetching && (
@@ -335,7 +335,7 @@ const HomePage: FC<HomeProps> = ({
   
                 isErrorBannersAndRecommendedProducts ? null : (bannersAndRecommendedProducts?.result !== undefined && bannersAndRecommendedProducts?.Totalcount !== 0 ) ? ( // <h2>{convertRTKQueryErrorToString(errorBannersAndRecommendedProducts)}</h2>
                   recommendedProducts.map((product, index) => (
-                    <ProductCard key={index} product={product} />
+                    <ProductCard showLikeIcon={true} key={index} product={product} />
                   ))
                 ) : null
               }

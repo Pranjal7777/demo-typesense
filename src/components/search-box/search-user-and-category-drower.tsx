@@ -13,7 +13,6 @@ import { RootState } from '@/store/store';
 import CloseIcon from '../../../public/assets/svg/close-icon';
 import SearchIcon from '../../../public/assets/svg/search-icon';
 import LocationSvg from '../../../public/assets/svg/location';
-import LeftArrowRoundedEdgeIcon from '../../../public/assets/svg/left-arrow-rounded-edge';
 import { routeSellerProfile, routeToCategories } from '@/store/utils/route-helper';
 import keyDownHandler from '@/helper/key-down-handler';
 import { useRouter } from 'next/router';
@@ -23,6 +22,7 @@ import { Hits } from 'react-instantsearch-dom';
 import SearchResults from '../typesense/SearchResults';
 import { CustomSearchResults } from '../ui/search-box/custom-hits';
 import { productsApi } from '@/store/api-slices/products-api';
+import LeftArrowIcon from '../../../public/assets/svg/left-arrow-icon';
 
 interface PlacePredictions {
   place_id: string;
@@ -139,12 +139,10 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
   };
 
   const clearLocationFromLocationSearchBox = () => {
-    // setFormData({ ...formData, location: '' });
     setFormData((prevState) => ({
       ...prevState,
       location: '',
     }));
-    // handleRemoveLocationHelper()
   };
 
   const fetchCurrentLocation = async () => {
@@ -158,16 +156,17 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
     }
   };
 
-  const categoryRoute = (categoryId: string, search: string) => {
-    // router.push(routeToCategories({category:{id:categoryId}}));
-
+  const categoryRoute = (categoryId: string, search: string, hit?: Hit) => {
     setFormData((prevState) => ({
       ...prevState,
       search: search,
       resultDropdown: router?.pathname === '/categories/[id]' ? false : prevState.resultDropdown,
     }));
     const url = routeToCategories({ category: { id: categoryId } });
-    const query = search ? { search } : {};
+    const query = {
+        selectedCategory: hit?.mainCategory || '',
+        search: search || undefined,
+      };
     router.push({ pathname: url, query });
     setSearchItemAndUserDrower(!searchItemAndUserDrower);
   };
@@ -186,7 +185,7 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
   return (
     <div
       className={appClsx(
-        'z-[10] h-full overflow-y-scroll fixed flex-col dark:bg-bg-primary-dark dark:text-text-primary-dark bg-bg-secondary-light inset-0 flex ',
+        'z-50 h-full overflow-y-scroll fixed flex-col dark:bg-bg-primary-dark dark:text-text-primary-dark bg-bg-secondary-light inset-0 flex ',
         className
       )}
     >
@@ -205,11 +204,10 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
         />
         <div className="sticky top-0 py-2  bg-bg-secondary-light dark:bg-bg-primary-dark">
           <div className="relative mx-4 flex items-center justify-center my-3 transition delay-0 ease-in duration-1000">
-            <LeftArrowRoundedEdgeIcon
+            <LeftArrowIcon
               primaryColor={`${theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}`}
               className="hover:cursor-pointer hover:scale-125 absolute left-1"
               onClick={() => {
-                // setSearchItemAndUserDrower(!searchItemAndUserDrower)
                 const { search, ...restQuery } = router.query;
                 router.push({
                   pathname: router.pathname,
@@ -228,14 +226,6 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
               primaryColor={`${theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}`}
               className="absolute left-4 rtl:right-4"
             />
-            {/* <input
-            className="truncate border-border-tertiary-light dark:border-border-tertiary-dark dark:bg-bg-quinary-dark focus:border-2 focus:!border-brand-color dark:text-bg-tertiary-light px-11 rtl:px-5 pr-9 rtl:pr-12 text-sm outline-none border rounded-md h-12 w-full focus:border-primary bg-bg-tertiary-light"
-            type="text"
-            name="search"
-            onFocus={() => setIsLocationTextBoxFocused(true)}
-            value={formData.search}
-            onChange={(e) => handleOnChange(e)}
-          /> */}
 
             <input
               className="truncate border-border-tertiary-light dark:border-border-tertiary-dark dark:bg-bg-quinary-dark focus:border-2 focus:!border-brand-color dark:text-bg-tertiary-light px-11 rtl:px-5 pr-9 rtl:pr-12 text-sm outline-none border rounded-md h-12 w-full focus:border-primary bg-bg-tertiary-light"
@@ -255,8 +245,6 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
                       <div
                         className="flex dark:hover:text-text-primary-dark border-border-tertiary-light h-14 items-center cursor-pointer hover:bg-bg-octonary-light dark:hover:bg-bg-duodenary-dark"
                         onClick={async () => {
-                          // categoryRoute(hit.categories[0].id);
-                          // setShowRecentSearchResultsFromTypesense(false);
                         }}
                       >
                         <div className="truncate ml-3 flex">
@@ -292,11 +280,8 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
                               await addItemToRecentSearch(hit.id, hit.title.en);
                               // @ts-ignore
                               await selectItemOrUserToSearch(hit.title.en);
-
-                              // setShowRecentSearchResultsFromTypesense(false);
                               // @ts-ignore
-                              categoryRoute(hit.categories[0].id);
-                              // setIsOpen(false);
+                              categoryRoute(hit.categories[0].id, hit.title.en, hit);
                             }}
                           >
                             <div className="truncate ml-3 flex">
@@ -424,7 +409,7 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
                 ></div>
               </div>
 
-              <div
+              {/* <div
                 className="h-[98%] w-[25%] flex flex-col items-center justify-center"
                 onClick={() => {
                   setIsUserOrItem(false);
@@ -452,10 +437,10 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
                     !isUserOrItem ? 'border-brand-color border-[3px] rounded-t-2xl' : ''
                   } w-full `}
                 ></div>
-              </div>
+              </div> */}
             </div>
 
-            <div className="h-full overflow-y-scroll border-primary px-4 divide-y-2 dark:divide-border-tertiary-dark divide-border-tertiary-light">
+            <div className="h-fit overflow-y-scroll border-primary px-4 divide-y-2 dark:divide-border-tertiary-dark divide-border-tertiary-light">
               {isSearchProductsAndUsersFetching ? (
                 <div className=" flex items-center justify-center h-[50%]">
                   <Spinner />
@@ -473,7 +458,7 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
                             key={hit.id}
                             onClick={() => {
                               // @ts-ignore
-                              categoryRoute(hit.categories[0]?.id , hit.title.en);
+                              categoryRoute(hit.categories[0]?.id , hit.title.en, hit);
                               // @ts-ignore
                               triggerSingleProductSearch({assetId:hit.id,search:hit.title.en})
                             }}

@@ -91,6 +91,7 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
   updateFilters,
   filterParameters
 }) => {
+  
   const { theme } = useTheme();
   const [selectedFilters, setSelectedFilters] = useState<filterTypes>({
     category: { title: '', _id: '' },
@@ -421,7 +422,6 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
   };
 
   useEffect(() => {
-    const price = console.log(selectedItemsFromFilterSection, 'asdkoasodk');
     setSelectedFilters({ ...selectedItemsFromFilterSection });
 
     // Handle price initialization from query
@@ -539,7 +539,6 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
         );
 
       case 20: // Condition
-        console.log(filter.data, 'filter.data==>');
         return (
           <div className="condition mt-[24px]">
             <TextWrapper className="text-base font-semibold leading-6 text-bg-primary-light">Condition</TextWrapper>
@@ -760,7 +759,7 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
         ></div>
 
         <div
-          className={`z-50 fixed h-full right-0 top-0 bottom-0 overflow-y-scroll dark:bg-bg-nonary-dark bg-bg-secondary-light text-text-primary-light dark:text-text-secondary-light lg:max-w-[35%] max-w-full transition-all ease-in duration-200  ${
+          className={`z-50 fixed w-full h-full right-0 top-0 bottom-0 overflow-y-scroll dark:bg-bg-nonary-dark bg-bg-secondary-light text-text-primary-light dark:text-text-secondary-light lg:max-w-[35%] max-w-full transition-all ease-in duration-200  ${
             filtersDrawer ? 'w-full md:w-[40%] lg:w-[30%] opacity-100 inline-block' : 'w-0 opacity-0 hidden'
           } `}
         >

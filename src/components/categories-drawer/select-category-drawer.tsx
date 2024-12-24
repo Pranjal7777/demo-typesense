@@ -25,7 +25,6 @@ const SelectCategoryDrawer: React.FC<CategoriesDrawerProps> = ({
   const [searchField, setSearchField] = useState('');
   const [filteredData, setFilteredData] = useState<categories[]>([]);
   const { categoriesWithChildren,categories } = useSelector((state: RootState) => state.auth);
-
   
   useEffect(() => {
     const filterCategories = (data: any | undefined, search: string): categories[] => {

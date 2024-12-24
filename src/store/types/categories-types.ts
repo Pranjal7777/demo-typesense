@@ -7,12 +7,15 @@ export interface ResponseGetAllGrandParentCategoriesPayload {
     totalCount: number;
 }
 export interface ResponseGetSubCategoriesByParentIdPayload {
-    message: string;
-    data: Category[];
-    categoryPath: [];
-    parentCategoryName: string;
-    parentCategoryId: string;
-    totalCount: number;
+  message: string;
+  data: Category[];
+  categoryPath: [];
+  parentCategoryName: string;
+  parentCategoryId: string;
+  totalCount: number;
+  webBanner?: string;
+  total_count?: number;
+  mobileBanner?: string;
 }
 export interface Category {
   id: string;

@@ -34,6 +34,8 @@ import NotificationIcon from '../../../../public/assets/svg/notification-icon';
 import { removeCookie } from '@/utils/cookies';
 import LeftArrowIcon from '../../../../public/assets/svg/left-arrow-icon';
 import { HIDE_SELLER_FLOW } from '@/config';
+import HartSvg from '../../../../public/assets/svg/heart';
+import { appClsx } from '@/lib/utils';
 export type loginOrUserName = {
   login: string;
   userName: string;
@@ -48,11 +50,14 @@ export type Props = {
   stickyHeaderWithSearchBox?: boolean;
   showItems?: number;
   categoriesWithChildCategories?: ResponseGetAllCategoriesPayload;
+  containerClassName?: string;
+  mobileContainerClassName?: string;
 };
 
 ////////////////////////////////////////
 type menuOptions = {
   item: string;
+
 };
 ///////////////////////////////////////
 
@@ -60,6 +65,8 @@ const Header: FC<Props> = ({
   stickyHeaderWithSearchBox = false,
   showItems = 4,
   // categoriesWithChildCategories,
+  containerClassName,
+  mobileContainerClassName,
 }) => {
   const { theme, toggleTheme } = useTheme();
   const minThreshold = useNewWindowScroll(0);
@@ -67,10 +74,8 @@ const Header: FC<Props> = ({
   const windowWidth = useWindowResize();
 
   const { categories } = useAppSelector((state: RootState) => state.auth);
-  // const {data,isLoading,isError}=categoriesApi.useGetAllCategoriesQuery();
 
   const { t } = useTranslation('common');
-  // const categories:categories[] = t('page.header.categories', { returnObjects: true });
   const allcategories: string = t('page.header.allcategories');
   const router = useRouter();
 
@@ -139,13 +144,6 @@ const Header: FC<Props> = ({
   };
 
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
-  // const [activeTheme, setActiveTheme] = useState(false);
-
-  // useEffect(() => {
-  //   if (theme) {
-  //     setActiveTheme(true);
-  //   }
-  // }, []);
 
   const activeThemeChange = () => {
     toggleTheme();
@@ -167,23 +165,24 @@ const Header: FC<Props> = ({
         // data={categoriesWithChildren}
       />
       {/* // desktop,letop,tab screen  */}
-      {/* {
-        !(windowWidth<638) && ( */}
 
       <nav
         // ${windowWidth <= 639 && 'hidden'}
-        className={`z-[2] mobile:hidden ${
-          maxThreshold && ' border-b border-border-tertiary-light dark:border-b-border-tertiary-dark'
-        }  
+        className={appClsx(
+          `z-[2] mobile:hidden ${
+            maxThreshold && ' border-b border-border-tertiary-light dark:border-b-border-tertiary-dark'
+          }  
          ${stickyHeaderWithSearchBox && 'border-b border-b-border-tertiary-light dark:border-b-border-tertiary-dark'} ${
-          minThreshold
-            ? stickyHeaderWithSearchBox
+            minThreshold
+              ? stickyHeaderWithSearchBox
+                ? 'text-text-primary-light dark:text-text-primary-dark bg-bg-secondary-light dark:bg-bg-primary-dark'
+                : 'text-text-primary-light dark:text-text-primary-dark bg-bg-secondary-light dark:bg-bg-primary-dark'
+              : stickyHeaderWithSearchBox
               ? 'text-text-primary-light dark:text-text-primary-dark bg-bg-secondary-light dark:bg-bg-primary-dark'
-              : 'text-text-primary-light dark:text-text-primary-dark bg-bg-secondary-light dark:bg-bg-primary-dark'
-            : stickyHeaderWithSearchBox
-            ? 'text-text-primary-light dark:text-text-primary-dark bg-bg-secondary-light dark:bg-bg-primary-dark'
-            : 'text-text-secondary-light dark:text-text-primary-dark'
-        } h-[69px] w-full fixed top-0 text-sm font-medium capitalize transition ease-in-out duration-2000`}
+              : 'text-text-secondary-light dark:text-text-primary-dark'
+          } h-[69px] w-full fixed top-0 text-sm font-medium capitalize transition ease-in-out duration-2000`,
+          containerClassName
+        )}
       >
         <div className=" max-w-[1440px] px-[64px] m-auto h-full flex items-center justify-between">
           <div className="flex items-center h-full w-[65%]">
@@ -237,19 +236,6 @@ const Header: FC<Props> = ({
 
               <li className="flex mx-4 items-center justify-center">
                 <button className="flex items-center justify-center" onClick={() => changMenu()}>
-                  {/* <CategoriesIcon
-                    color={`${
-                      stickyHeaderWithSearchBox
-                        ? 'var(--icon-primary-light)'
-                        : theme
-                        ? minThreshold
-                          ? 'var(--icon-primary-dark)'
-                          : 'var(--icon-primary-dark)'
-                        : minThreshold
-                        ? 'var(--icon-primary-light)'
-                        : 'var(--icon-primary-dark)'
-                    }`}
-                  /> */}
                   <CategoriesIcon
                     color={`${
                       stickyHeaderWithSearchBox
@@ -276,28 +262,14 @@ const Header: FC<Props> = ({
             <HydrationGuard>
               {userInfo && (
                 <div className="hidden md:flex gap-6 ">
-                  {/* <div className="cursor-pointer relative">
-                    <MessageIcon
-                      className="hover:scale-105"
-                      primaryColor={`${
-                        stickyHeaderWithSearchBox
-                          ? 'var(--icon-primary-light)'
-                          : theme
-                          ? minThreshold
-                            ? 'var(--icon-primary-dark)'
-                            : 'var(--icon-primary-dark)'
-                          : minThreshold
-                          ? 'var(--icon-primary-light)'
-                          : 'var(--icon-primary-dark)'
-                      }`}
-                    />
-                  </div> */}
                   {/* for like route */}
                   <div className="cursor-pointer">
-                    <FeedsIcon
+                    <HartSvg
+                      height="24"
+                      width="24"
                       onClick={() => router.push('/my-favorites')}
                       className="hover:scale-105"
-                      primaryColor={`${
+                      borderColor={`${
                         stickyHeaderWithSearchBox
                           ? theme
                             ? 'var(--icon-primary-dark)'
@@ -359,20 +331,6 @@ const Header: FC<Props> = ({
                 // <div className=" mx-9" onClick={changeisLoginModalOpen}> {loginOrUserName.login}</div>
               )}
             </HydrationGuard>
-            {/* <Button
-              onClick={sellPage}
-              type="button"
-              className={'mb-0 rounded-lg py-2 w-24 h-[34px] text-center hover:scale-105 transition-all duration-200'}
-              // ${!(windowScroll > 0)
-              //   ? stickyHeaderWithSearchBox
-              //     ? '!text-text-secondary-light dark:text-text-secondary-dark'
-              //     : `text-text-primary-light dark:text-tes`
-              //   : stickyHeaderWithSearchBox
-              //   ? '!text-text-secondary-light dark:text-text-secondary-dark'
-              //   : `!text-text-secondary-light dark:text-text-secondary-dark`}
-            >
-              {btnText}
-            </Button> */}
           </div>
         </div>
       </nav>
@@ -381,43 +339,15 @@ const Header: FC<Props> = ({
 
       {/* <CategoryDrower className={`sm:hidden mobile:inline-block ${searchCategoryDrower && "!hidden"} transition duration-700`} searchCategoryDrower={searchCategoryDrower} setsearchCategoryDrower={setsearchCategoryDrower}/> */}
       <nav
-        className={`z-[2] border-error ${
-          stickyHeaderWithSearchBox && 'bg-bg-secondary-light dark:bg-bg-secondary-dark'
-        } ${
-          minThreshold && 'dark:bg-bg-primary-dark bg-bg-secondary-light'
-        } mobile:inline-block sm:hidden h-[69px] w-full fixed top-0  flex items-center justify-center px-[16px]`}
+        className={appClsx(
+          `z-[2] border-error ${stickyHeaderWithSearchBox && 'bg-bg-secondary-light dark:bg-bg-secondary-dark'} ${
+            minThreshold && 'dark:bg-bg-primary-dark bg-bg-secondary-light'
+          } mobile:inline-block sm:hidden h-[69px] w-full fixed top-0  flex items-center justify-center px-[16px]`,
+          mobileContainerClassName
+        )}
       >
         <div className=" flex items-center justify-between h-full w-full max-w-[638px]">
           <div className={` flex items-center ${stickyHeaderWithSearchBox && 'mobile:hidden'} `}>
-            {
-              // stickyHeaderWithSearchBox ? (
-              //     !(theme!==true)
-              //     ? (<Image width={18} height={12} className='h-[12px] cursor-pointer w-[18px] min-h-3 hover:scale-110' onClick={()=>setsearchCategoryDrower(!searchCategoryDrower)} src={IMAGES.HAND_BURGER_MENU_ICON_WHITE} loader={gumletLoader} alt="hand-burger-menu-icon-white" />)
-              //     : (<Image width={18} height={12} className='h-[12px] cursor-pointer w-[18px] min-h-3 hover:scale-110' onClick={()=>setsearchCategoryDrower(!searchCategoryDrower)} src={IMAGES.HAND_BURGER_MENU_ICON_BLACK} loader={gumletLoader} alt="hand-burger-menu-icon-black" />)
-              // ) : (
-              // !(minThreshold && theme !== true)? (
-              //   <Image
-              //     onClick={handBurgerMenuClickHandler}
-              //     width={18}
-              //     height={12}
-              //     className="h-[12px] cursor-pointer w-[18px] min-h-3 hover:scale-110"
-              //     src={IMAGES.HAND_BURGER_MENU_ICON_WHITE}
-              //     loader={gumletLoader}
-              //     alt="hand-burger-menu-icon-white"
-              //   />
-              // ) : (
-              //   <Image
-              //     onClick={handBurgerMenuClickHandler}
-              //     width={18}
-              //     height={12}
-              //     className="h-[12px] cursor-pointer w-[18px] min-h-3 hover:scale-110"
-              //     src={IMAGES.HAND_BURGER_MENU_ICON_BLACK}
-              //     loader={gumletLoader}
-              //     alt="hand-burger-menu-icon-black"
-              //   />
-              // )
-              // )
-            }
             <HamburgerMenuIcon
               className="h-[12px] cursor-pointer w-[18px] min-h-3 hover:scale-110"
               onClick={handBurgerMenuClickHandler}
@@ -474,74 +404,14 @@ const Header: FC<Props> = ({
             <>
               <div className=" relative w-12 h-12 flex items-center justify-center">
                 <Link className="relative w-12 h-12 flex items-center justify-center" href="/">
-                  <LeftArrowIcon className='hover:cursor-pointer absolute left-0' height="18" width="18" primaryColor={theme ? '#FFFFFF' : '#202020'} />
-                  {/* <Image
-                    className="hover:cursor-pointer hover:scale-102 absolute left-1 dark:hidden"
-                    width={15}
-                    height={15}
-                    src={IMAGES.BACK_ARROW_ICON_BLACK}
-                    alt="back-arrow-icon"
-                    loader={gumletLoader}
+                  <LeftArrowIcon
+                    className="hover:cursor-pointer absolute left-0"
+                    height="18"
+                    width="18"
+                    primaryColor={theme ? '#FFFFFF' : '#202020'}
                   />
-                  <Image
-                    className="hover:cursor-pointer hover:scale-102 absolute left-1 hidden dark:inline-block"
-                    width={15}
-                    height={15}
-                    src={IMAGES.BACK_ARROW_ICON_WHITE}
-                    alt="back-arrow-icon"
-                    loader={gumletLoader}
-                  /> */}
                 </Link>
               </div>
-
-              {/* <div className=" flex items-center justify-center ">
-                <div className="mr-9">
-                  <Image
-                    width={21}
-                    height={21}
-                    className=" cursor-pointer hover:scale-110 dark:hidden inline"
-                    src={IMAGES.CHAT_ICON_BLACK}
-                    loader={gumletLoader}
-                    alt="chat-icon-black"
-                  />
-                  <Image
-                    width={21}
-                    height={21}
-                    className=" cursor-pointer hover:scale-110 dark:inline hidden"
-                    src={IMAGES.CHAT_ICON_WHITE}
-                    loader={gumletLoader}
-                    alt="chat-icon-white"
-                  />
-                </div>
-                <div
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    e.preventDefault();
-                    if (e.key == 'Enter' || e.key == ' ') {
-                      handBurgerMenuClickHandler();
-                    }
-                  }}
-                  onClick={handBurgerMenuClickHandler}
-                >
-                  <Image
-                    width={18}
-                    height={12}
-                    className="h-[12px] cursor-pointer w-[18px] min-h-3 hover:scale-110 dark:inline hidden "
-                    src={IMAGES.HAND_BURGER_MENU_ICON_WHITE}
-                    loader={gumletLoader}
-                    alt="hand-burger-menu-icon-white"
-                  />
-                  <Image
-                    width={18}
-                    height={12}
-                    className="h-[12px] cursor-pointer w-[18px] min-h-3 hover:scale-110 dark:hidden inline"
-                    src={IMAGES.HAND_BURGER_MENU_ICON_BLACK}
-                    loader={gumletLoader}
-                    alt="hand-burger-menu-icon-black"
-                  />
-                </div>
-              </div> */}
             </>
           )}
         </div>

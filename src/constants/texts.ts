@@ -1,3 +1,5 @@
+import { PROJECT_NAME } from "@/config";
+
 export const ENTER_ADDRESS = 'Enter Address';
 export const SAVE_ADDRESS = 'Save Address';
 export const CONTINUE = 'Continue';
@@ -16,7 +18,7 @@ export const DEFAULT='Default';
 export const MAKE_DEFAULT='Make Default';
 export const CONFIRMANDPAY='Confirm & pay';
 export const CARDS='Credit and Debit Card';
-export const THANK_YOU = 'Thank you for shopping with ' + process.env.NEXT_PUBLIC_PROJECT_NAME;
+export const THANK_YOU = 'Thank you for shopping with ' + PROJECT_NAME;
 export const WAIT_ORDER = 'Please wait while we redirect you to my order page';
 export const BACK_HOME = 'Back to Home';
 export const SOMETHING_WRONG = 'Something went wrong. Please try later.';
@@ -33,3 +35,5 @@ export const EDIT_ADDRESS = 'Edit Address';
 export const UPDATE_LOCATION = 'Update Location';
 export const CHANGE = 'Change';
 export const UNABLE_TO_FIND_LOCATION = 'Unable to fetch your location please try another way';
+export const CANCEL = 'Cancel';
+export const CONFIRM = 'Confirm';

@@ -3,7 +3,7 @@ import Layout from '@/components/layout';
 import PageBanner from '@/components/ui/page-banner';
 import PageHeaderWithBreadcrumb from '@/components/ui/page-header-with-breadcrumb';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import React, { FC } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 import { useTranslation } from 'next-i18next';
 import cookie from 'cookie';
 import { HeroSectionType, qaSectionType } from './privacy-policy';
@@ -13,6 +13,7 @@ import formatArrayToStrings from '@/helper/functions/format-array-strings';
 import { AUTH_URL_V1, BASE_API_URL, STRAPI_BASE_API_URL } from '@/config';
 import { GET_PRIVACY_POLICY_DATA, STRAPI_TERMS_OF_SERVICE } from '@/api/endpoints';
 import { GetServerSidePropsContext } from 'next';
+import { useTheme } from '@/hooks/theme';
 
 type HeaderBennerSection={
     bannerUrlForMobile:string
@@ -45,7 +46,19 @@ export type Props = {
   termsOfServiceData: termsData;  
   htmlContent:string
 };
-const TermsAndService: FC<Props>= ({termsOfServiceData,htmlContent}) =>{
+const TermsAndService: FC<Props>= ({termsOfServiceData,htmlContent}) =>{ 
+  const contentRef = useRef<HTMLDivElement>(null);
+  const {theme}=useTheme();
+
+   useEffect(() => {
+     const container = contentRef.current;
+     if (container) {
+       const elements = container.querySelectorAll('*');
+       elements.forEach((el:any) => {
+         el.style.color = theme ? '#FFF' : '#202020';
+       });
+     }
+   }, [theme]);
 
   const {t}=useTranslation('terms-of-service');
   const headerBennerSection = t('page.headerBennerSection', { returnObjects: true }) as HeaderBennerSection;
@@ -76,7 +89,7 @@ const TermsAndService: FC<Props>= ({termsOfServiceData,htmlContent}) =>{
           headerDescription={termsOfServiceData?.attributes?.heroSection?.subtitle}
           headerDescriptionForMobile={headerBennerSection.headerDescriptionForMobile}
         />
-        <div className="my-8 dark:text-text-secondary-light text-text-secondary-dark" dangerouslySetInnerHTML={{ __html: htmlContent }} />
+        <div ref={contentRef} className="my-8 dark:!text-text-secondary-light !text-text-secondary-dark" dangerouslySetInnerHTML={{ __html: htmlContent }} />
       </div>
     </Layout>
   );

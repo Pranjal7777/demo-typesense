@@ -1,7 +1,6 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useWindowResize } from '@/hooks/use-window-resize';
 import { appClsx } from '@/lib/utils';
-import { IMAGES } from '@/lib/images';
 import HeroImage from '@/components/ui/hero-image';
 
 import { useTranslation } from 'next-i18next';
@@ -31,6 +30,9 @@ export type HeroSectionProps = {
   handleRemoveLocationHelper: () => void;
   className?: string;
   imageClassName?: string;
+  mobileSearchBoxContainerClassName?: string;
+  showBackArrowInSearchBox?: boolean;
+  heroImageSrc?: string;
 };
 
 export type FormDataT = {
@@ -45,6 +47,9 @@ const HeroSection: FC<HeroSectionProps> = ({
   handleRemoveLocationHelper,
   className,
   imageClassName,
+  mobileSearchBoxContainerClassName,
+  showBackArrowInSearchBox = false,
+  heroImageSrc,
 }) => {
   const maxThreshold = useNewWindowScroll(400);
   const minThreshold = useNewWindowScroll(180);
@@ -58,6 +63,11 @@ const HeroSection: FC<HeroSectionProps> = ({
     resultDropdown: false,
     location: '',
   });
+  
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, search: (router?.query?.search as string) ?? '' }));
+  }, [router?.query?.search]);
+
   const { userInfo } = useAppSelector((state: RootState) => state.auth);
   const { searchClient } = useTypesenseSearch({
     searchItem: formData.search,
@@ -81,7 +91,7 @@ const HeroSection: FC<HeroSectionProps> = ({
       )}
       style={{ backgroundPosition: '50% 20%' }}
     >
-      {!stickyHeaderWithSearchBox && <HeroImage src={IMAGES.PRIMARY_BANNER} className={imageClassName} />}
+      {!stickyHeaderWithSearchBox && <HeroImage src={heroImageSrc} className={imageClassName} />}
       <div
         className={` flex flex-col mt-14 border-error ${
           stickyHeaderWithSearchBox ? 'w-full' : minThreshold ? 'w-full ' : 'max-w-full sm:max-w-[1083px] sm:mx-[64px] '
@@ -95,6 +105,8 @@ const HeroSection: FC<HeroSectionProps> = ({
           {heroSection.title}
         </h1>
         <NewSearchBox
+          showBackArrow={showBackArrowInSearchBox}
+          mobileContainerClassName={appClsx(mobileSearchBoxContainerClassName)}
           stickyHeaderWithSearchBox={stickyHeaderWithSearchBox}
           windowWidth={windowWidth}
           handleGetLocationHelper={handleGetLocationHelper}

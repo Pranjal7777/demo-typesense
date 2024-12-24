@@ -19,6 +19,7 @@ import { Toaster } from 'sonner';
 import FullScreenSpinner from '../full-screen-spinner';
 import showToast from '@/helper/show-toaster';
 import { AddressErrorType } from '@/store/types/profile-type';
+import UserProfile from '../user-profile';
 
 interface ProductCardProps {
   product: Product;
@@ -29,7 +30,8 @@ interface ProductCardProps {
   userID?: string;
 }
 
-const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isTypeSenseData = false, showLikeIcon = false, onLikeClick, userID }) => {
+const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isTypeSenseData = false, showLikeIcon = true, onLikeClick, userID }) => {
+
   const [likeAndDislikeProduct, { isLoading: isLikeAndDislikeLoading }] = productsApi.useLikeAndDislikeProductMutation();
    const userId = useSelector((state: RootState) => state.auth.userInfo?._id);
   const { theme } = useTheme();
@@ -51,11 +53,11 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
   const [isLiked, setIsLiked] = useState(product.isLiked);
 
   const handleLike = async () => {
-    try {
-      const result = await likeAndDislikeProduct({ assetid: product.assetId || '', like: !isLiked, userId: userID || userId || '' }).unwrap();
+    try {      
+      const result = await likeAndDislikeProduct({ assetid: product.assetId || product._id || product.id || '', like: !isLiked, userId: userID || userId || '' }).unwrap();
       showToast({ message: result?.message, messageType: 'success', position: 'bottom-right' });
       setIsLiked(!isLiked);
-      onLikeClick?.(product.assetId || '');
+      onLikeClick?.(product.assetId || product._id);
     } catch (error) {
       const errorData = error as AddressErrorType;
       showToast({ message: errorData?.data?.message, messageType: 'error', position: 'bottom-right' });
@@ -73,24 +75,25 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
         <Link href={`/seller-profile/${userAccountId}`}>
           {showProfilePic && (
             <div className="flex gap-1 md:gap-4 items-center">
-              {/* for profile image, in the src of next/image component we can add url from api  */}
-              {product?.profilePic && product?.profilePic.trim() !== '' ? (
-                <div className="relative h-[32px] w-[32px] sm:h-[36px] sm:w-[36px] overflow-hidden">
-                  <ImageContainer
-                    src={`${STATIC_IMAGE_URL}/${product?.profilePic}`}
-                    className="rounded-full object-cover"
-                    alt="profileimage"
-                  />
-                </div>
-              ) : (
-                <UserPlaceholderIcon
-                  secondaryColor={theme ? 'var(--icon-secondary-dark)' : 'var(--icon-secondary-light)'}
-                />
-              )}
+              <UserProfile
+                className="min-w-8 max-w-8 min-h-8 max-h-8 md:min-w-9 md:max-w-9 md:min-h-9 md:max-h-9"
+                firstName={product.firstName}
+                lastName={product.lastName}
+                profilePicUrl={product.profilePic}
+              />
 
-              <div>
+              <div className="overflow-overlay overflow-hidden">
                 {/* here we can add name coming form api as product?.name */}
-                <h5 className="text-xs leading-[18px] truncate md:text-sm font-medium md:leading-5 text-text-primary-light dark:text-text-primary-dark">
+                <h5
+                  title={
+                    product.firstName?.[0].toUpperCase() +
+                    product.firstName?.slice(1) +
+                    ' ' +
+                    product.lastName[0].toUpperCase() +
+                    product?.lastName?.slice(1)
+                  }
+                  className="text-xs leading-[18px] truncate md:text-sm font-medium md:leading-5 text-text-primary-light dark:text-text-primary-dark"
+                >
                   {product.firstName?.[0].toUpperCase() +
                     product.firstName?.slice(1) +
                     ' ' +
@@ -127,7 +130,7 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
           {/* <div> */}
           {/* this span will take image name from the api, product?.imageName  */}
           <span className="text-[10px] leading-[15px] md:text-sm font-normal text-[#202022] dark:text-white">
-            {product.assetTitle}
+            {product.assetTitle || product.title?.en || ''}
           </span>
           {/* </div> */}
           <div className="text-sm sm:text-[16px] sm:leading-6 font-semibold text-text-primary-light dark:text-text-primary-dark leading-5">

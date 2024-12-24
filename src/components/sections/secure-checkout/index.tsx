@@ -186,7 +186,10 @@ export default function SecureCheckout({
               <span>Checkout</span>
             </div>
           </div>
-          <div className="lg:flex items-center absolute left-1/2 transform -translate-x-1/2  hidden cursor-pointer" onClick={()=> router.push("/")}>
+          <div
+            className="lg:flex items-center absolute left-1/2 transform -translate-x-1/2  hidden cursor-pointer"
+            onClick={() => router.push('/')}
+          >
             <PrimaryLogo height={150} width={160} className="text-b mr-2" primaryColor="var(--brand-color)" />
           </div>
         </div>
@@ -209,9 +212,11 @@ export default function SecureCheckout({
               router.back();
             }}
           />
-          <button onClick={() => {
-            router.back();
-          }}>
+          <button
+            onClick={() => {
+              router.back();
+            }}
+          >
             <Image
               className="cursor-pointer hover:scale-110 dark:inline-block hidden fixed left-5 top-5"
               width={18}
@@ -244,12 +249,18 @@ export default function SecureCheckout({
                   alt="Product"
                   width={140}
                   height={140}
-                  className="rounded-md mr-4 mobile:h-[105px]"
+                  className="rounded-md mr-4 h-[74px] w-[74px] object-cover object-center"
                 />
-                <div className="flex flex-col py-1 h-[100px]">
+                <div className="flex flex-col py-1 gap-1">
                   <h3 className="dark:text-white">{checkoutProduct?.title}</h3>
                   <p className="text-sm text-gray-600 dark:text-gray-300 mobile:!text-[12px]">
-                    Sold by <button onClick={() => router.push(`/seller-profile/${sealerAccountId}`)} className="text-brand-color border-b border-brand-color">{sellerUserName}</button>
+                    Sold by{' '}
+                    <button
+                      onClick={() => router.push(`/seller-profile/${sealerAccountId}`)}
+                      className="text-brand-color border-b border-brand-color"
+                    >
+                      {sellerUserName}
+                    </button>
                   </p>
                   <p className="text-sm font-semibold mt-auto dark:text-white">{'USD $' + checkoutProduct?.price}</p>
                 </div>
@@ -339,9 +350,7 @@ export default function SecureCheckout({
                       <h2 className="text-lg font-semibold mb-1 dark:text-white ">{PAYMENT_OPTION}</h2>
                     </div>
                   }
-                  {!selectedAddressId && (
-                    <h4 className="text-sm dark:text-gray-300 mb-6 ">{ADDRESS_LABEL_1}</h4>
-                  )}
+                  {!selectedAddressId && <h4 className="text-sm dark:text-gray-300 mb-6 ">{ADDRESS_LABEL_1}</h4>}
 
                   {/* add payment method button for mobile */}
                   {!!(showAddPaymentFormView && paymentIntentData) && (
@@ -353,32 +362,38 @@ export default function SecureCheckout({
                       ref={stripeInstanceRef}
                     />
                   )}
-                  
+
                   {/* payment options for desktop */}
                   {showDesktopPaymentForm && (
                     <div className="hidden lg:block">
-                      <PaymentOptionForm
-                        selectedAddressId={selectedAddressId}
-                      />
+                      <PaymentOptionForm selectedAddressId={selectedAddressId} />
                     </div>
                   )}
                 </div>
               </div>
               <div className="lg:w-1/2 mt-8 lg:mt-0 border border-border-tertiary-light dark:border-border-tertiary-dark rounded-lg h-fit mobile:!mt-2 mobile:!border-none mobile:!mt:2">
-                <h3 className="hidden lg:block text-xl font-semibold px-6 pt-6 dark:text-white ">{DETAILS_OF_PAYMENT}</h3>
+                <h3 className="hidden lg:block text-xl font-semibold px-6 pt-6 dark:text-white ">
+                  {DETAILS_OF_PAYMENT}
+                </h3>
                 <div className=" bg-white dark:bg-bg-primary-dark rounded-lg p-6 mobile:!px-0 mobile:!py-2 ">
-                  <div className=" hidden lg:flex items-center mb-4" style={{alignItems:'unset'}}>
+                  <div className=" hidden lg:flex items-center mb-4" style={{ alignItems: 'unset' }}>
                     <Image
                       src={STATIC_IMAGE_URL + '/' + checkoutProduct?.images[0].url}
                       alt="Product"
                       width={140}
                       height={140}
-                      className="rounded-md mr-4 mobile:h-[105px] h-[137px] object-cover object-center"
+                      className="rounded-md mr-4 h-[74px] w-[74px] object-cover object-center"
                     />
-                    <div className="flex flex-col py-1 lg:py-3 ">
+                    <div className="flex flex-col justify-around ">
                       <h3 className="dark:text-white">{checkoutProduct?.title}</h3>
                       <p className="text-sm text-gray-600 dark:text-gray-300">
-                        Sold by <button onClick={() => router.push(`/seller-profile/${sealerAccountId}`)} className="text-brand-color border-b border-brand-color cursor-pointer">{sellerUserName}</button>
+                        Sold by{' '}
+                        <button
+                          onClick={() => router.push(`/seller-profile/${sealerAccountId}`)}
+                          className="text-brand-color border-b border-brand-color cursor-pointer"
+                        >
+                          {sellerUserName}
+                        </button>
                       </p>
                       <p className="text-sm font-semibold mt-auto dark:text-white">
                         {'USD $' + checkoutProduct?.price}
@@ -404,7 +419,11 @@ export default function SecureCheckout({
               type="submit"
               isLoading={isLoadingConfirmPayment}
               isDisabled={!isFormValid}
-              className={`lg:w-[50%] lg:mt-6 ${isFormValid ? 'bg-btn-bg-primary-light hover:bg-btn-bg-primary-light text-white' : ' opacity-[75%] !text-white cursor-not-allowed dark:opacity-50 '} !mb-0 mobile:w-[90%] mx-auto`}
+              className={`lg:w-[50%] lg:mt-6 ${
+                isFormValid
+                  ? 'bg-btn-bg-primary-light hover:bg-btn-bg-primary-light text-white'
+                  : ' opacity-[75%] !text-white cursor-not-allowed dark:opacity-50 '
+              } !mb-0 mobile:w-[90%] mx-auto`}
             >
               Continue
             </Button>
@@ -461,7 +480,7 @@ export default function SecureCheckout({
                     formData={formData}
                     changeFormData={changeFormData}
                     onPhoneChange={onPhoneChange}
-                    pageType='secure-checkout'
+                    pageType="secure-checkout"
                   />
                 </BuyFlowAddressContainer>
                 {showEditSection ? (
@@ -495,53 +514,53 @@ export default function SecureCheckout({
         showAddressDetailsWithMapInDessktop === 'true' &&
         showDetailsInExistingAddressContainer !== 'true' ? (
           // {/* add address section (address details form with map) for desktop start   */}
-            <div className="hidden sm:block w-full h-[100vh] overflow-y-scroll absolute dark:bg-slate-700 dark:bg-opacity-[0.2] bg-[#00000080] bg-opacity-[0.5] top-0 z-[10]">
-              {showMapInDesktop == 'true' ? (
-                <div className="w-[70%] max-w-[580px] flex flex-col items-center absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-[12px]  bg-white dark:bg-bg-primary-dark">
-                  <EnterAddressHeader className="rounded-t-[12px]" clickEvent={closeIconHandler}>
-                    {showEditSection ? EDIT_ADDRESS : ENTER_ADDRESS}
-                  </EnterAddressHeader>
-                  <div className="map-for-desktop h-[466px] w-full min-h-[456px] relative">
-                    <GoogleMapComponent
-                      setIsMapLoaded={setIsMapLoaded}
-                      userLocation={userLocation}
-                      setMap={setMap}
-                      fullscreenControl={false}
-                      streetViewControl={false}
-                      onDragEnd={onDragEnd}
-                      mapStyle={{
-                        width: '100%',
-                        height: '100%',
-                        borderBottomLeftRadius: '12px',
-                        borderBottomRightRadius: '12px',
-                      }}
-                    />
-                    <AutoCompleteSearchBox
-                      isMapLoaded={isMapLoaded}
-                      onPlaceSelected={onPlaceSelected}
-                      className="top-[59px]"
-                      formData={formData}
-                      setFormData={setFormData}
-                    />
+          <div className="hidden sm:block w-full h-[100vh] overflow-y-scroll absolute dark:bg-slate-700 dark:bg-opacity-[0.2] bg-[#00000080] bg-opacity-[0.5] top-0 z-[10]">
+            {showMapInDesktop == 'true' ? (
+              <div className="w-[70%] max-w-[580px] flex flex-col items-center absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-[12px]  bg-white dark:bg-bg-primary-dark">
+                <EnterAddressHeader className="rounded-t-[12px]" clickEvent={closeIconHandler}>
+                  {showEditSection ? EDIT_ADDRESS : ENTER_ADDRESS}
+                </EnterAddressHeader>
+                <div className="map-for-desktop h-[466px] w-full min-h-[456px] relative">
+                  <GoogleMapComponent
+                    setIsMapLoaded={setIsMapLoaded}
+                    userLocation={userLocation}
+                    setMap={setMap}
+                    fullscreenControl={false}
+                    streetViewControl={false}
+                    onDragEnd={onDragEnd}
+                    mapStyle={{
+                      width: '100%',
+                      height: '100%',
+                      borderBottomLeftRadius: '12px',
+                      borderBottomRightRadius: '12px',
+                    }}
+                  />
+                  <AutoCompleteSearchBox
+                    isMapLoaded={isMapLoaded}
+                    onPlaceSelected={onPlaceSelected}
+                    className="top-[59px]"
+                    formData={formData}
+                    setFormData={setFormData}
+                  />
 
-                    <button
-                      className="absolute bottom-[16px] rounded-md text-[14px] font-semibold right-[60px] w-[130px] h-[48px] bg-[#E1BBB4]"
-                      onClick={continueButtonHandler}
-                    >
-                      {showEditSection ? UPDATE_LOCATION : CONTINUE}
-                    </button>
-                    <button
-                      onClick={locateMeHandler}
-                      className=" absolute bottom-[16px] left-[15px] flex justify-around items-center w-[121px] px-[5px] h-[41px] bg-[#FFFFFF]  border border-[#517EE5] rounded-[5px]"
-                    >
-                      <MyLocationIcon primaryColor="#517EE5" />
-                      <span className="text-[#517EE5] font-semibold">Locate Me</span>
-                    </button>
-                  </div>
+                  <button
+                    className="absolute bottom-[16px] rounded-md text-[14px] font-semibold right-[60px] w-[130px] h-[48px] bg-[#E1BBB4]"
+                    onClick={continueButtonHandler}
+                  >
+                    {showEditSection ? UPDATE_LOCATION : CONTINUE}
+                  </button>
+                  <button
+                    onClick={locateMeHandler}
+                    className=" absolute bottom-[16px] left-[15px] flex justify-around items-center w-[121px] px-[5px] h-[41px] bg-[#FFFFFF]  border border-[#517EE5] rounded-[5px]"
+                  >
+                    <MyLocationIcon primaryColor="#517EE5" />
+                    <span className="text-[#517EE5] font-semibold">Locate Me</span>
+                  </button>
                 </div>
-              ) : null}
-            </div>
-          ) : null}
+              </div>
+            ) : null}
+          </div>
+        ) : null}
       </div>
       <Toaster />
     </>

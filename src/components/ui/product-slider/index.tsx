@@ -20,9 +20,10 @@ export type Props = {
   shareTitle?: string;
   isProductLiked: boolean;
   setTotalLikeCount:React.Dispatch<React.SetStateAction<number>>;
+  productCondition?: string;
 };
 
-const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shareTitle, isProductLiked, setTotalLikeCount }) => {
+const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shareTitle, isProductLiked, setTotalLikeCount, productCondition }) => {
   const route = useRouter();
   const { id } = route.query;
   const [likeAndDislikeProduct, { isLoading: isLikeAndDislikeLoading }] = productsApi.useLikeAndDislikeProductMutation();
@@ -268,6 +269,11 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
                   &gt;
                 </p>
               </button>
+            </div>
+          )}
+          {productCondition && (
+            <div className="absolute top-5 left-5 w-[75px] h-8 flex items-center justify-center text-brand-color bg-bg-quattuordenary-light rounded-[3px]">
+              {productCondition}
             </div>
           )}
         </div>

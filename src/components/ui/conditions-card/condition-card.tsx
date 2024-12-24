@@ -18,7 +18,7 @@ const ConditionCard: React.FC<ConditionCardProps> = ({ name, isSelected, onClick
           onClick();
         }
       }}
-      className={`border cursor-pointer ${isSelected ? 'text-brand-color bg-[#F7F5FC] dark:bg-[#221D2A] border-brand-color' : 'border-[#DBDBDB] dark:border-[#3D3B45]'}    w-[109px] h-[45px] rounded-[4px] flex  justify-center `}
+      className={`border cursor-pointer ${isSelected ? 'text-brand-color bg-brand-color-hover dark:bg-[#221D2A] border-brand-color' : 'border-[#DBDBDB] dark:border-[#3D3B45]'}    w-[109px] h-[45px] rounded-[4px] flex  justify-center `}
     >
       <div className="items-center justify-center flex w-full" tabIndex={0} role='button' onKeyUp={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {

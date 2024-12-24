@@ -5,30 +5,35 @@ import { GET_ALL_CATEGORIES_URL, GET_ALL_FILTERS_URL, GET_ALL_GRAND_PARENT_CATEG
 
 export const categoriesApi = rootApi.injectEndpoints({
   endpoints: (builder) => ({
-    getAllGrandParentCategories: builder.query<ResponseGetAllGrandParentCategoriesPayload,void>({
+    getAllGrandParentCategories: builder.query<ResponseGetAllGrandParentCategoriesPayload, void>({
       query: () => ({
-        url:`${AUTH_URL_V2}${GET_ALL_GRAND_PARENT_CATEGORIES_URL}/?&limit=100&set=0&status=1`,
-        method:'GET',
-        // body:getGuestTokenConfig,
+        url: `${AUTH_URL_V2}${GET_ALL_GRAND_PARENT_CATEGORIES_URL}/?&limit=100&set=0&status=1`,
+        method: 'GET',
       }),
     }),
-    getAllCategories: builder.query<ResponseGetAllCategoriesPayload,void>({
+    getAllCategories: builder.query<ResponseGetAllCategoriesPayload, void>({
       query: () => ({
-        url:`${AUTH_URL_V1}${GET_ALL_CATEGORIES_URL}`,
-        method:'GET',
-        // body:getGuestTokenConfig,
+        url: `${AUTH_URL_V1}${GET_ALL_CATEGORIES_URL}`,
+        method: 'GET',
       }),
     }),
-    getSubCategoriesByParentId: builder.query<ResponseGetSubCategoriesByParentIdPayload,{parentId:string}>({
-      query: ({parentId}) => ({
-        url:`${AUTH_URL_V2}${GET_SUB_CATEGORIES_BY_ID_URL}/?parentId=${parentId}&trigger=1&country=India&set=0&limit=100`,
-        method:'GET',
+    getSubCategoriesByParentId: builder.query<ResponseGetSubCategoriesByParentIdPayload, { parentId: string }>({
+      query: ({ parentId }) => ({
+        url: `${AUTH_URL_V2}${GET_SUB_CATEGORIES_BY_ID_URL}/?parentId=${parentId}&trigger=1&country=India&set=0&limit=100`,
+        method: 'GET',
       }),
     }),
-    getAllFilters: builder.query<ResponseGetSubCategoriesByParentIdPayload,void>({
+    getCategoriesBannerByParentId: builder.query<ResponseGetSubCategoriesByParentIdPayload, { parentId: string }>({
+      query: ({ parentId }) => ({
+        url: `${AUTH_URL_V2}${GET_SUB_CATEGORIES_BY_ID_URL}/?parentId=${parentId}&country=India`,
+        method: 'GET',
+      }),
+      keepUnusedDataFor: 0,
+    }),
+    getAllFilters: builder.query<ResponseGetSubCategoriesByParentIdPayload, void>({
       query: () => ({
-        url:`${AUTH_URL_V1}${GET_ALL_FILTERS_URL}`,
-        method:'GET',
+        url: `${AUTH_URL_V1}${GET_ALL_FILTERS_URL}`,
+        method: 'GET',
       }),
     }),
   }),

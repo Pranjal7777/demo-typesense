@@ -57,14 +57,14 @@ const PhoneNumberInput: FC<Props> = ({
           {required && '*'}
         </FormLabel>
       )}
-      <div className="mobile:mt-1 mt-2 w-full h-11 relative">
+      <div className="mt-1 w-full h-fit relative">
         <PhoneInput
           country={country || 'us'}
           countryCodeEditable = {false}
           value={phone}
           onChange={() => setPhone(phone)}
           containerStyle={{}}
-          inputStyle={{ border: '', width: '100%', height: '100%' }}
+          inputStyle={{ border: '', width: '100%', height: '44px' }}
           dropdownStyle={{
             background: 'white',
             color: 'black',
@@ -77,7 +77,7 @@ const PhoneNumberInput: FC<Props> = ({
             'my-custom-dropdown my-custom-dropdown-active dark:!bg-bg-primary-dark dark:!text-text-primary-dark ',dropdownClass
           )}
           containerClass={appClsx(
-            '!border-2 w-full outline-none h-11 border dark:bg-bg-primary-dark dark:border-border-tertiary-dark border-border-tertiary-light rounded',
+            '!border-2 w-full outline-none h-fit border dark:bg-bg-primary-dark dark:border-border-tertiary-dark border-border-tertiary-light rounded',
             className,
             { 'border-error': error }
           )}

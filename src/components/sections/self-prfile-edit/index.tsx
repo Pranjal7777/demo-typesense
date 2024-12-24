@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useState } from 'react';
+import React, { ChangeEvent, FC, useMemo, useState } from 'react';
 import LeftArrowIcon from '../../../../public/assets/svg/left-arrow-icon';
 import ProfileImageContainer from '@/components/ui/profile-image-container';
 import Image from 'next/image';
@@ -26,11 +26,21 @@ import UserPlaceholderIcon from '../../../../public/assets/svg/user-placeholder-
 import { STATIC_IMAGE_URL } from '@/config';
 import { selfProfileApi } from '@/store/api-slices/profile/self-profile';
 import OtpVerification from './otp-verification';
+import LableWithTextArea from '@/components/ui/lable-with-text-area';
+import e from 'express';
+import PurchaseProductDetails from '@/components/ui/purchase-card/purchaseProductDetails';
+import UserProfile from '@/components/ui/user-profile';
+import ConfirmationPopup from '@/components/ui/confirmation-popup';
+import FilterPopup from '@/components/ui/filter-popup';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth } from '../../../../firebase.config';
+import ReasonFilter from '@/components/ui/reason-filter';
 
 type SelfProfileEditSectionProps = {
   profileData?: SellerProfileType;
   leftArrowClickHandler: () => void;
   isMobile: boolean;
+  setProfileData: React.Dispatch<React.SetStateAction<SellerProfileType>>;
   // setProfilePicUrl: (_url: string) => void;
 };
 
@@ -42,6 +52,8 @@ export type EditFormDataType = {
   phoneNumber: string;
   countryCode: string;
   country: string;
+  bio: string;
+  website: string;
 };
 export type EditErrorStateType = {
   firstName: boolean;
@@ -50,6 +62,7 @@ export type EditErrorStateType = {
   email: boolean;
   phoneNumber: boolean;
   countryCode: boolean;
+  country: boolean;
 };
 export type ErrorMessages = {
   username: string;
@@ -58,10 +71,15 @@ export type ErrorMessages = {
 };
 export type VerificationDataType = {
   expiryTime: number;
-  verificationId :string;
+  verificationId: string;
 };
 
-const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, leftArrowClickHandler, isMobile }) => {
+const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
+  profileData,
+  leftArrowClickHandler,
+  isMobile,
+  setProfileData,
+}) => {
   const [editProfilePicUrl, setEditProfilePicUrl] = useState('');
   const { theme } = useTheme();
   const initialErrorState: EditErrorStateType = {
@@ -71,26 +89,9 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
     email: false,
     phoneNumber: false,
     countryCode: false,
+    country: false,
   };
-  // const initialEditProfileFormData:EditFormDataType = {
-  //   firstName: profileData?.firstName || '',
-  //   lastName: profileData?.lastName || '',
-  //   username: profileData?.username || '',
-  //   email: profileData?.email || '',
-  //   phoneNumber: profileData?.phoneNumber || '',
-  //   countryCode: profileData?.countryCode || '+91',
-  //   country: profileData?.country || 'India',
-  // };
 
-  // const [initialEditProfileFormData, setInitialEditProfileFormData] = useState<EditFormDataType>({
-  //   firstName: profileData?.firstName || '',
-  //   lastName: profileData?.lastName || '',
-  //   username: profileData?.username || '',
-  //   email: profileData?.email || '',
-  //   phoneNumber: profileData?.phoneNumber || '',
-  //   countryCode: profileData?.countryCode || '+91',
-  //   country: profileData?.country || 'India',
-  // });
   const initialEditProfileFormData = {
     firstName: profileData?.firstName || '',
     lastName: profileData?.lastName || '',
@@ -99,6 +100,8 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
     phoneNumber: profileData?.phoneNumber || '',
     countryCode: profileData?.countryCode || '+91',
     country: profileData?.country || 'India',
+    bio: profileData?.bio || '',
+    website: profileData?.website || '',
   };
 
   const [errorState, setErrorState] = useState<EditErrorStateType>(initialErrorState);
@@ -115,7 +118,11 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
   const [verificationData, setVerificationData] = useState<VerificationDataType | null>(null);
 
   const changeFormData = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+
     const { name, value } = e.target;
+    if (name == 'bio' || (name == 'website' && !updatedFields.includes(name))) {
+      setUpdatedFields((prevState) => [...prevState, name]);
+    }
     if (name in errorState) {
       setErrorState((prevState) => ({ ...prevState, [name]: value === '' }));
       if ((name == 'firstName' || name == 'lastName' || name == 'country') && !updatedFields.includes(name)) {
@@ -166,9 +173,8 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
   const [updateProfile] = selfProfileApi.useUpdateProfileMutation();
   const [updateUserName] = selfProfileApi.useUpdateUserNameMutation();
   const [updateEmail] = selfProfileApi.useUpdateEmailMutation();
-  const [updatePhoneNumber] = selfProfileApi.useUpdatePhoneNumberMutation();
-  const [sendVerificationCodeForChangeNumber] = selfProfileApi.useSendVerificationCodeForChangeNumberMutation()
-  const [verifyVerificationCode] = selfProfileApi.useVerifyVerificationCodeMutation();
+  const [updateAccount] = selfProfileApi.useUpdateAccountMutation();
+  const [sendVerificationCodeForChangeNumber] = selfProfileApi.useSendVerificationCodeForChangeNumberMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentEditField, setCurrentEditField] = useState<string | null>(null);
   const [showCongratulationModal, setShowCongratulationModal] = useState(false);
@@ -215,8 +221,6 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
         };
         setIsValidating(true);
         const data = await validateEmail(requestPayloadForValidEmail).unwrap();
-        // setInitialEditProfileFormData((prevState) => ({ ...prevState, email: editProfileFormData.email }));
-        // setUpdatedFields((prevState) => [...prevState, 'email']);
         const updateEmailMsg = await updateEmail({ newEmail: requestPayloadForValidEmail.email });
         setCongratulationMsg(updateEmailMsg?.data?.message || '');
       } catch (error) {
@@ -243,18 +247,15 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
           trigger: 3,
           userId: profileData?._id || '',
         };
-          const verificationData = await sendVerificationCodeForChangeNumber(requestPayloadForSendVerificationCode);
-          if(verificationData.error){
-            const errorData = verificationData.error as { data: { message: string } };
-            setErrorState((prevState) => ({ ...prevState, phoneNumber: true }));
-            setErrorMessages((prevState) => ({ ...prevState, phoneNumber: errorData?.data?.message }));
-          }else{
-            setVerificationData(verificationData.data.data);
-            setShowOtpVerification(true);
-          }
-        
-        // setInitialEditProfileFormData((prevState) => ({ ...prevState, phoneNumber: editProfileFormData.phoneNumber,countryCode:editProfileFormData.countryCode }));
-        // setUpdatedFields((prevState) => [...prevState, 'phoneNumber']);
+        const verificationData = await sendVerificationCodeForChangeNumber(requestPayloadForSendVerificationCode);
+        if (verificationData.error) {
+          const errorData = verificationData.error as { data: { message: string } };
+          setErrorState((prevState) => ({ ...prevState, phoneNumber: true }));
+          setErrorMessages((prevState) => ({ ...prevState, phoneNumber: errorData?.data?.message }));
+        } else {
+          setVerificationData(verificationData.data.data);
+          setShowOtpVerification(true);
+        }
       } catch (error) {
         const errorData = error as { data: { message: string } };
         setErrorState((prevState) => ({ ...prevState, phoneNumber: true }));
@@ -265,7 +266,7 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
         setIsValidating(false);
       }
     }
-    if(currentEditField !== 'phoneNumber'){
+    if (currentEditField !== 'phoneNumber') {
       setShowCongratulationModal(true);
     }
   };
@@ -280,15 +281,35 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
     }
     const requestPayload: Partial<EditFormDataType> = {};
     updatedFields.forEach((field) => {
-      requestPayload[field as keyof EditFormDataType] = editProfileFormData[field as keyof EditFormDataType];
+      // Skip adding 'bio' and 'website' fields
+      if (field !== 'bio' && field !== 'website') {
+        requestPayload[field as keyof EditFormDataType] = editProfileFormData[field as keyof EditFormDataType];
+      }
     });
     try {
       setIsUpdating(true);
-      const data = await updateProfile({
-        ...requestPayload,
-        ...(editProfilePicUrl && { profilePic: editProfilePicUrl }),
-      }).unwrap();
+      if (updatedFields.filter((field) => field !== 'bio' && field !== 'website').length > 0) {
+        const data = await updateProfile({
+          ...requestPayload,
+          ...(editProfilePicUrl && { profilePic: editProfilePicUrl }),
+        }).unwrap();
+      }
+      let accountPayload = {};
+      if (updatedFields.filter((field) => field == 'bio' || field == 'website').length > 0) {
+        accountPayload = {
+          ...(updatedFields.includes('bio') && { bio: editProfileFormData.bio }),
+          ...(updatedFields.includes('website') && { website: editProfileFormData.website }),
+        };
+        await updateAccount(accountPayload).unwrap();
+      }
       showToast({ message: 'Profile updated successfully', messageType: 'success' });
+      setProfileData((prevState) => ({
+        ...prevState,
+        ...(editProfilePicUrl && { profilePic: editProfilePicUrl }),
+        ...requestPayload,
+        ...accountPayload,
+      }));
+      setUpdatedFields([]);
     } catch (error) {
       const errorData = error as { data: { message: string } };
       showToast({
@@ -297,16 +318,125 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({ profileData, 
       });
     } finally {
       setIsUpdating(false);
+      setUpdatedFields([]);
     }
   };
-const onVerificationSuccess = () => {
-  setShowOtpVerification(false);
-  setShowCongratulationModal(true);
-  setVerificationData(null);
-}
-  // const verifyOtpHandler = async () => {
-  //   const data = await verifyVerificationCode({verificationId: verificationData?.verificationId || '', otp: otp}).unwrap();
-  // }
+  const onVerificationSuccess = () => {
+    setProfileData((prevState) => ({
+      ...prevState,
+      countryCode: editProfileFormData.countryCode,
+      phoneNumber: editProfileFormData.phoneNumber,
+    }));
+    setShowOtpVerification(false);
+    setShowCongratulationModal(true);
+    setVerificationData(null);
+  };
+
+  const [verifySocialAccount] = selfProfileApi.useVerifySocialAccountMutation();
+  const googleVerify = async () => {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({
+      prompt: 'select_account',
+    });
+    try {
+      const result = await signInWithPopup(auth, provider);
+        if (result.user) {
+          const payload = {
+            id: result.user.uid,
+            trigger: 2,
+          };
+          try {
+            await verifySocialAccount(payload).unwrap();
+            await updateProfile({
+              googleId: payload.id,
+            }).unwrap();
+            showToast({ message: 'Google account verified successfully', messageType: 'success' });
+          } catch (error) {
+            console.log(error, 'google-user-verify error');
+            const errorData = error as { data: { message: string } };
+            showToast({
+              message: errorData?.data?.message || 'Something went wrong please try after sometime',
+              messageType: 'error',
+            });
+          }
+        }     
+    } catch (error) {
+      console.log(error, 'google-user-verify error');
+    }
+  
+  };
+
+ const [deleteAccount, {isLoading: isDeleting}] = selfProfileApi.useDeleteAccountMutation();
+  const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
+  const [showDeleteReasons, setShowDeleteReasons] = useState(false);
+  const [selectedDeleteReason, setSelectedDeleteReason] = useState<string[]>([]);
+  const { data: deleteAccountReasons } = selfProfileApi.useGetDeleteAccountReasonsQuery();
+  const deleteReasons = useMemo(() => {
+    return deleteAccountReasons?.data.map((reason) => ({
+      label: reason.reason,
+      value: reason._id,
+    }));
+  }, [deleteAccountReasons]);
+
+  const [deleteError, setDeleteError] = useState('');
+  const [deleteOtherReason, setDeleteOtherReason] = useState('');
+
+  const handleDeleteReasonChange = (selectedValues: string[]) => {
+    setSelectedDeleteReason(selectedValues);
+  };
+  const deleteAccountHandler = () => {
+    setShowDeleteAccountModal(true);
+  };
+  const onDeleteModalClose = () => {
+    setShowDeleteAccountModal(false);
+    setShowDeleteReasons(false);
+    setSelectedDeleteReason([]);
+    setDeleteOtherReason('');
+    setDeleteError('');
+  };
+  const onDeleteConfirm = () => {
+    setShowDeleteReasons(true);
+  };
+  const onDeleteCancel = () => {
+    setShowDeleteAccountModal(false);
+    onDeleteModalClose();
+  };
+
+    const handleDeleteReasonSubmit = async () => {
+      if (selectedDeleteReason.length == 0) {
+        setDeleteError('Please select at least one reason');
+        return;
+      }
+      if (selectedDeleteReason?.[0] == 'Other' && deleteOtherReason == '') {
+        setDeleteError('Please specify the reason');
+        return;
+      }
+      const reason =
+        selectedDeleteReason?.[0] == 'Other'
+          ? deleteOtherReason
+          : deleteReasons?.find((option) => option.value === selectedDeleteReason?.[0])?.label || '';
+      const deleteAccountPayload = {
+        id: profileData?._id || '',
+        reason: reason,
+        deleteConfirmation: 'false',
+      };
+      try {
+        const data = await deleteAccount(deleteAccountPayload).unwrap();
+        showToast({
+          message: 'An email has been sent to your registered email address for account deletion confirmation.',
+          messageType: 'success',
+          duration: 5000,
+        });
+        onDeleteModalClose();
+      } catch (error) {
+        console.log(error, 'delete account error');
+        const errorData = error as { data: { message: string } };
+        showToast({
+          message: errorData?.data?.message || 'Something went wrong please try after sometime',
+          messageType: 'error',
+        });
+      }
+    };
 
   return (
     <div className="text-text-primary-light dark:text-text-primary-dark w-full">
@@ -326,33 +456,26 @@ const onVerificationSuccess = () => {
         />
         <p className="md:ml-10 ml-0">Edit Profile</p>
       </div>
-      <div className="content flex flex-col    md:flex-row w-full gap-x-16">
+      <div className="content flex flex-col md:flex-row w-full gap-x-16">
         <div className="profile-image w-[120px] self-center md:self-start">
           <div className="profile-image-container w-[100px] h-[100px] relative">
             <>
               {editProfilePicUrl ? (
-                <Image
-                  width={100}
-                  height={100}
-                  className=" rounded-full h-full w-full object-cover"
-                  // className="absolute  mobile:left-3 rtl:mobile:left-0 rtl:mobile:right-3 "
-                  src={editProfilePicUrl}
-                  alt="profile-image"
-                />
-              ) : profileData?.profilePic ? (
-                <ProfileImageContainer
-                  height={100}
-                  width={100}
-                  className="rounded-full"
-                  src={
-                    profileData.profilePic.includes('http')
-                      ? profileData.profilePic
-                      : `${STATIC_IMAGE_URL}/${profileData.profilePic}`
-                  }
-                  alt="profile-image"
+                <UserProfile
+                  firstName={profileData?.firstName}
+                  lastName={profileData?.lastName}
+                  profilePicUrl={editProfilePicUrl}
+                  className="h-[88px] w-[88px] md:h-[100px] md:w-[100px] "
+                  textContainerClassName="text-2xl md:text-3xl"
                 />
               ) : (
-                <UserPlaceholderIcon height="100" width="100" className="rounded-full" />
+                <UserProfile
+                  firstName={profileData?.firstName}
+                  lastName={profileData?.lastName}
+                  profilePicUrl={profileData?.profilePic}
+                  className="h-[88px] w-[88px] md:h-[100px] md:w-[100px]"
+                  textContainerClassName="text-2xl md:text-3xl"
+                />
               )}
             </>
             <Image
@@ -361,7 +484,7 @@ const onVerificationSuccess = () => {
               alt="profile-image"
               width={24}
               height={24}
-              className="rounded-full cursor-pointer absolute bottom-1 right-0"
+              className="rounded-full cursor-pointer absolute bottom-3 right-2 md:bottom-1 md:right-0"
             />
           </div>
         </div>
@@ -387,6 +510,15 @@ const onVerificationSuccess = () => {
             type="text"
             name="lastName"
             className="h-[45px] px-[12px] mobile:!text-[14px]"
+          />
+          <LableWithTextArea
+            showRequiredOrOptional={false}
+            mainClassName="md:col-span-2 my-0"
+            value={editProfileFormData.bio}
+            name="bio"
+            changeEvent={(e) => changeFormData(e)}
+            label="Bio"
+            labelClassName="sm:font-medium"
           />
           <div className="relative">
             <FormInput
@@ -458,8 +590,51 @@ const onVerificationSuccess = () => {
               id="country-selector"
               name="country"
               mainClassName="mb-0"
+              className="h-[46px]"
             />
           </div>
+          <div className="w-full md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormInput
+              labelClassName="font-medium "
+              value={editProfileFormData?.website || ''}
+              onChange={(e) => changeFormData(e)}
+              label="Website"
+              type="text"
+              name="website"
+              className="h-[45px] px-[12px] mobile:!text-[14px]"
+            />
+          </div>
+          <div className="w-full md:col-span-2">
+            <h4 className="md:text-xl font-bold">Social Accounts</h4>
+            <div className="flex flex-col md:flex-row gap-y-4 gap-x-8 mt-2 md:mt-4">
+              <div className="flex items-center gap-x-3">
+                <div className="flex items-center justify-center w-14 h-14 rounded-full bg-bg-quinquedenary-light">
+                  <Image src={IMAGES.GOOGLE_LOGO} alt="google" width={24} height={24} />
+                </div>
+                <div>
+                  <p className="text-sm">Gmail account</p>
+                  <p onClick={googleVerify} className="text-xs text-brand-color cursor-pointer">
+                    Verified
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-x-3">
+                <div className="flex items-center justify-center w-14 h-14 rounded-full bg-bg-quinquedenary-light">
+                  <Image src={IMAGES.FACEBOOK_LOGO} alt="facebook" width={24} height={24} />
+                </div>
+                <div>
+                  <p className="text-sm">Facebook account</p>
+                  <p className="text-xs text-brand-color cursor-pointer">Verified</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <span
+            onClick={deleteAccountHandler}
+            className="text-sm md:col-span-2 font-semibold pyt-1 text-error-dark cursor-pointer"
+          >
+            Delete Account
+          </span>
           <Button
             isLoading={isUpdating}
             disabled={isUpdating}
@@ -480,6 +655,8 @@ const onVerificationSuccess = () => {
         >
           {showOtpVerification ? (
             <OtpVerification
+              profileData={profileData}
+              setProfileData={setProfileData}
               verificationData={verificationData}
               setVerificationData={setVerificationData}
               countryCode={editProfileFormData?.countryCode || ''}
@@ -534,6 +711,8 @@ const onVerificationSuccess = () => {
         >
           {showOtpVerification ? (
             <OtpVerification
+              profileData={profileData}
+              setProfileData={setProfileData}
               setShowOtpVerification={setShowOtpVerification}
               verificationData={verificationData}
               setVerificationData={setVerificationData}
@@ -586,6 +765,40 @@ const onVerificationSuccess = () => {
                 </p>
               </div>
             </Model>
+          )}
+        </Model>
+      )}
+      {showDeleteAccountModal && (
+        <Model
+          modelClassName="items-end md:items-center"
+          closeIconClassName="absolute right-3 top-3 cursor-pointer "
+          className=" text-text-primary-light dark:text-text-primary-dark dark:bg-bg-nonary-dark rounded-[10px] w-full max-w-full md:max-w-[420px] mobile:rounded-b-none mobile:rounded-t-2xl  h-fit px-4 md:px-6 py-5 bottom-0"
+          onClose={onDeleteModalClose}
+        >
+          {showDeleteReasons ? (
+            <ReasonFilter
+              isButtonLoading={isDeleting}
+              showOtherOption={true}
+              filterDescription="Please select an option"
+              options={deleteReasons || []}
+              selectedValues={selectedDeleteReason}
+              onSelectionChange={handleDeleteReasonChange}
+              error={deleteError}
+              handleSubmit={handleDeleteReasonSubmit}
+              setOtherReason={setDeleteOtherReason}
+              otherReason={deleteOtherReason}
+            />
+          ) : (
+            <ConfirmationPopup
+              title="Delete Account"
+              containerClassName="bg-transparent w-full h-full static"
+              buttonContainerClassName="justify-center"
+              className="bg-transparent shadow-none w-full max-w-full p-0"
+              isOpen={showDeleteAccountModal}
+              message="Are you sure you want to delete your account?"
+              onClose={onDeleteCancel}
+              onConfirm={onDeleteConfirm}
+            />
           )}
         </Model>
       )}

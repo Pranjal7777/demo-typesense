@@ -37,6 +37,11 @@ export type Props = {
   categoriesWithChildCategories?: ResponseGetAllCategoriesPayload;
   myLocationFromServer?: MyLocationFromIp;
   children: React.ReactNode;
+  mobileSearchBoxContainerClassName?: string;
+  headerContainerClassName?: string;
+  mobileHeaderContainerClassName?: string;
+  showBackArrowInSearchBox?: boolean;
+  heroImageSrc?: string;
 };
 
 // Define the type for the schema object
@@ -53,6 +58,11 @@ const Layout: FC<Props> = ({
   categoriesWithChildCategories,
   myLocationFromServer,
   containerClass,
+  mobileSearchBoxContainerClassName,
+  headerContainerClassName,
+  mobileHeaderContainerClassName,
+  showBackArrowInSearchBox = false,
+  heroImageSrc,
 }) => {
   const { locale } = useRouter();
   const { token, myLocation, ipAddress } = useAppSelector((state: RootState) => state.auth);
@@ -102,21 +112,6 @@ const Layout: FC<Props> = ({
     setRemoveMyLocationDispatch();
   };
 
-
-  // const excludeDefaultFooter = ['auth', SIGN_IN_PAGE, SIGN_UP_PAGE, 'forgotpassword', '500', 'seller-profile'];
-
-
-  //in order to use 2 type of header on mentioned pages
-  // const stickyHeaderWithSearchBox =
-  //   // router.pathname.includes('categories') ||
-  //   router.pathname.includes('product') ||
-  //   router.pathname.includes('productDetails') ||
-  //   router.pathname.includes('about') ||
-  //   router.pathname.includes('terms-of-service') ||
-  //   router.pathname.includes('privacy-policy') ||
-  //   router.pathname.includes('faq') ||
-  //   router.pathname.includes('blog') ||
-  //   router.pathname.includes('seller-profile');
 
   const organizationSchema: SchemaItem = {
     '@context': 'https://schema.org',
@@ -207,16 +202,17 @@ const Layout: FC<Props> = ({
           <Header
             categoriesWithChildCategories={categoriesWithChildCategories}
             stickyHeaderWithSearchBox={stickyHeader}
+            containerClassName={appClsx(headerContainerClassName)}
+            mobileContainerClassName={appClsx(mobileHeaderContainerClassName)}
           />
         )}
 
         {
           !excludeHeroSection && (
             <HeroSection
-              // content={content}
-              // ${excludeDefaultPageHeaderForPlpPage.some((substring) => router.pathname.includes(substring)) &&
-              //   'border-error sm:hidden mobile:inline'
-              // }  please do not remove this for future use
+              heroImageSrc={heroImageSrc}         
+              mobileSearchBoxContainerClassName={appClsx(mobileSearchBoxContainerClassName)}
+              showBackArrowInSearchBox={showBackArrowInSearchBox}
               className={''}
               stickyHeaderWithSearchBox={stickyHeroSection}
               handleGetLocationHelper={handleGetLocationHelper}

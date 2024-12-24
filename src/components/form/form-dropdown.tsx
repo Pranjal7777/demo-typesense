@@ -44,14 +44,14 @@ export const FormDropdown: React.FC<DropdownProps> = ({
           </FormLabel>
         )}
 
-        <div className="mobile:mt-1 mt-2 w-full relative">
+        <div className="mt-1 w-full relative">
           <select
             id={id}
             name={name}
             value={selectedValue}
             onChange={(e) => onSelect(e)}
             className={appClsx(
-              'w-full px-4 outline-none h-11 border dark:bg-bg-primary-dark dark:border-border-transparent dark:text-text-primary-dark border-border-tertiary-light  rounded border-r-8 border-transparent  text-sm outline-1 dark:outline-[#3D3B45] outline-gray-300 focus:outline-2 dark:focus:outline-brand-color focus:outline-brand-color',
+              'w-full px-4 outline-none h-11 border dark:bg-bg-primary-dark dark:border-border-transparent dark:text-text-primary-dark border-border-tertiary-light  rounded border-r-8 border-transparent  text-sm outline-1 dark:outline-[#3D3B45] outline-gray-300 focus:outline-2 outline-offset-0 dark:focus:outline-brand-color focus:outline-brand-color',
               className,
               { 'border-error': error }
             )}

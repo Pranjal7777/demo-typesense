@@ -2,7 +2,7 @@
 import React, { ChangeEvent, FC, KeyboardEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { useActions, useAppSelector } from '@/store/utils/hooks';
-import { GOOGLE_MAPS_KEY } from '@/config';
+import { GOOGLE_MAPS_KEY, HIDE_SELLER_FLOW } from '@/config';
 import isUserAuthenticated from '@/helper/validation/check-user-authentication';
 import { productsApi } from '@/store/api-slices/products-api';
 import { SearchItems, SearchUsers } from '@/store/types';
@@ -34,8 +34,11 @@ import HistoryIcon from '../../../../public/images/history-icon.svg';
 import { CustomSearchResults } from './custom-hits';
 import Link from 'next/link';
 import { FormDataT } from '@/components/sections/hero-section';
-  import { getCookie, setCookie } from '@/utils/cookies';
+import { getCookie, setCookie } from '@/utils/cookies';
 import { SearchResponse } from '@/types';
+import LeftArrowIcon from '../../../../public/assets/svg/left-arrow-icon';
+import { getUserLocation } from '@/helper/get-location';
+import getAddressFromLatLng from '@/helper/get-address-by-lat-lng';
 
 export type NewSearchBoxProps = {
   windowWidth: number;
@@ -48,6 +51,8 @@ export type NewSearchBoxProps = {
   searchClient: any;
   formData: FormDataT;
   setFormData: React.Dispatch<React.SetStateAction<FormDataT>>;
+  mobileContainerClassName?: string;
+  showBackArrow?: boolean;
 };
 
 export type heroSection = {
@@ -82,6 +87,8 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
   setSelectedOption,
   formData,
   setFormData,
+  mobileContainerClassName,
+  showBackArrow = false,
 }) => {
   const { t } = useTranslation('common');
   const heroSection = t('page.header.heroSection', { returnObjects: true }) as heroSection;
@@ -129,28 +136,29 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
     }));
   }, []);
 
-
-  
-
   useEffect(() => {
     const searchQuery = router.query.search as string;
     if (searchQuery) {
-      searchClient.search([{
-        indexName: selectedOption === 'Items' ? 'kwibal_asset' : 'kwibal_accounts',
-        params: {
-          query: searchQuery,
-          query_by: selectedOption === 'Items' ? 'title.en,description' : 'first_name,last_name',
-          hitsPerPage: 1,
-        },
-      }]).then(({ results }: SearchResponse) => {
-        console.log(results,"resultsassad")
-        setHasValidSearchResults(results[0]?.hits?.length > 0);
-        setFormData(prev => ({
-          ...prev,
-          search: searchQuery,
-          resultDropdown: false
-        }));
-      });
+      searchClient
+        .search([
+          {
+            indexName: selectedOption === 'Items' ? 'kwibal_asset' : 'kwibal_accounts',
+            params: {
+              query: searchQuery,
+              query_by: selectedOption === 'Items' ? 'title.en,description' : 'first_name,last_name',
+              hitsPerPage: 1,
+            },
+          },
+        ])
+        .then(({ results }: SearchResponse) => {
+          console.log(results, 'resultsassad');
+          setHasValidSearchResults(results[0]?.hits?.length > 0);
+          setFormData((prev) => ({
+            ...prev,
+            search: searchQuery,
+            resultDropdown: false,
+          }));
+        });
     }
   }, [router.query.search, selectedOption]);
 
@@ -166,7 +174,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
     router.push({
       pathname: url,
       query: {
-        selectedCategory: hit?.mainCategory,
+        selectedCategory: hit?.mainCategory || '',
         search: search || undefined,
       },
     });
@@ -175,9 +183,9 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
   const sellerProfileRoute = (userId: string, searchText: string) => {
     router.push({
       pathname: routeSellerProfile(userId),
-      query: { 
+      query: {
         search: searchText,
-      }
+      },
     });
   };
 
@@ -212,14 +220,16 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
     }));
 
     if (value.trim()) {
-      const { results } = await searchClient.search([{
-        indexName: selectedOption === 'Items' ? 'kwibal_asset' : 'kwibal_accounts',
-        params: {
-          query: value,
-          query_by: selectedOption === 'Items' ? 'title.en,description' : 'first_name,last_name',
-          hitsPerPage: 1,
+      const { results } = await searchClient.search([
+        {
+          indexName: selectedOption === 'Items' ? 'kwibal_asset' : 'kwibal_accounts',
+          params: {
+            query: value,
+            query_by: selectedOption === 'Items' ? 'title.en,description' : 'first_name,last_name',
+            hitsPerPage: 1,
+          },
         },
-      }]);
+      ]);
       setHasValidSearchResults(results[0]?.hits?.length > 0);
     } else {
       setHasValidSearchResults(!!router.query.search);
@@ -299,7 +309,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
   const handleSearchButtonClick = async () => {
     setIsOpen(false);
     let searchText = formData.search.trim();
-    
+
     // If no text is typed, use the first recent search
     if (!searchText) {
       searchText = getFirstAvailableRecentSearch() || '';
@@ -309,6 +319,23 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
       await selectItemOrUserToSearch(searchText);
     }
   };
+
+  useEffect(() => {
+    getUserLocation().then((userCurrentLocation) => {
+      const lat = userCurrentLocation.latitude;
+      const lng = userCurrentLocation.longitude;
+      getAddressFromLatLng(lat, lng).then((address) => {
+        const data = {
+          address: (address?.addressLine1 as string) || '',
+          city: (address?.city as string) || '',
+          country: (address?.country as string) || '',
+          latitude: lat.toString(),
+          longitude: lng.toString(),
+        };
+        setMyLocationDispatch(data);
+      });
+    });
+  }, []);
 
   const selectedAddressFromLocationBox = (key: number) => {
     setIsAutoCompleteLocationBoxOpen(false);
@@ -382,13 +409,13 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
 
   // Add this function to handle the first available recent search
   const getFirstAvailableRecentSearch = () => {
-   if(recentSearchData){
-    if (selectedOption === 'Items' && recentSearchData?.data?.data?.length > 0) {
-      return recentSearchData.data.data[0].searchText;
-    } else if (selectedOption === 'Users' && recentSearchData?.data?.user?.length > 0) {
-      return recentSearchData.data.user[0].searchText;
+    if (recentSearchData) {
+      if (selectedOption === 'Items' && recentSearchData?.data?.data?.length > 0) {
+        return recentSearchData.data.data[0].searchText;
+      } else if (selectedOption === 'Users' && recentSearchData?.data?.user?.length > 0) {
+        return recentSearchData.data.user[0].searchText;
+      }
     }
-   }
     return null;
   };
 
@@ -418,13 +445,13 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
 
   // Add this helper function at the top of the component
   const getPrimaryColor = () => {
-    const isSellerProfilePage = router.pathname.startsWith('/seller-profile/')  || 
-    router.pathname.startsWith('/product');
-    
+    const isSellerProfilePage =
+      router.pathname.startsWith('/seller-profile/') || router.pathname.startsWith('/product');
+
     if (isSellerProfilePage) {
       return theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)';
     }
-    
+
     return minThreshold && theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)';
   };
 
@@ -475,20 +502,15 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
               {selectedOption === 'Items'
                 ? heroSection?.searchUserandItem?.items
                 : heroSection?.searchUserandItem?.users}
-              {isOpen ? (
-                <UpArrowRoundedEdge
-                  primaryColor={getPrimaryColor()}
-                  className="ml-2 rtl:ml-0 rtl:mr-2"
-                />
-              ) : (
-                <DownArrowRoundedEdge
-                  primaryColor={getPrimaryColor()}
-                  className="ml-2 rtl:ml-0 rtl:mr-2"
-                />
-              )}
+              {!HIDE_SELLER_FLOW &&
+                (isOpen ? (
+                  <UpArrowRoundedEdge primaryColor={getPrimaryColor()} className="ml-2 rtl:ml-0 rtl:mr-2" />
+                ) : (
+                  <DownArrowRoundedEdge primaryColor={getPrimaryColor()} className="ml-2 rtl:ml-0 rtl:mr-2" />
+                ))}
             </button>
 
-            {isOpen && (
+            {!HIDE_SELLER_FLOW && isOpen && (
               <div
                 className={`flex flex-col ${
                   stickyHeaderWithSearchBox && 'dark:!text-text-primary-dark dark:bg-bg-quinary-dark'
@@ -504,14 +526,16 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                 >
                   {heroSection?.searchUserandItem?.items}
                 </button>
-                <button
-                  className={` border-error p-2 cursor-pointer hover:bg-bg-octonary-light
+                {!HIDE_SELLER_FLOW && (
+                  <button
+                    className={` border-error p-2 cursor-pointer hover:bg-bg-octonary-light
                     dark:text-text-primary-dark dark:hover:bg-menu-hover dark:hover:text-text-secondary-dark
                   hover:rounded-b-md `}
-                  onClick={() => handleOptionSelect('Users')}
-                >
-                  {heroSection?.searchUserandItem?.users}
-                </button>
+                    onClick={() => handleOptionSelect('Users')}
+                  >
+                    {heroSection?.searchUserandItem?.users}
+                  </button>
+                )}
               </div>
             )}
           </div>
@@ -543,7 +567,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                 } dark:hover:bg-bg-octonary-dark hover:bg-bg-tertiary-light cursor-text h-full w-full outline-none pl-12 rtl:pr-12 ${
                   minThreshold ? 'dark:bg-bg-secondary-dark dark:!text-text-primary-dark bg-bg-tertiary-light' : ''
                 }
-                 ${ minThreshold && theme ? 'dark:bg-bg-secondary-dark dark:hover:!text-black bg-bg-tertiary-light' : '' }
+                 ${minThreshold && theme ? 'dark:bg-bg-secondary-dark dark:hover:!text-black bg-bg-tertiary-light' : ''}
                 `}
                 inputValue={formData.search}
                 name="search"
@@ -561,8 +585,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                 onKeyDownHandeler={handleSearchEnterKeyDown}
               />
 
-
-              {!!formData?.search  && formData.resultDropdown && (
+              {!!formData?.search && formData.resultDropdown && (
                 <SearchResults>
                   <div className="absolute top-[48px] shadow-2xl bg-bg-secondary-light dark:bg-bg-secondary-dark left-0 right-0 rounded-b-md overflow-hidden max-h-[263px]">
                     <CustomSearchResults searchQuery={formData.search}>
@@ -587,9 +610,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                                   {hit?.title?.en}
                                 </div>
                                 <div className="font-semibold text-sm text-brand-color ml-1">in </div>
-                                <div className="font-medium text-sm text-brand-color ml-1">
-                                  {hit.mainCategory}
-                                </div>
+                                <div className="font-medium text-sm text-brand-color ml-1">{hit.mainCategory}</div>
                               </div>
                             </div>
                           ) : (
@@ -597,10 +618,9 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                               className="w-full flex dark:hover:text-text-primary-dark text-text-secondary-light dark:text-text-primary-dark border-border-tertiary-light h-14 items-center cursor-pointer hover:bg-bg-octonary-light dark:hover:bg-bg-duodenary-dark"
                               onClick={async () => {
                                 const fullName = `${hit.first_name} ${hit.last_name}`;
-                                sellerProfileRoute(hit.id, fullName)
+                                sellerProfileRoute(hit.id, fullName);
                               }}
                             >
-                              
                               <div className="truncate ml-3 flex">
                                 <div className="border-3 font-medium text-sm text-text-primary-light dark:text-text-primary-dark">
                                   {hit.first_name} {hit.last_name}
@@ -775,14 +795,14 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
             ) : null} */}
 
             {isUserLogin && isRecentSearchOpen === true && !formData.search ? (
-              <div 
+              <div
                 className="absolute top-[48px] shadow-2xl bg-bg-secondary-light dark:bg-bg-secondary-dark left-0 right-0 rounded-b-md max-h-[263px] no-scrollbar"
-                style={{ 
+                style={{
                   overflowY: 'auto',
                   msOverflowStyle: 'none',
                   scrollbarWidth: 'none',
                 }}
-              > 
+              >
                 <div className="overflow-y-auto">
                   {isRecentSearchDataFetching ? (
                     <div className="flex items-center justify-center h-[120px]">
@@ -790,11 +810,12 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                     </div>
                   ) : recentSearchData?.data.data.length === 0 ? (
                     <div className="px-4 py-3 text-sm text-text-primary-light dark:text-text-primary-dark">
-                      No Recent Searches
+                      <h3 className="text-sm pt-4 flex items-center px-3 font-semibold">Recent Searches</h3>
+                      <p className="text-sm font-normal">No Recent Searches</p>
                     </div>
                   ) : (
-                    <> 
-                   
+                    <>
+                      <h3 className="text-sm pt-4 flex items-center px-3 font-semibold">Recent Searches</h3>
                       {selectedOption === 'Items' &&
                         recentSearchData?.data?.data?.map((search, index) => (
                           <div
@@ -802,13 +823,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                             key={index}
                             onClick={() => selectItemOrUserToSearch(`${search.searchText}`)}
                           >
-                             <Image
-                    src={HistoryIcon}
-                    alt={''}
-                    width={16}
-                    height={16}
-                    className="ml-3"
-                    />
+                            <Image src={HistoryIcon} alt={''} width={16} height={16} className="ml-3" />
                             <div className="truncate ml-3 flex">
                               <div className="font-medium text-sm text-text-primary-light dark:text-text-primary-dark">
                                 {search.searchText}
@@ -832,13 +847,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                             key={index}
                             onClick={() => selectItemOrUserToSearch(`${search.searchText}`)}
                           >
-                            <Image
-                              src={HistoryIcon}
-                              alt={''}
-                              width={16}
-                              height={16}
-                              className="ml-3"
-                            />
+                            <Image src={HistoryIcon} alt={''} width={16} height={16} className="ml-3" />
                             <div className="truncate ml-3 flex">
                               <div className="border-3 font-medium text-sm text-text-primary-light dark:text-text-primary-dark">
                                 {search.searchText}
@@ -864,7 +873,9 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                   stickyHeaderWithSearchBox &&
                   ' !bg-bg-tertiary-light dark:!bg-bg-quinary-dark dark:!text-text-primary-dark dark:hover:!text-text-primary-dark'
                 } dark:hover:bg-bg-octonary-dark hover:bg-bg-tertiary-light  cursor-text h-full w-full pl-11 pr-9 rtl:pr-11 outline-none ${
-                  minThreshold ? 'dark:bg-bg-secondary-dark dark:!text-text-primary-dark dark:hover:!text-black  bg-bg-tertiary-light' : ''
+                  minThreshold
+                    ? 'dark:bg-bg-secondary-dark dark:!text-text-primary-dark dark:hover:!text-black  bg-bg-tertiary-light'
+                    : ''
                 }`}
                 placeholder={heroSection?.searchPlace?.placeholder}
                 autoComplete="off"
@@ -958,14 +969,24 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
 
         {/* mobile search box start */}
         <div
-          className={` mobile:order-3 sm:hidden ${
-            stickyHeaderWithSearchBox && '!fixed top-[69px] bg-bg-secondary-light dark:bg-bg-secondary-dark'
-          }  z-49 sticky top-[69px] ${
-            minThreshold
-              ? '!fixed top-[69px] mobile:px-4 w-full bg-bg-secondary-light dark:bg-bg-primary-dark'
-              : 'max-w-[1083px] mobile:px-4'
-          } mobile:inline-block mx-5 relative w-full max-w-[638px] `}
+          className={appClsx(
+            ` mobile:order-3 sm:hidden ${
+              stickyHeaderWithSearchBox && '!fixed top-[69px] bg-bg-secondary-light dark:bg-bg-secondary-dark'
+            }  z-49 sticky top-[69px] ${
+              minThreshold
+                ? '!fixed top-[69px] mobile:px-4 w-full bg-bg-secondary-light dark:bg-bg-primary-dark'
+                : 'max-w-[1083px] mobile:px-4'
+            } mobile:inline-block mx-5 relative w-full max-w-[638px] `,
+            mobileContainerClassName
+          )}
         >
+          {showBackArrow && (
+            <LeftArrowIcon
+              onClick={() => router.back()}
+              primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
+              className="absolute top-6 left-4"
+            />
+          )}
           <button
             className={`relative  ${
               stickyHeaderWithSearchBox && 'hidden'

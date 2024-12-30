@@ -113,17 +113,22 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
 
   const EngagementStatsData = [
     {
-      logo: <HartSvg color={theme ? '#fff' : '#000'} className="w-[12px] h-[12px] md:w-[16px] md:h-[16px]" />,
+      logo: (
+        <HartSvg
+          className="w-[12px] h-[12px] md:w-[16px] md:h-[16px]"
+          borderColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
+        />
+      ),
       label: engagementStats[0].likes,
       value: totalLikedCount,
     },
     {
-      logo: <ViewsIcon color={theme ? '#fff' : '#000'} />,
+      logo: <ViewsIcon color={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} />,
       label: engagementStats[0].views,
       value: viewCount,
     },
     {
-      logo: <OffersIconSVG color={theme ? '#fff' : '#000'} />,
+      logo: <OffersIconSVG color={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} />,
       label: engagementStats[0].offers,
       value: offerTradeCount,
     },
@@ -210,6 +215,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
                 />
                 <div className="mobile:hidden">
                   <PdpCta
+                    apiData={apidata}
                     firstButtonText={data.result?.isNegotiable ? ctaText[0].makeOfferBtn : ctaText[0].firstBtn}
                     isSold={isSold}
                     secondButtonText={ctaText[0].secondBtn}
@@ -255,6 +261,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
       {/* sticky button for mobile screen start */}
       <div className=" px-2 z-10 sm:hidden flex items-center justify-between h-[76px] w-full fixed bottom-0 right-0 left-0 bg-bg-secondary-light dark:bg-bg-secondary-dark">
         <PdpCta
+          apiData={apidata}
           firstButtonText={data.result?.isNegotiable ? ctaText[0].makeOfferBtn : ctaText[0].firstBtn}
           isSold={isSold}
           secondButtonText={ctaText[0].secondBtn}

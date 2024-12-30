@@ -465,7 +465,7 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
                   firstName={profileData?.firstName}
                   lastName={profileData?.lastName}
                   profilePicUrl={editProfilePicUrl}
-                  className="h-[88px] w-[88px] md:h-[100px] md:w-[100px] "
+                  className="h-[88px] w-[88px] md:h-[100px] md:w-[100px]"
                   textContainerClassName="text-2xl md:text-3xl"
                 />
               ) : (

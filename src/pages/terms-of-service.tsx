@@ -14,6 +14,7 @@ import { AUTH_URL_V1, BASE_API_URL, STRAPI_BASE_API_URL } from '@/config';
 import { GET_PRIVACY_POLICY_DATA, STRAPI_TERMS_OF_SERVICE } from '@/api/endpoints';
 import { GetServerSidePropsContext } from 'next';
 import { useTheme } from '@/hooks/theme';
+import { getGuestTokenFromServer } from '@/helper/get-guest-token-from-server';
 
 type HeaderBennerSection={
     bannerUrlForMobile:string
@@ -103,6 +104,11 @@ export async function getServerSideProps({ locale, req }: { locale: string; req:
     const cookies = cookie.parse(req.headers.cookie || '');
     accessToken = cookies.accessToken?.replace(/"/g, '') || null;
   }
+    if (!accessToken) {
+      const guestToken = await getGuestTokenFromServer();
+      accessToken = guestToken.data.token.accessToken;
+    }
+
   try {
     const promises = [
       fetch(`${STRAPI_BASE_API_URL}${STRAPI_TERMS_OF_SERVICE}?populate=deep`),

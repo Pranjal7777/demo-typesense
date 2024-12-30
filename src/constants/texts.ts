@@ -37,3 +37,6 @@ export const CHANGE = 'Change';
 export const UNABLE_TO_FIND_LOCATION = 'Unable to fetch your location please try another way';
 export const CANCEL = 'Cancel';
 export const CONFIRM = 'Confirm';
+export const MANAGE_ACCOUNTS = 'Manage Accounts';
+export const ADD_NEW_ACCOUNT = 'Add New Account';
+export const ADD_NEW_ACCOUNT_PLACEHOLDER = 'Add a new account to manage your payments';

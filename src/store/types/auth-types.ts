@@ -194,6 +194,7 @@ export interface User{
     noOfVideos:string,
     phoneNumber:string,
     profileLink:string,
+    profilePic:string,
     referralCode:string,
     subscription:{
       isSubscribed:boolean,

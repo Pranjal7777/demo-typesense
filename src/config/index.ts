@@ -64,3 +64,15 @@ export const DEFAULT_LOCATION = {
   timezone: 'Asia/Kolkata',
 };
 
+export const ISOMETRIK_CHAT_API_BASE_URL = process.env.NEXT_PUBLIC_ISOMETRIK_BASE_URL;
+
+export const ISOMETRIK_CHAT_CONFIG = {
+  licenseKey: process.env.NEXT_PUBLIC_ISOMETRIK_LICENSE_KEY,
+  appSecret: process.env.NEXT_PUBLIC_ISOMETRIK_APP_SECRET,
+  userSecret: process.env.NEXT_PUBLIC_ISOMETRIK_USER_SECRET,
+  projectId: process.env.NEXT_PUBLIC_ISOMETRIK_PROJECT_ID,
+  keysetId: process.env.NEXT_PUBLIC_ISOMETRIK_KEYSET_ID,
+  adminId: process.env.NEXT_PUBLIC_ISOMETRIK_ADMIN_ID,
+  accountId: process.env.NEXT_PUBLIC_ISOMETRIK_ACCOUNT_ID,
+};
+

@@ -36,9 +36,13 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
    const userId = useSelector((state: RootState) => state.auth.userInfo?._id);
   const { theme } = useTheme();
   const router = useRouter();
-  const userAccountId = product.accountId;
+  const userAccountId = product.accountId;  
   const handleProductClick = () => {
-    router.push(`/product/${isTypeSenseData ? product.id : product.assetId || product._id}`);
+    router.push(
+      `/product/${product.assetTitle || product.title?.en || ''}-${
+        isTypeSenseData ? product.id : product.assetId || product._id
+      }`
+    );
   };
   const imageUrl = product?.images?.[0];
   const src =

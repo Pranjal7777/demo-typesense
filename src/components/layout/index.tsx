@@ -194,7 +194,7 @@ const Layout: FC<Props> = ({
     <>
       <div dir={locale === 'ar' ? 'rtl' : undefined}>
         <ProgressBar color="var(--brand-color)" />
-        <CustomHeader />
+        {/* <CustomHeader /> */}
 
         <Schema item={organizationSchema} />
 

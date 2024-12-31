@@ -1,6 +1,6 @@
 import BrandCard from '@/components/ui/brand-card';
 import { appClsx } from '@/lib/utils';
-import { CategoriesLogo } from '@/pages/categories/[id]';
+import { CategoriesLogo } from '@/pages/categories/[categoryName-id]';
 import React, { FC } from 'react';
 
 type BrandSliderPrps = {

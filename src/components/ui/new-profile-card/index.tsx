@@ -64,14 +64,14 @@ const NewProfileCard: FC<Props> = ({
     <div className={appClsx('w-full flex flex-col items-center md:items-start gap-1', cardClass)}>
       <UserProfile className='w-[100px] h-[100px] md:w-[100px] md:h-[100px]' textContainerClassName='text-3xl md:text-3xl' firstName={firstName} lastName={lastName} profilePicUrl={profilePic} />
 
-      <strong
+      <h1
         className={appClsx(
           'text-[20px] mt-2 md:mt-3 text-text-primary-light dark:text-text-primary-dark font-semibold leading-[30px]',
           fullNameClass
         )}
       >
         {fullName}
-      </strong>
+      </h1>
       <span
         className={appClsx(
           'text-text-tertiary-light dark:text-text-tertiary-dark text-[14px] leading-[21px] ',

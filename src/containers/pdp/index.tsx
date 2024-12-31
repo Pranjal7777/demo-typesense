@@ -161,7 +161,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
         dispatch(setCheckoutProduct(data.result));
       }
       await router.push(
-        `/buy/select-address?assetId=${assetId}&sellerId=${sellerAccountId}&chatId=${chatIdentifier.data.chatId}`
+        `/checkout/select-address?assetId=${assetId}&sellerId=${sellerAccountId}&chatId=${chatIdentifier.data.chatId}`
       );
     } catch (error) {
       console.error(error);

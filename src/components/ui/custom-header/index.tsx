@@ -19,7 +19,7 @@ interface OGTagsProps {
 const defaultTitle = 'Kwibal - The biggest buy & sell marketplace globally in 2024';
 const defaultOGTitle = 'Kwibal - The biggest buy & sell marketplace globally in 2024';
 const defaultDescription = 'Negotiate and get the best deals , buy direct or trade your products for another one.';
-const defaultOGURL = 'https://webv2.le-offers.com/';
+const defaultOGURL = 'https://web.platform.kwibal.com/';
 const defaultOGImage = 'https://leoffer-media.s3.ap-south-1.amazonaws.com/og_image_36021e5b9a.svg';
 
 const CustomHeader: React.FC<OGTagsProps> = ({
@@ -63,8 +63,8 @@ const CustomHeader: React.FC<OGTagsProps> = ({
       <meta property="og:image:height" content="512" />
       <link rel="canonical" href={url || defaultOGURL} />
 
-      <meta name="robots" content="noindex"></meta>
-      <meta name="googlebot" content="noindex"></meta>
+      {/* <meta name="robots" content="noindex"></meta>
+      <meta name="googlebot" content="noindex"></meta> */}
 
       {/* <meta http-equiv="pragma" content="no-cache" /> 
 <meta http-equiv="expires" content="-1" />

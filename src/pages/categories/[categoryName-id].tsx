@@ -16,11 +16,11 @@ import Slider from '@/components/ui/slider';
 import BrandSlider from '@/components/sections/brand-slider';
 import { GetServerSidePropsContext, NextPage } from 'next';
 import { CategoriesDataFromServer, GetAllSubCategoriesByCategoryId } from '@/helper/categories-data-from-server';
-import { Category, Product, ResponseGetAllCategoriesPayload, ResponseGetAllGrandParentCategoriesPayload } from '@/store/types';
+import { Category, Product, ResponseGetAllCategoriesPayload, ResponseGetAllGrandParentCategoriesPayload, ResponseGetSubCategoriesByParentIdPayload } from '@/store/types';
 import dynamic from 'next/dynamic';
 import cookie from 'cookie';
-import { API, HIDE_SELLER_FLOW, STRAPI_BASE_API_URL } from '@/config';
-import { STRAPI_CATEGORIES_PLP } from '@/api/endpoints';
+import { API, AUTH_URL_V2, BASE_API_URL, HIDE_SELLER_FLOW, STATIC_IMAGE_URL, STRAPI_BASE_API_URL } from '@/config';
+import { GET_SUB_CATEGORIES_BY_ID_URL, STRAPI_CATEGORIES_PLP } from '@/api/endpoints';
 import CategorySlider from '@/components/sections/category-slider';
 import { RootState } from '@/store/store';
 import { useAppSelector } from '@/store/utils/hooks';
@@ -39,6 +39,7 @@ import { getGuestTokenFromServer } from '@/helper/get-guest-token-from-server';
 import { categoriesApi } from '@/store/api-slices/categories-api';
 import { useNewWindowScroll } from '@/hooks/new-use-window-scroll';
 import { IMAGES } from '@/lib/images';
+import CustomHeader from '@/components/ui/custom-header';
 
 export type filteredProducts = {
   userName: string;
@@ -85,6 +86,7 @@ export type CategoriesPageProps = {
   tokenFromServer: any;
   myLocationFromServer?: any;
   categories: ResponseGetAllGrandParentCategoriesPayload;
+  categoriesBanner: ResponseGetSubCategoriesByParentIdPayload;
 };
 
 // Define the option type
@@ -94,7 +96,15 @@ type SortOption = {
 };
 
 // eslint-disable-next-line react/prop-types
-const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, subCategories, tokenFromServer, myLocationFromServer, categories }) {
+const Categories: NextPage<CategoriesPageProps> = function ({
+  categoriesLogos,
+  subCategories,
+  tokenFromServer,
+  myLocationFromServer,
+  categories,
+  categoriesBanner: categoriesBannerData,
+}) {
+  console.log(categoriesBannerData, 'categoriesBannerData');
   const { t } = useTranslation('categories');
   const aboutUs = t('page.aboutUs', { returnObjects: true }) as aboutUs;
   const accordion = t('page.accordion', { returnObjects: true }) as accordion;
@@ -102,12 +112,18 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
   const { data: filterParameters, error: filterParametersError } = productsApi.useGetFilterParametersQuery();
   const theme = useTheme();
 
-
   const router = useRouter();
 
-  const { id, selectedCategory } = router.query;
-  const searchParams = useSearchParams();
+  const { 'categoryName-id': categoryNameId , selectedCategory} = router.query;
+  const categoryNameIdArray = Array.isArray(categoryNameId) ? categoryNameId : categoryNameId?.split('-');
+  const id = categoryNameIdArray?.[categoryNameIdArray.length - 1];
+  const categoryName = categoryNameIdArray?.slice(0, -1).join('-');
   
+  // const paramsArray = categoryNameId?.split('-');
+  // const id = paramsArray[paramsArray.length - 1];
+  
+  const searchParams = useSearchParams();
+
   const initialFilters = {
     type: searchParams.get('type') || '',
     condition: searchParams.get('condition') || '',
@@ -119,7 +135,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
     address: searchParams.get('address') || '',
     latitude: searchParams.get('latitude') || '',
     longitude: searchParams.get('longitude') || '',
-    country:searchParams.get('country') || 'India',
+    country: searchParams.get('country') || 'India',
     category: { title: searchParams.get('categoryTitle') || '', _id: searchParams.get('categoryId') || '' },
   };
 
@@ -140,12 +156,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
     };
   }, []);
 
-  const {
-    data: categoriesBannerData,
-    isLoading: categoriesBannerDataLoading,
-    error: categoriesBannerDataError,
-  } = categoriesApi.useGetCategoriesBannerByParentIdQuery({parentId:id as string});
-
+  
   const closeFilter = () => {
     setFilterDrawer(false);
   };
@@ -225,7 +236,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
     return Object.entries(selectedItemsFromFilterSection)
       .map(([key, value]) => {
         // Skip rendering if it's the distance filter
-        if (key === 'distance' || key==='country' || key === 'latitude' || key === 'longitude') return null;
+        if (key === 'distance' || key === 'country' || key === 'latitude' || key === 'longitude') return null;
         if (!value) return null;
         if (typeof value === 'object') {
           if ('title' in value && (!value.title || value.title === '')) return null;
@@ -297,12 +308,8 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
     setBannersAndRecommendedProductsPageCount(bannersAndRecommendedProductsPageCount + 1);
   };
   const [recommendedProducts, setRecommendedProducts] = useState<Product[]>([]);
-  const [
-    triggerBannersAndRecommendedProducts,
-    {
-      data: bannersAndRecommendedProducts,
-    },
-  ] = productsApi.useLazyGetAllBannersAndProductsForFilterQuery();
+  const [triggerBannersAndRecommendedProducts, { data: bannersAndRecommendedProducts }] =
+    productsApi.useLazyGetAllBannersAndProductsForFilterQuery();
 
   useEffect(() => {
     if (bannersAndRecommendedProductsPageCount) {
@@ -346,8 +353,8 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
       address: getQueryParam(router.query.address),
       category: { title: searchParams.get('categoryTitle') || '', _id: searchParams.get('categoryId') || '' },
       latitude: getQueryParam(router.query.latitude),
-      longitude:getQueryParam(router.query.longitude),
-      country:getQueryParam(router.query.couuntry)
+      longitude: getQueryParam(router.query.longitude),
+      country: getQueryParam(router.query.couuntry),
     };
     setSelectedItemsFromFilterSection(updatedFilters);
   }, [router.query]);
@@ -366,6 +373,9 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
     categoryId: id as string,
     country: selectedItemsFromFilterSection.country,
   });
+
+  console.log(products, 'products-typesence');
+  
 
   useEffect(() => {
     resetFilters();
@@ -419,7 +429,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
     updateFilters(typesenseFilters);
   }, []);
 
-
   const customStyles: StylesConfig<SortOption, false> = {
     control: (provided) => ({
       ...provided,
@@ -427,9 +436,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
       outline: 'none',
       border: theme.theme ? '1px solid #433934' : `1px solid var(--border-tertiary-light)`,
       borderRadius: '0.775rem',
-      backgroundColor: theme.theme 
-        ? 'var(--bg-primary-dark)' 
-        : 'var(--bg-primary-light)',
+      backgroundColor: theme.theme ? 'var(--bg-primary-dark)' : 'var(--bg-primary-light)',
       fontSize: '14px',
       color: theme.theme ? '#fff' : 'var(--text-primary-light)',
       fontWeight: '400',
@@ -471,9 +478,17 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
     }),
   };
 
-
   return (
     <>
+      <CustomHeader
+        title={`Explore the best products from ${categoriesBannerData?.parentCategoryName} category in kwibal`}
+        description={`Explore the ${categoriesBannerData?.parentCategoryName} category on kwibal. Discover a wide range of products designed to meet your needs, from ${categoriesBannerData?.parentCategoryName} essentials to premium options.`}
+        image={
+          categoriesBannerData?.webBanner?.includes('http')
+            ? categoriesBannerData?.webBanner
+            : `${STATIC_IMAGE_URL}/${categoriesBannerData?.webBanner}`
+        }
+      />
       <FilterDrawer
         filtersDrawer={filtersDrawer}
         selectedItemsFromFilterSection={selectedItemsFromFilterSection}
@@ -515,7 +530,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
           <Breadcrumb
             isLinkDisable={true}
             className="!pl-0 md:!pl-0 my-5"
-            steps={[{ name: 'Categories' }, { name: getQueryParam(selectedCategory) }]}
+            steps={[{ name: 'Categories' }, { name: categoryName || '' }]}
           ></Breadcrumb>
           {/* categories section starts */}
           <div className="mobile:pb-9">
@@ -568,7 +583,9 @@ const Categories: NextPage<CategoriesPageProps> = function ({ categoriesLogos, s
                 <div
                   className={`w-full ${
                     minThreshold
-                      ? `fixed ${threshold < 700 ? 'top-[175px]' : 'top-[145px]'} left-0 right-0 z-30 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-5 mx-auto max-w-[1440px]`
+                      ? `fixed ${
+                          threshold < 700 ? 'top-[175px]' : 'top-[145px]'
+                        } left-0 right-0 z-30 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-5 mx-auto max-w-[1440px]`
                       : ''
                   }`}
                 >
@@ -704,10 +721,11 @@ export async function getServerSideProps({
   req,
 }: {
   locale: string;
-  params: { id: string };
+  params: any;
   req: GetServerSidePropsContext['req'];
 }) {
-  const { id: categoryId } = params;
+  const paramsArray = params['categoryName-id']?.split('-');
+  const categoryId = paramsArray[paramsArray.length - 1];
   let accessToken, tokenFromServer;
 
   try {
@@ -731,6 +749,14 @@ export async function getServerSideProps({
       fetch(`${STRAPI_BASE_API_URL}${STRAPI_CATEGORIES_PLP}?populate=deep`),
       GetAllSubCategoriesByCategoryId(accessToken, categoryId),
       CategoriesDataFromServer(accessToken),
+      fetch(`${BASE_API_URL}${AUTH_URL_V2}${GET_SUB_CATEGORIES_BY_ID_URL}/?parentId=${categoryId}&country=India`, {
+        method: 'GET',
+        headers: {
+          Authorization: `${accessToken}`,
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+      }),
     ];
     const listingApiReponses = await Promise.allSettled(promises);
 
@@ -739,7 +765,9 @@ export async function getServerSideProps({
     const response1 = listingApiReponses[0].status === 'fulfilled' && listingApiReponses[0].value;
     const response2 = listingApiReponses[1].status === 'fulfilled' && listingApiReponses[1].value;
     const categories = listingApiReponses[2].status === 'fulfilled' && listingApiReponses[2].value ;
+    const categoriesBannerResponse = listingApiReponses[3].status === 'fulfilled' && listingApiReponses[3].value ;
 
+    const categoriesBanner = await categoriesBannerResponse.json();
     const data = await response1.json();
     return {
       props: {
@@ -747,7 +775,8 @@ export async function getServerSideProps({
         categoriesLogos: data.data.attributes.brandLogos || [],
         subCategories: response2.data || [],
         tokenFromServer: tokenFromServer || null,
-        categories
+        categories,
+        categoriesBanner: categoriesBanner || null
       },
     };
   } catch (error) {

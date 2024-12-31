@@ -94,7 +94,7 @@ const AddressDetails: FC<Props> = ({
   };
 
   return (
-    <section className={`w-full mt-3 sm:mt-0 leading-[21px] md:leading-[24px] text-text-primary-light  dark:text-text-primary-dark   address-details-section ${router.pathname.includes('buy') ? 'px-3' : ''}`}>
+    <section className={`w-full mt-3 sm:mt-0 leading-[21px] md:leading-[24px] text-text-primary-light  dark:text-text-primary-dark   address-details-section ${router.pathname.includes('checkout') ? 'px-3' : ''}`}>
       <SelectedLocation setIsClickOnChange={setIsClickOnChange} pageType={pageType} formData={formData} />
       <LableWithTextArea
         labelClassName="font-[600]"

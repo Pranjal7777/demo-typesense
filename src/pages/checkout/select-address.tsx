@@ -56,7 +56,7 @@ export default function CheckoutPage() {
 
   const addNewAddressButtonForDesktopHandler = () => {
     router.replace({
-      pathname: '/buy/select-address',
+      pathname: '/checkout/select-address',
       query: {
         ...router.query,
         showAddressDetailsWithMapInDessktop: showAddressDetailsWithMapInDessktop === 'true' ? 'false' : 'true',
@@ -68,7 +68,7 @@ export default function CheckoutPage() {
   const continueButtonHandler = () => {
     if (formData.addressLine1) {
       router.replace({
-        pathname: '/buy/select-address',
+        pathname: '/checkout/select-address',
         query: {
           ...router.query,
           showAddressDetailsWithMapInDessktop: 'true',
@@ -87,7 +87,7 @@ export default function CheckoutPage() {
   const closeIconHandler = () => {
     const { chatId, sellerId, assetId } = router.query;
     router.replace({
-      pathname: '/buy/select-address',
+      pathname: '/checkout/select-address',
       query: {
         ...(chatId && { chatId }),
         ...(sellerId && { sellerId }),
@@ -107,7 +107,7 @@ export default function CheckoutPage() {
     setUserLocation(center);
     setFormData(item);
     router.replace({
-      pathname: '/buy/select-address',
+      pathname: '/checkout/select-address',
       query: {
         ...router.query,
         showAddressDetailsWithMapInDessktop: showAddressDetailsWithMapInDessktop === 'true' ? 'false' : 'true',
@@ -260,7 +260,7 @@ export default function CheckoutPage() {
         });
 
         router.replace({
-          pathname: '/buy/select-address',
+          pathname: '/checkout/select-address',
           query: {
             ...(chatId && { chatId }),
             ...(sellerId && { sellerId }),
@@ -320,7 +320,7 @@ export default function CheckoutPage() {
         });
         const { chatId, sellerId, assetId } = router.query;
         router.replace({
-          pathname: '/buy/select-address',
+          pathname: '/checkout/select-address',
           query: {
             ...(chatId && { chatId }),
             ...(sellerId && { sellerId }),
@@ -363,7 +363,7 @@ export default function CheckoutPage() {
     setUserLocation(center);
     setFormData(item);
     router.replace({
-      pathname: '/buy/select-address',
+      pathname: '/checkout/select-address',
       query: {
         ...(chatId && { chatId }),
         ...(sellerId && { sellerId }),
@@ -382,7 +382,7 @@ export default function CheckoutPage() {
 
   const toggleEnterAddress = () => {
     router.replace({
-      pathname: '/buy/select-address',
+      pathname: '/checkout/select-address',
       query: {
         ...router.query,
         showEnterAddress: showEnterAddress === 'true' ? 'false' : 'true',
@@ -423,7 +423,7 @@ export default function CheckoutPage() {
 
   const confirmLocationHandler = () => {
     router.replace({
-      pathname: '/buy/select-address',
+      pathname: '/checkout/select-address',
       query: {
         ...router.query,
         showEnterAddress,

@@ -34,7 +34,6 @@ const PdpCta: React.FC<PdpCtaProps> = ({
   const router = useRouter();
   const [loadingChat, setLoadingChat] = useState(false);
   const { userInfo } = useSelector((state: RootState) => state.auth);
-  console.log(userInfo, 'mir userInfo');
   const props = {
     // baseUrl: "https://apis.isometrik.io",
     hostUrl: 'wss://connections.isometrik.ai:2086/mqtt',
@@ -106,7 +105,6 @@ const PdpCta: React.FC<PdpCtaProps> = ({
                 conversationTitle: apiData?.title || `${apiData?.description}`,
                 conversationImageUrl: profilePic,
               });
-              console.log(chatCreds, 'chatCreds');
               
               // setTimeout(() => {
               //   console.log('chat creds inside setTimeout', chatCreds);

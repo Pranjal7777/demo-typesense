@@ -68,9 +68,9 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
             <ReportFlagSVG fillColor={currentTheme ? '#fff' : '#000'} />
           </div>
         </div>
-        <span className="text-lg md:text-2xl leading-[27px] md:leading-[36px] font-semibold text-text-primary-light dark:text-text-quinary-dark">
+        <h1 className="text-lg md:text-2xl leading-[27px] md:leading-[36px] font-semibold text-text-primary-light dark:text-text-quinary-dark">
           {categoryTitle}
-        </span>
+        </h1>
         <div className="flex justify-between mt-1">
           <span className="text-xs md:text-base text-text-tertiary-light dark:text-text-tertiary-dark flex items-center gap-1">
             <LocationSvg

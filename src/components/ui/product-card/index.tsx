@@ -31,12 +31,12 @@ interface ProductCardProps {
 }
 
 const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isTypeSenseData = false, showLikeIcon = true, onLikeClick, userID }) => {
-
+  console.log(product, 'inside-product-card');
   const [likeAndDislikeProduct, { isLoading: isLikeAndDislikeLoading }] = productsApi.useLikeAndDislikeProductMutation();
    const userId = useSelector((state: RootState) => state.auth.userInfo?._id);
   const { theme } = useTheme();
   const router = useRouter();
-  const userAccountId = product.accountId;  
+  const userAccountId = product.accountId;
   const handleProductClick = () => {
     router.push(
       `/product/${product.assetTitle || product.title?.en || ''}-${
@@ -76,7 +76,7 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
         role="button"
         className="card flex flex-col p-1 gap-2 sm:gap-3 hover:scale-102 transition-all duration-300 ease-in hover:cursor-pointer mobile:max-w-[100%] w-full h-full pb-[10px] max-w-[313px] hover:shadow-lg"
       >
-        <Link href={`/seller-profile/${userAccountId}`}>
+        <Link href={`/profile/seller/${product.firstName.replace(/\s+/g, '')}${product.lastName.replace(/\s+/g, '')}/${userAccountId}`}>
           {showProfilePic && (
             <div className="flex gap-1 md:gap-4 items-center">
               <UserProfile

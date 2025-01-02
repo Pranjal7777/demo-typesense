@@ -146,7 +146,7 @@ export default function SecureCheckout({
       };
       const response = await getStripePaymentKeys(payload, myLocation);
       if (view === 'mobile') {
-        return handleAddNewPaymentMethod(view, response?.data?.paymentIntentData);
+        return handleAddNewPaymentMethod(view, response.paymentIntentData);
       }
       setShowDesktopPaymentForm(true);
     } catch (error) {

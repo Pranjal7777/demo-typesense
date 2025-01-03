@@ -10,10 +10,12 @@ import { HeroSectionType, qaSectionType } from './privacy-policy';
 import { seoProperties } from './about';
 import CustomHeader from '@/components/ui/custom-header';
 import formatArrayToStrings from '@/helper/functions/format-array-strings';
-import { AUTH_URL_V1, BASE_API_URL, STRAPI_BASE_API_URL } from '@/config';
+import { AUTH_URL_V1, BASE_API_URL, STRAPI_ACCESS_TOKEN, STRAPI_BASE_API_URL, STRAPI_BASE_URL } from '@/config';
 import { GET_PRIVACY_POLICY_DATA, STRAPI_TERMS_OF_SERVICE } from '@/api/endpoints';
 import { GetServerSidePropsContext } from 'next';
 import { useTheme } from '@/hooks/theme';
+import { getGuestTokenFromServer } from '@/helper/get-guest-token-from-server';
+import { SeoData } from '@/store/types/strapi-seo-types';
 
 type HeaderBennerSection={
     bannerUrlForMobile:string
@@ -43,10 +45,15 @@ export interface termsData {
   attributes: termsDataAttributes;
 }
 export type Props = {
-  termsOfServiceData: termsData;  
-  htmlContent:string
+  termsOfServiceData: termsData;
+  htmlContent: string;
+  termsOfServiceSeoData: {
+    data: {
+      seo: SeoData;
+    };
+  };
 };
-const TermsAndService: FC<Props>= ({termsOfServiceData,htmlContent}) =>{ 
+const TermsAndService: FC<Props>= ({termsOfServiceData,htmlContent,termsOfServiceSeoData}) =>{ 
   const contentRef = useRef<HTMLDivElement>(null);
   const {theme}=useTheme();
 
@@ -66,17 +73,14 @@ const TermsAndService: FC<Props>= ({termsOfServiceData,htmlContent}) =>{
   const strapiSeoData = termsOfServiceData.attributes.seoProperties;
   const keywords = termsOfServiceData?.attributes?.seoProperties?.keywords;
   const joinedString = formatArrayToStrings(keywords);
+  const seoData = termsOfServiceSeoData?.data?.seo;
   return (
     <Layout excludeHeroSection={true} stickyHeader={true}>
       <CustomHeader
-        title={strapiSeoData?.metaTitle}
-        keywords={joinedString}
-        description={strapiSeoData?.metaDesc}
-        image={strapiSeoData?.metaImage?.data?.attributes.url}
-        twitterImage={strapiSeoData?.twitterCard?.twitterImageURL}
-        twitterImageAlt={strapiSeoData?.twitterCard?.twitterImageAlt}
-        twitterTitle={strapiSeoData?.twitterCard?.twitterTitle}
-        twitterURL={strapiSeoData?.twitterCard?.twitterURL}
+       title={seoData?.title}
+       description={seoData?.description}
+       image={seoData?.image?.url}
+       url={seoData?.url}
       />
       <PageHeaderWithBreadcrumb className="" steps={breadcrumbLinks}></PageHeaderWithBreadcrumb>
       <div className="mt-[50px] md:mt-[69px] relative custom-container mx-auto sm:px-16 mobile:px-4 ">
@@ -99,10 +103,17 @@ export default TermsAndService;
 
 export async function getServerSideProps({ locale, req }: { locale: string; req: GetServerSidePropsContext['req'] }) {
   let accessToken;
+  let termsOfServiceSeoData = {};
+
   if (req.headers.cookie) {
     const cookies = cookie.parse(req.headers.cookie || '');
     accessToken = cookies.accessToken?.replace(/"/g, '') || null;
   }
+    if (!accessToken) {
+      const guestToken = await getGuestTokenFromServer();
+      accessToken = guestToken.data.token.accessToken;
+    }
+
   try {
     const promises = [
       fetch(`${STRAPI_BASE_API_URL}${STRAPI_TERMS_OF_SERVICE}?populate=deep`),
@@ -112,13 +123,20 @@ export async function getServerSideProps({ locale, req }: { locale: string; req:
           Authorization: `${accessToken}`,
         },
       }),
+      fetch(`${STRAPI_BASE_URL}/api/terms-of-service?populate=seo.image`, {
+        headers: { Authorization: `${STRAPI_ACCESS_TOKEN}` },
+      }),
     ];
 
     const listingApiResponses = await Promise.allSettled(promises);
 
     const response1 = listingApiResponses[0].status === 'fulfilled' ? listingApiResponses[0].value : null;
     const response2 = listingApiResponses[1].status === 'fulfilled' ? listingApiResponses[1].value : null;
+    const response3 = listingApiResponses[2].status === 'fulfilled' ? listingApiResponses[2].value : null;
 
+    if(response3){
+      termsOfServiceSeoData = await response3.json();
+    }
     if (!response1 || !response2) {
       return { notFound: true };
     }
@@ -130,6 +148,7 @@ export async function getServerSideProps({ locale, req }: { locale: string; req:
         ...(await serverSideTranslations(locale, ['common', 'terms-of-service'])),
         termsOfServiceData: data.data,
         htmlContent: htmlContent,
+        termsOfServiceSeoData: termsOfServiceSeoData,
       },
     };
   } catch (error) {

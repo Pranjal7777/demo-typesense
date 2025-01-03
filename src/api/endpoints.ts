@@ -48,7 +48,7 @@ export const GET_ADDRESS_ATTRIBUTES = 'v1/addressAttribute?type=1'
 export const GET_ADDRESS_TYPES = 'v1/addressAttribute?type=2'
 export const GET_VERIFICATION_CODE = 'sendVerificationCode';
 export const USER_ACCOUNT = 'v1/userAccount';
-export const UPDATE_USER_ACCOUNT = `${USER_ACCOUNT}/update`;
+export const UPDATE_USER_ACCOUNT = 'v1/accounts/update';
 export const VERIFY_SOCIAL_ACCOUNT = '/socialVerify';
 export const GET_REASONS = 'v1/reasons?type';
 
@@ -84,3 +84,9 @@ export const GET_ALL_FAVORITES = 'v1/likesDislikeAsset';
 export const STRAPI_CATEGORIES_PLP='/categories-plp';
 export const STRAPI_PRIVACY_POLICY='/privacy-policy';
 export const STRAPI_TERMS_OF_SERVICE = '/terms-of-service';
+
+// chat api
+export const CHAT_USER_DETAILS = '/chat/user';
+export const CHAT_USERS = '/chat/users';
+export const CHAT_USER_TOKEN = '/chat/user/authenticate';
+export const CHAT_CONVERSATION = '/chat/conversation';

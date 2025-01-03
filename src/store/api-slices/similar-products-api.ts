@@ -1,4 +1,4 @@
-import { AUTH_URL_V1 } from '@/config';
+import {  AUTH_URL_V2 } from '@/config';
 import { rootApi } from './root-api';
 import { SIMILAR_PRODUCTS_URL } from '@/api/endpoints';
 
@@ -85,10 +85,9 @@ export interface CategoryPath {
 const SimilarProductsAPI = rootApi.injectEndpoints({
   endpoints: (builder) => ({
     getSimilarProducts: builder.query<SimilarProduct, { categoryId: string; assetId: string }>({
-      query: ({categoryId, assetId}) => ({
-        
-        url: `${AUTH_URL_V1}/${SIMILAR_PRODUCTS_URL}/?categoryId=${categoryId}&assetId=${assetId}`,
-        method: 'GET'
+      query: ({ categoryId, assetId }) => ({
+        url: `${AUTH_URL_V2}/${SIMILAR_PRODUCTS_URL}/?categoryId=${categoryId}&assetId=${assetId}`,
+        method: 'GET',
       }),
     }),
   }),

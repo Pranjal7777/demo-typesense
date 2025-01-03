@@ -8,21 +8,22 @@ import { useRouter } from 'next/router';
 import PurchaseDetailsSkeleton from '../purchase-details-skeleton';
 import DocumentIcon from '../../../../public/assets/svg/document-icon';
 import CurrencyExchangeIcon from '../../../../public/assets/svg/currency-exchange';
-import FilterPopup from '../filter-popup';
-import CloseIcon from '../../../../public/assets/svg/close-icon';
-import Button from '../button';
 import { useTheme } from '@/hooks/theme';
 import ConfirmationPopup from '../confirmation-popup';
 import { Toaster } from 'sonner';
 import showToast from '@/helper/show-toaster';
 import FullScreenSpinner from '../full-screen-spinner';
+import ReasonFilter from '../reason-filter';
+import Model from '@/components/model';
 type PurchaseDetailsCardProps = {
   cardClass?: string;
   currenOrderId: string;
+  refetchPurchaseData: () => void;
 };
 const PurchaseDetailsCard: FC<PurchaseDetailsCardProps> = ({
   currenOrderId,
   cardClass,
+  refetchPurchaseData
 }) => {
   const [selectedCancelOption, setSelectedCancelOption] = useState<string[]>([]);
   const [showConfirmationPopup, setShowConfirmationPopup] = useState<boolean>(false)
@@ -42,7 +43,6 @@ const {data: dealCancelReasons} = myPurchaseApi.useGetDealCancelReasonsQuery()
           label: reason.reason,
           value: reason.reason,
         })) || []),
-        { label: 'Other', value: 'Other' },
       ]
     );
   }, [dealCancelReasons]);
@@ -104,6 +104,7 @@ const {data: dealCancelReasons} = myPurchaseApi.useGetDealCancelReasonsQuery()
       setShowConfirmationPopup(false);
       setShowCancelPopup(false);
       refetch()
+      refetchPurchaseData()
     }catch(error){
       showToast({message:'Something went wrong', messageType:'error'})
     }
@@ -284,37 +285,28 @@ const {data: dealCancelReasons} = myPurchaseApi.useGetDealCancelReasonsQuery()
             </button>
           )}
           {showCancelPopup && (
-            <div className=" fixed inset-0 w-screen h-screen bg-[#00000080]">
-              <div className=" bg-bg-septenary-light w-[90%] max-w-[400px] dark:bg-bg-nonary-dark p-5 rounded-2xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                <CloseIcon
-                  onClick={cancelPopupCloseHandler}
-                  primaryColor={theme ? '#FFF' : '#202020'}
-                  height="13"
-                  width="13"
-                  className=" absolute right-5 top-5"
-                />
-                <FilterPopup
-                  containerClass="static p-0 bg-bg-septenary-light w-full"
-                  selectedValues={selectedCancelOption}
-                  options={cancelOptions}
-                  onSelectionChange={handleCancelOptionChange}
-                  filterType="RADIO"
-                />
-                {selectedCancelOption?.[0] == 'Other' && (
-                  <textarea
-                    onChange={handleOtherReasonChange}
-                    value={otherReason}
-                    placeholder="Please specify the reason"
-                    className="w-full resize-none mt-5 h-[100px] outline-none dark:bg-bg-quinary-dark dark:text-text-primary-dark dark:border-border-tertiary-dark border-border-tertiary-light p-3 border rounded-[4px] text-sm"
-                  ></textarea>
-                )}
-                {error && <span className="text-red-500 text-sm">{error}</span>}
-                <Button onClick={applyCancelHandler} className="mt-6 !mb-0 text-base font-normal">
-                  {' '}
-                  Apply{' '}
-                </Button>
-              </div>
-            </div>
+            <Model
+              onClose={() => cancelPopupCloseHandler()}
+              className="w-[90%] max-w-[420px] h-fit py-6 px-5 rounded-[15px]"
+            >
+              <ReasonFilter
+                filterHeaderText="Cancel Deal"
+                filterDescription="Please select an option"
+                containerClass="static p-0 bg-bg-septenary-light w-full bg-white"
+                selectedValues={selectedCancelOption}
+                options={cancelOptions}
+                onSelectionChange={handleCancelOptionChange}
+                handleSubmit={applyCancelHandler}
+                buttonText="Apply"
+                isButtonLoading={isPostDealCancelLoading}
+                error={error}
+                setError={setError}
+                showOtherOption={true}
+                otherReason={otherReason}
+                setOtherReason={setOtherReason}
+                otherReasonPlaceholder="Please specify the reason"
+              />
+            </Model>
           )}
           {showConfirmationPopup && (
             <ConfirmationPopup

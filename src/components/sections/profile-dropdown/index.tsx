@@ -35,7 +35,7 @@ const ProfileDropdown: FC<Props> = ({ menuOptions, signOut }) => {
     signOut();
     setShowLogoutModal(false);
   }
-  const { userInfo } = useAppSelector((state: RootState) => state.auth);
+  const { userInfo } = useAppSelector((state: RootState) => state.auth);  
   const { theme } = useTheme();
   return (
     <>
@@ -45,9 +45,13 @@ const ProfileDropdown: FC<Props> = ({ menuOptions, signOut }) => {
             <RedirectCard
               label={menuOptions[0].item}
               labelIcon={
-                <ProfileIcon height="28" width="28" primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} />
+                <ProfileIcon
+                  height="28"
+                  width="28"
+                  primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
+                />
               }
-              linkUrl={'/profile'}
+              linkUrl={`/profile/${userInfo?.fullName.replace(/\s+/g, '')}`}
               actionIcon={
                 <RightArrowRoundedEdge
                   primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
@@ -59,7 +63,13 @@ const ProfileDropdown: FC<Props> = ({ menuOptions, signOut }) => {
 
             <RedirectCard
               label={menuOptions[2].item}
-              labelIcon={<HomeIcon height="28" width="28" primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} />}
+              labelIcon={
+                <HomeIcon
+                  height="28"
+                  width="28"
+                  primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
+                />
+              }
               linkUrl={'/profile/address'}
               actionIcon={
                 <RightArrowRoundedEdge
@@ -73,7 +83,11 @@ const ProfileDropdown: FC<Props> = ({ menuOptions, signOut }) => {
             <RedirectCard
               label={menuOptions[3].item}
               labelIcon={
-                <ShoppingBagIcon height="24" width="24" primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} />
+                <ShoppingBagIcon
+                  height="24"
+                  width="24"
+                  primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
+                />
               }
               linkUrl={'/my-purchases'}
               actionIcon={

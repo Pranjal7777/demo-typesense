@@ -23,7 +23,7 @@ export const PaymentSection = React.forwardRef<HTMLFormElement>((props, ref) => 
     });
 
     if(data.paymentIntent?.status === 'succeeded'){
-      router.push('/buy/success');
+      router.push('/checkout/success');
     }
   };
 

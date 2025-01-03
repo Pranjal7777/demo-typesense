@@ -32,10 +32,10 @@ export const routeToCategories = (categoryObj: categoryType) => {
   const selectedId = category?.id || subCategory?.id || subSubCategory?.id || '';
   const selectedName = category?.name || subCategory?.name || subSubCategory?.name || '';
 
-  const baseRoute = `/categories/${selectedId}`;
-  const queryParam = selectedName ? `?selectedCategory=${encodeURIComponent(selectedName)}` : '';
+  const baseRoute = `/categories/${selectedName}-${selectedId}`;
+  // const queryParam = selectedName ? `?selectedCategory=${encodeURIComponent(selectedName)}` : '';
 
-  return `${baseRoute}${queryParam}`;
+  return `${baseRoute}`;
 };
 
 export const routeSellerProfile = (id: string) => `/seller-profile/${id}`;

@@ -34,7 +34,7 @@ export default function DesktopPaymentAddCardBtn() {
       });
 
       if (data.paymentIntent?.status === 'succeeded') {
-        router.push('/buy/success');
+        router.push('/checkout/success');
       }
       setIsLoading(false);
     } catch (error) {

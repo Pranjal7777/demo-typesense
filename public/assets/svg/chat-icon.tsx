@@ -3,9 +3,10 @@ import React from 'react';
 type ChatIconProps = {
   bgFillcolor: string;
   size?: 'mobile' | 'pc';
+  onClick?: () => void;
 };
 
-const ChatIcon: React.FC<ChatIconProps> = ({ bgFillcolor, size = 'pc' }) => {
+const ChatIcon: React.FC<ChatIconProps> = ({ bgFillcolor, size = 'pc', onClick }) => {
   const dimensions = size === 'mobile' ? { width: 50, height: 50 } : { width: 44, height: 44 };
   return (
     <svg
@@ -15,6 +16,7 @@ const ChatIcon: React.FC<ChatIconProps> = ({ bgFillcolor, size = 'pc' }) => {
       xmlns="http://www.w3.org/2000/svg"
       className="cursor-pointer"
       fill={bgFillcolor}
+      onClick={onClick}
     >
       <rect y="0.5" width="44" height="44" rx="4" fill={bgFillcolor} />
       <path

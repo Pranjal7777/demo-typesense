@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext, NextPage } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { DEFAULT_LOCATION } from '@/config';
+import { DEFAULT_LOCATION, STRAPI_ACCESS_TOKEN, STRAPI_BASE_URL } from '@/config';
 import { getGuestTokenFromServer } from '@/helper/get-guest-token-from-server';
 import { ResponseGetAllCategoriesPayload, ResponseGetAllGrandParentCategoriesPayload, Token } from '@/store/types';
 import {
@@ -11,7 +11,7 @@ import HomePage from '@/containers/home';
 import PropTypes from 'prop-types';
 import { postsItemsProps } from './blog';
 import CustomHeader from '@/components/ui/custom-header';
-import { StrapiData } from '@/store/types/strapi-seo-types';
+import { SeoData } from '@/store/types/strapi-seo-types';
 import { MyLocationFromIp } from '@/store/types/location-types';
 
 
@@ -65,7 +65,9 @@ interface HomeProps {
   posts: {
     data: postsItemsProps;
   };
-  strapiSEO: StrapiData
+  strapiSEO: {
+    seo: SeoData;
+  }
 }
 
 const Home: NextPage<HomeProps> =  ({
@@ -79,7 +81,7 @@ const Home: NextPage<HomeProps> =  ({
 
   return (
     <>
-      <CustomHeader title={strapiSEO?.attributes?.seoProperties?.metaTitle} description={strapiSEO?.attributes?.seoProperties?.metaDesc} />
+      <CustomHeader title={strapiSEO?.seo?.title} description={strapiSEO?.seo?.description} image={strapiSEO?.seo?.image?.url} url={strapiSEO?.seo?.url} />
       <HomePage
         tokenFromServer={tokenFromServer}
         categories={categories}
@@ -256,7 +258,7 @@ Home.propTypes = {
     ).isRequired,
   }).prototype,
 
-  strapiSEO: StrapiDataPropTypes.isRequired,
+  // strapiSEO: StrapiDataPropTypes.isRequired,
 
 };
 
@@ -290,7 +292,9 @@ export async function getServerSideProps({ req, res, locale }: { req: GetServerS
       CategoriesDataFromServer(accessTokenFromServer),
       CategoriesDataWithChildCategoriesFromServer(accessTokenFromServer),
       serverSideTranslations(locale, ['common']),
-      fetch('https://strapi.le-offers.com/api/home?populate=deep').then(res => res.json())
+      fetch(`${STRAPI_BASE_URL}/api/home?populate=seo.image`, {
+        headers: { Authorization: `${STRAPI_ACCESS_TOKEN}` },
+      }).then((res) => res.json()),
     ];
     
     
@@ -301,7 +305,8 @@ export async function getServerSideProps({ req, res, locale }: { req: GetServerS
     listingApiReponses[1].status === 'fulfilled' && listingApiReponses[1].value ;
     const translatedStrings = listingApiReponses[2].status === 'fulfilled' && listingApiReponses[2].value ;
     const myLocationFromServer = DEFAULT_LOCATION;
-    const strapiData = listingApiReponses[3].status === 'fulfilled' ? listingApiReponses[3].value.data.attributes.seoProperties : { data: [] };
+    
+    const strapiData = listingApiReponses[3].status === 'fulfilled' ? listingApiReponses[3].value.data : { data: {} };
 
     return {
       props: {
@@ -311,7 +316,7 @@ export async function getServerSideProps({ req, res, locale }: { req: GetServerS
         categories : categories || [],
         categoriesWithChildCategories : categoriesWithChildCategories || [],
         posts: blogData || { data: [] },
-        strapiSEO: strapiData || {data:[]},
+        strapiSEO: strapiData || {data:{}},
       },
     };
   } catch (error) {
@@ -323,7 +328,7 @@ export async function getServerSideProps({ req, res, locale }: { req: GetServerS
         categories: [],
         categoriesWithChildCategories: [],
         posts: { data: [] },
-        strapiSEO: {data:[]},
+        strapiSEO: {data:{}},
         error: (error as Error).message || 'An error occurred',
       },
     };

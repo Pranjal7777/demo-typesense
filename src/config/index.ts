@@ -16,6 +16,8 @@ export const AUTH_URL_V2 = '/v2';
 export const AUTH_URL_V3 = '/v3';
 
 export const STRAPI_BASE_API_URL=process.env.NEXT_PUBLIC_STRAPI_BASE_API_URL;
+export const STRAPI_ACCESS_TOKEN=process.env.NEXT_PUBLIC_STRAPI_ACCESS_TOKEN;
+export const STRAPI_BASE_URL=process.env.NEXT_PUBLIC_STRAPI_BASE_URL;
 export const API='/api';
 // Website SEO Linking
 export const WEB_LINK = WEB_URL;
@@ -62,5 +64,17 @@ export const DEFAULT_LOCATION = {
   postal: '560002',
   region: 'Karnataka',
   timezone: 'Asia/Kolkata',
+};
+
+export const ISOMETRIK_CHAT_API_BASE_URL = process.env.NEXT_PUBLIC_ISOMETRIK_BASE_URL;
+
+export const ISOMETRIK_CHAT_CONFIG = {
+  licenseKey: process.env.NEXT_PUBLIC_ISOMETRIK_LICENSE_KEY,
+  appSecret: process.env.NEXT_PUBLIC_ISOMETRIK_APP_SECRET,
+  userSecret: process.env.NEXT_PUBLIC_ISOMETRIK_USER_SECRET,
+  projectId: process.env.NEXT_PUBLIC_ISOMETRIK_PROJECT_ID,
+  keysetId: process.env.NEXT_PUBLIC_ISOMETRIK_KEYSET_ID,
+  adminId: process.env.NEXT_PUBLIC_ISOMETRIK_ADMIN_ID,
+  accountId: process.env.NEXT_PUBLIC_ISOMETRIK_ACCOUNT_ID,
 };
 

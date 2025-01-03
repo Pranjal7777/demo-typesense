@@ -30,6 +30,7 @@ import Placeholder from '@/containers/placeholder/placeholder';
 import { useAppSelector } from '@/store/utils/hooks';
 import { getFormattedRating } from '@/helper';
 import CustomHeader from '@/components/ui/custom-header';
+import { getGuestTokenFromServer } from '@/helper/get-guest-token-from-server';
 
 type Props = {
   sellerProfileData: SellerProfileType;
@@ -293,9 +294,14 @@ export default SellerProfile;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { req, locale, query } = context;
+  let accessToken;
   const { id, search } = query as { id: string, search: string };
   const cookies = cookie.parse(req.headers.cookie || '');
-  const accessToken = cookies.accessToken?.replace(/"/g, '') || null;
+  accessToken = cookies.accessToken?.replace(/"/g, '') || null;
+  if (!accessToken) {
+    const guestToken = await getGuestTokenFromServer();
+    accessToken = guestToken.data.token.accessToken;
+  }
 
   let sellerProfileData = null;
   let followCountData = null;

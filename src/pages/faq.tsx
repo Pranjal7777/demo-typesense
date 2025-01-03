@@ -1,20 +1,17 @@
 import PageHeaderWithBreadcrumb from '@/components/ui/page-header-with-breadcrumb';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import React, { memo, useCallback, useMemo, useState } from 'react';
-// import { useTranslation } from 'next-i18next';
 import PageBanner from '@/components/ui/page-banner';
 import ContentSectionPageTitle from '@/components/ui/content-section-page-title';
 import Description from '@/components/ui/description';
-
-// import { FAQ_SECTION } from '@/api/endpoints';
 import dynamic from 'next/dynamic';
 import Layout from '@/components/layout';
 import { useTranslation } from 'next-i18next';
 import CustomHeader from '@/components/ui/custom-header';
 import { seoProperties } from './about';
-import formatArrayToStrings from '@/helper/functions/format-array-strings';
-import { HIDE_SELLER_FLOW } from '@/config';
+import { HIDE_SELLER_FLOW, STRAPI_ACCESS_TOKEN, STRAPI_BASE_URL } from '@/config';
 import FAQ from '@/components/sections/faq';
+import { SeoData } from '@/store/types/strapi-seo-types';
 
 const FaqCard = dynamic(() => import('@/components/sections/faq/faq-card'));
 
@@ -80,18 +77,20 @@ type BreadcrumbLinks = {
 
 export interface FaqProps {
   faqData: faqDataTypes;
+  faqSeoData: {
+    data: {
+      seo: SeoData;
+    };
+  };
 }
 
-const Faq: React.FC<FaqProps> = ({ faqData }) => {
+const Faq: React.FC<FaqProps> = ({ faqData, faqSeoData }) => {
 
   const { t } = useTranslation('faq');
-  // const headerBennerSection: HeaderBennerSection = t('page.headerBennerSection', { returnObjects: true });
   const breadcrumbLinks = t('page.breadcrumbLinks', { returnObjects: true }) as BreadcrumbLinks[];
-  // const faqSection: FaqSection = t('page.faqSection', { returnObjects: true });
-
+  const seoData = faqSeoData?.data?.seo;
   const [isBuyerOrSeller, setIsBuyerOrSeller] = useState(false);
   const [openCard, setOpenCard] = useState<number | null>(null);
-  const strapiSeoData = faqData?.seoProperties;
   const handleCardClick = useCallback((id: number) => {
     setOpenCard((prev) => (prev === id ? null : id));
   }, []);
@@ -105,36 +104,24 @@ const Faq: React.FC<FaqProps> = ({ faqData }) => {
     () => faqData?.SellersSection?.questionsAndAnswers,
     [faqData?.SellersSection?.questionsAndAnswers]
   );
-  const keywords = faqData?.seoProperties?.keywords;
-  const joinedString = formatArrayToStrings(keywords);
+
+  console.log(seoData, 'seoData');
+
 
   return (
-    <Layout excludeHeroSection={true} stickyHeader={true}>
-      <CustomHeader
-        title={strapiSeoData?.metaTitle}
-        keywords={joinedString}
-        description={strapiSeoData?.metaDesc}
-        image={strapiSeoData?.metaImage?.data?.attributes.url}
-        twitterImage={strapiSeoData?.twitterCard?.twitterImageURL}
-        twitterImageAlt={strapiSeoData?.twitterCard?.twitterImageAlt}
-        twitterTitle={strapiSeoData?.twitterCard?.twitterTitle}
-        twitterURL={strapiSeoData?.twitterCard?.twitterURL}
+    <>
+        <CustomHeader
+          title={seoData?.title}
+          description={seoData?.description}
+          image={seoData?.image?.url}
+          url={seoData?.url}
       />
+      <Layout excludeHeroSection={true} stickyHeader={true}>
 
       <PageHeaderWithBreadcrumb className=" " steps={breadcrumbLinks}></PageHeaderWithBreadcrumb>
       {faqData ? (
         <>
-          {/* {faqData?.breadCrumbLinks?.length > 0 ? (
-            <PageHeaderWithBreadcrumb className="" steps={faqData?.breadCrumbLinks}></PageHeaderWithBreadcrumb>
-          ) : null} */}
           <div className=" mt-[50px] sm:mt-[69px] relative custom-container mx-auto sm:px-16 mobile:px-4">
-            {/* <PageBanner
-          bannerUrlForMobile={headerBennerSection.bannerUrlForMobile}
-          bannerUrlForWeb={headerBennerSection.bannerUrlForWeb}
-          headerText={headerBennerSection.headerText}
-          headerDescription={headerBennerSection.headerDescription}
-          headerDescriptionForMobile={headerBennerSection.headerDescriptionForMobile}
-        /> */}
             {faqData?.heroSection ? (
               <PageBanner
                 bannerUrlForMobile={faqData?.heroSection?.heroImage?.cover_image?.data?.attributes?.url}
@@ -199,8 +186,9 @@ const Faq: React.FC<FaqProps> = ({ faqData }) => {
         </>
       ) : (
         <NoTFound status={404} error={'Data not found'} />
-      )}
-    </Layout>
+        )}
+      </Layout>
+    </>
   );
 };
 
@@ -208,15 +196,27 @@ export default memo(Faq);
 
 export async function getStaticProps({ locale }: { locale: string }) {
   let faqData = null;
+  let faqSeoData = {};
   try {
-    const response = await fetch('https://strapi.le-offers.com/api/faq-section?populate=deep');
-    // const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/${FAQ_SECTION}?populate=deep`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch data');
-    }
+     const promises = [
+       fetch(`https://strapi.le-offers.com/api/faq-section?populate=deep`),
+       fetch(`${STRAPI_BASE_URL}/api/faq?populate=seo.image`, {
+         headers: { Authorization: `${STRAPI_ACCESS_TOKEN}` },
+       }),
+     ];
 
-    const data = await response.json();
-    faqData = data?.data?.attributes;
+     const listingApiReponses = await Promise.allSettled(promises);
+
+     const response1 = listingApiReponses[0].status === 'fulfilled' ? listingApiReponses[0].value : null;
+     const response2 = listingApiReponses[1].status === 'fulfilled' ? listingApiReponses[1].value : null;
+
+     if (response1) {
+       const faqResult = await response1?.json();
+       faqData = faqResult?.data?.attributes;
+     }
+     if (response2) {
+       faqSeoData = await response2?.json();
+     }  
   } catch (error) {
     console.log('Error while fetching:', error);
   }
@@ -225,6 +225,7 @@ export async function getStaticProps({ locale }: { locale: string }) {
     props: {
       ...(await serverSideTranslations(locale, ['common', 'faq'])),
       faqData,
+      faqSeoData
     },
   };
 }

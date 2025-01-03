@@ -16,6 +16,8 @@ export const AUTH_URL_V2 = '/v2';
 export const AUTH_URL_V3 = '/v3';
 
 export const STRAPI_BASE_API_URL=process.env.NEXT_PUBLIC_STRAPI_BASE_API_URL;
+export const STRAPI_ACCESS_TOKEN=process.env.NEXT_PUBLIC_STRAPI_ACCESS_TOKEN;
+export const STRAPI_BASE_URL=process.env.NEXT_PUBLIC_STRAPI_BASE_URL;
 export const API='/api';
 // Website SEO Linking
 export const WEB_LINK = WEB_URL;

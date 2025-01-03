@@ -19,10 +19,12 @@ import FullScreenSpinner from '../full-screen-spinner';
 type PurchaseDetailsCardProps = {
   cardClass?: string;
   currenOrderId: string;
+  refetchPurchaseData: () => void;
 };
 const PurchaseDetailsCard: FC<PurchaseDetailsCardProps> = ({
   currenOrderId,
   cardClass,
+  refetchPurchaseData
 }) => {
   const [selectedCancelOption, setSelectedCancelOption] = useState<string[]>([]);
   const [showConfirmationPopup, setShowConfirmationPopup] = useState<boolean>(false)
@@ -104,6 +106,7 @@ const {data: dealCancelReasons} = myPurchaseApi.useGetDealCancelReasonsQuery()
       setShowConfirmationPopup(false);
       setShowCancelPopup(false);
       refetch()
+      refetchPurchaseData()
     }catch(error){
       showToast({message:'Something went wrong', messageType:'error'})
     }

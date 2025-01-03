@@ -15,6 +15,7 @@ type PurchaseContainerProps = {
   isPurchaseDetailsFetching: any;
   isMobile?: boolean;
   setShowOrderId :  React.Dispatch<React.SetStateAction<string>>;
+  refetchPurchaseData: () => void;
 };
 
 const PurchaseContainer: FC<PurchaseContainerProps> = ({
@@ -23,7 +24,8 @@ const PurchaseContainer: FC<PurchaseContainerProps> = ({
   data,
   isPurchaseDetailsFetching,
   isMobile,
-  setShowOrderId
+  setShowOrderId,
+  refetchPurchaseData
 }) => {
 
   const [currenOrderId, setCurrenOrderId] = useState('');
@@ -90,6 +92,7 @@ const PurchaseContainer: FC<PurchaseContainerProps> = ({
             {isPurchaseDetailsFetching && [...Array(5)].map((_, index) => <PurchaseCardSkeleton key={index} />)}
           </div>
           <PurchaseDetailsCard
+            refetchPurchaseData={refetchPurchaseData}
             currenOrderId={currenOrderId}
             cardClass=" flex-1 h-[86%] overflow-y-scroll hidden md:block"
           />
@@ -97,6 +100,7 @@ const PurchaseContainer: FC<PurchaseContainerProps> = ({
           {showPurchaseDetailsMobile ? (
             <div className="right flex-1 overflow-y-scroll  md:hidden">
               <PurchaseDetailsCard
+                refetchPurchaseData={refetchPurchaseData}
                 currenOrderId={currenOrderId}
                 cardClass=" flex-1 h-full overflow-y-scroll  md:hidden p-0 border-0"
               />

@@ -41,3 +41,23 @@ export interface TwitterCard {
   twitterImageAlt: string;
   twitterImage: ImageProps;
 }
+
+export interface Twitter {
+  twitterTitle: string;
+  twitterUrl: string;
+  twitterImage: {
+    url: string;
+    name: string;
+  };
+}
+
+export interface SeoData {
+  title: string;
+  description: string;
+  image: {
+    url: string;
+    name: string;
+  };
+  url: string;
+  twitter?: Twitter;
+}

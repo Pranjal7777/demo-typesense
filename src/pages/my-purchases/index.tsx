@@ -200,6 +200,7 @@ const [page, setPage] = useState(1);
         >
           {currenTab == 'Purchases' ? (
             <PurchaseContainer
+            refetchPurchaseData={refetch}
             setShowOrderId = {setShowOrderId}
               isMobile={isMobile}
               data={data}

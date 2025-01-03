@@ -63,11 +63,7 @@ const PdpCta: React.FC<PdpCtaProps> = ({
     };
   }, []);
 
-  console.log(apiData, 'mir apiData');
-
   const chatIconClickHandler = async () => {
-    console.log(apiData, 'mir apiData');
-    console.log('chat icon clicked');
     if (userInfo) {
       const profilePic = apiData?.images[0]?.url.includes('https')
         ? apiData?.images[0]?.url
@@ -76,19 +72,16 @@ const PdpCta: React.FC<PdpCtaProps> = ({
       const userName = userInfo.username.charAt(0).toUpperCase() + userInfo.username.slice(1).toLowerCase();
       let password = userName + apiData?._id.slice(-5);
       let userIdentifier = `${userInfo.username}${apiData?._id}`;
-      console.log(userIdentifier, 'mir userIdentifier');
       try {
         setLoadingChat(true);
         const users = await getChatUsers();
         const userData = users.users.find((user: ChatUser) => user.userIdentifier === userIdentifier);
-        console.log(userData, 'mir userData alredy exist');
         if (userData) {
           try {
           
             const tokenData = await getChatUserToken(userData.userIdentifier, password);
             chatCreds.userToken = tokenData.userToken;
             chatCreds.isometrikUserId = tokenData.userId;
-            console.log(tokenData, 'mir userData token');
             try {
               const conversation = await createConversation(tokenData.userToken, {
                 typingEvents: true,
@@ -106,28 +99,17 @@ const PdpCta: React.FC<PdpCtaProps> = ({
                 conversationImageUrl: profilePic,
               });
               
-              // setTimeout(() => {
-              //   console.log('chat creds inside setTimeout', chatCreds);
-                // initializeChat({
-                //   ...props,
-                //   conversationId: conversation.conversationId,
-                //   isometrikUserId: chatCreds.isometrikUserId,
-                //   userToken: chatCreds.userToken,
-                // });
-              //   setLoadingChat(false);
-              // }, 5000);
                 initializeChat({
                   ...props,
                   conversationId: conversation.conversationId,
                   isometrikUserId: chatCreds.isometrikUserId,
                   userToken: chatCreds.userToken,
                 });
-              console.log(conversation, 'whatevr');
             } catch (error) {
-              console.log(error, 'mir error');
+              console.log(error);
             }
           } catch (error) {
-            console.log(error, 'mir error');
+            console.log(error);
           }
         } else {
           try {
@@ -137,7 +119,6 @@ const PdpCta: React.FC<PdpCtaProps> = ({
               userName: apiData?.title || `${apiData?.description}`,
               userProfileImageUrl: profilePic,
             });
-            console.log(userDetails, 'mir userDetails created');
             if (userDetails) {
               chatCreds.userToken = userDetails.userToken;
               chatCreds.isometrikUserId = userDetails.userId;
@@ -157,39 +138,23 @@ const PdpCta: React.FC<PdpCtaProps> = ({
                   conversationTitle: apiData?.title || `${apiData?.description}`,
                   conversationImageUrl: profilePic,
                 });
-                const newToken = await getChatUserToken(userIdentifier, password);
-                chatCreds.userToken = newToken.userToken;
-                chatCreds.isometrikUserId = newToken.userId;
-                // setTimeout(() => {
-                //   console.log('chat creds inside setTimeout', chatCreds);
-                //   initializeChat({
-                //     ...props,
-                //     conversationId: conversation.conversationId,
-                //     isometrikUserId: newToken.userId,
-                //     userToken: newToken.userToken,
-                //   });
-                //   setLoadingChat(false);
-                // }, 5000);
+
                 initializeChat({
                   ...props,
                   conversationId: conversation.conversationId,
-                  isometrikUserId: newToken.userId,
-                  userToken: newToken.userToken,
+                  isometrikUserId: chatCreds.isometrikUserId,
+                  userToken: chatCreds.userToken,
                 });
-
-                console.log(chatCreds, 'chatCreds');
               } catch (error) {
-                console.log(error, 'mir error');
+                console.log(error);
               }
             }
-            console.log(userDetails, 'mir userData created');
           } catch (error) {
-            console.log(error, 'mir error');
+            console.log(error);
           }
-          console.log(chatCreds, 'mir chatCreds');
         }
       } catch (error) {
-        console.log(error, 'mir error');
+        console.log(error);
       }
       finally{
         setLoadingChat(false);
@@ -197,9 +162,6 @@ const PdpCta: React.FC<PdpCtaProps> = ({
     } else {
       router.push('/login');
     }
-    //   // console.log(userDetails);
-
-    // console.log(users, 'mir users');
   };
 
   return (

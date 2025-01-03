@@ -14,7 +14,8 @@ import AboutTextContent from '@/components/sections/about-text-content';
 import { HeroSectionType } from './privacy-policy';
 import CustomHeader from '@/components/ui/custom-header';
 import formatArrayToStrings from '@/helper/functions/format-array-strings';
-import { PROJECT_NAME } from '@/config';
+import { PROJECT_NAME, STRAPI_ACCESS_TOKEN, STRAPI_BASE_URL } from '@/config';
+import { SeoData } from '@/store/types/strapi-seo-types';
 
 type AboutSection = {
   aboutSectionTitle: string;
@@ -128,54 +129,33 @@ export interface termsData {
 }
 export type Props = {
   aboutData: termsData;
+  aboutSeoData: {
+    data: {
+      seo: SeoData;
+    };
+  };
 };
 //////////////////
 
-const About: FC<Props> = ({ aboutData }) => {
-  // function joinKeywords(keywordsObj: Record<string, string>): string {
-  //   if (!keywordsObj) {
-  //     return '';
-  //   }
+const About: FC<Props> = ({ aboutData , aboutSeoData}) => {
+  console.log(aboutSeoData, 'seoData');
 
-  //   const valuesArray = Object.values(keywordsObj);
-  //   const joinedString = valuesArray.join(', ');
-
-  //   return joinedString;
-  // }
-
-  const keywords = aboutData?.attributes?.seoProperties?.keywords;
-  const joinedString = formatArrayToStrings(keywords);
   const { t } = useTranslation('about');
   // const headerBennerSection: HeaderBennerSection = t('page.headerBennerSection', { returnObjects: true });
   const breadcrumbLinks = t('page.breadcrumbLinks', { returnObjects: true, projectName: PROJECT_NAME }) as BreadcrumbLinks[];
   const aboutSection = t('page.aboutSection', { returnObjects: true, projectName: PROJECT_NAME }) as AboutSection;
-  // const ourServiceSection: OurServiceSection = t('page.ourServiceSection', { returnObjects: true });
-  // const meetourTeamSection: MeetourTeamSection = t('page.meetourTeamSection', { returnObjects: true });
-  const strapiSeoData = aboutData.attributes.seoProperties;
-
+  const seoData = aboutSeoData?.data?.seo;
   return (
-    <Layout excludeHeroSection={true} stickyHeader={true}>
-      {/* @ts-ignore */}
-      <CustomHeader
-        title={strapiSeoData?.metaTitle}
-        keywords={joinedString}
-        description={strapiSeoData?.metaDesc}
-        image={strapiSeoData?.metaImage?.data?.attributes.url}
-        twitterImage={strapiSeoData?.twitterCard?.twitterImageURL}
-        twitterImageAlt={strapiSeoData?.twitterCard?.twitterImageAlt}
-        twitterTitle={strapiSeoData?.twitterCard?.twitterTitle}
-        twitterURL={strapiSeoData?.twitterCard?.twitterURL}
+    <>
+        <CustomHeader
+        title={seoData?.title}
+        description={seoData?.description}
+        image={seoData?.image?.url}
+        url={seoData?.url}
       />
-
+      <Layout excludeHeroSection={true} stickyHeader={true}>
       <PageHeaderWithBreadcrumb className="" steps={breadcrumbLinks}></PageHeaderWithBreadcrumb>
       <div className=" mt-[50px] sm:mt-[69px]  relative custom-container mx-auto sm:px-16 mobile:px-4 ">
-        {/* <PageBanner 
-                bannerUrlForMobile={headerBennerSection.bannerUrlForMobile}
-                bannerUrlForWeb={headerBennerSection.bannerUrlForWeb}
-                headerText={headerBennerSection.headerText}
-                headerDescription={headerBennerSection.headerDescription}
-                headerDescriptionForMobile={headerBennerSection.headerDescriptionForMobile}
-            /> */}
         <PageBanner
           bannerUrlForMobile={aboutData?.attributes?.heroSection?.heroImage?.cover_image?.data?.attributes?.url}
           bannerUrlForWeb={aboutData?.attributes?.heroSection?.heroImage?.cover_image?.data?.attributes?.url}
@@ -186,11 +166,6 @@ const About: FC<Props> = ({ aboutData }) => {
 
         <div className="sm:py-4 mt-7 lg:py-12 mobile:pb-0 mobile:pt-9 border-error">
           <ContentSectionPageTitle className="">{aboutSection.aboutSectionTitle}</ContentSectionPageTitle>
-          {/* <ContentSection className='max-w-[1063px] mx-auto'
-                title={aboutSection.items.title}
-                desc={aboutSection.items.desc}
-                sectionTitleClassName='text-center pb-8 mobile:pb-4 text-[28px] mobile:text-xl'
-              /> */}
           {/* new ontent section */}
           <AboutTextContent
             className="max-w-[1063px] mx-auto"
@@ -260,19 +235,43 @@ const About: FC<Props> = ({ aboutData }) => {
         </div>
       </div>
     </Layout>
+    </>
   );
 };
 
 export default About;
 
 export async function getStaticProps({ locale }: { locale: string }) {
-  // const res = await fetch('https://strapi.le-offers.com/api/about-le-offer?populate=deep');
-  const res = await fetch('https://strapi.le-offers.com/api/about-us?populate=deep');
-  const data = await res.json();
+  let aboutData = {};
+  let aboutSeoData = {};
+  try {
+    const promises = [
+      fetch(`https://strapi.le-offers.com/api/about-us?populate=deep`),
+      fetch(`${STRAPI_BASE_URL}/api/about-us?populate=seo.image`, {
+        headers: { Authorization: `${STRAPI_ACCESS_TOKEN}` },
+      }),
+    ];
+
+    const listingApiReponses = await Promise.allSettled(promises);
+
+    const response1 = listingApiReponses[0].status === 'fulfilled' ? listingApiReponses[0].value : null;
+    const response2 = listingApiReponses[1].status === 'fulfilled' ? listingApiReponses[1].value : null;
+
+    if (response1) {
+     const aboutResult = await response1?.json();
+     aboutData = aboutResult?.data;
+    }
+    if (response2) {
+      aboutSeoData = await response2?.json();
+    }  
+  } catch (error) {
+    console.log(error);
+  }
   return {
     props: {
       ...(await serverSideTranslations(locale, ['common', 'about'])),
-      aboutData: data.data,
+      aboutData: aboutData || {},
+      aboutSeoData: aboutSeoData || {},
     },
   };
 }

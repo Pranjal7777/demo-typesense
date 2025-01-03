@@ -7,15 +7,13 @@ import { useTranslation } from 'next-i18next';
 import dynamic from 'next/dynamic';
 import CustomHeader from '@/components/ui/custom-header';
 import { seoProperties } from './about';
-import formatArrayToStrings from '@/helper/functions/format-array-strings';
-// import ContentSectionPageTitle from '@/components/Ui/ContentSectionPageTitle';
-// import ContentSection from '@/components/Sections/ContentSection';
 const PageBanner = dynamic(() => import('@/components/ui/page-banner'), { ssr: true });
 import cookie from 'cookie';
 import { GetServerSidePropsContext } from 'next';
-import { API, AUTH_URL_V1, BASE_API_URL, STRAPI_BASE_API_URL } from '@/config';
+import { AUTH_URL_V1, BASE_API_URL, STRAPI_ACCESS_TOKEN, STRAPI_BASE_API_URL, STRAPI_BASE_URL } from '@/config';
 import { GET_PRIVACY_POLICY_DATA, STRAPI_PRIVACY_POLICY } from '@/api/endpoints';
 import { getGuestTokenFromServer } from '@/helper/get-guest-token-from-server';
+import { SeoData } from '@/store/types/strapi-seo-types';
 
 type HeaderBennerSection = {
   bannerUrlForMobile: string;
@@ -67,42 +65,29 @@ export interface PrivacyDataType {
 }
 export type Props = {
   PrivacyData: PrivacyDataType;
-  htmlContent:string
+  htmlContent:string,
+  privacyPolicySeoData: {
+    seo: SeoData;
+  }
 };
 
-const PrivacyPolicy: FC<Props> = ({ PrivacyData,htmlContent }) => {
+const PrivacyPolicy: FC<Props> = ({ PrivacyData,htmlContent,privacyPolicySeoData }) => {
+  const seoData = privacyPolicySeoData?.seo;
   const { t } = useTranslation('privacy-policy');
   const headerBennerSection = t('page.headerBennerSection', { returnObjects: true }) as HeaderBennerSection;
   const breadcrumbLinks = t('page.breadcrumbLinks', { returnObjects: true }) as BreadcrumbLinks[];
-  // const privacyPolicySection: PrivacyPolicySection = t('page.privacyPolicySection', { returnObjects: true });
-  const strapiSeoData = PrivacyData?.attributes?.seoProperties;
-  const keywords = PrivacyData?.attributes?.seoProperties?.keywords;
-  const joinedString = formatArrayToStrings(keywords);
-  // const {data:htmlContent,isFetching,isError }=productsApi.useGetPrivacyPolicyDataQuery();
 
   return (
     <Layout  excludeHeroSection={true} stickyHeader={true}>
       <CustomHeader
-        title={strapiSeoData?.metaTitle}
-        keywords={joinedString}
-        description={strapiSeoData?.metaDesc}
-        image={strapiSeoData?.metaImage?.data?.attributes.url}
-        twitterImage={strapiSeoData?.twitterCard?.twitterImageURL}
-        twitterImageAlt={strapiSeoData?.twitterCard?.twitterImageAlt}
-        twitterTitle={strapiSeoData?.twitterCard?.twitterTitle}
-        twitterURL={strapiSeoData?.twitterCard?.twitterURL}
+        title={seoData?.title}
+        description={seoData?.description}
+        image={seoData?.image?.url}
+        url={seoData?.url}
       />
 
       <PageHeaderWithBreadcrumb className="" steps={breadcrumbLinks}></PageHeaderWithBreadcrumb>
       <div className="mt-[5px] sm:mt-[5px] relative custom-container mx-auto sm:px-16 mobile:px-4 ">
-        {/* <PageBanner
-          bannerUrlForMobile={headerBennerSection.bannerUrlForMobile}
-          bannerUrlForWeb={headerBennerSection.bannerUrlForWeb}
-          headerText={headerBennerSection.headerText}
-          headerDescription={headerBennerSection.headerDescription}
-          headerDescriptionForMobile={headerBennerSection.headerDescriptionForMobile}
-        /> */}
-        {/* new page banner start */}
         <PageBanner
           bannerUrlForMobile={PrivacyData?.attributes?.heroSection?.heroImage?.cover_image?.data?.attributes?.url}
           bannerUrlForWeb={PrivacyData?.attributes?.heroSection?.heroImage?.cover_image?.data?.attributes?.url}
@@ -110,21 +95,8 @@ const PrivacyPolicy: FC<Props> = ({ PrivacyData,htmlContent }) => {
           headerDescription={PrivacyData?.attributes?.heroSection?.subtitle}
           headerDescriptionForMobile={headerBennerSection.headerDescriptionForMobile}
         />
-        {/* new page banner end */}
-        {/* <QaSection
-          description={PrivacyData?.attributes?.privacySection?.description}
-          title={PrivacyData?.attributes?.privacySection?.title}
-          data={PrivacyData}
-        /> */}
 
         <div className='my-8 text-text-primary-light dark:text-text-primary-dark' dangerouslySetInnerHTML={{ __html: htmlContent }} />
-
-        {/* <div className="py-12 mobile:pb-0 mobile:pt-9 border-error">
-          <ContentSectionPageTitle className="">{privacyPolicySection.title}</ContentSectionPageTitle>
-          {privacyPolicySection.items.map((item, key) => (
-            <ContentSection key={key} className="" title={item.title} desc={item.desc} />
-          ))}
-        </div> */}
       </div>
     </Layout>
   );
@@ -135,6 +107,7 @@ export default PrivacyPolicy;
 export async function getServerSideProps({ locale ,req}: { locale: string ,req: GetServerSidePropsContext['req']}) {
 
   let accessToken;
+  let privacyPolicySeoData = {};
   if (req.headers.cookie) {
     const cookies = cookie.parse(req.headers.cookie || '');
     accessToken = cookies.accessToken?.replace(/"/g, '') || null;
@@ -152,15 +125,23 @@ export async function getServerSideProps({ locale ,req}: { locale: string ,req: 
           Authorization: `${accessToken}`,
         },
       }),
+      fetch(`${STRAPI_BASE_URL}/api/privacy-policy?populate=seo.image`, {
+        headers: { Authorization: `${STRAPI_ACCESS_TOKEN}` },
+      }),
     ];
 
     const listingApiReponses = await Promise.allSettled(promises);
 
     const response1 = listingApiReponses[0].status === 'fulfilled' ? listingApiReponses[0].value : null;
     const response2 = listingApiReponses[1].status === 'fulfilled' ? listingApiReponses[1].value : null;
+    const response3 = listingApiReponses[2].status === 'fulfilled' ? listingApiReponses[2].value : null;
 
     if (!response1 || !response2) {
       return { notFound: true };
+    }
+    if(response3){
+      const privacyPolicyResult = await response3.json();
+      privacyPolicySeoData = privacyPolicyResult?.data;
     }
     const data = await response1.json();  
     const data2 = await response2.json();
@@ -171,7 +152,8 @@ export async function getServerSideProps({ locale ,req}: { locale: string ,req: 
       props: {
         ...(await serverSideTranslations(locale, ['common', 'privacy-policy'])),
         PrivacyData: data.data,
-        htmlContent:htmlContent
+        htmlContent:htmlContent,
+        privacyPolicySeoData: privacyPolicySeoData
       },
     };
   } catch (error) {

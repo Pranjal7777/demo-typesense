@@ -51,7 +51,7 @@ const PurchaseCard: FC<PurchaseCardProps> = ({
         cardClass
       )}
     >
-      <div className="w-full p-2 flex justify-between text-text-secondary-dark dark:text-text-primary-dark bg-bg-quinquedenary-light rounded-lg">
+      <div className="w-full p-2 flex justify-between text-text-secondary-dark dark:text-text-primary-dark bg-bg-quinquedenary-light dark:bg-bg-secondary-dark rounded-lg">
         <div className="flex items-center gap-2">
           <ImageContainer
             height={48}

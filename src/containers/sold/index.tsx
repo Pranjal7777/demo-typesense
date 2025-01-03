@@ -75,6 +75,7 @@ const SoldContainer: FC<SoldContainerProps> = ({
             {isPurchaseDetailsFetching && [...Array(5)].map((_, index) => <PurchaseCardSkeleton key={index} />)}
           </div>
           <PurchaseDetailsCard
+            
             currenOrderId={currenOrderId}
             cardClass=" flex-1 h-[86%] overflow-y-scroll hidden md:block"
           />

@@ -128,7 +128,12 @@ const CategoriesDrawer: React.FC<CategoriesDrawerProps> = ({ isSearchCategoriesD
 
           {/* Search Input */}
           <div className="w-full relative flex items-center px-[24px]">
-            <SearchIcon primaryColor={theme ? '#FFF' : '#57585A'} width={17} height={17} className="absolute left-9 rtl:right-9 " />
+            <SearchIcon
+              primaryColor={theme ? '#FFF' : '#57585A'}
+              width={17}
+              height={17}
+              className="absolute left-9 rtl:right-9 "
+            />
             <input
               onChange={onSearchChange}
               className="w-full pl-9 rtl:pr-9 pr-2 h-11 outline-none dark:text-text-primary-dark dark:bg-bg-quinary-dark dark:border-border-tertiary-dark border-border-tertiary-light bg-bg-tertiary-light focus:border-2 focus:border-brand-color dark:focus:border-brand-color rounded"
@@ -137,7 +142,13 @@ const CategoriesDrawer: React.FC<CategoriesDrawerProps> = ({ isSearchCategoriesD
               placeholder="Search"
             />
             {searchField.length > 0 && (
-              <CloseIcon width={"12"} height={"12"} primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-secondary-light)'} className="absolute right-9 rtl:left-9" onClick={clearSearch} />
+              <CloseIcon
+                width={'12'}
+                height={'12'}
+                primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
+                className="absolute right-9 rtl:left-9"
+                onClick={clearSearch}
+              />
             )}
           </div>
         </div>

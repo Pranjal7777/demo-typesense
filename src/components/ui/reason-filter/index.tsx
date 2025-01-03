@@ -71,17 +71,23 @@ const ReasonFilter = forwardRef<HTMLDivElement, ReasonFilterProps>(
     return (
       <div
         ref={ref}
-        className={appClsx('w-full text-text-secondary-dark dark:text-text-secondary-light', containerClass)}
+        className={appClsx(
+          'w-full text-text-secondary-dark dark:text-text-secondary-light bg-white dark:bg-bg-nonary-dark',
+          containerClass
+        )}
       >
         <h3 className={appClsx(' text-lg font-semibold text-center mb-5', filterHeaderTextClass)}>
           {filterHeaderText}
         </h3>
-        {filterDescription && <p className={appClsx("text-sm mb-2",filterDescriptionClass)}>{filterDescription}</p>}
+        {filterDescription && <p className={appClsx('text-sm mb-2', filterDescriptionClass)}>{filterDescription}</p>}
         <div className="w-full flex flex-col gap-3 bg-white dark:bg-bg-nonary-dark">
           {reasonOptions.map((option) => (
             <div
               onClick={() => handleSelectionChange(option.value)}
-              className={appClsx("text-sm w-full p-3 relative border rounded-[4px] dark:border-border-tertiary-dark border-border-tertiary-light cursor-pointer", optionClass)}
+              className={appClsx(
+                'text-sm w-full p-3 relative border rounded-[4px] dark:border-border-tertiary-dark border-border-tertiary-light cursor-pointer',
+                optionClass
+              )}
             >
               {option.label}
               {selectedValues.includes(option.value) && (
@@ -107,7 +113,13 @@ const ReasonFilter = forwardRef<HTMLDivElement, ReasonFilterProps>(
             ></textarea>
           )}
           {error && <p className="text-error text-sm">{error}</p>}
-          <Button isLoading={isButtonLoading} className={appClsx("mt-2 !mb-0 text-sm font-semibold",buttonClass)} onClick={handleSubmit}>{buttonText || 'Submit'}</Button>
+          <Button
+            isLoading={isButtonLoading}
+            className={appClsx('mt-2 !mb-0 text-sm font-semibold', buttonClass)}
+            onClick={handleSubmit}
+          >
+            {buttonText || 'Submit'}
+          </Button>
         </div>
       </div>
     );

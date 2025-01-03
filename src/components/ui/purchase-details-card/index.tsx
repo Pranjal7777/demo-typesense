@@ -18,7 +18,7 @@ import Model from '@/components/model';
 type PurchaseDetailsCardProps = {
   cardClass?: string;
   currenOrderId: string;
-  refetchPurchaseData: () => void;
+  refetchPurchaseData?: () => void;
 };
 const PurchaseDetailsCard: FC<PurchaseDetailsCardProps> = ({
   currenOrderId,
@@ -104,7 +104,7 @@ const {data: dealCancelReasons} = myPurchaseApi.useGetDealCancelReasonsQuery()
       setShowConfirmationPopup(false);
       setShowCancelPopup(false);
       refetch()
-      refetchPurchaseData()
+      refetchPurchaseData?.()
     }catch(error){
       showToast({message:'Something went wrong', messageType:'error'})
     }
@@ -287,7 +287,7 @@ const {data: dealCancelReasons} = myPurchaseApi.useGetDealCancelReasonsQuery()
           {showCancelPopup && (
             <Model
               onClose={() => cancelPopupCloseHandler()}
-              className="w-[90%] max-w-[420px] h-fit py-6 px-5 rounded-[15px]"
+              className="w-[90%] max-w-[420px] h-fit py-6 px-5 rounded-[15px]  bg-white dark:bg-bg-nonary-dark"
             >
               <ReasonFilter
                 filterHeaderText="Cancel Deal"

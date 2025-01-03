@@ -67,8 +67,11 @@ const ProductReport = ({assetId, handleCloseReport}: ProductReportProps) => {
     };
   return (
     <>
-      <Model onClose={() => handleCloseReport()} className="w-[90%] max-w-[420px] h-fit py-6 px-5 rounded-[15px]">
-        <div className="w-full h-full">
+      <Model
+        onClose={() => handleCloseReport()}
+        className="w-[90%] max-w-[420px] h-fit py-6 px-5 rounded-[15px] bg-white dark:bg-bg-nonary-dark"
+      >
+        <div className="w-full h-full bg-white dark:bg-bg-nonary-dark">
           <ReasonFilter
             filterHeaderText="Report"
             filterDescription="Please select an option"

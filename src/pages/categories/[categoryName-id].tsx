@@ -104,7 +104,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   categories,
   categoriesBanner: categoriesBannerData,
 }) {
-  console.log(categoriesBannerData, 'categoriesBannerData');
   const { t } = useTranslation('categories');
   const aboutUs = t('page.aboutUs', { returnObjects: true }) as aboutUs;
   const accordion = t('page.accordion', { returnObjects: true }) as accordion;
@@ -372,10 +371,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   } = useTypesenseCategory({
     categoryId: id as string,
     country: selectedItemsFromFilterSection.country,
-  });
-
-  console.log(products, 'products-typesence');
-  
+  });  
 
   useEffect(() => {
     resetFilters();
@@ -425,7 +421,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   useEffect(() => {
     const initialFilters = { ...selectedItemsFromFilterSection };
     const typesenseFilters = transformFilters(initialFilters);
-    console.log(typesenseFilters, selectedItemsFromFilterSection, 'typesenseFilters');
     updateFilters(typesenseFilters);
   }, []);
 

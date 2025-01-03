@@ -138,10 +138,7 @@ export type Props = {
 //////////////////
 
 const About: FC<Props> = ({ aboutData , aboutSeoData}) => {
-  console.log(aboutSeoData, 'seoData');
-
   const { t } = useTranslation('about');
-  // const headerBennerSection: HeaderBennerSection = t('page.headerBennerSection', { returnObjects: true });
   const breadcrumbLinks = t('page.breadcrumbLinks', { returnObjects: true, projectName: PROJECT_NAME }) as BreadcrumbLinks[];
   const aboutSection = t('page.aboutSection', { returnObjects: true, projectName: PROJECT_NAME }) as AboutSection;
   const seoData = aboutSeoData?.data?.seo;

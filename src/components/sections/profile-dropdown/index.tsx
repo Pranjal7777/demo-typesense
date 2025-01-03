@@ -35,9 +35,7 @@ const ProfileDropdown: FC<Props> = ({ menuOptions, signOut }) => {
     signOut();
     setShowLogoutModal(false);
   }
-  const { userInfo } = useAppSelector((state: RootState) => state.auth);
-  console.log(userInfo, 'userInfo');
-  
+  const { userInfo } = useAppSelector((state: RootState) => state.auth);  
   const { theme } = useTheme();
   return (
     <>

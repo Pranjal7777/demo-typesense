@@ -105,9 +105,6 @@ const Faq: React.FC<FaqProps> = ({ faqData, faqSeoData }) => {
     [faqData?.SellersSection?.questionsAndAnswers]
   );
 
-  console.log(seoData, 'seoData');
-
-
   return (
     <>
         <CustomHeader

@@ -16,7 +16,6 @@ type ProductPageProps = {
 
 function PdpPage({ pdpProductData }: ProductPageProps) {
   const [isLoading, setIsLoading] = useState(true);
-  console.log(pdpProductData, 'pdpProductData');
   useEffect(() => {
     setIsLoading(false);
   }, []);

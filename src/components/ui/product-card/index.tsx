@@ -31,7 +31,6 @@ interface ProductCardProps {
 }
 
 const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isTypeSenseData = false, showLikeIcon = true, onLikeClick, userID }) => {
-  console.log(product, 'inside-product-card');
   const [likeAndDislikeProduct, { isLoading: isLikeAndDislikeLoading }] = productsApi.useLikeAndDislikeProductMutation();
    const userId = useSelector((state: RootState) => state.auth.userInfo?._id);
   const { theme } = useTheme();

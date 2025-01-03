@@ -15,9 +15,7 @@ const SimilarProductsList: React.FC<SimilarProductsProps> = ({ assetId, category
 
   if (isError) {
     console.error('Error fetching similar products:', error);
-  }
-  console.log(data, 'data-similar-products');
-  
+  }  
   return (
     <div className="lg:mt-[52px] mobile:mt-[16px] w-full">
       {isLoading && (

@@ -25,6 +25,8 @@ import { useDispatch } from 'react-redux';
 import { getChatIdentifier } from '@/helper/payment';
 import { formatPriceWithoutCents } from '@/utils/price-formatter';
 import LeftArrowIcon from '../../../public/assets/svg/left-arrow-icon';
+import ImageContainer from '@/components/ui/image-container';
+import { STATIC_IMAGE_URL } from '@/config';
 export type filteredProducts = {
   userName: string;
   timeStamp: string;
@@ -99,6 +101,9 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
   const { userInfo, myLocation } = useAppSelector((state: RootState) => state.auth);
   const [isFirstButtonLoading, setIsFirstButtonLoading] = useState(false);
   const dispatch = useDispatch();
+
+  const [stickyHeaderDetails, setStickyHeaderDetails] = useState<any>({});
+  console.log(stickyHeaderDetails, 'mirchul stickyHeaderDetails');
   
   const breadcrumbSteps = [
     {
@@ -169,6 +174,11 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
       setIsFirstButtonLoading(false);
     }
   };
+
+  const getImageSrc = (url: string) => {
+    const src = url?.includes('http') ? url : `${STATIC_IMAGE_URL}/${url}`;
+    return src;
+  };
   
 
   return (
@@ -180,6 +190,18 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
       stickyHeroSection={true}
       showBackArrowInSearchBox={true}
     >
+      {(stickyHeaderDetails?.activeImageSrc || stickyHeaderDetails?.showShareIcon) && (
+        <div className="fixed h-[80px] top-[145px] left-0 right-0 z-30 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-5 mx-auto max-w-[1440px]">
+          <ImageContainer
+            src={getImageSrc(stickyHeaderDetails?.activeImageSrc)}
+            alt={`Thumbnail`}
+            width={110}
+            height={110}
+            className={` border !aspect-square h-[70px] w-[70px] object-cover rounded-lg`}
+            layout="fixed"
+          />
+        </div>
+      )}
       <div className="mt-0 md:mt-5">
         <Breadcrumb steps={breadcrumbSteps} />
       </div>
@@ -189,6 +211,8 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
         <div className="flex gap-8 mobile:gap-2 w-full xl:h-[576px] lg:h-[530px] md:h-full sm:h-[400px] flex-col lg:flex-row overflow-y-scroll">
           <div className=" h-full w-full lg:w-[60%]">
             <ProductSlider
+              setStickyHeaderDetails={setStickyHeaderDetails}
+              stickyHeaderDetails={stickyHeaderDetails}
               className=""
               setTotalLikeCount={setTotalLikeCount}
               imagesArray={images}

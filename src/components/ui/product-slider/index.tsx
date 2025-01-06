@@ -1,5 +1,5 @@
 import { appClsx } from '@/lib/utils';
-import React, { MouseEvent, useRef, useState } from 'react';
+import React, { MouseEvent, useEffect, useRef, useState } from 'react';
 import HartSvg from '../../../../public/assets/svg/heart';
 import { getCookie } from '@/utils/cookies';
 import { useRouter } from 'next/router';
@@ -21,9 +21,11 @@ export type Props = {
   isProductLiked: boolean;
   setTotalLikeCount:React.Dispatch<React.SetStateAction<number>>;
   productCondition?: string;
+  setStickyHeaderDetails: React.Dispatch<React.SetStateAction<any>>;
+  stickyHeaderDetails: any;  
 };
 
-const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shareTitle, isProductLiked, setTotalLikeCount, productCondition }) => {
+const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shareTitle, isProductLiked, setTotalLikeCount, productCondition, setStickyHeaderDetails, stickyHeaderDetails }) => {
   const route = useRouter();
   const { id } = route.query;
   const [likeAndDislikeProduct, { isLoading: isLikeAndDislikeLoading }] = productsApi.useLikeAndDislikeProductMutation();
@@ -159,6 +161,51 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
   };
   const [videoSrc, setVideoSrc] = useState<string>('');
 
+  const imageElementRef = useRef<HTMLDivElement>(null);
+  const shareIconRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const updatePosition = () => {
+      if (imageElementRef.current) {
+        const rect = imageElementRef.current.getBoundingClientRect();
+
+        if (rect.top < 145) {
+          console.log(rect.top, imagesArray[currentImageIndex].url, 'mir for imageElementRef');
+          // if(! stickyHeaderDetails?.activeImageSrc) {
+          console.log('mirchul imageElementRef', imagesArray[currentImageIndex]?.url);
+          setStickyHeaderDetails({ ...stickyHeaderDetails, activeImageSrc: imagesArray[currentImageIndex]?.url });
+          // }
+        } else {
+          // if (stickyHeaderDetails?.activeImageSrc) {
+          setStickyHeaderDetails({ ...stickyHeaderDetails, activeImageSrc: null });
+          // }
+        }
+      }
+
+      if (shareIconRef.current) {
+        const rect = shareIconRef.current.getBoundingClientRect();
+        if (rect.top < 145) {
+          if (!stickyHeaderDetails?.showShareIcon) {
+            setStickyHeaderDetails?.({ ...stickyHeaderDetails, showShareIcon: true });
+          }
+        } else {
+          console.log('inelse', stickyHeaderDetails?.showShareIcon);
+
+          // if (stickyHeaderDetails?.showShareIcon) {
+          setStickyHeaderDetails?.({ ...stickyHeaderDetails, showShareIcon: false });
+          // }
+        }
+      }
+    };
+
+    updatePosition(); // Initial update when component mounts
+    window.addEventListener('scroll', updatePosition);
+
+    return () => {
+      window.removeEventListener('scroll', updatePosition);
+    };
+  }, []);
+
   return (
     <>
       {isLikeAndDislikeLoading && <FullScreenSpinner />}
@@ -233,7 +280,7 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
             onMouseLeave={() => setIsHoveringCTAs(false)}
             onMouseEnter={() => setIsHoveringCTAs(true)}
           >
-            <div className="cursor-pointer">
+            <div ref={shareIconRef} className="cursor-pointer">
               <ShareButton url={shareURL} title={shareTitle} />
             </div>
             <button
@@ -289,7 +336,10 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
         )}
 
         {/* Thumbnails gallery */}
-        <div className="flex  flex-row lg:flex-col gap-2 mobile:gap-0 justify-start mobile:h-full  mobile:w-[100%] lg:w-[19%]  overflow-y-scroll overflow-x-hidden mobile:overflow-y-hidden mobile:overflow-x-scroll mobile:mt-2">
+        <div
+          ref={imageElementRef}
+          className="flex  flex-row lg:flex-col gap-2 mobile:gap-0 justify-start mobile:h-full  mobile:w-[100%] lg:w-[19%]  overflow-y-scroll overflow-x-hidden mobile:overflow-y-hidden mobile:overflow-x-scroll mobile:mt-2"
+        >
           {imagesArray?.map((img, index) => (
             <div
               key={index}

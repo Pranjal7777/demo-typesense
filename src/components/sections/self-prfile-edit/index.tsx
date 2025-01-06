@@ -288,7 +288,7 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
     });
     try {
       setIsUpdating(true);
-      if (updatedFields.filter((field) => field !== 'bio' && field !== 'website').length > 0) {
+      if (updatedFields.filter((field) => field !== 'bio' && field !== 'website').length > 0 || editProfilePicUrl) {
         const data = await updateProfile({
           ...requestPayload,
           ...(editProfilePicUrl && { profilePic: editProfilePicUrl }),

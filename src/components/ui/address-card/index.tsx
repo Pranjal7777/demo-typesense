@@ -3,6 +3,7 @@ import DeleteIcon from '../../../../public/assets/svg/delete-icon';
 import EditIcon from '../../../../public/assets/svg/edit-icon';
 import { useTheme } from '@/hooks/theme';
 import {  UserInfoType } from '@/store/types/profile-type';
+import showToast from '@/helper/show-toaster';
 
 export type Props = {
   item: UserInfoType;
@@ -34,8 +35,8 @@ const AddressCard: FC<Props> = ({
   return (
     <div className="bg-[white] flex flex-col dark:bg-bg-primary-dark  border border-[#DBDBDB]  dark:border-[#3D3B45] p-[9px] rounded-[8px] max-w-[427px] min-w-[340px] md:min-w-[289px] ">
       <div className="text-[#202020] dark:text-text-primary-dark font-semibold leading-[24px] ">
-        <span className="text-sm font-semibold">{`${item.name}`} </span>
-        <span className="text-[14px]">{` (${
+        <span className=" font-semibold">{`${item.name}`} </span>
+        <span className="text-sm">{` (${
           item.addressTypeAttribute == '6617b871a86bb50e82fda3ce'
             ? 'Business'
             : item.addressTypeAttribute == '6617b87aa86bb50e82fda3cf'
@@ -43,7 +44,7 @@ const AddressCard: FC<Props> = ({
             : 'Other'
         })`}</span>
       </div>
-      <p className="text-[#57585A] dark:text-[#929293] text-[12px] md:text-[14px] leading-[18px] md:leading-[21px] py-[15px]">
+      <p className="text-[#57585A] dark:text-[#929293] text-[12px] md:text-[14px] leading-[18px] md:leading-[21px] pt-2 pb-3">
         {item.addressLine1}
       </p>
       <div className="flex-grow"></div>
@@ -82,7 +83,11 @@ const AddressCard: FC<Props> = ({
 
           <DeleteIcon
             onClick={() => {
-              deleteButtonHandler(item._id);
+              if(item.isDefault){
+                showToast({message:'Default address cannot be deleted',messageType:'info'});
+              }else{
+                deleteButtonHandler(item._id);
+              }
             }}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}

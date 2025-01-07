@@ -15,6 +15,8 @@ import showToast from '@/helper/show-toaster';
 import FullScreenSpinner from '../full-screen-spinner';
 import ReasonFilter from '../reason-filter';
 import Model from '@/components/model';
+import { STATIC_IMAGE_URL } from '@/config';
+import { formatPriceWithoutCents } from '@/utils/price-formatter';
 type PurchaseDetailsCardProps = {
   cardClass?: string;
   currenOrderId: string;
@@ -69,6 +71,8 @@ const {data: dealCancelReasons} = myPurchaseApi.useGetDealCancelReasonsQuery()
       orderId: currenOrderId,
     }),
   });
+
+  console.log(orderDetails, 'orderDetails')
   const date = useMemo(() => {
     if (orderDetails?.data?.orderDate) {
       return getFormattedDate(orderDetails?.data?.orderDate);
@@ -152,7 +156,7 @@ const {data: dealCancelReasons} = myPurchaseApi.useGetDealCancelReasonsQuery()
                 containerClass="md:p-3 w-full  md:border dark:border-border-tertiary-dark border-border-tertiary-light rounded-lg gap-3"
                 imageSrc={`${orderDetails?.data?.image || ' '}`}
                 details={orderDetails?.data?.productName || ''}
-                description={`${orderDetails?.data?.currency || ''} ${orderDetails?.data?.amount || ''}`}
+                description={formatPriceWithoutCents(orderDetails?.data?.amount || 0)}
               />
               {orderDetails.data.orderType == 'EXCHANGED' && (
                 <>
@@ -164,7 +168,7 @@ const {data: dealCancelReasons} = myPurchaseApi.useGetDealCancelReasonsQuery()
                     containerClass=" md:p-3  w-full md:border dark:border-border-tertiary-dark border-border-tertiary-light rounded-lg gap-3"
                     imageSrc={`${orderDetails?.data?.image || ' '}`}
                     details={orderDetails?.data?.productName || ''}
-                    description={`${orderDetails?.data?.currency || ''} ${orderDetails?.data?.amount || ''}`}
+                    description={formatPriceWithoutCents(orderDetails?.data?.amount || 0)}
                   />
                 </>
               )}
@@ -181,8 +185,18 @@ const {data: dealCancelReasons} = myPurchaseApi.useGetDealCancelReasonsQuery()
                   details={orderDetails?.data?.sellerFullName}
                   descriptionClass="text-xs text-brand-color cursor-pointer"
                   description={orderDetails?.data?.sellerId && 'View Profile'}
-                  onDescriptionClick={() => router.push(`seller-profile/${orderDetails?.data?.sellerAccountId || ''}`)}
-                  imageSrc={`${orderDetails?.data?.sellerProfilePic || ' '}`}
+                  onDescriptionClick={() =>
+                    router.push(
+                      `/profile/seller/${orderDetails?.data?.sellerFullName?.replace(/\s+/g, '')}/${
+                        orderDetails?.data?.sellerAccountId
+                      }`
+                    )
+                  }
+                  imageSrc={
+                    orderDetails?.data?.sellerProfilePic?.includes('http')
+                      ? `${orderDetails?.data?.sellerProfilePic}`
+                      : `${STATIC_IMAGE_URL}/${orderDetails?.data?.sellerProfilePic || ' '}`
+                  }
                   isProfile={true}
                 />
               </div>
@@ -212,7 +226,7 @@ const {data: dealCancelReasons} = myPurchaseApi.useGetDealCancelReasonsQuery()
                 <>
                   <div className="flex justify-between items-center text-sm mt-3">
                     <span className="font-medium">Deal Value</span>
-                    <span className="font-semibold">{orderDetails?.data?.amount || ''}</span>
+                    <span className="font-semibold">{formatPriceWithoutCents(orderDetails?.data?.amount || 0)}</span>
                   </div>
                   <div className="flex justify-between items-center text-sm mt-3">
                     <span className="font-medium">App Commission</span>
@@ -221,16 +235,14 @@ const {data: dealCancelReasons} = myPurchaseApi.useGetDealCancelReasonsQuery()
                   <div className="flex text-base font-semibold  border-t pt-2 justify-between items-center mt-3">
                     <span className="">Earned amount</span>
                     <span className="">
-                      {(orderDetails?.data?.amount || 0) - (orderDetails?.data?.appCommission || 0) || ''}
+                      {formatPriceWithoutCents((orderDetails?.data?.amount || 0) - (orderDetails?.data?.appCommission || 0))}
                     </span>
                   </div>
                 </>
               ) : (
                 <div className="flex justify-between items-center text-sm mt-3">
                   <span className="font-medium">{orderDetails?.data?.paymentTypeText}</span>
-                  <span className="font-semibold">{`${orderDetails?.data?.currency || ''} ${
-                    orderDetails?.data?.amount || ''
-                  }`}</span>
+                  <span className="font-semibold">{formatPriceWithoutCents(orderDetails?.data?.amount || 0)}</span>
                 </div>
               )}
 

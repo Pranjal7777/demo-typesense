@@ -5,6 +5,8 @@ import { appClsx } from '@/lib/utils';
 import keyDownHandler from '@/helper/key-down-handler';
 import ImageContainer from '../image-container';
 import { STATIC_IMAGE_URL } from '@/config';
+import Image from 'next/image';
+import { PURCHASE_PLACEHOLDER } from '../../../../public/images/placeholder';
 
 type PurchaseCardProps = {
   cardData?: any;
@@ -18,6 +20,7 @@ type PurchaseCardProps = {
   buyerName?: string;
   orderType?: string;
   showPurchaseDetailsMobile?: boolean;
+  buyerProfilePic?: string;
 };
 
 const PurchaseCard: FC<PurchaseCardProps> = ({
@@ -31,7 +34,8 @@ const PurchaseCard: FC<PurchaseCardProps> = ({
   buyerName,
   productName,
   amount,
-  showPurchaseDetailsMobile
+  showPurchaseDetailsMobile,
+  buyerProfilePic
 }) => {
   
   return (
@@ -53,10 +57,10 @@ const PurchaseCard: FC<PurchaseCardProps> = ({
     >
       <div className="w-full p-2 flex justify-between text-text-secondary-dark dark:text-text-primary-dark bg-bg-quinquedenary-light dark:bg-bg-secondary-dark rounded-lg">
         <div className="flex items-center gap-2">
-          <ImageContainer
+          <Image
             height={48}
             width={58}
-            src={`${STATIC_IMAGE_URL}/${productImageSrc}`}
+            src={ productImageSrc ? (productImageSrc?.includes('http') ? `${productImageSrc}` : `${STATIC_IMAGE_URL}/${productImageSrc}`) : PURCHASE_PLACEHOLDER}
             className={appClsx('object-cover h-12')}
             alt={productName || 'product'}
           />
@@ -74,7 +78,7 @@ const PurchaseCard: FC<PurchaseCardProps> = ({
         <div className="flex items-center gap-[6px]">
           <ProfileImageContainer
             className="object-fill rounded-full"
-            src={''}
+            src={buyerProfilePic?.includes('http') ? `${buyerProfilePic}` : `${STATIC_IMAGE_URL}/${buyerProfilePic}`}
             alt="Profile Image"
             height={24}
             width={24}

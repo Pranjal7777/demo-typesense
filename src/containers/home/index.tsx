@@ -193,15 +193,24 @@ const HomePage: FC<HomeProps> = ({
     longitude: myLocation?.longitude,
     country: myLocation?.country,
   });
+  console.log(bannersAndRecommendedProducts, 'lebhaiproducts');
   const [recommendedProducts, setRecommendedProducts] = useState<Product[]>([]);
   useEffect(() => {
     if (bannersAndRecommendedProducts?.result) {
-      // Filter out duplicates before merging
-      const existingIds = new Set(recommendedProducts.map(item => item._id));
+      if (bannersAndRecommendedProductsPageCount === 1){
+        setRecommendedProducts(bannersAndRecommendedProducts.result);
+      }else{
+        // Filter out duplicates before merging
+        const existingIds = new Set(recommendedProducts.map((item) => item._id));
       const newUniqueItems = bannersAndRecommendedProducts.result.filter(item => !existingIds.has(item._id));
-      setRecommendedProducts((prevProducts:Product[]) => [...prevProducts, ...newUniqueItems]);
+        setRecommendedProducts((prevProducts:Product[]) => [...prevProducts, ...newUniqueItems]);
+      }
     }
-  }, [bannersAndRecommendedProducts]);
+  }, [bannersAndRecommendedProducts,bannersAndRecommendedProductsPageCount]);
+
+  useEffect(()=>{
+    setBannersAndRecommendedProductsPageCount(1);
+  },[myLocation?.latitude, myLocation?.longitude, myLocation?.country]);
 
   const handleBannersAndRecommendedProductsPageCount = () => {
     setBannersAndRecommendedProductsPageCount(bannersAndRecommendedProductsPageCount + 1);

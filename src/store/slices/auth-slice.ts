@@ -117,9 +117,14 @@ export const authSlice = createSlice({
       setCookie(ACCESS_TOKEN, action.payload.accessToken, { expires: action.payload.accessExpireAt });
       state.token = {
         accessToken: action.payload.accessToken,
-        accessExpireAt: action.payload.accessExpireAt,  
-        refreshToken: state.token?.refreshToken || ''
+        accessExpireAt: action.payload.accessExpireAt,
+        refreshToken: state.token?.refreshToken || '',
       };
+    },
+    updateUserInfoDispatch: (state: AuthInitialState, action: PayloadAction<User>) => {
+      state.userInfo = action.payload;
+      setCookie('userInfo', JSON.stringify(action.payload), { expires: 2, path: '/' });
+     localStorage.setItem('userInfo', JSON.stringify(action.payload));
     },
 
     // logout: (state) => {
@@ -128,4 +133,4 @@ export const authSlice = createSlice({
   },
 });
 
-export const { setRemoveUserDataDispatch,setGuestTokenDispatch, setUpdateAccessTokenDispatch } = authSlice.actions;
+export const { setRemoveUserDataDispatch,setGuestTokenDispatch, setUpdateAccessTokenDispatch,updateUserInfoDispatch } = authSlice.actions;

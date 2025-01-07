@@ -120,6 +120,8 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   
   // const paramsArray = categoryNameId?.split('-');
   // const id = paramsArray[paramsArray.length - 1];
+  console.log(categoriesBannerData, 'murcategoriesBannerData');
+  
   
   const searchParams = useSearchParams();
 
@@ -525,7 +527,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
           <Breadcrumb
             isLinkDisable={true}
             className="!pl-0 md:!pl-0 my-5"
-            steps={[{ name: 'Categories' }, { name: categoryName || '' }]}
+            steps={[{name: 'Home', link:'/'},{ name: 'Categories' }, { name: categoryName || '' }]}
           ></Breadcrumb>
           {/* categories section starts */}
           <div className="mobile:pb-9">
@@ -580,7 +582,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                     minThreshold
                       ? `fixed ${
                           threshold < 700 ? 'top-[175px]' : 'top-[145px]'
-                        } left-0 right-0 z-30 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-5 mx-auto max-w-[1440px]`
+                        } left-0 right-0 z-auto bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-5 mx-auto max-w-[1440px]`
                       : ''
                   }`}
                 >

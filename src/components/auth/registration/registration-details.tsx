@@ -24,6 +24,7 @@ import SignupLink from '@/components/ui/signup-link';
 import Link from 'next/link';
 import validatePhoneNumber from '@/helper/validation/phone-number-validation';
 import { PHONE_NUMBER, PHONE_NUMBER_INVALID_MESSAGE, USER_NAME } from '@/constants/texts';
+import { getCountryCodeFromName } from '@/helper';
 
 export type CompleteSignUp = {
   completeRegistration: string;
@@ -76,7 +77,6 @@ const RegistrationDetails: React.FC = () => {
     country: 'India',
     email: '',
   });
-  console.log(individualData, 'mir individualData');
 
   const [companyData, setCompanyData] = useState({
     accountType: 'company',
@@ -150,10 +150,12 @@ const RegistrationDetails: React.FC = () => {
     }
   };
 
-  const onIndividualChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    console.log(e,e.target, 'whayttt');
-    
+  const onIndividualChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {    
     const { name, value } = e.target;
+    let countryCode = '';
+    if (name === 'country') {
+       countryCode = getCountryCodeFromName(value);
+    }
     if (name === 'firstName' || name === 'lastName') {
       if (/[^a-zA-Z]/.test(value)) {
         return;
@@ -165,11 +167,15 @@ const RegistrationDetails: React.FC = () => {
         [name]: value.trim() == '' ? `${name == 'phoneNumber' ? 'Phone Number' : name} is missing` : '',
       }));
     }
-    setIndividualData({ ...individualData, [name]: value });
+    setIndividualData({ ...individualData, [name]: value, countryCode });
   };
 
   const onCompanyChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+     let countryCode = '';
+     if (name === 'country') {
+       countryCode = getCountryCodeFromName(value);
+     }
     if (name === 'firstName' || name === 'lastName') {
       if (/[^a-zA-Z]/.test(value)) {
         return;
@@ -178,7 +184,7 @@ const RegistrationDetails: React.FC = () => {
     if (name in errorState) {
       setErrorState((prevState) => ({ ...prevState, [name]: value.trim() == '' ? `${name} is missing` : '' }));
     }
-    setCompanyData({ ...companyData, [name]: value });
+    setCompanyData({ ...companyData, [name]: value, countryCode });
   };
 
   const onPhoneChange = (value: string, data: { dialCode: string; name: string }) => {
@@ -354,7 +360,7 @@ const RegistrationDetails: React.FC = () => {
             setErrorState((prevState) => ({ ...prevState, inviteReferralCode: '' }));
           }
         } catch (e) {
-          console.log(e, 'mir inviteReferralCode error');
+          console.log(e, 'inviteReferralCode error');
           const error = e as { data: { message: string } };
           if (error.data && error.data.message) {
             setErrorState((prevState) => ({ ...prevState, inviteReferralCode: `${error.data.message}` }));
@@ -571,7 +577,6 @@ const RegistrationDetails: React.FC = () => {
     const signUpData = localStorage.getItem('signUpData');
     if (signUpData) {
       const parsedData = JSON.parse(signUpData);
-      console.log(parsedData, 'mir signUpData');
       setIndividualData({
         ...individualData,
         email: parsedData.email,
@@ -767,6 +772,7 @@ const RegistrationDetails: React.FC = () => {
                 country="in"
                 required={true}
                 label={CompleteSignUp.phonePlaceholder}
+                value={companyData.countryCode + companyData.phoneNumber}
                 error={errorState.phoneNumber}
                 onChange={onPhoneChange}
               />

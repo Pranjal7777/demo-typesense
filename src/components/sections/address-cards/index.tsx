@@ -4,9 +4,9 @@ import AddressContainer from '@/containers/address';
 import Placeholder from '@/containers/placeholder/placeholder';
 import keyDownHandler from '@/helper/key-down-handler';
 import { addressApi } from '@/store/api-slices/profile/address-api';
-import { UserInfoType } from '@/store/types/profile-type';
+import { AddressType, UserInfoType } from '@/store/types/profile-type';
 import { useRouter } from 'next/router';
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 import { NO_ADDRESS } from '../../../../public/images/placeholder';
 import Button from '@/components/ui/button';
 
@@ -33,6 +33,22 @@ const AddressCards: FC<Props> = ({
       router.push('/500');
     }
   },[error]);
+
+  const allSavedAddress:AddressType[] | null = useMemo(()=>{
+    const defaultItem = data?.data?.filter((item) => item.isDefault);
+    const otherItems = data?.data?.filter((item) => !item.isDefault);
+    if(defaultItem && otherItems){
+      const sortedData = [...defaultItem, ...otherItems];
+      return sortedData;
+    }
+    if(defaultItem){
+      return defaultItem;
+    }
+    if(otherItems){
+      return otherItems;
+    }
+    return null;
+  },[data]);
   
 
   return (
@@ -55,8 +71,8 @@ const AddressCards: FC<Props> = ({
         [...Array(6)].map((_, index) => <AddressCardSkeleton key={index} />)
       ) : error ? (
         <h1>Something went wrong. Please try later.</h1>
-      ) : data && data?.data?.length > 0 ? (
-        data?.data?.map((item) => (
+      ) : allSavedAddress && allSavedAddress.length > 0 ? (
+        allSavedAddress?.map((item) => (
           <AddressCard
             defaultButtonHandler={defaultButtonHandler}
             defaultButton={item.isDefault}

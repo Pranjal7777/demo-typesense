@@ -56,6 +56,13 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
   const [isLiked, setIsLiked] = useState(product.isLiked);
 
   const handleLike = async () => {
+
+    if(!userId){
+      showToast({ message: 'Please login to like this product', messageType: 'error' });
+      router.push('/login');
+      return;
+    }
+
     try {      
       const result = await likeAndDislikeProduct({ assetid: product.assetId || product._id || product.id || '', like: !isLiked, userId: userID || userId || '' }).unwrap();
       showToast({ message: result?.message, messageType: 'success', position: 'bottom-right' });

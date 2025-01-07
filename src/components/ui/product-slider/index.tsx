@@ -21,9 +21,10 @@ export type Props = {
   isProductLiked: boolean;
   setTotalLikeCount:React.Dispatch<React.SetStateAction<number>>;
   productCondition?: string;
+  assetId?: string;
 };
 
-const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shareTitle, isProductLiked, setTotalLikeCount, productCondition }) => {
+const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shareTitle, isProductLiked, setTotalLikeCount, productCondition, assetId }) => {
   const route = useRouter();
   const { id } = route.query;
   const [likeAndDislikeProduct, { isLoading: isLikeAndDislikeLoading }] = productsApi.useLikeAndDislikeProductMutation();
@@ -121,17 +122,19 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
   const userID = useSelector((state: RootState) => state.auth.userInfo?._id);
 
   const handleLike = async () => {
+    console.log('pdp likeclick outside', userID);
     if (isLoggedIn) {
+      console.log('pdp likeclick inside', userID);
       try {
         const newLikeState = !isLiked;
-        if (typeof userID === 'string' && typeof id === 'string') {
-          const userId: string = userID;
-          const assetId: string = id;
-          const result = await likeAndDislikeProduct({ assetid: assetId, like: newLikeState, userId }).unwrap();
+        // if (typeof userID === 'string' && typeof id === 'string') {
+          const userId: string = userID || '';
+          // const assetId: string = assetId || '';
+          const result = await likeAndDislikeProduct({ assetid: assetId || '', like: newLikeState, userId: userId || '' }).unwrap();
           setIsLiked(newLikeState);
           setTotalLikeCount((prev) => (newLikeState ? prev + 1 : prev - 1));
           toast.success(result.message);
-        }
+        // }
       } catch (error) {
         toast.error('Error updating like count');
       }

@@ -44,15 +44,15 @@ const nextConfig = {
   i18n,
 };
 
-module.exports = {
-  async rewrites() {
-    return [
-      {
-        source: '/sitemap/:file*.xml', // Match any URL starting with "/sitemap" and ending with ".xml"
-        destination: 'https://assets.platform.kwibal.com/sitemap/:file*.xml', // Proxy to your S3 bucket
-      },
-    ];
-  },
-};
+// module.exports = {
+//   async rewrites() {
+//     return [
+//       {
+//         source: '/sitemap/:file*.xml', // Match any URL starting with "/sitemap" and ending with ".xml"
+//         destination: 'https://assets.platform.kwibal.com/sitemap/:file*.xml', // Proxy to your S3 bucket
+//       },
+//     ];
+//   },
+// };
 
 export default nextConfig;

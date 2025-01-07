@@ -190,6 +190,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
           <div className=" h-full w-full lg:w-[60%]">
             <ProductSlider
               className=""
+              assetId={assetId}
               setTotalLikeCount={setTotalLikeCount}
               imagesArray={images}
               shareURL={shareLink}

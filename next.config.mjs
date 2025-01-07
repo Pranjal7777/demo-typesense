@@ -19,7 +19,7 @@ const nextConfig = {
         hostname: 'photos.platform.kwibal.com',
         port: '',
         pathname: '/*/**',
-      }
+      },
     ],
     domains: [
       'leoffer-media.s3.ap-south-1.amazonaws.com',
@@ -38,10 +38,18 @@ const nextConfig = {
       'leoffer-images.s3.ap-south-1.amazonaws.com',
       'photos.platform.kwibal.com',
       'ideal-excitement-d2904ea8a5.media.strapiapp.com',
-      'kwibal-images.s3.us-west-2.amazonaws.com'
-    ]
+      'kwibal-images.s3.us-west-2.amazonaws.com',
+    ],
   },
   i18n,
+  async rewrites() {
+    return [
+      {
+        source: '/sitemap/:file*.xml',
+        destination: 'https://assets.platform.kwibal.com/sitemap/:file*.xml',
+      },
+    ];
+  },
 };
 
 export default nextConfig;

@@ -111,27 +111,48 @@ const RegistrationDetails: React.FC = () => {
     });
   }, [isIndividualOrCompany]);
 
+  const generateUsername = (data: { firstName: string; lastName: string }) => {
+    const firstAndLastNameStr = data.firstName.substring(0, 3) + data.lastName.substring(0, 3);
+    const lastFourDigit = Math.floor(1000 + Math.random() * 9000);
+    const newUsername = `${firstAndLastNameStr}${lastFourDigit}`;
+    return newUsername;
+  };
   useEffect(() => {
     if (individualData.firstName && individualData.lastName) {
-      const firstAndLastNameStr = individualData.firstName.substring(0, 3) + individualData.lastName.substring(0, 3);
-      const lastFourDigit = Math.floor(1000 + Math.random() * 9000);
-      const newUsername = `${firstAndLastNameStr}${lastFourDigit}`;
+      const newUsername = generateUsername({ firstName: individualData.firstName, lastName: individualData.lastName });
       setIndividualData({ ...individualData, username: newUsername });
       setErrorState((prevState) => ({ ...prevState, username: '' }));
     }
   }, [individualData.firstName, individualData.lastName]);
 
+
   useEffect(() => {
-    if (companyData.companyName) {
-      const companyNameInLowerCase = companyData.companyName.replace(/\s+/g, '').toLowerCase();
-      const lastFourDigit = Math.floor(1000 + Math.random() * 9000);
-      const newUsername = `${companyNameInLowerCase}${lastFourDigit}`;
+    if (companyData.firstName && companyData.lastName) {
+      const newUsername = generateUsername({ firstName: companyData.firstName, lastName: companyData.lastName });
       setCompanyData({ ...companyData, username: newUsername });
       setErrorState((prevState) => ({ ...prevState, username: '' }));
     }
-  }, [companyData.companyName]);
+  }, [companyData.firstName, companyData.lastName]);
+
+  const onCompanyUsernameFocus = () => {
+    if (companyData.firstName && companyData.lastName && !companyData.username) {
+      const newUsername = generateUsername({ firstName: companyData.firstName, lastName: companyData.lastName });
+      setCompanyData({ ...companyData, username: newUsername });
+      setErrorState((prevState) => ({ ...prevState, username: '' }));
+    }
+  };
+
+  const onIndividualUsernameFocus = () => {
+    if (individualData.firstName && individualData.lastName && !individualData.username) {
+      const newUsername = generateUsername({ firstName: individualData.firstName, lastName: individualData.lastName });
+      setIndividualData({ ...individualData, username: newUsername });
+      setErrorState((prevState) => ({ ...prevState, username: '' }));
+    }
+  };
 
   const onIndividualChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    console.log(e,e.target, 'whayttt');
+    
     const { name, value } = e.target;
     if (name === 'firstName' || name === 'lastName') {
       if (/[^a-zA-Z]/.test(value)) {
@@ -639,6 +660,7 @@ const RegistrationDetails: React.FC = () => {
                 error={errorState.username}
                 type="text"
                 name="username"
+                onFocus={onIndividualUsernameFocus}
                 value={individualData.username}
                 onChange={(e) => onIndividualChange(e)}
               />
@@ -725,6 +747,7 @@ const RegistrationDetails: React.FC = () => {
                 error={errorState.username}
                 type="text"
                 name="username"
+                onFocus={onCompanyUsernameFocus}
                 value={companyData.username}
                 onChange={(e) => onCompanyChange(e)}
               />

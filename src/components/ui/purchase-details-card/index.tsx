@@ -72,7 +72,6 @@ const {data: dealCancelReasons} = myPurchaseApi.useGetDealCancelReasonsQuery()
     }),
   });
 
-  console.log(orderDetails, 'orderDetails')
   const date = useMemo(() => {
     if (orderDetails?.data?.orderDate) {
       return getFormattedDate(orderDetails?.data?.orderDate);

@@ -23,9 +23,7 @@ type UserLoginProps = { primaryColor?: any };
 const UserLogin: React.FC<UserLoginProps> = ({primaryColor}) => {
   const { t } = useTranslation('common');
   const menuOptions = t('page.menuOptions', { returnObjects: true }) as menuOptions[];
-  const userInfo = useAppSelector((state) => state.auth.userInfo);
-  console.log(userInfo, 'miruserInfo');
-  
+  const userInfo = useAppSelector((state) => state.auth.userInfo);  
   const [isHovered, setIsHovered] = useState(false);
 
   const deviceId = generateDeviceId();
@@ -45,7 +43,6 @@ const UserLogin: React.FC<UserLoginProps> = ({primaryColor}) => {
 
       if (message === 'Success') {
         setRemoveUserDataDispatch();
-        // toast.success('You have logged out successfully.');
         const { data } = await getGuestToken().unwrap();
         setGuestTokenDispatch(data?.token);
       }

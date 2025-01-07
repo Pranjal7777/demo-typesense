@@ -193,7 +193,6 @@ const HomePage: FC<HomeProps> = ({
     longitude: myLocation?.longitude,
     country: myLocation?.country,
   });
-  console.log(bannersAndRecommendedProducts, 'lebhaiproducts');
   const [recommendedProducts, setRecommendedProducts] = useState<Product[]>([]);
   useEffect(() => {
     if (bannersAndRecommendedProducts?.result) {

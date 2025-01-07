@@ -100,9 +100,6 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
   const [isFirstButtonLoading, setIsFirstButtonLoading] = useState(false);
   const dispatch = useDispatch();
 
-  console.log(apidata,userInfo, 'pdpapidata');
-  
-  
   const breadcrumbSteps = [
     {
       name: hamburger[0].home,

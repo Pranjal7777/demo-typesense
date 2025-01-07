@@ -117,12 +117,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   const categoryNameIdArray = Array.isArray(categoryNameId) ? categoryNameId : categoryNameId?.split('-');
   const id = categoryNameIdArray?.[categoryNameIdArray.length - 1];
   const categoryName = categoryNameIdArray?.slice(0, -1).join('-');
-  
-  // const paramsArray = categoryNameId?.split('-');
-  // const id = paramsArray[paramsArray.length - 1];
-  console.log(categoriesBannerData, 'murcategoriesBannerData');
-  
-  
+
   const searchParams = useSearchParams();
 
   const initialFilters = {

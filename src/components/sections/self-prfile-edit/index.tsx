@@ -115,10 +115,8 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
     email: '',
     phoneNumber: '',
   });
-  console.log(profileData, 'mirProfileData');
   const dispatch = useDispatch();
   const {userInfo} = useAppSelector((state:RootState) => state.auth);
-  console.log(userInfo, 'mirchuluserInfo');
   const [isValidating, setIsValidating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [otpError, setOtpError] = useState('');
@@ -236,7 +234,7 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
         const errorData = error as { data: { message: string } };
         setErrorState((prevState) => ({ ...prevState, email: true }));
         setErrorMessages((prevState) => ({ ...prevState, email: errorData?.data?.message }));
-        console.log(errorData?.data?.message, 'mir email validate error');
+        console.log(errorData?.data?.message, 'email validate error');
         return;
       } finally {
         setIsValidating(false);
@@ -269,7 +267,7 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
         const errorData = error as { data: { message: string } };
         setErrorState((prevState) => ({ ...prevState, phoneNumber: true }));
         setErrorMessages((prevState) => ({ ...prevState, phoneNumber: errorData?.data?.message }));
-        console.log(errorData?.data?.message, 'mir phone number validate error');
+        console.log(errorData?.data?.message, 'phone number validate error');
         return;
       } finally {
         setIsValidating(false);

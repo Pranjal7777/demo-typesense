@@ -122,9 +122,7 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
   const userID = useSelector((state: RootState) => state.auth.userInfo?._id);
 
   const handleLike = async () => {
-    console.log('pdp likeclick outside', userID);
     if (isLoggedIn) {
-      console.log('pdp likeclick inside', userID);
       try {
         const newLikeState = !isLiked;
         // if (typeof userID === 'string' && typeof id === 'string') {

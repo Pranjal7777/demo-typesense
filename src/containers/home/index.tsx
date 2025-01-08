@@ -234,8 +234,6 @@ const HomePage: FC<HomeProps> = ({
   };  
 
   const onLikeClick = (assetId: string) => {
-    // setRecommendedProducts(prevProducts => prevProducts.map(product => product._id === assetId ? { ...product, isLiked: !product.isLiked } : product)); 
-    console.log(assetId, recommendedProducts, 'mir assetId');
     refetchBannersAndRecommendedProducts();
   };
   

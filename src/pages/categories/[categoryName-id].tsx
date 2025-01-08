@@ -110,8 +110,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   const { myLocation } = useAppSelector((state: RootState) => state.auth);
   const { data: filterParameters, error: filterParametersError } = productsApi.useGetFilterParametersQuery();
   const theme = useTheme();
-  console.log(categoriesBannerData, 'mir categoriesBannerData');
-
   const router = useRouter();
 
   const { 'categoryName-id': categoryNameId , selectedCategory} = router.query;

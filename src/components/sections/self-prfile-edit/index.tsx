@@ -35,6 +35,11 @@ import FilterPopup from '@/components/ui/filter-popup';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../../../../firebase.config';
 import ReasonFilter from '@/components/ui/reason-filter';
+import { useDispatch } from 'react-redux';
+import { updateUserInfoDispatch } from '@/store/slices/auth-slice';
+import { RootState } from '@/store/store';
+import { useAppSelector } from '@/store/utils/hooks';
+import { User } from '@/store/types';
 
 type SelfProfileEditSectionProps = {
   profileData?: SellerProfileType;
@@ -110,6 +115,8 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
     email: '',
     phoneNumber: '',
   });
+  const dispatch = useDispatch();
+  const {userInfo} = useAppSelector((state:RootState) => state.auth);
   const [isValidating, setIsValidating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [otpError, setOtpError] = useState('');
@@ -227,7 +234,7 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
         const errorData = error as { data: { message: string } };
         setErrorState((prevState) => ({ ...prevState, email: true }));
         setErrorMessages((prevState) => ({ ...prevState, email: errorData?.data?.message }));
-        console.log(errorData?.data?.message, 'mir email validate error');
+        console.log(errorData?.data?.message, 'email validate error');
         return;
       } finally {
         setIsValidating(false);
@@ -260,7 +267,7 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
         const errorData = error as { data: { message: string } };
         setErrorState((prevState) => ({ ...prevState, phoneNumber: true }));
         setErrorMessages((prevState) => ({ ...prevState, phoneNumber: errorData?.data?.message }));
-        console.log(errorData?.data?.message, 'mir phone number validate error');
+        console.log(errorData?.data?.message, 'phone number validate error');
         return;
       } finally {
         setIsValidating(false);
@@ -309,6 +316,13 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
         ...requestPayload,
         ...accountPayload,
       }));
+      const payload = {
+        ...userInfo,
+        ...(editProfilePicUrl && { profilePic: editProfilePicUrl }),
+        ...(updatedFields.includes('firstName') && { firstName: editProfileFormData.firstName}),
+        ...(updatedFields.includes('lastName') && { lastName: editProfileFormData.lastName }),
+      };
+      dispatch(updateUserInfoDispatch(payload as User));
       setUpdatedFields([]);
     } catch (error) {
       const errorData = error as { data: { message: string } };
@@ -350,6 +364,10 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
             await updateProfile({
               googleId: payload.id,
             }).unwrap();
+            setProfileData((prevState) => ({
+              ...prevState,
+              loginVerifiredBy: { ...prevState.loginVerifiredBy, gmailVerified: true },
+            }));
             showToast({ message: 'Google account verified successfully', messageType: 'success' });
           } catch (error) {
             console.log(error, 'google-user-verify error');
@@ -614,7 +632,7 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
                 <div>
                   <p className="text-sm">Gmail account</p>
                   <p onClick={googleVerify} className="text-xs text-brand-color cursor-pointer">
-                    Verified
+                   {profileData?.loginVerifiredBy?.gmailVerified ? 'Verified' : 'Verify'}
                   </p>
                 </div>
               </div>
@@ -624,7 +642,9 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
                 </div>
                 <div>
                   <p className="text-sm">Facebook account</p>
-                  <p className="text-xs text-brand-color cursor-pointer">Verified</p>
+                  <p className="text-xs text-brand-color cursor-pointer">
+                    {profileData?.loginVerifiredBy?.facebookVerified ? 'Verified' : 'Verify'}
+                  </p>
                 </div>
               </div>
             </div>

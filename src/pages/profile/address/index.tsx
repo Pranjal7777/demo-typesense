@@ -96,14 +96,14 @@ function Address() {
     aptNo: '',
     city: '',
     country: '',
-    countryCode: '',
+    countryCode: `${userInfo?.countryCode}`,
     countryShortForm:'',
     isDefault: false,
     lat: 1,
     long: 1,
-    name: '',
+    name: `${userInfo?.firstName} ${userInfo?.lastName}`,
     note: '',
-    phoneNumber: '',
+    phoneNumber: `${userInfo?.phoneNumber}`,
     state: '',
     streetNo: '',
     zipCode: '',
@@ -141,6 +141,11 @@ function Address() {
 
   const changeFormData = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    if(name == 'name'){
+     if (/[^a-zA-Z ]/.test(value)) {
+       return;
+     }
+    }
     if (name in errorState) {
       setErrorState((prevState) => ({ ...prevState, [name]: value === '' }));
     }

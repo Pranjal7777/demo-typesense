@@ -58,7 +58,7 @@ const ImgSlider: FC<Props> = ({ banners }) => {
         <Warp key={index} onClick={()=> handleClick(item.type, item.url)}>
          
           <Image
-            className="rounded-2xl"
+            className="rounded-2xl object-cover"
             width={639}
             height={260}
             src={`${STATIC_IMAGE_URL}/${item.imageWeb}`}

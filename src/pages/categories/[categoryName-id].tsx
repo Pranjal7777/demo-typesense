@@ -110,17 +110,13 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   const { myLocation } = useAppSelector((state: RootState) => state.auth);
   const { data: filterParameters, error: filterParametersError } = productsApi.useGetFilterParametersQuery();
   const theme = useTheme();
-
   const router = useRouter();
 
   const { 'categoryName-id': categoryNameId , selectedCategory} = router.query;
   const categoryNameIdArray = Array.isArray(categoryNameId) ? categoryNameId : categoryNameId?.split('-');
   const id = categoryNameIdArray?.[categoryNameIdArray.length - 1];
   const categoryName = categoryNameIdArray?.slice(0, -1).join('-');
-  
-  // const paramsArray = categoryNameId?.split('-');
-  // const id = paramsArray[paramsArray.length - 1];
-  
+
   const searchParams = useSearchParams();
 
   const initialFilters = {
@@ -501,6 +497,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
         myLocationFromServer={myLocationFromServer}
         categories={categories}
         heroImageSrc={categoriesBannerData?.webBanner || IMAGES.PRIMARY_BANNER}
+        description={categoriesBannerData?.description || ''}
       >
         {/* header with image and search box */}
         {/* Section:- What are you looking for? */}
@@ -525,7 +522,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
           <Breadcrumb
             isLinkDisable={true}
             className="!pl-0 md:!pl-0 my-5"
-            steps={[{ name: 'Categories' }, { name: categoryName || '' }]}
+            steps={[{name: 'Home', link:'/'},{ name: 'Categories' }, { name: categoryName || '' }]}
           ></Breadcrumb>
           {/* categories section starts */}
           <div className="mobile:pb-9">
@@ -576,11 +573,12 @@ const Categories: NextPage<CategoriesPageProps> = function ({
               )}
               <div className=" w-full pt-9 sm:py-8 lg:py-12 flex flex-col items-center justify-center">
                 <div
+                style={{zIndex: 1}}
                   className={`w-full ${
                     minThreshold
                       ? `fixed ${
                           threshold < 700 ? 'top-[175px]' : 'top-[145px]'
-                        } left-0 right-0 z-30 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-5 mx-auto max-w-[1440px]`
+                        } left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-5 mx-auto max-w-[1440px]`
                       : ''
                   }`}
                 >

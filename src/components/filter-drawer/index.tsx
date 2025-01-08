@@ -577,11 +577,11 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
               </div>
               <div className="location flex flex-col h-[86px] mt-[12px]">
                 <span className="text-sm font-medium">Location</span>
-                <div className="relative w-full mt-2 items-center flex border border-[#DBDBDB] dark:border-[#3D3B45] h-[45px] justify-center rounded">
+                <div className="relative w-full mt-2 items-center gap-1 px-4 flex border border-[#DBDBDB] dark:border-[#3D3B45] h-[45px] rounded">
                   <Image
                     width={17}
                     height={17}
-                    className="absolute left-3"
+                    className=""
                     // src={IMAGES.LOCATION_ICON_BLACK}
                     // loader={gumletLoader}
                     src={MyLocationIcon}
@@ -760,7 +760,7 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
 
         <div
           className={`z-50 fixed w-full h-full right-0 top-0 bottom-0 overflow-y-scroll dark:bg-bg-nonary-dark bg-bg-secondary-light text-text-primary-light dark:text-text-secondary-light lg:max-w-[35%] max-w-full transition-all ease-in duration-200  ${
-            filtersDrawer ? 'w-full md:w-[40%] lg:w-[30%] opacity-100 inline-block' : 'w-0 opacity-0 hidden'
+            filtersDrawer ? 'w-full max-w-[460px] opacity-100 inline-block' : 'w-0 opacity-0 hidden'
           } `}
         >
           <div className="relative">

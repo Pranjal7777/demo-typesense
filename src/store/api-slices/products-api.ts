@@ -200,6 +200,7 @@ export const productsApi = rootApi.injectEndpoints({
         }&cat_id=${catId}`,
         method: 'GET',
       }),
+      keepUnusedDataFor: 0,
     }),
     getFilterParameters: builder.query<FilterParameterResponse, void>({
       query: () => ({

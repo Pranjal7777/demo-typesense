@@ -78,7 +78,7 @@ const PurchaseContainer: FC<PurchaseContainerProps> = ({
                   cardClass={currenOrderId == item?.orderId ? 'border border-brand-color' : ''}
                   currenOrderId={currenOrderId}
                   orderId={`${item?.orderId}`}
-                  productImageSrc={`${item.image}` || ' '}
+                  productImageSrc={`${item.image}` || ''}
                   productName={
                     item?.productName?.length > 22 ? `${item?.productName?.slice(0, 22)}...` : item?.productName || ''
                   }
@@ -86,6 +86,7 @@ const PurchaseContainer: FC<PurchaseContainerProps> = ({
                   buyerName={item.buyerFullName}
                   orderType={item.orderType}
                   cardClickHandler={onCardClick}
+                  // buyerProfilePic={item}
                 />
               ))}
 

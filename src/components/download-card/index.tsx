@@ -50,10 +50,10 @@ const DownloadCard: React.FC = () => {
   return (
     <div className="relative w-full h-[618px] overflow-hidden lg:h-[388px] bg-gradient-color-from">
       <div className="flex-col lg:flex-row flex custom-container mx-auto sm:px-16 mobile:px-4">
-        <div className="mt-4 border-error lg:w-[50%] lg:my-12 flex flex-col items-center text-center lg:text-left dark:text-text-primary-dark">
+        <div className="mt-4 border-error lg:w-[50%] lg:my-12 flex flex-col items-center text-center lg:text-left">
           <div className="md:ml-[8%] items-center flex  flex-col lg:items-start mt-5 lg:mt-0">
             <h2 className="font-semibold text-2xl md:text-[40px] leading-[36px] lg:leading-[60px]  mobile:px-20 ">{appDownloadSection.heading}</h2>
-            <p className="max-w-[440px] mt-3 text-xs md:text-base font-normal w-[80%]  lg:w-auto text-text-quaternary-dark dark:text-text-primary-dark">
+            <p className="max-w-[440px] mt-3 text-xs md:text-base font-normal w-[80%]  lg:w-auto text-text-quaternary-dark">
               {appDownloadSection.subHeading}
             </p>
 

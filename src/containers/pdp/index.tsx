@@ -99,7 +99,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
   const { userInfo, myLocation } = useAppSelector((state: RootState) => state.auth);
   const [isFirstButtonLoading, setIsFirstButtonLoading] = useState(false);
   const dispatch = useDispatch();
-  
+
   const breadcrumbSteps = [
     {
       name: hamburger[0].home,
@@ -134,10 +134,10 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
     },
   ];
   const ToggleInfo = [
-    // {
-    //   label: togglePanelText[0].toggleOne,
-    //   content: <UserProductList accoundId={sellerAccountId} page="1" />,
-    // },
+    {
+      label: togglePanelText[0].toggleOne,
+      content: <UserProductList accoundId={sellerAccountId} page="1" />,
+    },
     {
       label: togglePanelText[0].toggleTwo,
       content: <SimilarProductsList assetId={assetId} categoryId={categoryId} />,
@@ -190,6 +190,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
           <div className=" h-full w-full lg:w-[60%]">
             <ProductSlider
               className=""
+              assetId={assetId}
               setTotalLikeCount={setTotalLikeCount}
               imagesArray={images}
               shareURL={shareLink}
@@ -210,23 +211,29 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
                   postTimeStamp={prodTimeStamp}
                   price={formatPriceWithoutCents(prodPrice)}
                   timestampLabel={postingLabel}
+                  isSeller={apidata?.users?.accountId === userInfo?.accountId}
                   // currency={currencyCode}
                   assetCondition={`${apidata.city}, ${apidata.state}, ${apidata.country}`}
                 />
-                <div className="mobile:hidden">
-                  <PdpCta
-                    apiData={apidata}
-                    firstButtonText={data.result?.isNegotiable ? ctaText[0].makeOfferBtn : ctaText[0].firstBtn}
-                    isSold={isSold}
-                    secondButtonText={ctaText[0].secondBtn}
-                    noStockButtonText={ctaText[0].nostock}
-                    handleFirstButtonClick={handleFirstButtonClick}
-                    isFirstButtonLoading={isFirstButtonLoading}
-                  />
-                </div>
+                {apidata?.users?.accountId !== userInfo?.accountId && (
+                  <div className="mobile:hidden">
+                    <PdpCta
+                      apiData={apidata}
+                      firstButtonText={data.result?.isNegotiable ? ctaText[0].makeOfferBtn : ctaText[0].firstBtn}
+                      isSold={isSold}
+                      secondButtonText={ctaText[0].secondBtn}
+                      noStockButtonText={ctaText[0].nostock}
+                      handleFirstButtonClick={handleFirstButtonClick}
+                      isFirstButtonLoading={isFirstButtonLoading}
+                    />
+                  </div>
+                )}
+
                 <EngagementStats data={EngagementStatsData} />
               </div>
-              <div className="h-[30%]">
+
+              {/* hide seller info */}
+              {/* <div className="h-[30%]">
                 <ProfileCard
                   sellerName={sellerUserName}
                   sellerRating={sellerRating}
@@ -238,7 +245,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
                   accoundId={sellerAccountId}
                   isFollow={apidata?.isFollow}
                 />
-              </div>
+              </div> */}
               <div className="mt-5">
                 <InfoBox question={desc} answer={prodDesc} width={'100%'} />
               </div>
@@ -259,17 +266,19 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
       </div>
 
       {/* sticky button for mobile screen start */}
-      <div className=" px-2 z-10 sm:hidden flex items-center justify-between h-[76px] w-full fixed bottom-0 right-0 left-0 bg-bg-secondary-light dark:bg-bg-secondary-dark">
-        <PdpCta
-          apiData={apidata}
+      {apidata?.users?.accountId !== userInfo?.accountId && (
+        <div className=" px-2 z-10 sm:hidden flex items-center justify-between h-[76px] w-full fixed bottom-0 right-0 left-0 bg-bg-secondary-light dark:bg-bg-secondary-dark">
+          <PdpCta
+            apiData={apidata}
           firstButtonText={data.result?.isNegotiable ? ctaText[0].makeOfferBtn : ctaText[0].firstBtn}
           isSold={isSold}
           secondButtonText={ctaText[0].secondBtn}
           noStockButtonText={ctaText[0].nostock}
           handleFirstButtonClick={handleFirstButtonClick}
           isFirstButtonLoading={isFirstButtonLoading}
-        />
-      </div>
+          />
+        </div>
+      )}
       {/* sticky button for mobile screen end */}
 
       {/* page divider start */}

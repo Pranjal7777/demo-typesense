@@ -16,6 +16,7 @@ type ProductDetailsCardProps = {
   timestampLabel: string;
   assetCondition?: string;
   assetId?: string;
+  isSeller?: boolean;
 };
 
 const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
@@ -26,7 +27,8 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
   currency,
   timestampLabel,
   assetCondition,
-  assetId
+  assetId,
+  isSeller
 }) => {
   const theme = useTheme();
   const currentTheme = theme.theme;
@@ -65,7 +67,7 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
               }
             }}
           >
-            <ReportFlagSVG fillColor={currentTheme ? '#fff' : '#000'} />
+            {!isSeller && <ReportFlagSVG fillColor={currentTheme ? '#fff' : '#000'} />}
           </div>
         </div>
         <h1 className="text-lg md:text-2xl leading-[27px] md:leading-[36px] font-semibold text-text-primary-light dark:text-text-quinary-dark">

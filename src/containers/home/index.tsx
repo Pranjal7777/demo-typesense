@@ -186,7 +186,7 @@ const HomePage: FC<HomeProps> = ({
     isError: isErrorBannersAndRecommendedProducts,
     error: errorBannersAndRecommendedProducts,
     isFetching: isFetchingBannersAndRecommendedProducts,
-    // refetch,
+    refetch: refetchBannersAndRecommendedProducts,
   } = productsApi.useGetAllBannersAndProductsQuery({
     page: bannersAndRecommendedProductsPageCount,
     latitude: myLocation?.latitude,
@@ -194,14 +194,25 @@ const HomePage: FC<HomeProps> = ({
     country: myLocation?.country,
   });
   const [recommendedProducts, setRecommendedProducts] = useState<Product[]>([]);
+  useEffect(()=>{
+    refetchBannersAndRecommendedProducts();
+  },[router.asPath, refetchBannersAndRecommendedProducts]);
   useEffect(() => {
     if (bannersAndRecommendedProducts?.result) {
-      // Filter out duplicates before merging
-      const existingIds = new Set(recommendedProducts.map(item => item._id));
+      if (bannersAndRecommendedProductsPageCount === 1){
+        setRecommendedProducts(bannersAndRecommendedProducts.result);
+      }else{
+        // Filter out duplicates before merging
+        const existingIds = new Set(recommendedProducts.map((item) => item._id));
       const newUniqueItems = bannersAndRecommendedProducts.result.filter(item => !existingIds.has(item._id));
-      setRecommendedProducts((prevProducts:Product[]) => [...prevProducts, ...newUniqueItems]);
+        setRecommendedProducts((prevProducts:Product[]) => [...prevProducts, ...newUniqueItems]);
+      }
     }
-  }, [bannersAndRecommendedProducts]);
+  }, [bannersAndRecommendedProducts,bannersAndRecommendedProductsPageCount]);
+
+  useEffect(()=>{
+    setBannersAndRecommendedProductsPageCount(1);
+  },[myLocation?.latitude, myLocation?.longitude, myLocation?.country]);
 
   const handleBannersAndRecommendedProductsPageCount = () => {
     setBannersAndRecommendedProductsPageCount(bannersAndRecommendedProductsPageCount + 1);
@@ -221,6 +232,10 @@ const HomePage: FC<HomeProps> = ({
       router.push('/productList');
     }
   };  
+
+  const onLikeClick = (assetId: string) => {
+    refetchBannersAndRecommendedProducts();
+  };
   
   return (
     <>
@@ -335,7 +350,7 @@ const HomePage: FC<HomeProps> = ({
   
                 isErrorBannersAndRecommendedProducts ? null : (bannersAndRecommendedProducts?.result !== undefined && bannersAndRecommendedProducts?.Totalcount !== 0 ) ? ( // <h2>{convertRTKQueryErrorToString(errorBannersAndRecommendedProducts)}</h2>
                   recommendedProducts.map((product, index) => (
-                    <ProductCard showLikeIcon={true} key={index} product={product} />
+                    <ProductCard showLikeIcon={true} key={index} product={product} onLikeClick={onLikeClick}/>
                   ))
                 ) : null
               }

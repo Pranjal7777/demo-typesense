@@ -163,7 +163,7 @@ const RegisterWithEmailAndPassword: React.FC = () => {
         // ShowToastWithCountdown("Redirecting to SignIn page", countdownDuration, `${SIGN_IN_PAGE}?step=4`);
 
         toast.info('Redirecting to Login page', {
-          duration: 5000,
+          duration: 3000,
           onAutoClose: () => {
             router.push(`${SIGN_IN_PAGE}?step=4`);
           },
@@ -173,12 +173,19 @@ const RegisterWithEmailAndPassword: React.FC = () => {
   };
 
   useEffect(() => {
-    const email = localStorage.getItem('auth_email');
+    const email =  localStorage.getItem('auth_email');
     if (email) {
       setFormData({ ...formData, email: email });
       localStorage.removeItem('auth_email');
     }
     localStorage.removeItem('signUpData');
+  }, []);
+
+  useEffect(() => {
+    const email = localStorage.getItem('email');
+    if (email) {
+      setFormData({ ...formData, email: email });
+    }
   }, []);
 
   const handleSignInClick = useCallback(() => {

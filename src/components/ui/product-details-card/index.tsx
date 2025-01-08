@@ -19,6 +19,7 @@ type ProductDetailsCardProps = {
   assetId?: string;
   setStickyHeaderDetails: React.Dispatch<React.SetStateAction<StickyHeaderDetails>>;
   stickyHeaderDetails: StickyHeaderDetails;
+  isSeller?: boolean;
 };
 
 const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
@@ -31,7 +32,8 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
   assetCondition,
   assetId,
   setStickyHeaderDetails,
-  stickyHeaderDetails
+  stickyHeaderDetails,
+  isSeller
 }) => {
   const theme = useTheme();
   const currentTheme = theme.theme;
@@ -116,7 +118,7 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
               }
             }}
           >
-            <ReportFlagSVG fillColor={currentTheme ? '#fff' : '#000'} />
+            {!isSeller && <ReportFlagSVG fillColor={currentTheme ? '#fff' : '#000'} />}
           </div>
         </div>
         <h1 ref={productNameElementRef} className="text-lg md:text-2xl leading-[27px] md:leading-[36px] font-semibold text-text-primary-light dark:text-text-quinary-dark">

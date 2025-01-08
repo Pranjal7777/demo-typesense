@@ -24,6 +24,7 @@ import SignupLink from '@/components/ui/signup-link';
 import Link from 'next/link';
 import validatePhoneNumber from '@/helper/validation/phone-number-validation';
 import { PHONE_NUMBER, PHONE_NUMBER_INVALID_MESSAGE, USER_NAME } from '@/constants/texts';
+import { getCountryCodeFromName } from '@/helper';
 
 export type CompleteSignUp = {
   completeRegistration: string;
@@ -76,7 +77,6 @@ const RegistrationDetails: React.FC = () => {
     country: 'India',
     email: '',
   });
-  console.log(individualData, 'mir individualData');
 
   const [companyData, setCompanyData] = useState({
     accountType: 'company',
@@ -111,53 +111,100 @@ const RegistrationDetails: React.FC = () => {
     });
   }, [isIndividualOrCompany]);
 
+  const generateUsername = (data: { firstName: string; lastName: string }) => {
+    const firstAndLastNameStr = data.firstName.substring(0, 3) + data.lastName.substring(0, 3);
+    const lastFourDigit = Math.floor(1000 + Math.random() * 9000);
+    const newUsername = `${firstAndLastNameStr}${lastFourDigit}`;
+    return newUsername;
+  };
   useEffect(() => {
     if (individualData.firstName && individualData.lastName) {
-      const firstAndLastNameStr = individualData.firstName.substring(0, 3) + individualData.lastName.substring(0, 3);
-      const lastFourDigit = Math.floor(1000 + Math.random() * 9000);
-      const newUsername = `${firstAndLastNameStr}${lastFourDigit}`;
+      const newUsername = generateUsername({ firstName: individualData.firstName, lastName: individualData.lastName });
       setIndividualData({ ...individualData, username: newUsername });
       setErrorState((prevState) => ({ ...prevState, username: '' }));
     }
   }, [individualData.firstName, individualData.lastName]);
 
+
   useEffect(() => {
-    if (companyData.companyName) {
-      const companyNameInLowerCase = companyData.companyName.replace(/\s+/g, '').toLowerCase();
-      const lastFourDigit = Math.floor(1000 + Math.random() * 9000);
-      const newUsername = `${companyNameInLowerCase}${lastFourDigit}`;
+    if (companyData.firstName && companyData.lastName) {
+      const newUsername = generateUsername({ firstName: companyData.firstName, lastName: companyData.lastName });
       setCompanyData({ ...companyData, username: newUsername });
       setErrorState((prevState) => ({ ...prevState, username: '' }));
     }
-  }, [companyData.companyName]);
+  }, [companyData.firstName, companyData.lastName]);
 
-  const onIndividualChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const onCompanyUsernameFocus = () => {
+    if (companyData.firstName && companyData.lastName && !companyData.username) {
+      const newUsername = generateUsername({ firstName: companyData.firstName, lastName: companyData.lastName });
+      setCompanyData({ ...companyData, username: newUsername });
+      setErrorState((prevState) => ({ ...prevState, username: '' }));
+    }
+  };
+
+  const onIndividualUsernameFocus = () => {
+    if (individualData.firstName && individualData.lastName && !individualData.username) {
+      const newUsername = generateUsername({ firstName: individualData.firstName, lastName: individualData.lastName });
+      setIndividualData({ ...individualData, username: newUsername });
+      setErrorState((prevState) => ({ ...prevState, username: '' }));
+    }
+  };
+
+  const onIndividualChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {    
     const { name, value } = e.target;
+    let countryCode = '';
+    if (name === 'country') {
+       countryCode = getCountryCodeFromName(value);
+    }
     if (name === 'firstName' || name === 'lastName') {
       if (/[^a-zA-Z]/.test(value)) {
         return;
       }
+      if(value.trim().length > 30){
+        return;
+      }
     }
     if (name in errorState) {
-      setErrorState((prevState) => ({
-        ...prevState,
-        [name]: value.trim() == '' ? `${name == 'phoneNumber' ? 'Phone Number' : name} is missing` : '',
-      }));
+      if(name == 'firstName' || name == 'lastName'){
+        setErrorState((prevState) => ({
+          ...prevState,
+          [name]: value.trim().length < 3  ? `${name == 'firstName' ? 'First Name' : 'Last Name'} should be at least 3 characters` : '',
+        }));
+      } else {
+        setErrorState((prevState) => ({
+          ...prevState,
+          [name]: value.trim() == '' ? `${name == 'phoneNumber' ? 'Phone Number' : name} is missing` : '',
+        }));
+      }
     }
-    setIndividualData({ ...individualData, [name]: value });
+    setIndividualData({ ...individualData, [name]: value, countryCode });
   };
 
   const onCompanyChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+     let countryCode = '';
+     if (name === 'country') {
+       countryCode = getCountryCodeFromName(value);
+     }
     if (name === 'firstName' || name === 'lastName') {
       if (/[^a-zA-Z]/.test(value)) {
         return;
       }
+      if(value.trim().length > 30){
+        return;
+      }
     }
     if (name in errorState) {
-      setErrorState((prevState) => ({ ...prevState, [name]: value.trim() == '' ? `${name} is missing` : '' }));
+      if(name == 'firstName' || name == 'lastName'){
+        setErrorState((prevState) => ({
+          ...prevState,
+          [name]: value.trim().length < 3  ? `${name == 'firstName' ? 'First Name' : 'Last Name'} should be at least 3 characters` : '',
+        }));
+      } else {
+        setErrorState((prevState) => ({ ...prevState, [name]: value.trim() == '' ? `${name} is missing` : '' }));
+      }
     }
-    setCompanyData({ ...companyData, [name]: value });
+    setCompanyData({ ...companyData, [name]: value, countryCode });
   };
 
   const onPhoneChange = (value: string, data: { dialCode: string; name: string }) => {
@@ -333,7 +380,7 @@ const RegistrationDetails: React.FC = () => {
             setErrorState((prevState) => ({ ...prevState, inviteReferralCode: '' }));
           }
         } catch (e) {
-          console.log(e, 'mir inviteReferralCode error');
+          console.log(e, 'inviteReferralCode error');
           const error = e as { data: { message: string } };
           if (error.data && error.data.message) {
             setErrorState((prevState) => ({ ...prevState, inviteReferralCode: `${error.data.message}` }));
@@ -550,7 +597,6 @@ const RegistrationDetails: React.FC = () => {
     const signUpData = localStorage.getItem('signUpData');
     if (signUpData) {
       const parsedData = JSON.parse(signUpData);
-      console.log(parsedData, 'mir signUpData');
       setIndividualData({
         ...individualData,
         email: parsedData.email,
@@ -614,7 +660,7 @@ const RegistrationDetails: React.FC = () => {
                 placeholder="Enter your First Name"
                 required={true}
                 label={CompleteSignUp.firstNamePlaceholder}
-                error={errorState.firstName && 'First Name is missing'}
+                error={errorState.firstName}
                 type="text"
                 name="firstName"
                 value={individualData.firstName}
@@ -625,7 +671,7 @@ const RegistrationDetails: React.FC = () => {
                 placeholder="Enter your Last Name"
                 required={true}
                 label={CompleteSignUp.lastNamePlaceholder}
-                error={errorState.lastName && 'Last Name is missing'}
+                error={errorState.lastName}
                 type="text"
                 name="lastName"
                 value={individualData.lastName}
@@ -639,6 +685,7 @@ const RegistrationDetails: React.FC = () => {
                 error={errorState.username}
                 type="text"
                 name="username"
+                onFocus={onIndividualUsernameFocus}
                 value={individualData.username}
                 onChange={(e) => onIndividualChange(e)}
               />
@@ -689,7 +736,7 @@ const RegistrationDetails: React.FC = () => {
                 placeholder="Enter your First Name"
                 required={true}
                 label={CompleteSignUp.companyOptionFirstNamePlaceholder}
-                error={errorState.firstName && 'First Name is missing'}
+                error={errorState.firstName}
                 type="text"
                 name="firstName"
                 value={companyData.firstName}
@@ -700,7 +747,7 @@ const RegistrationDetails: React.FC = () => {
                 placeholder="Enter your Last Name"
                 required={true}
                 label={CompleteSignUp.companyOptionLastNamePlaceholder}
-                error={errorState.lastName && 'Last Name is missing'}
+                error={errorState.lastName}
                 type="text"
                 name="lastName"
                 value={companyData.lastName}
@@ -725,6 +772,7 @@ const RegistrationDetails: React.FC = () => {
                 error={errorState.username}
                 type="text"
                 name="username"
+                onFocus={onCompanyUsernameFocus}
                 value={companyData.username}
                 onChange={(e) => onCompanyChange(e)}
               />
@@ -744,6 +792,7 @@ const RegistrationDetails: React.FC = () => {
                 country="in"
                 required={true}
                 label={CompleteSignUp.phonePlaceholder}
+                value={companyData.countryCode + companyData.phoneNumber}
                 error={errorState.phoneNumber}
                 onChange={onPhoneChange}
               />

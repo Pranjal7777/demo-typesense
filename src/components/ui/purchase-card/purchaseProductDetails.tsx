@@ -3,6 +3,8 @@ import ImageContainer from '../image-container';
 import { STATIC_IMAGE_URL } from '@/config';
 import { appClsx } from '@/lib/utils';
 import ProfileImageContainer from '../profile-image-container';
+import { PURCHASE_PLACEHOLDER } from '../../../../public/images/placeholder';
+import Image from 'next/image';
 
 type PurchaseProductDetailsProps = {
   imageSrc?: string;
@@ -43,7 +45,7 @@ const PurchaseProductDetails: FC<PurchaseProductDetailsProps> = ({
     }
   }  
 
-  const imageUrl = imageSrc?.includes('http') ? imageSrc : `${STATIC_IMAGE_URL}/${imageSrc}`;
+  const imageUrl = imageSrc?.trim() ? (imageSrc?.includes('http') ? imageSrc : `${STATIC_IMAGE_URL}/${imageSrc}`) :(!isProfile ? PURCHASE_PLACEHOLDER : '');
 
   return (
     <div className={appClsx('flex items-center gap-1', containerClass)}>
@@ -57,7 +59,7 @@ const PurchaseProductDetails: FC<PurchaseProductDetailsProps> = ({
             width={24}
           />
         ) : (
-          <ImageContainer
+          <Image
             height={height}
             width={width}
             src={imageUrl}

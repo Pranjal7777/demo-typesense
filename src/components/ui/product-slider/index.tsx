@@ -25,9 +25,13 @@ export type Props = {
   setStickyHeaderDetails: React.Dispatch<React.SetStateAction<StickyHeaderDetails>>;
   stickyHeaderDetails: StickyHeaderDetails;  
   setActiveProductImage: React.Dispatch<React.SetStateAction<string>>;
+  assetId?: string;
 };
 
-const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shareTitle, isProductLiked, setTotalLikeCount, productCondition, setStickyHeaderDetails, stickyHeaderDetails, setActiveProductImage }) => {
+const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shareTitle, isProductLiked, setTotalLikeCount, productCondition, setStickyHeaderDetails, stickyHeaderDetails, setActiveProductImage, assetId }) => {
+
+
+// const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shareTitle, isProductLiked, setTotalLikeCount, productCondition, assetId }) => {
   const route = useRouter();
   const { id } = route.query;
   const [likeAndDislikeProduct, { isLoading: isLikeAndDislikeLoading }] = productsApi.useLikeAndDislikeProductMutation();
@@ -132,14 +136,14 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
     if (isLoggedIn) {
       try {
         const newLikeState = !isLiked;
-        if (typeof userID === 'string' && typeof id === 'string') {
-          const userId: string = userID;
-          const assetId: string = id;
-          const result = await likeAndDislikeProduct({ assetid: assetId, like: newLikeState, userId }).unwrap();
+        // if (typeof userID === 'string' && typeof id === 'string') {
+          const userId: string = userID || '';
+          // const assetId: string = assetId || '';
+          const result = await likeAndDislikeProduct({ assetid: assetId || '', like: newLikeState, userId: userId || '' }).unwrap();
           setIsLiked(newLikeState);
           setTotalLikeCount((prev) => (newLikeState ? prev + 1 : prev - 1));
           toast.success(result.message);
-        }
+        // }
       } catch (error) {
         toast.error('Error updating like count');
       }

@@ -6,4 +6,5 @@ export const NO_PRODUCTS = '/images/placeholder/no_product_placeholder.svg';
 export const NO_LIKES = '/images/placeholder/no_likes_placeholder.svg';
 export const NO_ADDRESS = '/images/placeholder/no_address_placeholder.svg';
 export const NO_ACCOUNT = '/images/placeholder/no_account_placeholder.svg';
+export const PURCHASE_PLACEHOLDER = '/images/placeholder/purchase_placeholder.svg';
 

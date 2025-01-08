@@ -419,7 +419,7 @@ const Header: FC<Props> = ({
       {/* profile dropdown start */}
       {/* <ProfileDropdown/> */}
       {showProfileDropdown ? (
-        <div className="profile-dropdown fixed z-50 w-screen h-screen sm:hidden hover:cursor-pointer   bg-bg-secondary-light dark:bg-[#1A1A1A] text-text-primary-light dark:text-text-primary-dark">
+        <div className="profile-dropdown fixed z-50 w-screen h-screen sm:hidden hover:cursor-pointer  bg-bg-secondary-light dark:bg-[#1A1A1A] text-text-primary-light dark:text-text-primary-dark">
           <div className="max-h-[90%] overflow-y-scroll">
             <AddressHeader
               iconClickEvent={handBurgerMenuClickHandler}

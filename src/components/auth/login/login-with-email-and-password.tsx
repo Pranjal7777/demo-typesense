@@ -197,7 +197,7 @@ const LoginWithEmailAndPassword: React.FC = () => {
           localStorage.setItem('auth_email', formData?.email);
 
           toast.info('Redirecting to SignUp page', {
-            duration: 3500,
+            duration: 3000,
             onAutoClose: () => {
               router.push(`${SIGN_UP_PAGE}?step=2`);
             },
@@ -216,6 +216,7 @@ const LoginWithEmailAndPassword: React.FC = () => {
       setFormData({ email: email });
       // localStorage.removeItem('auth_email');
     }
+    localStorage.removeItem('email');
   },[]);
 
   const handleSignUpClick = useCallback(() => {

@@ -33,6 +33,7 @@ export type HeroSectionProps = {
   mobileSearchBoxContainerClassName?: string;
   showBackArrowInSearchBox?: boolean;
   heroImageSrc?: string;
+  description?: string;
 };
 
 export type FormDataT = {
@@ -50,6 +51,7 @@ const HeroSection: FC<HeroSectionProps> = ({
   mobileSearchBoxContainerClassName,
   showBackArrowInSearchBox = false,
   heroImageSrc,
+  description,
 }) => {
   const maxThreshold = useNewWindowScroll(400);
   const minThreshold = useNewWindowScroll(180);
@@ -120,9 +122,9 @@ const HeroSection: FC<HeroSectionProps> = ({
         <p
           className={`z-[0] mobile:mt-2 mobile:mb-7 mobile:text-[10px] mobile:leading-4 mobile:font-medium mobile:text-center mobile:order-2 text-text-secondary-light dark:text-text-primary-dark text-base font-medium text-secondary transition-all duration-700 ease-in mobile:px-4 ${
             stickyHeaderWithSearchBox && 'hidden'
-          } ${minThreshold ? 'hidden' : ''}`}
+          } ${minThreshold ? 'hidden' : ''}`} 
         >
-          {heroSection.popularSearch}
+          {description || heroSection.popularSearch}
         </p>
       </div>
     </div>

@@ -110,6 +110,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   const { myLocation } = useAppSelector((state: RootState) => state.auth);
   const { data: filterParameters, error: filterParametersError } = productsApi.useGetFilterParametersQuery();
   const theme = useTheme();
+  console.log(categoriesBannerData, 'mir categoriesBannerData');
 
   const router = useRouter();
 
@@ -498,6 +499,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
         myLocationFromServer={myLocationFromServer}
         categories={categories}
         heroImageSrc={categoriesBannerData?.webBanner || IMAGES.PRIMARY_BANNER}
+        description={categoriesBannerData?.description || ''}
       >
         {/* header with image and search box */}
         {/* Section:- What are you looking for? */}
@@ -573,11 +575,12 @@ const Categories: NextPage<CategoriesPageProps> = function ({
               )}
               <div className=" w-full pt-9 sm:py-8 lg:py-12 flex flex-col items-center justify-center">
                 <div
+                style={{zIndex: 1}}
                   className={`w-full ${
                     minThreshold
                       ? `fixed ${
                           threshold < 700 ? 'top-[175px]' : 'top-[145px]'
-                        } left-0 right-0 z-auto bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-5 mx-auto max-w-[1440px]`
+                        } left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-5 mx-auto max-w-[1440px]`
                       : ''
                   }`}
                 >

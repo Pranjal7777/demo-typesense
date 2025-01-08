@@ -186,7 +186,7 @@ const HomePage: FC<HomeProps> = ({
     isError: isErrorBannersAndRecommendedProducts,
     error: errorBannersAndRecommendedProducts,
     isFetching: isFetchingBannersAndRecommendedProducts,
-    // refetch,
+    refetch: refetchBannersAndRecommendedProducts,
   } = productsApi.useGetAllBannersAndProductsQuery({
     page: bannersAndRecommendedProductsPageCount,
     latitude: myLocation?.latitude,
@@ -194,6 +194,9 @@ const HomePage: FC<HomeProps> = ({
     country: myLocation?.country,
   });
   const [recommendedProducts, setRecommendedProducts] = useState<Product[]>([]);
+  useEffect(()=>{
+    refetchBannersAndRecommendedProducts();
+  },[router.asPath, refetchBannersAndRecommendedProducts]);
   useEffect(() => {
     if (bannersAndRecommendedProducts?.result) {
       if (bannersAndRecommendedProductsPageCount === 1){
@@ -229,6 +232,12 @@ const HomePage: FC<HomeProps> = ({
       router.push('/productList');
     }
   };  
+
+  const onLikeClick = (assetId: string) => {
+    // setRecommendedProducts(prevProducts => prevProducts.map(product => product._id === assetId ? { ...product, isLiked: !product.isLiked } : product)); 
+    console.log(assetId, recommendedProducts, 'mir assetId');
+    refetchBannersAndRecommendedProducts();
+  };
   
   return (
     <>
@@ -343,7 +352,7 @@ const HomePage: FC<HomeProps> = ({
   
                 isErrorBannersAndRecommendedProducts ? null : (bannersAndRecommendedProducts?.result !== undefined && bannersAndRecommendedProducts?.Totalcount !== 0 ) ? ( // <h2>{convertRTKQueryErrorToString(errorBannersAndRecommendedProducts)}</h2>
                   recommendedProducts.map((product, index) => (
-                    <ProductCard showLikeIcon={true} key={index} product={product} />
+                    <ProductCard showLikeIcon={true} key={index} product={product} onLikeClick={onLikeClick}/>
                   ))
                 ) : null
               }

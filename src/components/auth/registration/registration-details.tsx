@@ -160,12 +160,22 @@ const RegistrationDetails: React.FC = () => {
       if (/[^a-zA-Z]/.test(value)) {
         return;
       }
+      if(value.trim().length > 30){
+        return;
+      }
     }
     if (name in errorState) {
-      setErrorState((prevState) => ({
-        ...prevState,
-        [name]: value.trim() == '' ? `${name == 'phoneNumber' ? 'Phone Number' : name} is missing` : '',
-      }));
+      if(name == 'firstName' || name == 'lastName'){
+        setErrorState((prevState) => ({
+          ...prevState,
+          [name]: value.trim().length < 3  ? `${name == 'firstName' ? 'First Name' : 'Last Name'} should be at least 3 characters` : '',
+        }));
+      } else {
+        setErrorState((prevState) => ({
+          ...prevState,
+          [name]: value.trim() == '' ? `${name == 'phoneNumber' ? 'Phone Number' : name} is missing` : '',
+        }));
+      }
     }
     setIndividualData({ ...individualData, [name]: value, countryCode });
   };
@@ -180,9 +190,19 @@ const RegistrationDetails: React.FC = () => {
       if (/[^a-zA-Z]/.test(value)) {
         return;
       }
+      if(value.trim().length > 30){
+        return;
+      }
     }
     if (name in errorState) {
-      setErrorState((prevState) => ({ ...prevState, [name]: value.trim() == '' ? `${name} is missing` : '' }));
+      if(name == 'firstName' || name == 'lastName'){
+        setErrorState((prevState) => ({
+          ...prevState,
+          [name]: value.trim().length < 3  ? `${name == 'firstName' ? 'First Name' : 'Last Name'} should be at least 3 characters` : '',
+        }));
+      } else {
+        setErrorState((prevState) => ({ ...prevState, [name]: value.trim() == '' ? `${name} is missing` : '' }));
+      }
     }
     setCompanyData({ ...companyData, [name]: value, countryCode });
   };
@@ -640,7 +660,7 @@ const RegistrationDetails: React.FC = () => {
                 placeholder="Enter your First Name"
                 required={true}
                 label={CompleteSignUp.firstNamePlaceholder}
-                error={errorState.firstName && 'First Name is missing'}
+                error={errorState.firstName}
                 type="text"
                 name="firstName"
                 value={individualData.firstName}
@@ -651,7 +671,7 @@ const RegistrationDetails: React.FC = () => {
                 placeholder="Enter your Last Name"
                 required={true}
                 label={CompleteSignUp.lastNamePlaceholder}
-                error={errorState.lastName && 'Last Name is missing'}
+                error={errorState.lastName}
                 type="text"
                 name="lastName"
                 value={individualData.lastName}
@@ -716,7 +736,7 @@ const RegistrationDetails: React.FC = () => {
                 placeholder="Enter your First Name"
                 required={true}
                 label={CompleteSignUp.companyOptionFirstNamePlaceholder}
-                error={errorState.firstName && 'First Name is missing'}
+                error={errorState.firstName}
                 type="text"
                 name="firstName"
                 value={companyData.firstName}
@@ -727,7 +747,7 @@ const RegistrationDetails: React.FC = () => {
                 placeholder="Enter your Last Name"
                 required={true}
                 label={CompleteSignUp.companyOptionLastNamePlaceholder}
-                error={errorState.lastName && 'Last Name is missing'}
+                error={errorState.lastName}
                 type="text"
                 name="lastName"
                 value={companyData.lastName}

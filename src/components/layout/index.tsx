@@ -63,6 +63,7 @@ const Layout: FC<Props> = ({
   mobileHeaderContainerClassName,
   showBackArrowInSearchBox = false,
   heroImageSrc,
+  description,
 }) => {
   const { locale } = useRouter();
   const { token, myLocation, ipAddress } = useAppSelector((state: RootState) => state.auth);
@@ -210,6 +211,7 @@ const Layout: FC<Props> = ({
         {
           !excludeHeroSection && (
             <HeroSection
+              description={description}
               heroImageSrc={heroImageSrc}         
               mobileSearchBoxContainerClassName={appClsx(mobileSearchBoxContainerClassName)}
               showBackArrowInSearchBox={showBackArrowInSearchBox}

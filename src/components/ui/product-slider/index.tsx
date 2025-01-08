@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store';
 import FullScreenSpinner from '../full-screen-spinner';
 import { toast } from 'sonner';
+import { StickyHeaderDetails } from '@/containers/pdp';
 // import { setLikeCount, toggleLike } from '@/store/slices/product-detaill-slice';
 
 export type Props = {
@@ -21,11 +22,12 @@ export type Props = {
   isProductLiked: boolean;
   setTotalLikeCount:React.Dispatch<React.SetStateAction<number>>;
   productCondition?: string;
-  setStickyHeaderDetails: React.Dispatch<React.SetStateAction<any>>;
-  stickyHeaderDetails: any;  
+  setStickyHeaderDetails: React.Dispatch<React.SetStateAction<StickyHeaderDetails>>;
+  stickyHeaderDetails: StickyHeaderDetails;  
+  setActiveProductImage: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shareTitle, isProductLiked, setTotalLikeCount, productCondition, setStickyHeaderDetails, stickyHeaderDetails }) => {
+const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shareTitle, isProductLiked, setTotalLikeCount, productCondition, setStickyHeaderDetails, stickyHeaderDetails, setActiveProductImage }) => {
   const route = useRouter();
   const { id } = route.query;
   const [likeAndDislikeProduct, { isLoading: isLikeAndDislikeLoading }] = productsApi.useLikeAndDislikeProductMutation();
@@ -50,6 +52,10 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
       return newIndex;
     });
   };
+
+  useEffect(() => {
+    setActiveProductImage(imagesArray[currentImageIndex].url);
+  }, [currentImageIndex, setActiveProductImage]);
 
   const btnPressNext = () => {
     setCurrentImageIndex((prevIndex) => {
@@ -166,36 +172,36 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
 
   useEffect(() => {
     const updatePosition = () => {
-      if (imageElementRef.current) {
-        const rect = imageElementRef.current.getBoundingClientRect();
+      if (!imageElementRef.current || !shareIconRef.current) return;
 
-        if (rect.top < 145) {
-          console.log(rect.top, imagesArray[currentImageIndex].url, 'mir for imageElementRef');
-          // if(! stickyHeaderDetails?.activeImageSrc) {
-          console.log('mirchul imageElementRef', imagesArray[currentImageIndex]?.url);
-          setStickyHeaderDetails({ ...stickyHeaderDetails, activeImageSrc: imagesArray[currentImageIndex]?.url });
-          // }
+      const imageRect = imageElementRef.current.getBoundingClientRect();
+      const shareIconRect = shareIconRef.current.getBoundingClientRect();
+
+      setStickyHeaderDetails((prevDetails) => {
+        let newDetails = { ...prevDetails };
+
+        // Set showProductImage to true when the imageElement is either scrolled past 145px from the top or completely out of viewport
+        if (imageRect.top <= 145 || imageRect.bottom < 0) {
+          newDetails.showProductImage = true;
         } else {
-          // if (stickyHeaderDetails?.activeImageSrc) {
-          setStickyHeaderDetails({ ...stickyHeaderDetails, activeImageSrc: null });
-          // }
+          newDetails.showProductImage = false;
         }
-      }
 
-      if (shareIconRef.current) {
-        const rect = shareIconRef.current.getBoundingClientRect();
-        if (rect.top < 145) {
-          if (!stickyHeaderDetails?.showShareIcon) {
-            setStickyHeaderDetails?.({ ...stickyHeaderDetails, showShareIcon: true });
-          }
+        if (shareIconRect.top <= 145) {
+          newDetails.showShareIcon = true;
         } else {
-          console.log('inelse', stickyHeaderDetails?.showShareIcon);
-
-          // if (stickyHeaderDetails?.showShareIcon) {
-          setStickyHeaderDetails?.({ ...stickyHeaderDetails, showShareIcon: false });
-          // }
+          newDetails.showShareIcon = false;
         }
-      }
+
+        // Update state only if there's a change
+        if (
+          newDetails.showProductImage !== prevDetails.showProductImage ||
+          newDetails.showShareIcon !== prevDetails.showShareIcon
+        ) {
+          return newDetails;
+        }
+        return prevDetails;
+      });
     };
 
     updatePosition(); // Initial update when component mounts

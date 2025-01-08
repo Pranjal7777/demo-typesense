@@ -1,7 +1,7 @@
 import { useTheme } from '@/hooks/theme';
 import ChatIcon from '../../../../public/assets/svg/chat-icon';
 import Button from '../button';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import 'isomtrik-quickchat';
 import 'isomtrik-quickchat/css';
 import { initializeChat } from 'isomtrik-quickchat/utils';
@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 import { ChatUser } from '@/store/types/chat-sdk-type';
 import { ISOMETRIK_CHAT_CONFIG, STATIC_IMAGE_URL } from '@/config';
 import FullScreenSpinner from '../full-screen-spinner';
+import { StickyHeaderDetails } from '@/containers/pdp';
 type PdpCtaProps = {
   firstButtonText: string;
   secondButtonText?: string;
@@ -20,6 +21,8 @@ type PdpCtaProps = {
   handleFirstButtonClick?: () => void;
   isFirstButtonLoading?: boolean;
   apiData?: any;
+  setStickyHeaderDetails?: React.Dispatch<React.SetStateAction<StickyHeaderDetails>>;
+  stickyHeaderDetails?: StickyHeaderDetails;
 };
 const PdpCta: React.FC<PdpCtaProps> = ({
   isSold,
@@ -29,6 +32,8 @@ const PdpCta: React.FC<PdpCtaProps> = ({
   isFirstButtonLoading,
   handleFirstButtonClick,
   apiData,
+  setStickyHeaderDetails,
+  stickyHeaderDetails
 }) => {
   const theme = useTheme();
   const router = useRouter();
@@ -164,8 +169,46 @@ const PdpCta: React.FC<PdpCtaProps> = ({
     }
   };
 
+
+  const buttonsRef = useRef<HTMLDivElement>(null);
+
+
+      useEffect(() => {
+        const updatePosition = () => {
+          if (!buttonsRef.current) return;
+
+          const buttonsRect = buttonsRef.current.getBoundingClientRect();
+
+          setStickyHeaderDetails?.((prevDetails) => {
+            let newDetails = { ...prevDetails };
+
+            // Set showProductImage to true when the imageElement is either scrolled past 145px from the top or completely out of viewport
+            if (buttonsRect.top <= 235 || buttonsRect.bottom < 0) {
+              newDetails.showButtons = true;
+            } else {
+              newDetails.showButtons = false;
+            }
+
+            // Update state only if there's a change
+            if (
+              newDetails.showButtons !== prevDetails.showButtons
+            ) {
+              return newDetails;
+            }
+            return prevDetails;
+          });
+        };
+
+        updatePosition(); // Initial update when component mounts
+        window.addEventListener('scroll', updatePosition);
+
+        return () => {
+          window.removeEventListener('scroll', updatePosition);
+        };
+      }, []);
+
   return (
-    <div className={`flex w-full gap-2 ${isSold ? 'mt-0' : 'mt-5'} justify-around`}>
+    <div className={`flex w-full gap-2 ${isSold ? 'mt-0' : 'mt-5'} justify-around`} ref={buttonsRef}>
       {!isSold ? (
         <>
           <Button

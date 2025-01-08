@@ -20,6 +20,7 @@ export type Props = {
   shareURL: string;
   shareTitle?: string;
   isProductLiked: boolean;
+  setIsLiked: React.Dispatch<React.SetStateAction<boolean>>;
   setTotalLikeCount:React.Dispatch<React.SetStateAction<number>>;
   productCondition?: string;
   setStickyHeaderDetails: React.Dispatch<React.SetStateAction<StickyHeaderDetails>>;
@@ -28,7 +29,7 @@ export type Props = {
   assetId?: string;
 };
 
-const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shareTitle, isProductLiked, setTotalLikeCount, productCondition, setStickyHeaderDetails, stickyHeaderDetails, setActiveProductImage, assetId }) => {
+const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shareTitle, isProductLiked, setTotalLikeCount, productCondition, setStickyHeaderDetails, stickyHeaderDetails, setActiveProductImage, assetId, setIsLiked }) => {
 
 
 // const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shareTitle, isProductLiked, setTotalLikeCount, productCondition, assetId }) => {
@@ -46,7 +47,7 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
   const router = useRouter();
   const isLoggedIn = getCookie('isUserAuth');
   const [showVideo, setShowVideo] = useState(false);
-  const [isLiked, setIsLiked] = useState(isProductLiked)
+  // const [isLiked, setIsLiked] = useState(isProductLiked)
   
   // Handlers for next and previous buttons
   const btnPressPrev = () => {
@@ -135,7 +136,7 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
   const handleLike = async () => {
     if (isLoggedIn) {
       try {
-        const newLikeState = !isLiked;
+        const newLikeState = !isProductLiked;
         // if (typeof userID === 'string' && typeof id === 'string') {
           const userId: string = userID || '';
           // const assetId: string = assetId || '';
@@ -304,7 +305,7 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
                 }
               }}
             >
-              <HartSvg color="#ff0000" height="20" width="20" isFilled={isLiked} />
+              <HartSvg color="#ff0000" height="20" width="20" isFilled={isProductLiked} />
             </button>
           </div>
 

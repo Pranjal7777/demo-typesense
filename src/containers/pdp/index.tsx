@@ -36,6 +36,7 @@ import ChatIcon from '../../../public/assets/svg/chat-icon';
 import Button from '@/components/ui/button';
 import { productsApi } from '@/store/api-slices/products-api';
 import showToast from '@/helper/show-toaster';
+import FullScreenSpinner from '@/components/ui/full-screen-spinner';
 export type filteredProducts = {
   userName: string;
   timeStamp: string;
@@ -229,10 +230,21 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
     return src;
   };
 
-
-  console.log(stickyHeaderDetails, 'mir stickyHeaderDetails');
-  
-  
+  const handleShareClick = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: prodTitle,
+          text: 'Product from Kwibal',
+          url: shareLink,
+        });
+      } catch (error) {
+        console.error('Error sharing:', error);
+      }
+    } else {
+      alert('Sharing not supported.');
+    }
+  };
 
   return (
     <Layout
@@ -244,7 +256,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
       showBackArrowInSearchBox={true}
     >
       {(stickyHeaderDetails?.showProductImage || stickyHeaderDetails?.showShareIcon) && (
-        <div className="fixed flex justify-between items-center h-[80px] top-[145px] left-0 right-0 z-30 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-5 mx-auto max-w-[1440px]">
+        <div style={{zIndex: 1}} className="hidden  fixed md:flex justify-between items-center h-[80px]  top-[145px] left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-5 mx-auto max-w-[1440px]">
           <div className="flex gap-4">
             {stickyHeaderDetails.showProductImage && (
               <ImageContainer
@@ -266,9 +278,11 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
               </div>
               {stickyHeaderDetails.showShareIcon && (
                 <ShareIcon
+                  onClick={handleShareClick}
                   height={28}
                   width={28}
                   primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
+                  className="cursor-pointer"
                 />
               )}
             </div>
@@ -280,7 +294,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
                 onClick={handleLike}
                 height="24"
                 width="24"
-                className="hover:scale-105"
+                className="hover:scale-105 cursor-pointer"
                 borderColor={`${theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}`}
                 color="var(--heart-fill-color)"
                 isFilled={isLiked}
@@ -333,6 +347,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
               shareURL={shareLink}
               shareTitle={prodTitle}
               isProductLiked={isLiked}
+              setIsLiked={setIsLiked}
               productCondition={apidata.assetCondition}
             />
             <div className="lg:mt-5 md:mt-3 sm:mt-2 flex items-end justify-between mobile:hidden"></div>
@@ -436,6 +451,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
       <div className="custom-container mobile:px-4">
         <InfoSection />
       </div>
+      {isLikeAndDislikeLoading && <FullScreenSpinner/>}
     </Layout>
   );
 };

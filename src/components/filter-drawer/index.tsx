@@ -759,11 +759,11 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
         ></div>
 
         <div
-          className={`z-50 fixed w-full h-full right-0 top-0 bottom-0 overflow-y-scroll dark:bg-bg-nonary-dark bg-bg-secondary-light text-text-primary-light dark:text-text-secondary-light lg:max-w-[35%] max-w-full transition-all ease-in duration-200  ${
+          className={`z-50 fixed w-full h-full max-w-[460px] right-0 top-0 bottom-0 overflow-y-scroll dark:bg-bg-nonary-dark bg-bg-secondary-light text-text-primary-light dark:text-text-secondary-light lg:max-w-[35%]  transition-all ease-in duration-200  ${
             filtersDrawer ? 'w-full max-w-[460px] opacity-100 inline-block' : 'w-0 opacity-0 hidden'
           } `}
         >
-          <div className="relative">
+          <div className="relative h-screen flex flex-col">
             <div className="w-full flex md:flex-row items-center justify-between font-semibold text-2xl sticky top-0 flex-row-reverse z-10 px-5 dark:bg-[#1A1A1A] bg-bg-secondary-light md:py-6 py-5 border-b border-[#DBDBDB] dark:border-[#202020]">
               <TextWrapper className="md:text-xl md:leading-8 md:font-semibold md:text-left w-full text-center text-lg leading-7">
                 Filters
@@ -809,7 +809,7 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
                 // loader={gumletLoader}
               />
             </div>
-            <div className="pb-5 lg:pb-[120px] pt-2 p-6 sticky top-0 w-full dark:bg-[#1A1A1A] bg-bg-secondary-light">
+            <div className=" flex-1 overflow-y-scroll pt-2 p-6 sticky top-0 w-full dark:bg-[#1A1A1A] bg-bg-secondary-light">
               {/* dyanamic filter section */}
               {filterParameters?.data.filters.map((filter, index) => (
                 <React.Fragment key={index}>{renderFilterSection(filter)}</React.Fragment>

@@ -25,7 +25,7 @@ import { RootState } from '@/store/store';
 import SearchIcon from '../../../../public/assets/svg/search-icon';
 import LocationSvg from '../../../../public/assets/svg/location';
 import UpArrowRoundedEdge from '../../../../public/assets/svg/up-arrow-rounded-edge';
-import { routeToCategories, routeSellerProfile } from '@/store/utils/route-helper';
+import { routeToCategories, routeSellerProfile, routeToSearch } from '@/store/utils/route-helper';
 import { Hits, InstantSearch, Configure, connectStateResults } from 'react-instantsearch-dom';
 import SearchBox from '@/components/typesense/SearchBox';
 import SearchResults from '@/components/typesense/SearchResults';
@@ -170,12 +170,13 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
   };
 
   const categoryRoute = async (categoryId: string, search: string, hit?: Hit) => {
-    const url = routeToCategories({ category: { id: categoryId, name: hit?.mainCategory || '' } });
+    // const url = routeToCategories({ category: { id: categoryId, name: hit?.mainCategory || '' } });
+    const searchUrl = routeToSearch({ category: { id: categoryId, name: search || '' } });
     router.push({
-      pathname: url,
-      query: {
-        search: search || undefined,
-      },
+      pathname: searchUrl,
+      // query: {
+      //   search: search || undefined,
+      // },
     });
   };
 
@@ -795,7 +796,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
 
             {isUserLogin && isRecentSearchOpen === true && !formData.search ? (
               <div
-                className="absolute top-[48px] shadow-2xl bg-bg-secondary-light dark:bg-bg-secondary-dark left-0 right-0 rounded-b-md max-h-[263px] no-scrollbar"
+                className="absolute top-[48px] z-50 shadow-2xl bg-bg-secondary-light dark:bg-bg-secondary-dark left-0 right-0 rounded-b-md max-h-[263px] no-scrollbar"
                 style={{
                   overflowY: 'auto',
                   msOverflowStyle: 'none',
@@ -814,7 +815,9 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                     </div>
                   ) : (
                     <>
-                      <h3 className="text-sm pt-4 flex items-center px-3 font-semibold">Recent Searches</h3>
+                      <h3 className="text-sm pt-4 flex text-text-primary-light dark:text-text-primary-dark items-center px-3 font-semibold">
+                        Recent Searches
+                      </h3>
                       {selectedOption === 'Items' &&
                         recentSearchData?.data?.data?.map((search, index) => (
                           <div

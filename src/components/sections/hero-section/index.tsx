@@ -81,6 +81,9 @@ const HeroSection: FC<HeroSectionProps> = ({
     queryBy: selectedOption === 'Items' ? 'title.en,description' : 'first_name,last_name',
   });
 
+  console.log(searchClient , 'searchClient');
+  
+
   return (
     <div
       className={appClsx(

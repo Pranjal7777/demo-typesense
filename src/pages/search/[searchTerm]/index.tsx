@@ -92,7 +92,6 @@ export type CategoriesPageProps = {
   tokenFromServer: any;
   myLocationFromServer?: any;
   categories: ResponseGetAllGrandParentCategoriesPayload;
-  categoriesBanner: ResponseGetSubCategoriesByParentIdPayload;
 };
 
 // Define the option type
@@ -108,7 +107,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   tokenFromServer,
   myLocationFromServer,
   categories,
-  categoriesBanner: categoriesBannerData,
 }) {
   const { t } = useTranslation('categories');
   const aboutUs = t('page.aboutUs', { returnObjects: true }) as aboutUs;
@@ -123,9 +121,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   const categoryNameIdArray = Array.isArray(categoryNameId) ? categoryNameId : categoryNameId?.split('-');
   const id = categoryNameIdArray?.[categoryNameIdArray.length - 1];
   const categoryName = categoryNameIdArray?.slice(0, -1).join('-');
-
-  // const paramsArray = categoryNameId?.split('-');
-  // const id = paramsArray[paramsArray.length - 1];
 
   const searchParams = useSearchParams();
 
@@ -239,37 +234,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     }
     updateFilters(typesenseFilters);
   };
-
-//   const handleRemoveAllFilters = () => {
-//     Object.entries(selectedItemsFromFilterSection).forEach(([key, value]) => {
-//       const updatedFeaturedFilters = { ...selectedItemsFromFilterSection };
-//       if (key === 'category') {
-//         updatedFeaturedFilters.category = { title: '', _id: '' };
-//       } else if (key === 'address') {
-//         updatedFeaturedFilters.address = '';
-//         const { query } = router;
-//         delete query.latitude;
-//         delete query.longitude;
-//         delete query.address;
-//       } else {
-//         (updatedFeaturedFilters as any)[key] = '';
-//       }
-
-//       setSelectedItemsFromFilterSection(updatedFeaturedFilters);
-//       addFiltersToQuery(updatedFeaturedFilters);
-
-//       let typesenseFilters = transformFilters(updatedFeaturedFilters);
-//       if (!typesenseFilters?.address) {
-//         typesenseFilters.address = '';
-//       }
-//       if (!typesenseFilters?.type) {
-//         typesenseFilters.type = '';
-//       }
-//       updateFilters(typesenseFilters);
-//     });
-//   };
-
-
 
   const selectedItemsFromFiltersSectionList = () => {
     return Object.entries(selectedItemsFromFilterSection)
@@ -465,67 +429,9 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     const typesenseFilters = transformFilters(initialFilters);
     updateFilters(typesenseFilters);
   }, []);
-
-  const customStyles: StylesConfig<SortOption, false> = {
-    control: (provided) => ({
-      ...provided,
-      width: '100%',
-      outline: 'none',
-      border: theme.theme ? '1px solid #433934' : `1px solid var(--border-tertiary-light)`,
-      borderRadius: '0.775rem',
-      backgroundColor: theme.theme ? 'var(--bg-primary-dark)' : 'var(--bg-primary-light)',
-      fontSize: '14px',
-      color: theme.theme ? '#fff' : 'var(--text-primary-light)',
-      fontWeight: '400',
-      cursor: 'pointer',
-      transition: 'background-color 0.2s ease-in-out, border-color 0.2s ease-in-out',
-    }),
-    option: (provided, state) => ({
-      ...provided,
-      backgroundColor: state.isFocused
-        ? theme.theme
-          ? '#2D3748'
-          : '#EDF2F7'
-        : theme.theme
-        ? 'var(--bg-primary-dark)'
-        : '#FFF',
-      color: theme.theme ? '#fff' : 'var(--bg-primary-light)',
-      fontSize: '14px',
-      fontWeight: '400',
-      cursor: 'pointer',
-    }),
-    menu: (provided) => ({
-      ...provided,
-      backgroundColor: theme.theme ? 'var(--bg-primary-dark)' : '#fff',
-    }),
-    singleValue: (provided) => ({
-      ...provided,
-      color: theme.theme ? '#fff' : 'var(--bg-primary-light)',
-    }),
-    indicatorSeparator: () => ({
-      display: 'none',
-    }),
-    valueContainer: (provided) => ({
-      ...provided,
-      padding: '2px 0px 2px 8px',
-    }),
-    indicatorsContainer: (provided) => ({
-      ...provided,
-      padding: '0px 0px 0px 0px',
-    }),
-  };
-
+  
   return (
     <>
-      <CustomHeader
-        title={`Explore the best products from ${categoriesBannerData?.parentCategoryName} category in kwibal`}
-        description={`Explore the ${categoriesBannerData?.parentCategoryName} category on kwibal. Discover a wide range of products designed to meet your needs, from ${categoriesBannerData?.parentCategoryName} essentials to premium options.`}
-        image={
-          categoriesBannerData?.webBanner?.includes('http')
-            ? categoriesBannerData?.webBanner
-            : `${STATIC_IMAGE_URL}/${categoriesBannerData?.webBanner}`
-        }
-      />
       <FilterDrawer
         filtersDrawer={filtersDrawer}
         selectedItemsFromFilterSection={selectedItemsFromFilterSection}
@@ -539,12 +445,11 @@ const Categories: NextPage<CategoriesPageProps> = function ({
       />
 
       <Layout
-        excludeHeroSection={true}
         stickyHeader={true}
+        stickyHeroSection={true}
         tokenFromServer={tokenFromServer}
         myLocationFromServer={myLocationFromServer}
         categories={categories}
-        // heroImageSrc={categoriesBannerData?.webBanner || IMAGES.PRIMARY_BANNER}
       >
         {/* header with image and search box */}
         {/* Section:- What are you looking for? */}
@@ -557,71 +462,13 @@ const Categories: NextPage<CategoriesPageProps> = function ({
               <CategorySlider className="border-error" data={subCategories} />
             </Slider>
           )}
-
-          {/* {categoriesLogos.length > 0 && (
-            <Slider className={` border-error  ${hasActiveFilters() ? 'mt-[80px]' : 'mt-[40px]'}`}>
-              <SectionTitle className="mb-4 sm:mb-3">Popular brands</SectionTitle>
-              <BrandSlider data={categoriesLogos} />
-            </Slider>
-          )} */}
-
-          {/* subcategories brand section end  */}
-
-          {/* <Breadcrumb
-            isLinkDisable={true}
-            className="!pl-0 md:!pl-0 my-5"
-            steps={[{ name: 'Categories' }, { name: categoryName || '' }]}
-          ></Breadcrumb> */}
           {/* categories section starts */}
           <div className={`mobile:pb-9 w-full ${hasActiveFilters() ? 'mt-[80px]' : 'mt-[40px]'}`}>
             <div className="w-full ">
-              {allHighlightedProducts.length > 0 && (
-                <div className=" w-full flex flex-col items-center justify-center">
-                  <div className=" flex  w-full justify-between">
-                    <SectionTitle>Featured Products</SectionTitle>
-                  </div>
-                  {hasActiveFilters() && (
-                    <div className="border-2 boreder-error flex gap-10 items-center w-full flex-wrap mt-5 mobile:overflow-x-scroll h-8 md:h-4 border-none">
-                      <div className="flex gap-3 overflow-x-auto scrollbar-hide">
-                        {selectedItemsFromFiltersSectionList()}
-                      </div>
-                    </div>
-                  )}{' '}
-                  <div className={` ${hasActiveFilters() ? 'mt-[80px]' : 'mt-[40px]'}`}>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-x-3 gap-y-4 md:gap-x-2 md:gap-y-7">
-                      {isError ? (
-                        <h2>{convertRTKQueryErrorToString(error)}</h2>
-                      ) : highlightedProducts?.result !== undefined ? (
-                        allHighlightedProducts.map((product, index) => <ProductCard key={index} product={product} />)
-                      ) : null}
-                      {isFetching && (
-                        <>
-                          {Array.from({ length: 10 }).map((_, index) => (
-                            <Skeleton key={index} />
-                          ))}
-                        </>
-                      )}
-                    </div>
-
-                    <div className=" mt-7 w-full flex items-center justify-center">
-                      {highlightedProducts ? (
-                        <button
-                          className={`border-2 text-sm font-medium px-4 py-2 rounded dark:text-text-primary-dark
-                    ${allHighlightedProducts.length >= highlightedProducts?.Totalcount ? 'hidden' : ''}
-                    
-                    `}
-                          onClick={() => handleHighlightedProductsPageCountPageCount()}
-                        >
-                          View more
-                        </button>
-                      ) : null}
-                    </div>
-                  </div>
-                </div>
-              )}
               <div className=" w-full flex flex-col justify-center">
                 <div
-                  className={`w-full ${`fixed top-[69px] left-0 right-0 z-30 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-2 mx-auto max-w-[1440px]`}`}
+                  style={{ zIndex: 1 }}
+                  className={`w-full ${`fixed top-[130px] sm:top-[145px] left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-2 mx-auto max-w-[1440px]`}`}
                 >
                   <div
                     className={`flex  w-full justify-end filterselectContainer ${
@@ -636,41 +483,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                         </div>
                       </div>
                     )}
-                    {/* {hasActiveFilters() && (
-                      <div className="border-2 boreder-error flex gap-10 items-center w-full flex-wrap mt-5 mobile:overflow-x-scroll h-8 md:h-4 border-none mb-2">
-                        <div className="flex gap-3 overflow-x-auto scrollbar-hide">
-                          {selectedItemsFromFiltersSectionList()}
-                        </div>
-                      </div>
-                    )} */}
-                    {/* <div className="ml-auto mr-[24px] relative inline-flex items-center gap-2">
-                      <Select
-                        isSearchable={false}
-                        className="w-fit min-w-[140px]  mobile:text-sm text-[14px] overflow-ellipsis"
-                        onChange={(option) => {
-                          updateFilters({ sort: option?.value });
-                        }}
-                        autoFocus={false}
-                        options={[
-                          { value: 'newest', label: 'Newest First' },
-                          { value: 'oldest', label: 'Oldest First' },
-                          { value: 'price_asc', label: 'Low to High' },
-                          { value: 'price_desc', label: 'High to Low' },
-                        ]}
-                        defaultValue={{ value: 'newest', label: 'Newest First' }}
-                        formatOptionLabel={({ label }, { context }) => <span className="pl-2">{label}</span>}
-                        styles={customStyles}
-                        theme={(theme) => ({
-                          ...theme,
-                          borderRadius: 0,
-                          colors: {
-                            ...theme.colors,
-                            primary25: theme ? '#f1ecf9' : '#EDF2F7',
-                            primary: theme ? 'var(--brand-color)' : 'var(--brand-color-hover)',
-                          },
-                        })}
-                      />
-                    </div> */}
+          
                     <button
                       className=" md:w-[148px] mobile:min-w-[36px] md:min-w-[148px] h-11 text-text-primary-light dark:text-text-primary-dark md:border-2 items-center flex  cursor-pointer justify-end md:justify-center gap-1 rounded-[100px]"
                       onClick={handleFilterDrawer}
@@ -694,15 +507,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                       </div>
                     </button>
                   </div>
-                  {/* {hasActiveFilters() && (
-                    <div className="border-2 boreder-error flex gap-10 items-center w-full flex-wrap mt-5 mobile:overflow-x-scroll h-8 md:h-4 border-none mb-2">
-                      <div className="flex gap-3 overflow-x-auto scrollbar-hide">
-                        {selectedItemsFromFiltersSectionList()}
-                      </div>
-                    </div>
-                  )} */}
-                  {/* <p onClick={handleRemoveAllFilters} className="text-brand-color text-sm md:text-base md:font-medium cursor-pointer">Remove All</p> */}
-                </div>
+                   </div>
                 <div className={`mt-10 w-full mobile:mt-6`}>
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-x-3 gap-y-4 md:gap-x-2 md:gap-y-7">
                     {errorTypesense ? (
@@ -806,23 +611,13 @@ export async function getServerSideProps({
       fetch(`${STRAPI_BASE_API_URL}${STRAPI_CATEGORIES_PLP}?populate=deep`),
       GetAllSubCategoriesByCategoryId(accessToken, categoryId),
       CategoriesDataFromServer(accessToken),
-      fetch(`${BASE_API_URL}${AUTH_URL_V2}${GET_SUB_CATEGORIES_BY_ID_URL}/?parentId=${categoryId}&country=India`, {
-        method: 'GET',
-        headers: {
-          Authorization: `${accessToken}`,
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-      }),
     ];
     const listingApiReponses = await Promise.allSettled(promises);
 
     const response1 = listingApiReponses[0].status === 'fulfilled' && listingApiReponses[0].value;
     const response2 = listingApiReponses[1].status === 'fulfilled' && listingApiReponses[1].value;
     const categories = listingApiReponses[2].status === 'fulfilled' && listingApiReponses[2].value;
-    const categoriesBannerResponse = listingApiReponses[3].status === 'fulfilled' && listingApiReponses[3].value;
 
-    const categoriesBanner = await categoriesBannerResponse.json();
     const data = await response1.json();
     return {
       props: {
@@ -831,7 +626,6 @@ export async function getServerSideProps({
         subCategories: response2.data || [],
         tokenFromServer: tokenFromServer || null,
         categories,
-        categoriesBanner: categoriesBanner || null,
       },
     };
   } catch (error) {

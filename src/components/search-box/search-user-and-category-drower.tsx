@@ -13,7 +13,7 @@ import { RootState } from '@/store/store';
 import CloseIcon from '../../../public/assets/svg/close-icon';
 import SearchIcon from '../../../public/assets/svg/search-icon';
 import LocationSvg from '../../../public/assets/svg/location';
-import { routeSellerProfile, routeToCategories } from '@/store/utils/route-helper';
+import { routeSellerProfile, routeToCategories, routeToSearch } from '@/store/utils/route-helper';
 import keyDownHandler from '@/helper/key-down-handler';
 import { useRouter } from 'next/router';
 import { Configure } from 'react-instantsearch-dom';
@@ -131,6 +131,7 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
   //   handleRemoveLocationHelper();
   //   setIsLocationTextBoxFocused(false);
   // };
+
   const removeUserAndItem = () => {
     setFormData((prevState) => ({
       ...prevState,
@@ -162,12 +163,20 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
       search: search,
       resultDropdown: router?.pathname === '/categories/[id]' ? false : prevState.resultDropdown,
     }));
-    const url = routeToCategories({ category: { id: categoryId } });
-    const query = {
-        selectedCategory: hit?.mainCategory || '',
-        search: search || undefined,
-      };
-    router.push({ pathname: url, query });
+    // const url = routeToCategories({ category: { id: categoryId } });
+    // const searchUrl = routeToSearch({ category: { id: categoryId } });
+    const searchUrl = routeToSearch({ category: { id: categoryId, name: search || '' } });
+    router.push({
+      pathname: searchUrl,
+      // query: {
+      //   search: search || undefined,
+      // },
+    });
+    // const query = {
+    //     selectedCategory: hit?.mainCategory || '',
+    //     search: search || undefined,
+    //   };
+    // router.push({ pathname: url, query });
     setSearchItemAndUserDrower(!searchItemAndUserDrower);
   };
   const sellerProfileRoute = (userId: string) => {

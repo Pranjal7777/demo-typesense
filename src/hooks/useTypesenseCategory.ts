@@ -29,31 +29,95 @@ interface UseTypesenseCategoryProps {
   country: string;
 }
 
+// Define SEO-friendly filter names
+const FILTER_MAPPINGS = {
+  condition: {
+    new: 'New',
+    used: 'Used',
+    all: 'All'
+  },
+  type: {
+    'buy-now': 'Buy Now',
+    'make-offer': 'Make Offer',
+    trades: 'Trades',
+    all: 'All'
+  },
+  sort: {
+    'price-low': 'price_asc',
+    'price-high': 'price_desc',
+    newest: 'newest',
+    oldest: 'oldest'
+  }
+} as const;
+
 export const useTypesenseCategory = ({ categoryId, initialFilters, country }: UseTypesenseCategoryProps) => {
   const router = useRouter();
   const { myLocation } = useAppSelector((state: RootState) => state.auth);
   
-  // Initialize filters with URL parameters
+  // Convert SEO-friendly URL parameters to filter values
   const initializeFiltersFromURL = () => {
     const { query } = router;
     return {
-      type: query.type as string || '',
-      condition: query.condition as string || '',
-      price: query.price ? (() => {
-        const [min, max] = (query.price as string).replace(/\$/g, '').split(' - ');
-        return { min: parseInt(min), max: parseInt(max) };
-      })() : undefined,
-      distance: query.distance !== 'Country' && query.distance !== 'World' ? query.distance as string : query.distance,
+      type: query.type ? convertUrlParamToFilter('type', query.type as string) : '',
+      condition: query.condition ? convertUrlParamToFilter('condition', query.condition as string) : '',
+      price: query.price ? parsePriceRange(query.price as string) : undefined,
+      distance: query.distance !== 'country' && query.distance !== 'world' 
+        ? query.distance as string 
+        : capitalizeFirstLetter(query.distance as string),
       address: query.address as string || '',
       latitude: query.latitude as string || myLocation?.latitude || '',
       longitude: query.longitude as string || myLocation?.longitude || '',
-      country:query.country || 'India',
-      category: query.categoryId ? {
+      country: query.country || 'India',
+      category: query.category ? {
         _id: query.categoryId as string,
-        title: query.categoryTitle as string
+        title: decodeURIComponent(query.category as string)
       } : undefined,
-      // ... other filters
+      sort: query.sort ? convertUrlParamToFilter('sort', query.sort as string) : 'newest'
     };
+  };
+
+  // Helper functions for URL parameter conversion
+  const convertUrlParamToFilter = (filterType: keyof typeof FILTER_MAPPINGS, urlParam: string): string => {
+    const mapping = FILTER_MAPPINGS[filterType];
+    return mapping[urlParam as keyof typeof mapping] || '';
+  };
+
+  const convertFilterToUrlParam = (filterType: keyof typeof FILTER_MAPPINGS, filterValue: string): string => {
+    const mapping = FILTER_MAPPINGS[filterType];
+    return Object.entries(mapping).find(([_, value]) => value === filterValue)?.[0] || '';
+  };
+
+  const parsePriceRange = (priceString: string): { min: number; max: number } | undefined => {
+    const [min, max] = priceString.split('-').map(num => parseInt(num.trim()));
+    return min && max ? { min, max } : undefined;
+  };
+
+  const capitalizeFirstLetter = (string: string): string => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
+  // Update URL with SEO-friendly parameters
+  const updateUrlWithFilters = (newFilters: CategoryFilters) => {
+    const seoFriendlyParams = {
+      ...router.query,
+      type: newFilters.type ? convertFilterToUrlParam('type', newFilters.type) : undefined,
+      condition: newFilters.condition ? convertFilterToUrlParam('condition', newFilters.condition) : undefined,
+      price: newFilters.price ? `${newFilters.price.min}-${newFilters.price.max}` : undefined,
+      distance: newFilters.distance?.toLowerCase(),
+      address: newFilters.address || undefined,
+      category: newFilters.category?.title ? encodeURIComponent(newFilters.category.title) : undefined,
+      sort: newFilters.sort ? convertFilterToUrlParam('sort', newFilters.sort) : undefined
+    };
+
+    // Remove undefined values
+    Object.keys(seoFriendlyParams).forEach(key => 
+      seoFriendlyParams[key] === undefined && delete seoFriendlyParams[key]
+    );
+
+    router.push({
+      pathname: router.pathname,
+      query: seoFriendlyParams
+    }, undefined, { shallow: true });
   };
 
   // Initialize state with URL parameters
@@ -75,33 +139,30 @@ export const useTypesenseCategory = ({ categoryId, initialFilters, country }: Us
   }, [router.query]);
 
   const buildSearchParams = () => {
-    const { query } = router;
-    let filterBy = `categories.id:=${categoryId} && statusCode:=1 && sold:=false && expiredTs:>=${currentTime} && country:=${query.country || 'India'}`;
-
+    let filterBy = `categories.id:=${categoryId} && statusCode:=1 && sold:=false && expiredTs:>=${currentTime} && country:=${filters.country || 'India'}`;
 
     if (filters.price) {
       filterBy += ` && price:>=${filters.price.min} && price:<=${filters.price.max}`;
     }
-    if (filters.condition) {
-      const condition = filters.condition.toLowerCase();
-      if (condition !== 'all') {
-        const conditionValue = condition === 'new' ? 'New' : 'Used';
-        filterBy += ` && assetCondition:=${conditionValue}`;
-      }
+
+    if (filters.condition && filters.condition !== 'All') {
+      filterBy += ` && assetCondition:=${filters.condition}`;
     }
+
     if (filters.type && filters.type !== 'All') {
-      const type =
-        filters.type === 'Buy Now'
-          ? 'isNegotiable:=false'
-          : filters.type === 'Make Offer'
-          ? 'isNegotiable:=true'
-          : filters.type === 'Trades'
-          ? 'availableForExchange:=true'
-          : '';
-      if (type) {
-        filterBy += ` && ${type}`;
+      switch (filters.type) {
+        case 'Buy Now':
+          filterBy += ' && isNegotiable:=false';
+          break;
+        case 'Make Offer':
+          filterBy += ' && isNegotiable:=true';
+          break;
+        case 'Trades':
+          filterBy += ' && availableForExchange:=true';
+          break;
       }
     }
+
     if (filters.category?._id) {
       filterBy += ` && categories.id:=${filters.category._id}`;
     }
@@ -171,7 +232,9 @@ export const useTypesenseCategory = ({ categoryId, initialFilters, country }: Us
   };
 
   const updateFilters = (newFilters: Partial<CategoryFilters>) => {
-    setFilters(prev => ({ ...prev, ...newFilters }));
+    const updatedFilters = { ...filters, ...newFilters };
+    setFilters(updatedFilters);
+    updateUrlWithFilters(updatedFilters);
     setCurrentPage(1);
   };
 

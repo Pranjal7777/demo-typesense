@@ -29,6 +29,7 @@ import { BASE_API_URL, HIDE_SELLER_FLOW } from '@/config';
 import Placeholder from '@/containers/placeholder/placeholder';
 import { useAppSelector } from '@/store/utils/hooks';
 import { getFormattedRating } from '@/helper';
+import { useTypesenseSellerProducts } from '@/hooks/useTypesenseSellerProducts';
 
 type Props = {
   sellerProfileData: SellerProfileType;
@@ -58,23 +59,29 @@ const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
     debouncedSetSearchTerm(searchTerm);
   }, [searchTerm]);
 
-  const { data, isLoading, isFetching } = sellerProfileApi.useGetAllProductsQuery({
+  const {
+    products: typesenseProducts,
+    isLoading: isTypesenseLoading,
+    error: typesenseError,
+    hasMore: hasMoreProducts,
+    loadMore: loadMoreProducts,
+    updateSearch,
+  } = useTypesenseSellerProducts({
     accountId: accountId || '',
-    page,
-    search: debouncedSearchTerm,
-  });  
+    searchTerm: debouncedSearchTerm,
+  });
 
   useEffect(() => {
-    if (data) {
+    if (typesenseProducts) {
         if (page === 1) {
-          setProductList(data.result);
+          setProductList(typesenseProducts);
         } else {
-          setProductList((prevProducts) => [...prevProducts, ...data.result]);
+          setProductList((prevProducts) => [...prevProducts, ...typesenseProducts]);
         }
       setIsSearchLoading(false);
     }
     setIsSearchLoading(false);
-  }, [data]);
+  }, [typesenseProducts]);
 
   const handleViewMore = () => {
     setPage((prevPage) => prevPage + 1);
@@ -184,7 +191,7 @@ const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
                 <h3 className="md:text-[20px] text-text-secondary-dark dark:text-text-secondary-light  md:pl-[20px] font-semibold ">
                   {tab}
                 </h3>
-                {tab == 'Listing' && data && data?.result?.length > 0 && (
+                {tab === 'Listing' && (
                   <div className="search-box w-[290px] h-[44px] hidden md:flex gap-3 rounded-[4px] items-center px-[10px] bg-bg-septenary-light dark:bg-bg-secondary-dark ">
                     <SearchIcon className="h-[24px] w-[24px]" />
                     <input
@@ -200,20 +207,20 @@ const SellerProfile: FC<Props> = ({ sellerProfileData, followCountData }) => {
               {tab === 'Listing' ? (
                 <>
                   <div className="product md:pl-[20px] w-full grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-2 md:gap-4 lg:grid-cols-3 xl:grid-cols-4">
-                    {data && productList.length > 0
+                    {typesenseProducts && productList.length > 0
                       ? productList.map((product) => (
-                          <ProductCard showProfilePic={false} key={product._id} product={product} />
+                          <ProductCard showProfilePic={false} key={product._id+Math.random()} product={product} />
                         ))
                       : null}
-                    {(isLoading || isSearchLoading || isFetching) &&
+                    {(isTypesenseLoading || isSearchLoading ) &&
                       [...Array(6)].map((_, index) => <ProductCardSkeleton key={index} />)}
                   </div>
 
-                  {!isFetching && !isSearchLoading && productList.length < 1 ? (
+                  { !isSearchLoading && productList.length < 1 ? (
                     <Placeholder alt="no-products" title="No Product Found!" />
                   ) : null}
 
-                  {!isLoading && !isSearchLoading && data?.result && productList.length < data?.Totalcount ? (
+                  {!isTypesenseLoading && !isSearchLoading && typesenseProducts && productList.length < typesenseProducts?.length ? (
                     <div className="w-full flex justify-center items-center mt-6">
                       <button
                         className={'border-2 text-sm font-medium px-4 py-2 rounded dark:text-text-primary-dark'}

@@ -7,14 +7,18 @@ type RightArrowRoundedEdgeProps = {
   primaryColor?: string;
   secondaryColor?:string;
   className?: string;
+  bgColor?: string;
+  opacity?: number;
 } & SVGAttributes<SVGElement>;
 
 const SliderLeftArrowBtn: FC<RightArrowRoundedEdgeProps> = ({
   width = '52',
   height = '52',
-  primaryColor = '#D9D9D9',
+  primaryColor = 'white',
+  bgColor = 'black',
   secondaryColor = 'white',
   className,
+  opacity = 1,
   ...props
 }) => {
   return (
@@ -28,7 +32,7 @@ const SliderLeftArrowBtn: FC<RightArrowRoundedEdgeProps> = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <rect width="52" height="52" rx="26" transform="matrix(-1 0 0 1 52 0)" fill="black" fillOpacity="0.39" />
+      <rect width="52" height="52" rx="26" transform="matrix(-1 0 0 1 52 0)" fill={bgColor} fillOpacity={opacity} />
       <mask id="mask0_114_30670" maskUnits="userSpaceOnUse" x="8" y="8" width="36" height="36">
         <rect width="36" height="36" transform="matrix(-1 0 0 1 44 8)" fill={primaryColor} />
       </mask>

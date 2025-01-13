@@ -8,11 +8,10 @@ type HomeBlogCardProps = {
   image: string;
   question: string;
   description: string;
-  key: number;
   id: number;
 };
 
-const HomeBlogCard: FC<HomeBlogCardProps> = ({ key, image, description, question, id }) => {
+const HomeBlogCard: FC<HomeBlogCardProps> = ({ image, description, question, id }) => {
   const { theme } = useTheme();
   const router = useRouter();
 
@@ -30,7 +29,6 @@ const HomeBlogCard: FC<HomeBlogCardProps> = ({ key, image, description, question
       tabIndex={0}
       role="button"
       className="outline-none"
-      key={key}
     >
       <div className="relative rounded-xl max-w-[427px] mobile:max-w-full w-full max-h-[379px] sm:max-h-fit flex flex-col items-start justify-between mobile:items-center cursor-pointer">
         <div className=" max-h-[224px] mobile:h-[180px] h-[200px] w-full overflow-hidden rounded-b-xl">

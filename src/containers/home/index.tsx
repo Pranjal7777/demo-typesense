@@ -149,36 +149,6 @@ const HomePage: FC<HomeProps> = ({
     getBlogData();
   },[]);
   
-  const [highlightedProductsPageCount, sethighlightedProductsPageCount] = useState(1);
-  const {
-    data: highlightedProducts,
-    isError,
-    error,
-    isFetching,
-    // refetch: refetchHighlitedProduct,
-  } = productsApi.useGetAllHighlightedProductsQuery({
-    page: highlightedProductsPageCount,
-    latitude: myLocation?.latitude,
-    longitude: myLocation?.longitude,
-    country: myLocation?.country,
-  });
-
-  const [allHighlightedProducts, setAllHighlightedProducts] = useState<Product[]>([]);
-  useEffect(() => {
-    if(highlightedProducts){
-      if (highlightedProducts?.result) {
-        const existingIds = new Set(allHighlightedProducts.map(item => item._id));
-
-        const newUniqueItems = highlightedProducts.result.filter(item => !existingIds.has(item._id));
-        setAllHighlightedProducts((prevProducts:Product[]) => [...prevProducts, ...newUniqueItems]);
-      }
-    }
-  }, [highlightedProducts]);
-
-
-  const handleHighlightedProductsPageCountPageCount = () => {
-    sethighlightedProductsPageCount(highlightedProductsPageCount + 1);
-  };
 
   const [bannersAndRecommendedProductsPageCount, setBannersAndRecommendedProductsPageCount] = useState(1);
   const {
@@ -193,6 +163,7 @@ const HomePage: FC<HomeProps> = ({
     longitude: myLocation?.longitude,
     country: myLocation?.country,
   });
+
   const [recommendedProducts, setRecommendedProducts] = useState<Product[]>([]);
   useEffect(()=>{
     refetchBannersAndRecommendedProducts();
@@ -255,69 +226,7 @@ const HomePage: FC<HomeProps> = ({
           ) : (
             <WhatAreYouLookingForSkeleton />
           ))}
-          {/* <WhatAreYouLookingFor
-            allCategoriesIcon={IMAGES.CATEGORY_GRID_ICON}
-            categories={categories}
-          /> */}
-          {/* @todo sell button should be separate component */}
 
-          
-          {/* <span
-            className="cursor-pointer hover:scale-102 shadow-sm bg-brand-color text-text-secondary-light dark:text-text-secondary-light hidden mobile:flex items-center justify-center fixed w-[89px] h-[44px] bottom-3 right-4 rounded-full z-[1]"
-            onClick={sellPage}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                sellPage();
-              }
-            }}
-            tabIndex={0}
-            role="button"
-          >
-            <span className="text-3xl">+</span>
-            <span className="ml-1 text-base font-semibold mr-1 tracking-wide">Sell</span>
-          </span> */}
-
-
-          {/*Highlight Product Sections*/}
-          {!HIDE_SELLER_FLOW && <div className="mx-auto ">
-            {(!isFetching && highlightedProducts?.result==null) ? null:  <SectionTitle className="sm:mt-12 sm:mb-8 mt-8 mb-4 ">Featured Products</SectionTitle> }
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-x-3 gap-y-4 md:gap-x-4 md:gap-y-7">
-              {
-                isError ? (
-                  <h2>{convertRTKQueryErrorToString(error)}</h2>
-                ) : highlightedProducts?.result !== undefined ? (
-                  allHighlightedProducts.map((product, index) => <ProductCard showLikeIcon={true} key={index} product={product} />)
-                ) : null
-              }
-              {isFetching && (
-                <>
-                  {Array.from({ length: 10 }).map((_, index) => (
-                    <Skeleton key={index} />
-                  ))}
-                </>
-              )}
-            </div>
-
-            <div className=" mt-7 w-full flex items-center justify-center">
-              {/* @todo this button should be one component */}
-              {highlightedProducts ? (
-                <button
-                  className={`border-2 text-sm font-medium px-4 py-2 rounded dark:text-text-primary-dark
-              ${
-                (allHighlightedProducts.length >= highlightedProducts?.Totalcount ? 'hidden' : '')
-                }
-              
-              `}
-                  onClick={() => handleHighlightedProductsPageCountPageCount()}
-                >
-                  View more
-                </button>
-              ) : null}
-            </div>
-          </div>}
-          {/*Highlight Product Sections Ends*/}
           {/** Banner Section Starts */}
           <>
           {isErrorBannersAndRecommendedProducts ? (
@@ -503,8 +412,7 @@ const HomePage: FC<HomeProps> = ({
           {/* Comments Sections Starts Here*/}
           <TestimonialSection />
           {/* Comments Sections Ends Here*/}
-
-            
+           
           {/* For Dealers & Virtual Retailing */}
           {
             blogData ? blogData?.data?.attributes?.blog_data?.length > 1 && (
@@ -520,10 +428,11 @@ const HomePage: FC<HomeProps> = ({
                   {blogData?.data?.attributes?.blog_data?.length > 0
                     ? blogData?.data?.attributes?.blog_data
                       ?.slice(0, 3)
-                      ?.map((blog, key) => (
+                      ?.map((blog, index ) => (
                         <HomeBlogCard
+                          key={blog.id}
                           id = {blog.id}
-                          key={key}
+                          // keyProp={index}
                           description={blog?.blog_section[0]?.slug_paragraphs[0]?.paragraph?.slice(0, 120)}
                           question={blog?.title}
                           image={blog?.cover_image?.data?.attributes?.url}
@@ -534,31 +443,6 @@ const HomePage: FC<HomeProps> = ({
               </div>
             ) : null
           }
-          {/* //// {blogData?.data?.attributes?.blog_data?.length > 1 && (
-            <div className=" flex flex-col items-center justify-center sm:py-12 mobile:py-0 mobile:mt-9 mobile:mb-9">
-              <SectionTitle className=" mb-3 mobile:mb-2">{dealersSection.title}</SectionTitle>
-
-              <SectionDescription className="max-w-[877px] text-center mb-8 mobile:mb-4">
-                {dealersSection.description}
-              </SectionDescription>
-
-              <div className="w-full h-full flex mobile:flex-col gap-x-4 mobile:gap-y-5">
-                {/* max-w-[50%] mobile:max-h-[343px] mobile:h-[343px]  this three classes are diffrent in first one and  max-w-[50%] second two are [25%] [25%]*/}
-          {/* {blogData?.data?.attributes?.blog_data?.length > 0
-                  ? blogData?.data?.attributes?.blog_data
-                    ?.slice(0, 3)
-                    ?.map((blog, key) => (
-                      <HomeBlogCard
-                        key={key}
-                        description={blog?.blog_section[0]?.slug_paragraphs[0]?.paragraph?.slice(0, 120)}
-                        question={blog?.title}
-                        image={blog?.cover_image?.data?.attributes?.url}
-                      />
-                    ))
-                  : null}
-              </div>
-            </div>
-          )} */} 
           {/* For Dealers & Virtual Retailing */}
 
           {/* FAQ’s section starts */}

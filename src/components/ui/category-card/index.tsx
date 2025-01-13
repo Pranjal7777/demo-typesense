@@ -24,9 +24,9 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
             className="h-full w-full"
           />
         </div>
-        <h3 className="text-xs md:text-base mt-6 text-text-primary-color font-primary font-normal text-center max-w-[154.59px]">
+        <span className="text-xs md:text-base mt-6 text-text-primary-color font-primary font-normal text-center max-w-[154.59px]">
           {ImageName}
-        </h3>
+        </span>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import React, { useMemo } from 'react';
+import React, { useLayoutEffect, useMemo } from 'react';
 import Registration from '@/components/auth/registration/index';
 const RegisterWithEmailAndPassword = dynamic(
   () => import('@/components/auth/registration/register-with-email-and-password'),
@@ -17,11 +17,24 @@ import PrimaryLogo from '../../public/assets/svg/primary-logo';
 import DownArrowRoundedEdge from '../../public/assets/svg/down-arrow-rounded-edge';
 import CloseIcon from '../../public/assets/svg/close-icon';
 import { useTheme } from '@/hooks/theme';
+import cookie from 'cookie';
+import { getGuestTokenFromServer } from '@/helper/get-guest-token-from-server';
+import { GetServerSidePropsContext } from 'next';
+import { useDispatch } from 'react-redux';
+import { Token } from '@/store/types';
+import { setGuestTokenDispatch } from '@/store/slices/auth-slice';
 
-const Auth = () => {
+const Auth = ({token}:{token:Token}) => {
   const router = useRouter();
   const { step } = router.query;
   const {theme} = useTheme();
+  const dispatch = useDispatch();
+
+  useLayoutEffect(()=>{
+    if(token){
+      dispatch(setGuestTokenDispatch(token));
+    }
+  },[token])
 
   const organizationSchema: SchemaItem = {
     '@context': 'https://schema.org',
@@ -131,10 +144,22 @@ const Auth = () => {
 
 export default Auth;
 
-export async function getServerSideProps({ locale }: { locale: string }) {
+export async function getServerSideProps({ locale, req }: { locale: string, req: GetServerSidePropsContext['req'] }) {
+  let accessToken;
+  let token = null;
+  if (req.headers.cookie) {
+    const cookies = cookie.parse(req.headers.cookie || '');
+    accessToken = cookies.accessToken?.replace(/"/g, '') || null;
+  }
+  if (!accessToken) {
+    const guestToken = await getGuestTokenFromServer();
+    token = guestToken.data.token;
+  }
   return {
     props: {
       ...(await serverSideTranslations(locale, ['auth'])),
+      ...(token ? { token: token } : null),
     },
+
   };
 }

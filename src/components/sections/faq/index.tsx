@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import SectionTitle from '@/components/ui/section-title';
 import FaqCard from './faq-card';
 import { PROJECT_NAME } from '@/config';
@@ -50,4 +50,4 @@ const FAQ = () => {
   );
 };
 
-export default FAQ;
+export default memo(FAQ);

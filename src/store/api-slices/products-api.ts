@@ -35,40 +35,8 @@ export const productsApi = rootApi.injectEndpoints({
           latitude || DEFAULT_LOCATION.latitude
         }&long=${longitude || DEFAULT_LOCATION.longitude}&limit=10&country=${country || DEFAULT_LOCATION.countryName}`,
         method: 'GET',
-        // body:getGuestTokenConfig,
       }),
-      // Only have one cache entry because the arg always maps to one string
-      serializeQueryArgs: ({ endpointName }) => {
-        return endpointName;
-      },
-      // Always merge incoming data to the cache entry
-      // merge: (currentCache, newItems) => {
-      //   if (newItems?.result && newItems?.result !==null) {
-      //     currentCache.result.push(...newItems.result);
-      //   }
-      // },
-      // new merge condition start
-      // merge: (currentCache, newItems) => {
-      //   if (!Array.isArray(currentCache.result)) {
-      //     currentCache.result = [];
-      //   }
-
-      // // Filter out duplicates before merging
-      // const existingIds = new Set(currentCache.result.map(item => item._id));
-      // const newUniqueItems = newItems.result.filter(item => !existingIds.has(item._id));
-
-      //   currentCache.result.push(...newUniqueItems);
-      // },
-      //new merge condition end
-      // Refetch when the page arg changes
-      forceRefetch({ currentArg, previousArg }) {
-        // return currentArg !== previousArg;
-        return (
-          currentArg?.page !== previousArg?.page ||
-          currentArg?.latitude !== previousArg?.latitude ||
-          currentArg?.longitude !== previousArg?.longitude
-        );
-      },
+      keepUnusedDataFor: 0,
     }),
     getAllHighlightedProducts: builder.query<
       ResponseGetAllHighlightedProductsPayload,
@@ -80,42 +48,7 @@ export const productsApi = rootApi.injectEndpoints({
         }&long=${longitude || DEFAULT_LOCATION.longitude}&limit=10&country=${country || DEFAULT_LOCATION.country}`,
         // url: `${AUTH_URL_V2}/${GET_ALL_HIGHLIGHTED_PRODUCTS_URL}/?page=${page}&promoted=1&lat=21.1959&long=72.8302`,
         method: 'GET',
-        // body:getGuestTokenConfig,
       }),
-      // Only have one cache entry because the arg always maps to one string
-      serializeQueryArgs: ({ endpointName }) => {
-        return endpointName;
-      },
-      // Always merge incoming data to the cache entry
-      // merge: (currentCache, newItems) => {
-      //   if (newItems?.result && newItems?.result !==null) {
-      //     currentCache.result.push(...newItems.result);
-      //   }
-      // },
-
-      // new merge condition start
-      // merge: (currentCache, newItems) => {
-      //   if (!Array.isArray(currentCache.result)) {
-      //     currentCache.result = [];
-      //   }
-
-      //   // Filter out duplicates before merging
-      //   const existingIds = new Set(currentCache.result.map(item => item._id));
-      //   const newUniqueItems = newItems.result.filter(item => !existingIds.has(item._id));
-
-      //   currentCache.result.push(...newUniqueItems);
-      // },
-      // new merge condition end
-
-      // Refetch when the page arg changes
-      forceRefetch({ currentArg, previousArg }) {
-        // return currentArg !== previousArg; new implement by me
-        return (
-          currentArg?.page !== previousArg?.page ||
-          currentArg?.latitude !== previousArg?.latitude ||
-          currentArg?.longitude !== previousArg?.longitude
-        );
-      },
     }),
     searchProductsAndUsers: builder.query<
       ResponseSearchItemsPayload | ResponseSearchUsersPayload,

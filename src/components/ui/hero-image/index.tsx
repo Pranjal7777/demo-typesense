@@ -23,18 +23,18 @@ const HeroImage: FC<HeroImageProps> = ({ className, src }) => {
   const DEFAULT_IMAGE_URL = IMAGES.PRIMARY_BANNER;
 
   return (
-    <div className="reletive">
+    <div className="">
       <Image
         className={appClsx(
-          'brightness-50 relative mx-auto max-h-[524px] bg-cover bg-top bg-no-repeat flex items-center justify-center',
+          `brightness-50 relative mx-auto max-h-[524px] bg-cover bg-top bg-no-repeat flex items-center justify-center object-cover ${src ? "object-position-c" : ""}`,
           className
         )}
         // src={`${GUMLET_API_URL}/${src}`}
         src={imageSrc}
         alt="Header Image"
         layout="fill"
-        objectFit="cover"
-        objectPosition="50% 20%"
+        // objectFit="cover"
+        objectPosition={src ? "50% 20%" : undefined}
         quality={80}
         // placeholder="blur"
         // blurDataURL={`${GUMLET_API_URL}/${src}?q=10&blur=10`}

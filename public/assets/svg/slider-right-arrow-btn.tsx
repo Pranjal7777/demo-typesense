@@ -6,6 +6,8 @@ type SliderRightArrowBtnProps = {
   height?: string;
   primaryColor?: string;
   secondaryColor?: string;
+  bgColor?: string;
+  opacity?: number;
   className?: string;
 } & SVGAttributes<SVGElement>;
 
@@ -14,6 +16,8 @@ const SliderRightArrowBtn: FC<SliderRightArrowBtnProps> = ({
   height = '52',
   primaryColor = '#D9D9D9',
   secondaryColor = 'white',
+  bgColor = 'black',
+  opacity = 1,
   className,
   ...props
 }) => {
@@ -27,7 +31,7 @@ const SliderRightArrowBtn: FC<SliderRightArrowBtnProps> = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <rect width="52" height="52" rx="26" fill="black" fillOpacity="0.39" />
+      <rect width="52" height="52" rx="26" fill={bgColor} fillOpacity={opacity} />
       <mask id="mask0_114_30665" maskUnits="userSpaceOnUse" x="8" y="8" width="36" height="36">
         <rect x="8" y="8" width="36" height="36" fill={primaryColor} />
       </mask>

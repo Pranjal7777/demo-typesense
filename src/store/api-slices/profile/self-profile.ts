@@ -8,6 +8,7 @@ import {
   ResponseValidVerificationCodePayload,
 } from '@/store/types';
 import { ReasonResponse, SendVerificationForChangeNumber } from '@/store/types/profile-type';
+import { FollowersAndFollowingResponse } from '@/store/types/seller-profile-type';
 
 // import { ResponseAddress } from '@/store/types';
 
@@ -95,6 +96,22 @@ export const selfProfileApi = rootApi.injectEndpoints({
         url: `${GET_REASONS}=3`,
         method: 'GET',
       }),
+    }),
+    getFollowersAndFollowing: builder.query<
+      FollowersAndFollowingResponse,
+      { page: number; trigger: number; accountId: string; userId: string }
+    >({
+      query: (body) => ({
+        url: `${AUTH_URL_V1}/followeeNFollower`,
+        method: 'GET',
+        params: {
+          accountId: body.accountId || '',
+          userId: body.userId || '',
+          trigger: body.trigger || 0,
+          page: body.page || 1,
+        },
+      }),
+      keepUnusedDataFor: 0,
     }),
   }),
 });

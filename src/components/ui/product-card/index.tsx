@@ -80,7 +80,7 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
         className="card flex flex-col p-1 gap-2 sm:gap-3 hover:scale-102 transition-all duration-300 ease-in hover:cursor-pointer mobile:max-w-[100%] w-full h-full pb-[10px] max-w-[313px] hover:shadow-lg"
       >
         <Link
-          href={`/profile/seller/${product.firstName.replace(/\s+/g, '')}${product.lastName.replace(
+          href={`/profile/seller/${product?.firstName?.replace(/\s+/g, '')}${product?.lastName?.replace(
             /\s+/g,
             ''
           )}/${userAccountId}`}
@@ -89,27 +89,27 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
             <div className="flex gap-1 md:gap-4 items-center">
               <UserProfile
                 className="min-w-8 max-w-8 min-h-8 max-h-8 md:min-w-9 md:max-w-9 md:min-h-9 md:max-h-9"
-                firstName={product.firstName}
-                lastName={product.lastName}
-                profilePicUrl={product.profilePic}
+                firstName={product?.firstName}
+                lastName={product?.lastName}
+                profilePicUrl={product?.profilePic}
               />
 
               <div className="overflow-overlay overflow-hidden">
                 {/* here we can add name coming form api as product?.name */}
                 <strong
                   title={
-                    product.firstName?.[0].toUpperCase() +
-                    product.firstName?.slice(1) +
+                    product?.firstName?.[0]?.toUpperCase() +
+                    product?.firstName?.slice(1) +
                     ' ' +
-                    product.lastName[0].toUpperCase() +
+                    product?.lastName?.[0]?.toUpperCase() +
                     product?.lastName?.slice(1)
                   }
                   className="text-xs leading-[18px] truncate md:text-sm font-medium md:leading-5 text-text-primary-light dark:text-text-primary-dark"
                 >
-                  {product.firstName?.[0].toUpperCase() +
-                    product.firstName?.slice(1) +
+                  {product?.firstName?.[0]?.toUpperCase() +
+                    product?.firstName?.slice(1) +
                     ' ' +
-                    product.lastName[0].toUpperCase() +
+                    product?.lastName?.[0]?.toUpperCase() +
                     product?.lastName?.slice(1)}
                 </strong>
                 {/* here we can write time coming from api or we can calculate later */}

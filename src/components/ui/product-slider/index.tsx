@@ -1,5 +1,5 @@
 import { appClsx } from '@/lib/utils';
-import React, { MouseEvent, useRef, useState } from 'react';
+import React, { MouseEvent, useEffect, useRef, useState } from 'react';
 import HartSvg from '../../../../public/assets/svg/heart';
 import { getCookie } from '@/utils/cookies';
 import { useRouter } from 'next/router';
@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store';
 import FullScreenSpinner from '../full-screen-spinner';
 import { toast } from 'sonner';
+import { StickyHeaderDetails } from '@/containers/pdp';
 // import { setLikeCount, toggleLike } from '@/store/slices/product-detaill-slice';
 
 export type Props = {
@@ -19,12 +20,19 @@ export type Props = {
   shareURL: string;
   shareTitle?: string;
   isProductLiked: boolean;
+  setIsLiked: React.Dispatch<React.SetStateAction<boolean>>;
   setTotalLikeCount:React.Dispatch<React.SetStateAction<number>>;
   productCondition?: string;
+  setStickyHeaderDetails: React.Dispatch<React.SetStateAction<StickyHeaderDetails>>;
+  stickyHeaderDetails: StickyHeaderDetails;  
+  setActiveProductImage: React.Dispatch<React.SetStateAction<string>>;
   assetId?: string;
 };
 
-const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shareTitle, isProductLiked, setTotalLikeCount, productCondition, assetId }) => {
+const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shareTitle, isProductLiked, setTotalLikeCount, productCondition, setStickyHeaderDetails, stickyHeaderDetails, setActiveProductImage, assetId, setIsLiked }) => {
+
+
+// const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shareTitle, isProductLiked, setTotalLikeCount, productCondition, assetId }) => {
   const route = useRouter();
   const { id } = route.query;
   const [likeAndDislikeProduct, { isLoading: isLikeAndDislikeLoading }] = productsApi.useLikeAndDislikeProductMutation();
@@ -39,7 +47,7 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
   const router = useRouter();
   const isLoggedIn = getCookie('isUserAuth');
   const [showVideo, setShowVideo] = useState(false);
-  const [isLiked, setIsLiked] = useState(isProductLiked)
+  // const [isLiked, setIsLiked] = useState(isProductLiked)
   
   // Handlers for next and previous buttons
   const btnPressPrev = () => {
@@ -49,6 +57,10 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
       return newIndex;
     });
   };
+
+  useEffect(() => {
+    setActiveProductImage(imagesArray[currentImageIndex].url);
+  }, [currentImageIndex, setActiveProductImage]);
 
   const btnPressNext = () => {
     setCurrentImageIndex((prevIndex) => {
@@ -124,7 +136,7 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
   const handleLike = async () => {
     if (isLoggedIn) {
       try {
-        const newLikeState = !isLiked;
+        const newLikeState = !isProductLiked;
         // if (typeof userID === 'string' && typeof id === 'string') {
           const userId: string = userID || '';
           // const assetId: string = assetId || '';
@@ -159,6 +171,51 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
     playVideo(currentImageIndex);
   };
   const [videoSrc, setVideoSrc] = useState<string>('');
+
+  const imageElementRef = useRef<HTMLDivElement>(null);
+  const shareIconRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const updatePosition = () => {
+      if (!imageElementRef.current || !shareIconRef.current) return;
+
+      const imageRect = imageElementRef.current.getBoundingClientRect();
+      const shareIconRect = shareIconRef.current.getBoundingClientRect();
+
+      setStickyHeaderDetails((prevDetails) => {
+        let newDetails = { ...prevDetails };
+
+        // Set showProductImage to true when the imageElement is either scrolled past 145px from the top or completely out of viewport
+        if (imageRect.top <= 145 || imageRect.bottom < 0) {
+          newDetails.showProductImage = true;
+        } else {
+          newDetails.showProductImage = false;
+        }
+
+        if (shareIconRect.top <= 145) {
+          newDetails.showShareIcon = true;
+        } else {
+          newDetails.showShareIcon = false;
+        }
+
+        // Update state only if there's a change
+        if (
+          newDetails.showProductImage !== prevDetails.showProductImage ||
+          newDetails.showShareIcon !== prevDetails.showShareIcon
+        ) {
+          return newDetails;
+        }
+        return prevDetails;
+      });
+    };
+
+    updatePosition(); // Initial update when component mounts
+    window.addEventListener('scroll', updatePosition);
+
+    return () => {
+      window.removeEventListener('scroll', updatePosition);
+    };
+  }, []);
 
   return (
     <>
@@ -234,7 +291,7 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
             onMouseLeave={() => setIsHoveringCTAs(false)}
             onMouseEnter={() => setIsHoveringCTAs(true)}
           >
-            <div className="cursor-pointer">
+            <div ref={shareIconRef} className="cursor-pointer">
               <ShareButton url={shareURL} title={shareTitle} />
             </div>
             <button
@@ -248,7 +305,7 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
                 }
               }}
             >
-              <HartSvg color="#ff0000" height="20" width="20" isFilled={isLiked} />
+              <HartSvg color="#ff0000" height="20" width="20" isFilled={isProductLiked} />
             </button>
           </div>
 
@@ -290,7 +347,10 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
         )}
 
         {/* Thumbnails gallery */}
-        <div className="flex  flex-row lg:flex-col gap-2 mobile:gap-0 justify-start mobile:h-full  mobile:w-[100%] lg:w-[19%]  overflow-y-scroll overflow-x-hidden mobile:overflow-y-hidden mobile:overflow-x-scroll mobile:mt-2">
+        <div
+          ref={imageElementRef}
+          className="flex  flex-row lg:flex-col gap-2 mobile:gap-0 justify-start mobile:h-full  mobile:w-[100%] lg:w-[19%]  overflow-y-scroll overflow-x-hidden mobile:overflow-y-hidden mobile:overflow-x-scroll mobile:mt-2"
+        >
           {imagesArray?.map((img, index) => (
             <div
               key={index}

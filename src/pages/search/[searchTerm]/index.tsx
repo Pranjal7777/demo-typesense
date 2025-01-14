@@ -16,7 +16,13 @@ import Slider from '@/components/ui/slider';
 import BrandSlider from '@/components/sections/brand-slider';
 import { GetServerSidePropsContext, NextPage } from 'next';
 import { CategoriesDataFromServer, GetAllSubCategoriesByCategoryId } from '@/helper/categories-data-from-server';
-import { Category, Product, ResponseGetAllCategoriesPayload, ResponseGetAllGrandParentCategoriesPayload, ResponseGetSubCategoriesByParentIdPayload } from '@/store/types';
+import {
+  Category,
+  Product,
+  ResponseGetAllCategoriesPayload,
+  ResponseGetAllGrandParentCategoriesPayload,
+  ResponseGetSubCategoriesByParentIdPayload,
+} from '@/store/types';
 import dynamic from 'next/dynamic';
 import cookie from 'cookie';
 import { API, AUTH_URL_V2, BASE_API_URL, HIDE_SELLER_FLOW, STATIC_IMAGE_URL, STRAPI_BASE_API_URL } from '@/config';
@@ -28,6 +34,7 @@ import AboutUs from '@/components/about-us';
 import Accordion from '@/components/sections/accordion-card';
 import InfoSection from '@/components/sections/info-section';
 import { convertRTKQueryErrorToString } from '@/helper/convert-rtk-query-error-to-string';
+import { useTypesenseSearch } from '@/hooks/useTypesenseSearchPage';
 import { useSearchParams } from 'next/navigation';
 import Select from 'react-select';
 import { useTheme } from '@/hooks/theme';
@@ -39,7 +46,6 @@ import { categoriesApi } from '@/store/api-slices/categories-api';
 import { useNewWindowScroll } from '@/hooks/new-use-window-scroll';
 import { IMAGES } from '@/lib/images';
 import CustomHeader from '@/components/ui/custom-header';
-import { useTypesenseCategory } from '@/hooks/useTypesenseCategory';
 import Placeholder from '@/containers/placeholder/placeholder';
 
 export type filteredProducts = {
@@ -87,7 +93,6 @@ export type CategoriesPageProps = {
   tokenFromServer: any;
   myLocationFromServer?: any;
   categories: ResponseGetAllGrandParentCategoriesPayload;
-  categoriesBanner: ResponseGetSubCategoriesByParentIdPayload;
 };
 
 // Define the option type
@@ -103,7 +108,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   tokenFromServer,
   myLocationFromServer,
   categories,
-  categoriesBanner: categoriesBannerData,
 }) {
   const { t } = useTranslation('categories');
   const aboutUs = t('page.aboutUs', { returnObjects: true }) as aboutUs;
@@ -111,9 +115,10 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   const { myLocation } = useAppSelector((state: RootState) => state.auth);
   const { data: filterParameters, error: filterParametersError } = productsApi.useGetFilterParametersQuery();
   const theme = useTheme();
+
   const router = useRouter();
 
-  const { 'categoryName-id': categoryNameId , selectedCategory} = router.query;
+  const { searchTerm: categoryNameId, selectedCategory } = router.query;
   const categoryNameIdArray = Array.isArray(categoryNameId) ? categoryNameId : categoryNameId?.split('-');
   const id = categoryNameIdArray?.[categoryNameIdArray.length - 1];
   const categoryName = categoryNameIdArray?.slice(0, -1).join('-');
@@ -152,7 +157,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     };
   }, []);
 
-  
   const closeFilter = () => {
     setFilterDrawer(false);
   };
@@ -201,7 +205,11 @@ const Categories: NextPage<CategoriesPageProps> = function ({
       { shallow: true }
     );
   };
+
+  console.log(router.pathname, 'router pathname');
+  
   const removeFilter = (key: string) => {
+    console.log(key, 'key remove');
     const updatedFeaturedFilters = { ...selectedItemsFromFilterSection };
     if (key === 'category') {
       updatedFeaturedFilters.category = { title: '', _id: '' };
@@ -355,6 +363,12 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     setSelectedItemsFromFilterSection(updatedFilters);
   }, [router.query]);
 
+  const { searchTerm: routeSearchTerm } = router.query;
+  // Get the actual search term from the URL
+  const searchText = Array.isArray(routeSearchTerm) 
+    ? routeSearchTerm[0].split('-').slice(0, -1).join(' ') // Remove the ID part and join with spaces
+    : routeSearchTerm?.split('-').slice(0, -1).join(' ') || '';
+
   const {
     products,
     isLoading,
@@ -365,10 +379,12 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     loadMore,
     updateFilters,
     resetFilters,
-  } = useTypesenseCategory({
-    categoryId: id as string,
+  } = useTypesenseSearch({
+    searchTerm: searchText,
     country: selectedItemsFromFilterSection.country,
-  });  
+  });
+
+  console.log(products, 'products-search');
 
   useEffect(() => {
     resetFilters();
@@ -420,67 +436,9 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     const typesenseFilters = transformFilters(initialFilters);
     updateFilters(typesenseFilters);
   }, []);
-
-  const customStyles: StylesConfig<SortOption, false> = {
-    control: (provided) => ({
-      ...provided,
-      width: '100%',
-      outline: 'none',
-      border: theme.theme ? '1px solid #433934' : `1px solid var(--border-tertiary-light)`,
-      borderRadius: '0.775rem',
-      backgroundColor: theme.theme ? 'var(--bg-primary-dark)' : 'var(--bg-primary-light)',
-      fontSize: '14px',
-      color: theme.theme ? '#fff' : 'var(--text-primary-light)',
-      fontWeight: '400',
-      cursor: 'pointer',
-      transition: 'background-color 0.2s ease-in-out, border-color 0.2s ease-in-out',
-    }),
-    option: (provided, state) => ({
-      ...provided,
-      backgroundColor: state.isFocused
-        ? theme.theme
-          ? '#2D3748'
-          : '#EDF2F7'
-        : theme.theme
-        ? 'var(--bg-primary-dark)'
-        : '#FFF',
-      color: theme.theme ? '#fff' : 'var(--bg-primary-light)',
-      fontSize: '14px',
-      fontWeight: '400',
-      cursor: 'pointer',
-    }),
-    menu: (provided) => ({
-      ...provided,
-      backgroundColor: theme.theme ? 'var(--bg-primary-dark)' : '#fff',
-    }),
-    singleValue: (provided) => ({
-      ...provided,
-      color: theme.theme ? '#fff' : 'var(--bg-primary-light)',
-    }),
-    indicatorSeparator: () => ({
-      display: 'none',
-    }),
-    valueContainer: (provided) => ({
-      ...provided,
-      padding: '2px 0px 2px 8px',
-    }),
-    indicatorsContainer: (provided) => ({
-      ...provided,
-      padding: '0px 0px 0px 0px',
-    }),
-  };
-
+  
   return (
     <>
-      <CustomHeader
-        title={`Explore the best products from ${categoriesBannerData?.parentCategoryName} category in kwibal`}
-        description={`Explore the ${categoriesBannerData?.parentCategoryName} category on kwibal. Discover a wide range of products designed to meet your needs, from ${categoriesBannerData?.parentCategoryName} essentials to premium options.`}
-        image={
-          categoriesBannerData?.webBanner?.includes('http')
-            ? categoriesBannerData?.webBanner
-            : `${STATIC_IMAGE_URL}/${categoriesBannerData?.webBanner}`
-        }
-      />
       <FilterDrawer
         filtersDrawer={filtersDrawer}
         selectedItemsFromFilterSection={selectedItemsFromFilterSection}
@@ -494,15 +452,15 @@ const Categories: NextPage<CategoriesPageProps> = function ({
       />
 
       <Layout
+        stickyHeader={true}
+        stickyHeroSection={true}
         tokenFromServer={tokenFromServer}
         myLocationFromServer={myLocationFromServer}
         categories={categories}
-        heroImageSrc={categoriesBannerData?.webBanner || IMAGES.PRIMARY_BANNER}
-        description={categoriesBannerData?.description || ''}
       >
         {/* header with image and search box */}
         {/* Section:- What are you looking for? */}
-        <div className=" relative custom-container mx-auto sm:px-16 mobile:px-4 ">
+        <div className={`relative custom-container mx-auto sm:px-16 mobile:px-4 `}>
           {/* start */}
           {/* subcategories card section start */}
           {!HIDE_SELLER_FLOW && subCategories.length > 0 && (
@@ -511,119 +469,43 @@ const Categories: NextPage<CategoriesPageProps> = function ({
               <CategorySlider className="border-error" data={subCategories} />
             </Slider>
           )}
-
-          {categoriesLogos.length > 0 && (
-            <Slider className=" border-error pt-9 sm:py-8 lg:py-12 ">
-              <SectionTitle className="mb-4 sm:mb-3">Popular brands</SectionTitle>
-              <BrandSlider data={categoriesLogos} />
-            </Slider>
-          )}
-
-          {/* subcategories brand section end  */}
-          <Breadcrumb
-            isLinkDisable={true}
-            className="!pl-0 md:!pl-0 my-5"
-            steps={[{ name: 'Home', link: '/' }, { name: 'Categories' }, { name: categoryName || '' }]}
-          ></Breadcrumb>
           {/* categories section starts */}
-          <div className="mobile:pb-9">
-            <div className=" ">
-              {allHighlightedProducts.length > 0 && (
-                <div className=" w-full pt-9 sm:py-8 lg:py-12 flex flex-col items-center justify-center">
-                  <div className=" flex  w-full justify-between">
-                    <SectionTitle>Featured Products</SectionTitle>
-                  </div>
-                  {hasActiveFilters() && (
-                    <div className="border-2 boreder-error flex gap-10 items-center w-full flex-wrap mt-5 mobile:overflow-x-scroll h-8 md:h-4 border-none">
-                      <div className="flex gap-3 overflow-x-auto scrollbar-hide">
-                        {selectedItemsFromFiltersSectionList()}
-                      </div>
-                    </div>
-                  )}{' '}
-                  <div className="mt-10 w-full">
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-x-3 gap-y-4 md:gap-x-2 md:gap-y-7">
-                      {isError ? (
-                        <h2>{convertRTKQueryErrorToString(error)}</h2>
-                      ) : highlightedProducts?.result !== undefined ? (
-                        allHighlightedProducts.map((product, index) => <ProductCard key={index} product={product} />)
-                      ) : null}
-                      {isFetching && (
-                        <>
-                          {Array.from({ length: 10 }).map((_, index) => (
-                            <Skeleton key={index} />
-                          ))}
-                        </>
-                      )}
-                    </div>
-
-                    <div className=" mt-7 w-full flex items-center justify-center">
-                      {highlightedProducts ? (
-                        <button
-                          className={`border-2 text-sm font-medium px-4 py-2 rounded dark:text-text-primary-dark
-                    ${allHighlightedProducts.length >= highlightedProducts?.Totalcount ? 'hidden' : ''}
-                    
-                    `}
-                          onClick={() => handleHighlightedProductsPageCountPageCount()}
-                        >
-                          View more
-                        </button>
-                      ) : null}
-                    </div>
-                  </div>
-                </div>
-              )}
-              <div className=" w-full pt-9 sm:py-8 lg:py-12 flex flex-col items-center justify-center">
+          <div className={`mobile:pb-9 w-full ${hasActiveFilters() ? 'mt-[80px]' : 'mt-[40px]'}`}>
+            <div className="w-full ">
+              <div className=" w-full flex flex-col justify-center">
                 <div
                   style={{ zIndex: 1 }}
-                  className={`w-full ${
-                    minThreshold
-                      ? `fixed ${
-                          threshold < 700 ? 'top-[175px]' : 'top-[145px]'
-                        } left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-5 mx-auto max-w-[1440px]`
-                      : ''
-                  }`}
+                  className={`w-full ${`fixed top-[130px] sm:top-[145px] left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-2 mx-auto max-w-[1440px]`}`}
                 >
-                  <div className=" flex  w-full justify-between filterselectContainer">
-                    <SectionTitle>All Products</SectionTitle>
-                    <div className="ml-auto mr-[24px] relative inline-flex items-center gap-2">
-                      <Select
-                        isSearchable={false}
-                        className="w-fit min-w-[140px]  mobile:text-sm text-[14px] overflow-ellipsis"
-                        onChange={(option) => {
-                          updateFilters({ sort: option?.value });
-                        }}
-                        autoFocus={false}
-                        options={[
-                          { value: 'newest', label: 'Newest First' },
-                          { value: 'oldest', label: 'Oldest First' },
-                          { value: 'price_asc', label: 'Low to High' },
-                          { value: 'price_desc', label: 'High to Low' },
-                        ]}
-                        defaultValue={{ value: 'newest', label: 'Newest First' }}
-                        formatOptionLabel={({ label }, { context }) => <span className="pl-2">{label}</span>}
-                        styles={customStyles}
-                        theme={(theme) => ({
-                          ...theme,
-                          borderRadius: 0,
-                          colors: {
-                            ...theme.colors,
-                            primary25: theme ? '#f1ecf9' : '#EDF2F7',
-                            primary: theme ? 'var(--brand-color)' : 'var(--brand-color-hover)',
-                          },
-                        })}
-                      />
-                    </div>
-                    <button className="flex cursor-pointer justify-between items-center" onClick={handleFilterDrawer}>
+                  <div
+                    className={`flex  w-full justify-end filterselectContainer ${
+                      hasActiveFilters() ? 'justify-between' : 'justify-end'
+                    }`}
+                  >
+                    {/* <SectionTitle>All Products</SectionTitle> */}
+                    {hasActiveFilters() && (
+                      <div className="border-2 boreder-error flex gap-10 items-center w-full flex-wrap  mobile:overflow-x-scroll border-none">
+                        <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide">
+                          {selectedItemsFromFiltersSectionList()}
+                        </div>
+                      </div>
+                    )}
+          
+                    <button
+                      className=" md:w-[148px] mobile:min-w-[36px] md:min-w-[148px] h-11 text-text-primary-light dark:text-text-primary-dark md:border-2 items-center flex  cursor-pointer justify-end md:justify-center gap-1 rounded-[100px]"
+                      onClick={handleFilterDrawer}
+                    >
+                      <span className="hidden md:block">More filters</span>
                       <div>
                         <img
-                          className=" inline-block mobile:hidden"
+                          className=" inline-block mobile:hidden h-[18px] w-[18px]"
                           width={28}
                           height={24}
                           src={'/images/filters_icon_white.svg'}
                           alt="dollar_coin_icon"
                         />
                         <img
-                          className=" mobile:block hidden"
+                          className=" mobile:block hidden h-[18px] w-[18px]"
                           width={20}
                           height={18}
                           src={'/images/filters_icon_white.svg'}
@@ -632,15 +514,8 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                       </div>
                     </button>
                   </div>
-                  {hasActiveFilters() && (
-                    <div className="border-2 boreder-error flex gap-10 items-center w-full flex-wrap mt-5 mobile:overflow-x-scroll h-8 md:h-4 border-none mb-2">
-                      <div className="flex gap-3 overflow-x-auto scrollbar-hide">
-                        {selectedItemsFromFiltersSectionList()}
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <div className="mt-10 w-full mobile:mt-6">
+                   </div>
+                <div className={`mt-10 w-full mobile:mt-6`}>
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-x-3 gap-y-4 md:gap-x-2 md:gap-y-7">
                     {errorTypesense ? (
                       <div className="col-span-full">
@@ -651,11 +526,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                         <ProductCard key={`${product?.id}-${index}`} product={product} isTypeSenseData={true} />
                       ))
                     ) : !isLoading ? (
-                      <Placeholder
-                        containerClassName="col-span-full mb-8"
-                        title="No products found"
-                        description="Please search for something else"
-                      />
+                      <Placeholder containerClassName='col-span-full mb-8' title='No products found' description='Please search for something else'/>
                     ) : null}
 
                     {isLoading && (
@@ -720,7 +591,7 @@ export async function getServerSideProps({
   params: any;
   req: GetServerSidePropsContext['req'];
 }) {
-  const paramsArray = params['categoryName-id']?.split('-');
+  const paramsArray = params['searchTerm']?.split('-');
   const categoryId = paramsArray[paramsArray.length - 1];
   let accessToken, tokenFromServer;
 
@@ -730,7 +601,7 @@ export async function getServerSideProps({
       const cookies = cookie.parse(req.headers.cookie);
       accessToken = cookies.accessToken?.replace(/"/g, '');
     }
-    
+
     if (!accessToken) {
       const guestTokenResponse = await getGuestTokenFromServer();
       if (!guestTokenResponse?.data?.token) {
@@ -745,25 +616,13 @@ export async function getServerSideProps({
       fetch(`${STRAPI_BASE_API_URL}${STRAPI_CATEGORIES_PLP}?populate=deep`),
       GetAllSubCategoriesByCategoryId(accessToken, categoryId),
       CategoriesDataFromServer(accessToken),
-      fetch(`${BASE_API_URL}${AUTH_URL_V2}${GET_SUB_CATEGORIES_BY_ID_URL}/?parentId=${categoryId}&country=India`, {
-        method: 'GET',
-        headers: {
-          Authorization: `${accessToken}`,
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-      }),
     ];
     const listingApiReponses = await Promise.allSettled(promises);
 
-
-    
     const response1 = listingApiReponses[0].status === 'fulfilled' && listingApiReponses[0].value;
     const response2 = listingApiReponses[1].status === 'fulfilled' && listingApiReponses[1].value;
-    const categories = listingApiReponses[2].status === 'fulfilled' && listingApiReponses[2].value ;
-    const categoriesBannerResponse = listingApiReponses[3].status === 'fulfilled' && listingApiReponses[3].value ;
+    const categories = listingApiReponses[2].status === 'fulfilled' && listingApiReponses[2].value;
 
-    const categoriesBanner = await categoriesBannerResponse.json();
     const data = await response1.json();
     return {
       props: {
@@ -772,7 +631,6 @@ export async function getServerSideProps({
         subCategories: response2.data || [],
         tokenFromServer: tokenFromServer || null,
         categories,
-        categoriesBanner: categoriesBanner || null
       },
     };
   } catch (error) {

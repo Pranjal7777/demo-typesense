@@ -2,10 +2,10 @@
 import React, { ChangeEvent, FC, KeyboardEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { useActions, useAppSelector } from '@/store/utils/hooks';
-import { GOOGLE_MAPS_KEY, HIDE_SELLER_FLOW } from '@/config';
+import { GOOGLE_MAPS_KEY, HIDE_SELLER_FLOW, STATIC_IMAGE_URL } from '@/config';
 import isUserAuthenticated from '@/helper/validation/check-user-authentication';
 import { productsApi } from '@/store/api-slices/products-api';
-import { SearchItems, SearchUsers } from '@/store/types';
+import { Product, SearchItems, SearchUsers } from '@/store/types';
 import { useDebounce } from '@/hooks/use-debounce';
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService';
 import { HydrationGuard } from '../hydration-guard';
@@ -25,7 +25,7 @@ import { RootState } from '@/store/store';
 import SearchIcon from '../../../../public/assets/svg/search-icon';
 import LocationSvg from '../../../../public/assets/svg/location';
 import UpArrowRoundedEdge from '../../../../public/assets/svg/up-arrow-rounded-edge';
-import { routeToCategories, routeSellerProfile } from '@/store/utils/route-helper';
+import { routeToCategories, routeSellerProfile, routeToSearch } from '@/store/utils/route-helper';
 import { Hits, InstantSearch, Configure, connectStateResults } from 'react-instantsearch-dom';
 import SearchBox from '@/components/typesense/SearchBox';
 import SearchResults from '@/components/typesense/SearchResults';
@@ -39,6 +39,7 @@ import { SearchResponse } from '@/types';
 import LeftArrowIcon from '../../../../public/assets/svg/left-arrow-icon';
 import { getUserLocation } from '@/helper/get-location';
 import getAddressFromLatLng from '@/helper/get-address-by-lat-lng';
+import { IMAGES } from '@/lib/images';
 
 export type NewSearchBoxProps = {
   windowWidth: number;
@@ -145,13 +146,12 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
             indexName: selectedOption === 'Items' ? 'kwibal_asset' : 'kwibal_accounts',
             params: {
               query: searchQuery,
-              query_by: selectedOption === 'Items' ? 'title.en,description' : 'first_name,last_name',
+              query_by: selectedOption === 'Items' ? 'title.en' : 'first_name,last_name',
               hitsPerPage: 1,
             },
           },
         ])
         .then(({ results }: SearchResponse) => {
-          console.log(results, 'resultsassad');
           setHasValidSearchResults(results[0]?.hits?.length > 0);
           setFormData((prev) => ({
             ...prev,
@@ -170,12 +170,13 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
   };
 
   const categoryRoute = async (categoryId: string, search: string, hit?: Hit) => {
-    const url = routeToCategories({ category: { id: categoryId, name: hit?.mainCategory || '' } });
+    // const url = routeToCategories({ category: { id: categoryId, name: hit?.mainCategory || '' } });
+    const searchUrl = routeToSearch({ category: { id: categoryId, name: search || '' } });
     router.push({
-      pathname: url,
-      query: {
-        search: search || undefined,
-      },
+      pathname: searchUrl,
+      // query: {
+      //   search: search || undefined,
+      // },
     });
   };
 
@@ -224,7 +225,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
           indexName: selectedOption === 'Items' ? 'kwibal_asset' : 'kwibal_accounts',
           params: {
             query: value,
-            query_by: selectedOption === 'Items' ? 'title.en,description' : 'first_name,last_name',
+            query_by: selectedOption === 'Items' ? 'title.en' : 'first_name,last_name',
             hitsPerPage: 1,
           },
         },
@@ -285,7 +286,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
           indexName: currentOption === 'Items' ? 'kwibal_asset' : 'kwibal_accounts',
           params: {
             query: searchText,
-            query_by: currentOption === 'Items' ? 'title.en,description' : 'first_name,last_name',
+            query_by: currentOption === 'Items' ? 'title.en' : 'first_name,last_name',
             hitsPerPage: 1,
           },
         },
@@ -294,7 +295,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
       if (results[0]?.hits?.length > 0) {
         const hit = results[0].hits[0];
         if (currentOption === 'Items') {
-          categoryRoute(hit.categories[0].id, hit.title.en, hit);
+          categoryRoute(hit.categories[0].id, searchText, hit);
         } else {
           sellerProfileRoute(hit.id, searchText);
         }
@@ -454,6 +455,16 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
     return minThreshold && theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)';
   };
 
+  const getSearchItemImageUrl = (hit: any) => {
+    return hit.images[0].type === 'VIDEO'
+      ? hit.images[0].thumbnailUrl?.includes('https')
+        ? hit.images[0].thumbnailUrl
+        : `${STATIC_IMAGE_URL}/${hit.images[0].thumbnailUrl}` || (theme ? IMAGES.FALLBACK_IMAGE_DARK : IMAGES.FALLBACK_IMAGE_LIGHT)
+      : hit.images[0].url?.includes('https')
+      ? hit.images[0].url
+      : `${STATIC_IMAGE_URL}/${hit.images[0].url}` || (theme ? IMAGES.FALLBACK_IMAGE_DARK : IMAGES.FALLBACK_IMAGE_LIGHT);
+  };
+
   return (
     <>
       {/* @todo */}
@@ -603,7 +614,8 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                                 setIsOpen(false);
                               }}
                             >
-                              <div className="truncate ml-3 flex">
+                              <div className="truncate ml-3 flex items-center gap-2">
+                                <Image src={getSearchItemImageUrl(hit)} alt={'search-product-image'} width={40} height={40} className=" h-8 w-8 rounded-full" />
                                 <div className="font-medium text-sm text-text-primary-light dark:text-text-primary-dark">
                                   {/* @ts-ignore */}
                                   {hit?.title?.en}
@@ -795,7 +807,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
 
             {isUserLogin && isRecentSearchOpen === true && !formData.search ? (
               <div
-                className="absolute top-[48px] shadow-2xl bg-bg-secondary-light dark:bg-bg-secondary-dark left-0 right-0 rounded-b-md max-h-[263px] no-scrollbar"
+                className="absolute top-[48px] z-50 shadow-2xl bg-bg-secondary-light dark:bg-bg-secondary-dark left-0 right-0 rounded-b-md max-h-[263px] no-scrollbar"
                 style={{
                   overflowY: 'auto',
                   msOverflowStyle: 'none',
@@ -814,7 +826,9 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                     </div>
                   ) : (
                     <>
-                      <h3 className="text-sm pt-4 flex items-center px-3 font-semibold">Recent Searches</h3>
+                      <h3 className="text-sm pt-4 flex text-text-primary-light dark:text-text-primary-dark items-center px-3 font-semibold">
+                        Recent Searches
+                      </h3>
                       {selectedOption === 'Items' &&
                         recentSearchData?.data?.data?.map((search, index) => (
                           <div
@@ -1015,11 +1029,11 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
               className="absolute  mobile:left-3 rtl:mobile:left-0 rtl:mobile:right-3 "
             />
             <span
-              className={`text-base  ml-9 mobile:text-sm rtl:ml-0 rtl:mr-9 truncate dark:text-text-secondary-dark ${
-                router?.query?.search ? '' : 'text-text-denary-light'
+              className={`text-base  ml-9 mobile:text-sm rtl:ml-0 rtl:mr-9 truncate text-text-secondary-dark ${
+                formData.search ? '' : 'text-text-denary-light'
               }`}
             >
-              {router?.query?.search ? (router.query.search as string) : heroSection.searchPlaceholder}
+              {formData.search ? formData.search : heroSection.searchPlaceholder}
             </span>
           </button>
         </div>
@@ -1030,6 +1044,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
 
       {/* mobile screen DROWER */}
       <SearchUserAndCategoryDrower
+        selectItemOrUserToSearch={selectItemOrUserToSearch}
         isPlacePredictionsLoading={isPlacePredictionsLoading}
         isSearchProductsAndUsersFetching={false}
         className={`sm:hidden mobile:inline-block ${searchItemAndUserDrower && '!hidden'}`}

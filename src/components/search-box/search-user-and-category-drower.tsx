@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useEffect, useState } from 'react';
+import React, { ChangeEvent, FC, KeyboardEvent, useEffect, useState } from 'react';
 import SearchUserAndCategoryCard from './search-user-and-category-card';
 import { appClsx } from '@/lib/utils';
 import SearchLocationAutocompleteCard from './search-location-autocomplete-card';
@@ -13,7 +13,7 @@ import { RootState } from '@/store/store';
 import CloseIcon from '../../../public/assets/svg/close-icon';
 import SearchIcon from '../../../public/assets/svg/search-icon';
 import LocationSvg from '../../../public/assets/svg/location';
-import { routeSellerProfile, routeToCategories } from '@/store/utils/route-helper';
+import { routeSellerProfile, routeToCategories, routeToSearch } from '@/store/utils/route-helper';
 import keyDownHandler from '@/helper/key-down-handler';
 import { useRouter } from 'next/router';
 import { Configure } from 'react-instantsearch-dom';
@@ -55,6 +55,7 @@ export type Props = {
   handleGetLocationHelper: () => Promise<boolean>;
   handleRemoveLocationHelper: () => void;
   handleOnChange: (_e: ChangeEvent<HTMLInputElement>) => void;
+  selectItemOrUserToSearch?: (_searchText: string) => void;
   address: string;
   placesService: {
     getDetails: (
@@ -114,6 +115,7 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
   searchResults,
   searchClient,
   setSelectedOption,
+  selectItemOrUserToSearch,
 }) => {
   // please do not remove this -> this code is for translation of this page
   // const { t } = useTranslation('common');
@@ -131,6 +133,7 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
   //   handleRemoveLocationHelper();
   //   setIsLocationTextBoxFocused(false);
   // };
+
   const removeUserAndItem = () => {
     setFormData((prevState) => ({
       ...prevState,
@@ -162,12 +165,20 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
       search: search,
       resultDropdown: router?.pathname === '/categories/[id]' ? false : prevState.resultDropdown,
     }));
-    const url = routeToCategories({ category: { id: categoryId } });
-    const query = {
-        selectedCategory: hit?.mainCategory || '',
-        search: search || undefined,
-      };
-    router.push({ pathname: url, query });
+    // const url = routeToCategories({ category: { id: categoryId } });
+    // const searchUrl = routeToSearch({ category: { id: categoryId } });
+    const searchUrl = routeToSearch({ category: { id: categoryId, name: search || '' } });
+    router.push({
+      pathname: searchUrl,
+      // query: {
+      //   search: search || undefined,
+      // },
+    });
+    // const query = {
+    //     selectedCategory: hit?.mainCategory || '',
+    //     search: search || undefined,
+    //   };
+    // router.push({ pathname: url, query });
     setSearchItemAndUserDrower(!searchItemAndUserDrower);
   };
   const sellerProfileRoute = (userId: string) => {
@@ -181,6 +192,14 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
       location: myLocation?.address,
     }));
   }, [myLocation, myLocation?.address]);
+
+   const handleSearchEnterKeyDown = async (event: KeyboardEvent<HTMLInputElement>) => {
+     if (event.key === 'Enter') {
+       if (formData.search !== '') {
+         await selectItemOrUserToSearch?.(formData.search);       
+       }
+     }
+   };
 
   return (
     <div
@@ -234,6 +253,7 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
               onFocus={() => setIsLocationTextBoxFocused(true)}
               value={formData.search}
               onChange={(e) => handleInstantSearchOnChange?.(e)}
+              onKeyDown={handleSearchEnterKeyDown}
               autoComplete="off"
             />
 
@@ -450,7 +470,6 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
                   <CustomSearchResults searchQuery={formData.search}>
                     <Hits
                       hitComponent={({ hit }) => {
-                        console.log(hit, 'hit==>>');
                         return (
                           <div
                             tabIndex={0}

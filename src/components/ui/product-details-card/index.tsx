@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReportFlagSVG from '../../../../public/assets/svg/report-icon';
 import { useTheme } from '@/hooks/theme';
 import { useRouter } from 'next/router';
@@ -6,6 +6,7 @@ import { getCookie } from '@/utils/cookies';
 import { getFormattedDateFromTimestamp } from '@/helper/get-formatted-date';
 import ProductReport from './product-report';
 import LocationSvg from '../../../../public/assets/svg/location';
+import { StickyHeaderDetails } from '@/containers/pdp';
 
 type ProductDetailsCardProps = {
   familyName: string;
@@ -16,6 +17,8 @@ type ProductDetailsCardProps = {
   timestampLabel: string;
   assetCondition?: string;
   assetId?: string;
+  setStickyHeaderDetails: React.Dispatch<React.SetStateAction<StickyHeaderDetails>>;
+  stickyHeaderDetails: StickyHeaderDetails;
   isSeller?: boolean;
 };
 
@@ -28,6 +31,8 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
   timestampLabel,
   assetCondition,
   assetId,
+  setStickyHeaderDetails,
+  stickyHeaderDetails,
   isSeller
 }) => {
   const theme = useTheme();
@@ -48,6 +53,52 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
   const handleCloseReport = () => {
     setShowReport(false);
   };
+
+    const productNameElementRef = useRef<HTMLDivElement>(null);
+    const priceElementRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+      const updatePosition = () => {
+        if (!productNameElementRef.current || !priceElementRef.current) return;
+
+        const productNameRect = productNameElementRef.current.getBoundingClientRect();
+        const priceRect = priceElementRef.current.getBoundingClientRect();
+
+        setStickyHeaderDetails((prevDetails) => {
+          let newDetails = { ...prevDetails };
+
+          // Set showProductImage to true when the imageElement is either scrolled past 145px from the top or completely out of viewport
+          if (productNameRect.top <= 180 || productNameRect.bottom < 0) {
+            newDetails.showProductName = true;
+          } else {
+            newDetails.showProductName = false;
+          }
+
+          if (priceRect.top <= 235) {
+            newDetails.showPrice = true;
+          } else {
+            newDetails.showPrice = false;
+          }
+
+          // Update state only if there's a change
+          if (
+            newDetails.showPrice !== prevDetails.showPrice ||
+            newDetails.showProductName !== prevDetails.showProductName
+          ) {
+            return newDetails;
+          }
+          return prevDetails;
+        });
+      };
+
+      updatePosition(); // Initial update when component mounts
+      window.addEventListener('scroll', updatePosition);
+
+      return () => {
+        window.removeEventListener('scroll', updatePosition);
+      };
+    }, []);
+
   return (
     <>
       <div className="flex flex-col  md:gap-1">
@@ -70,7 +121,7 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
             {!isSeller && <ReportFlagSVG fillColor={currentTheme ? '#fff' : '#000'} />}
           </div>
         </div>
-        <h1 className="text-lg md:text-2xl leading-[27px] md:leading-[36px] font-semibold text-text-primary-light dark:text-text-quinary-dark">
+        <h1 ref={productNameElementRef} className="text-lg md:text-2xl leading-[27px] md:leading-[36px] font-semibold text-text-primary-light dark:text-text-quinary-dark">
           {categoryTitle}
         </h1>
         <div className="flex justify-between mt-1">
@@ -96,7 +147,7 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
       </div>
 
       <div className="flex flex-col mobile:flex-row  mobile:justify-between mobile:items-center">
-        <span className=" mt-3 md:mt-5 text-xl md:text-[28px] font-bold text-text-primary-light dark:text-text-quinary-dark">
+        <span ref={priceElementRef} className=" mt-3 md:mt-5 text-xl md:text-[28px] font-bold text-text-primary-light dark:text-text-quinary-dark">
           {currency} {price}
         </span>
       </div>

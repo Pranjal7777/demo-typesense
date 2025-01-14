@@ -21,47 +21,41 @@ interface CategoryFilters {
   category?: { title: string; _id: string };
   latitude?: string;
   longitude?: string;
+  searchTerm?: string;
 }
 
 interface UseTypesenseCategoryProps {
-  categoryId?: string;
+  searchTerm: string;
   initialFilters?: CategoryFilters;
   country: string;
 }
 
-export const useTypesenseCategory = ({ categoryId, initialFilters, country }: UseTypesenseCategoryProps) => {
+export const useTypesenseSearch = ({ searchTerm, initialFilters, country }: UseTypesenseCategoryProps) => {
   const router = useRouter();
   const { myLocation } = useAppSelector((state: RootState) => state.auth);
-
-  // Initialize filters with URL parameters
+  
   const initializeFiltersFromURL = () => {
     const { query } = router;
     return {
-      type: (query.type as string) || '',
-      condition: (query.condition as string) || '',
-      price: query.price
-        ? (() => {
-            const [min, max] = (query.price as string).replace(/\$/g, '').split(' - ');
-            return { min: parseInt(min), max: parseInt(max) };
-          })()
-        : undefined,
-      distance:
-        query.distance !== 'Country' && query.distance !== 'World' ? (query.distance as string) : query.distance,
-      address: (query.address as string) || '',
-      latitude: (query.latitude as string) || myLocation?.latitude || '',
-      longitude: (query.longitude as string) || myLocation?.longitude || '',
+      type: query.type as string || '',
+      condition: query.condition as string || '',
+      price: query.price ? (() => {
+        const [min, max] = (query.price as string).replace(/\$/g, '').split(' - ');
+        return { min: parseInt(min), max: parseInt(max) };
+      })() : undefined,
+      distance: query.distance !== 'Country' && query.distance !== 'World' ? query.distance as string : query.distance,
+      address: query.address as string || '',
+      latitude: query.latitude as string || myLocation?.latitude || '',
+      longitude: query.longitude as string || myLocation?.longitude || '',
       country: query.country || 'India',
-      category: query.categoryId
-        ? {
-            _id: query.categoryId as string,
-            title: query.categoryTitle as string,
-          }
-        : undefined,
-      // ... other filters
+      category: query.categoryId ? {
+        _id: query.categoryId as string,
+        title: query.categoryTitle as string
+      } : undefined,
+      searchTerm: searchTerm || '',
     };
   };
 
-  // Initialize state with URL parameters
   const [filters, setFilters] = useState<CategoryFilters>(() => initializeFiltersFromURL());
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -70,20 +64,21 @@ export const useTypesenseCategory = ({ categoryId, initialFilters, country }: Us
   const [totalCount, setTotalCount] = useState(0);
   const currentTime = Math.floor(Date.now() / 1000);
 
-  // Updating filters when URL changes
   useEffect(() => {
     const urlFilters = initializeFiltersFromURL();
-    setFilters((prev) => ({
+    setFilters(prev => ({
       ...prev,
-      ...urlFilters,
+      ...urlFilters
     }));
   }, [router.query]);
 
   const buildSearchParams = () => {
     const { query } = router;
-    let filterBy = `categories.id:=${categoryId} && statusCode:=1 && sold:=false && expiredTs:>=${currentTime} && country:=${
-      query.country || 'India'
-    }`;
+    let filterBy = `statusCode:=1 && sold:=false && expiredTs:>=${currentTime}`;
+
+    if (filters.category?._id) {
+      filterBy += ` && categories.id:=${filters.category._id}`;
+    }
 
     if (filters.price) {
       filterBy += ` && price:>=${filters.price.min} && price:<=${filters.price.max}`;
@@ -108,11 +103,8 @@ export const useTypesenseCategory = ({ categoryId, initialFilters, country }: Us
         filterBy += ` && ${type}`;
       }
     }
-    if (filters.category?._id) {
-      filterBy += ` && categories.id:=${filters.category._id}`;
-    }
     if (filters.address) {
-      if (!['World', 'Country'].includes(filters.distance as string)) {
+      if ((!['World', 'Country'].includes(filters.distance as string))) {
         let radius = 400;
         if (filters.distance) {
           radius = parseInt(filters.distance);
@@ -125,6 +117,10 @@ export const useTypesenseCategory = ({ categoryId, initialFilters, country }: Us
           filterBy += ` && geo_location:(${latitude}, ${longitude}, ${radius} km)`;
         }
       }
+    }
+
+    if(query.country){
+      filterBy += ` && country:=${query.country}`;
     }
     return filterBy;
   };
@@ -142,30 +138,40 @@ export const useTypesenseCategory = ({ categoryId, initialFilters, country }: Us
       case 'oldest':
         return `${baseSort},listingTs:asc`;
       default:
-        return `${baseSort},listingTs:desc`; // Default sorting
+        return `${baseSort},listingTs:desc`;
     }
   };
 
   const fetchProducts = async (resetProducts = false) => {
     setIsLoading(true);
     setError(null);
-
     try {
       const searchParameters = {
-        q: '*',
+        q: searchTerm || '*',
+        query_by: 'title.en',
         filter_by: buildSearchParams(),
         sort_by: getSortByParameter(),
         per_page: 20,
+        page: currentPage,
+        prefix: true,
+        typo_tolerance: true,
       };
 
       const result = await client.collections('kwibal_asset').documents().search(searchParameters);
       const hits = result.hits?.map((hit) => hit.document) || [];
-      setProducts(hits as Product[]);
-      setTotalCount(hits.length || 0);
+      
+      if (resetProducts) {
+        setProducts(hits as Product[]);
+      } else {
+        setProducts(prev => [...prev, ...hits] as Product[]);
+      }
+      setTotalCount(result.found || 0);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
       console.error('Search error:', err);
-      setProducts([]);
+      if (resetProducts) {
+        setProducts([]);
+      }
       setTotalCount(0);
     } finally {
       setIsLoading(false);
@@ -177,7 +183,7 @@ export const useTypesenseCategory = ({ categoryId, initialFilters, country }: Us
   };
 
   const updateFilters = (newFilters: Partial<CategoryFilters>) => {
-    setFilters((prev) => ({ ...prev, ...newFilters }));
+    setFilters(prev => ({ ...prev, ...newFilters }));
     setCurrentPage(1);
   };
 
@@ -190,7 +196,7 @@ export const useTypesenseCategory = ({ categoryId, initialFilters, country }: Us
     setCurrentPage(1);
     setProducts([]);
     fetchProducts(true);
-  }, [categoryId, country]);
+  }, [searchTerm, country]);
 
   useEffect(() => {
     if (currentPage > 1) {

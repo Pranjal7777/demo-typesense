@@ -25,6 +25,18 @@ import { useDispatch } from 'react-redux';
 import { getChatIdentifier } from '@/helper/payment';
 import { formatPriceWithoutCents } from '@/utils/price-formatter';
 import LeftArrowIcon from '../../../public/assets/svg/left-arrow-icon';
+import ImageContainer from '@/components/ui/image-container';
+import { STATIC_IMAGE_URL } from '@/config';
+import ShareIconSVG from '../../../public/assets/svg/share-icon';
+import SearchIcon from '../../../public/assets/svg/search-icon';
+import SvgWrapper from '@/components/ui/svg-wrapper';
+import SVG_PATH from '@/lib/svg-path';
+import ShareIcon from '../../../public/assets/svg/share-icon-flat';
+import ChatIcon from '../../../public/assets/svg/chat-icon';
+import Button from '@/components/ui/button';
+import { productsApi } from '@/store/api-slices/products-api';
+import showToast from '@/helper/show-toaster';
+import FullScreenSpinner from '@/components/ui/full-screen-spinner';
 export type filteredProducts = {
   userName: string;
   timeStamp: string;
@@ -64,6 +76,15 @@ type togglePanelText = {
 type ProductProps = {
   data: any;
 };
+
+export type StickyHeaderDetails = {
+  showProductImage: boolean;
+  showShareIcon: boolean;
+  showProductName: boolean;
+  showPrice: boolean;
+  showButtons: boolean;
+};
+
 const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
   const sellerAccountId = data?.result?.users?.accountId;
   const router = useRouter();
@@ -100,6 +121,38 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
   const [isFirstButtonLoading, setIsFirstButtonLoading] = useState(false);
   const dispatch = useDispatch();
 
+    const [likeAndDislikeProduct, { isLoading: isLikeAndDislikeLoading }] =
+      productsApi.useLikeAndDislikeProductMutation();
+      const [isLiked, setIsLiked] = useState(apidata?.isLiked);
+
+       const handleLike = async () => {
+         if (userInfo) {
+           try {
+             const newLikeState = !isLiked;
+             if (typeof userInfo.accountId === 'string' && typeof assetId === 'string') {
+               const userId: string = userInfo.accountId;
+               const result = await likeAndDislikeProduct({ assetid: assetId, like: newLikeState, userId }).unwrap();
+               setIsLiked(newLikeState);
+               setTotalLikeCount((prev) => (newLikeState ? prev + 1 : prev - 1));
+               showToast({ message: result.message });
+             }
+           } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+             showToast({ message: errorMessage });
+           }
+         } else {
+           router.push('/login');
+         }
+       };
+
+  const [stickyHeaderDetails, setStickyHeaderDetails] = useState<StickyHeaderDetails>({
+    showShareIcon: false,
+    showProductImage: false,
+    showProductName: false,
+    showPrice: false,
+    showButtons: false,
+  });
+  
   const breadcrumbSteps = [
     {
       name: hamburger[0].home,
@@ -169,7 +222,29 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
       setIsFirstButtonLoading(false);
     }
   };
-  
+
+  const [activeProductImage, setActiveProductImage] = useState<string>('');
+
+  const getImageSrc = (url: string) => {
+    const src = url?.includes('http') ? url : `${STATIC_IMAGE_URL}/${url}`;
+    return src;
+  };
+
+  const handleShareClick = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: prodTitle,
+          text: 'Product from Kwibal',
+          url: shareLink,
+        });
+      } catch (error) {
+        console.error('Error sharing:', error);
+      }
+    } else {
+      alert('Sharing not supported.');
+    }
+  };
 
   return (
     <Layout
@@ -180,6 +255,79 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
       stickyHeroSection={true}
       showBackArrowInSearchBox={true}
     >
+      {(stickyHeaderDetails?.showProductImage || stickyHeaderDetails?.showShareIcon) && (
+        <div style={{zIndex: 1}} className="hidden  fixed md:flex justify-between items-center h-[80px]  top-[145px] left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-5 mx-auto max-w-[1440px]">
+          <div className="flex gap-4">
+            {stickyHeaderDetails.showProductImage && (
+              <ImageContainer
+                src={getImageSrc(activeProductImage)}
+                alt={`Thumbnail`}
+                width={110}
+                height={110}
+                className={` border !aspect-square h-[70px] w-[70px] object-cover rounded-lg`}
+                layout="fixed"
+              />
+            )}
+
+            <div className="flex items-center gap-x-3 text-text-primary-light dark:text-text-primary-dark">
+              <div className="flex flex-col  gap-y-2">
+                {stickyHeaderDetails.showProductName && <span className="text-sm font-medium">{prodTitle}</span>}
+                {stickyHeaderDetails.showPrice && (
+                  <span className="font-semibold">{formatPriceWithoutCents(prodPrice)}</span>
+                )}
+              </div>
+              {stickyHeaderDetails.showShareIcon && (
+                <ShareIcon
+                  onClick={handleShareClick}
+                  height={28}
+                  width={28}
+                  primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
+                  className="cursor-pointer"
+                />
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {stickyHeaderDetails.showShareIcon && (
+              <HartSvg
+                onClick={handleLike}
+                height="24"
+                width="24"
+                className="hover:scale-105 cursor-pointer"
+                borderColor={`${theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}`}
+                color="var(--heart-fill-color)"
+                isFilled={isLiked}
+              />
+            )}
+            {stickyHeaderDetails.showButtons && (
+              <div className="flex gap-2">
+                <Button
+                  isLoading={isFirstButtonLoading}
+                  onClick={handleFirstButtonClick}
+                  className={`w-[174px]  text-sm mb-0`}
+                >
+                  Buy Now
+                </Button>
+
+                <Button
+                  className="w-[174px] text-sm mb-0 dark:bg-bg-tertiary-dark dark:text-text-primary-dark"
+                  buttonType="secondary"
+                >
+                  Offer Trade
+                </Button>
+
+                <ChatIcon
+                  // onClick={chatIconClickHandler}
+                  bgFillcolor={theme ? '#363636' : '#F4F4F4'}
+                  fillColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
+                  // size={isMobile ? 'mobile' : 'pc'}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      )}
       <div className="mt-0 md:mt-5">
         <Breadcrumb steps={breadcrumbSteps} />
       </div>
@@ -189,13 +337,17 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
         <div className="flex gap-8 mobile:gap-2 w-full xl:h-[576px] lg:h-[530px] md:h-full sm:h-[400px] flex-col lg:flex-row overflow-y-scroll">
           <div className=" h-full w-full lg:w-[60%]">
             <ProductSlider
+              setActiveProductImage={setActiveProductImage}
+              setStickyHeaderDetails={setStickyHeaderDetails}
+              stickyHeaderDetails={stickyHeaderDetails}
               className=""
               assetId={assetId}
               setTotalLikeCount={setTotalLikeCount}
               imagesArray={images}
               shareURL={shareLink}
               shareTitle={prodTitle}
-              isProductLiked={apidata.isLiked}
+              isProductLiked={isLiked}
+              setIsLiked={setIsLiked}
               productCondition={apidata.assetCondition}
             />
             <div className="lg:mt-5 md:mt-3 sm:mt-2 flex items-end justify-between mobile:hidden"></div>
@@ -205,6 +357,8 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
             <div>
               <div className="mobile:mt-5 w-full flex flex-col">
                 <ProductDetailsCard
+                  setStickyHeaderDetails={setStickyHeaderDetails}
+                  stickyHeaderDetails={stickyHeaderDetails}
                   assetId={assetId}
                   familyName={prodCategory}
                   categoryTitle={prodTitle}
@@ -218,6 +372,8 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
                 {apidata?.users?.accountId !== userInfo?.accountId && (
                   <div className="mobile:hidden">
                     <PdpCta
+                      setStickyHeaderDetails={setStickyHeaderDetails}
+                      stickyHeaderDetails={stickyHeaderDetails}
                       apiData={apidata}
                       firstButtonText={data.result?.isNegotiable ? ctaText[0].makeOfferBtn : ctaText[0].firstBtn}
                       isSold={isSold}
@@ -295,6 +451,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
       <div className="custom-container mobile:px-4">
         <InfoSection />
       </div>
+      {isLikeAndDislikeLoading && <FullScreenSpinner/>}
     </Layout>
   );
 };

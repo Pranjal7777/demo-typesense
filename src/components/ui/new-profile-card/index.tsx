@@ -8,6 +8,7 @@ import Link from 'next/link';
 import UserProfile from '../user-profile';
 import Model from '@/components/model';
 import FollowDetails from './follow-details';
+import { SellerProfileType } from '@/store/types/seller-profile-type';
 type Props = {
   cardClass?: string;
   fullNameClass?: string;
@@ -62,6 +63,9 @@ const NewProfileCard: FC<Props> = ({
 }) => {
   // const profileSrc = profilePic ? (profilePic.includes('http') ? profilePic : `${STATIC_IMAGE_URL}/${profilePic}`) : '';
   // const { theme } = useTheme();
+  const [totalUserFollowers, setTotalUserFollowers] = useState(totalFollowers || 0);
+  const [totalUserFollowing, setTotalUserFollowing] = useState(totalFollowing || 0);
+
   const [activeTab, setActiveTab] = useState('');
    const [isOpen, setIsOpen] = useState(false);
    const handleClose = () => {
@@ -134,16 +138,16 @@ const NewProfileCard: FC<Props> = ({
             )}
           >
             <span className="cursor-pointer" onClick={() => handleOpen('followers')}>{`${
-              totalFollowers || '0 '
+              totalUserFollowers || '0 '
             } followers`}</span>
             <span className="cursor-pointer" onClick={() => handleOpen('following')}>{`${
-              totalFollowing || '0 '
+              totalUserFollowing || '0 '
             } following`}</span>
           </div>
         )}
       </div>
-      {isOpen && <Model  className='rounded-[12px] h-[500px] flex flex-col' onClose={handleClose} >
-        <FollowDetails title={activeTab === 'followers' ? 'Followers' : 'Following'}/>
+      {isOpen && <Model closeIconClassName='top-[26px]' className='sm:rounded-[12px] min-h-screen sm:min-h-fit rounded-none sm:h-[500px] max-w-screen sm:max-w-[460px] flex flex-col dark:bg-bg-secondary-dark' onClose={handleClose} >
+        <FollowDetails setTotalUserFollowers={setTotalUserFollowers} setTotalUserFollowing={setTotalUserFollowing} title={activeTab === 'followers' ? 'Followers' : 'Following'}/>
         </Model>}
     </>
   );

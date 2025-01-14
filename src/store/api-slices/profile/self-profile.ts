@@ -99,7 +99,7 @@ export const selfProfileApi = rootApi.injectEndpoints({
     }),
     getFollowersAndFollowing: builder.query<
       FollowersAndFollowingResponse,
-      { page: number; trigger: number; accountId: string; userId: string }
+      { page: number; trigger: number; accountId: string; userId: string; searchText?: string }
     >({
       query: (body) => ({
         url: `${AUTH_URL_V1}/followeeNFollower`,
@@ -109,6 +109,7 @@ export const selfProfileApi = rootApi.injectEndpoints({
           userId: body.userId || '',
           trigger: body.trigger || 0,
           page: body.page || 1,
+          ...(body.searchText && { searchText: body.searchText }),
         },
       }),
       keepUnusedDataFor: 0,

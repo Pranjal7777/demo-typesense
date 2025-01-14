@@ -17,7 +17,7 @@ type UserProfileProps = {
 const UserProfile:FC<UserProfileProps> = ({ firstName, lastName, profilePicUrl, className, imageClassName, textContainerClassName, imageHeight, imageWidth }) => {
   const [hasError, setHasError] = useState(false);
   const [profilePicSrc, setProfilePicSrc] = useState(
-    profilePicUrl?.includes('http') ? profilePicUrl : `${STATIC_IMAGE_URL}${profilePicUrl}`
+    profilePicUrl?.includes('http') ? profilePicUrl : `${STATIC_IMAGE_URL}/${profilePicUrl}`
   );
   useEffect(() => {
     setProfilePicSrc(profilePicUrl?.includes('http') ? profilePicUrl : `${STATIC_IMAGE_URL}/${profilePicUrl}`);

@@ -44,13 +44,14 @@ export type ButtonProps = {
   className?: string;
   isLoading?: boolean;
   isDisabled?: boolean;
+  spinnerClassName?: string;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-const Button: FC<ButtonProps> = ({ children, className, buttonType, isDisabled, isLoading, ...otherProps }) => {
+const Button: FC<ButtonProps> = ({ children, className, buttonType, isDisabled, isLoading, spinnerClassName, ...otherProps }) => {
   const CustomButton = getButton(buttonType);
   return (
     <button className={appClsx('', CustomButton, className)} {...otherProps} disabled={isDisabled}>
-      {isLoading ? <Spinner /> : children}
+        {isLoading ? <Spinner className={spinnerClassName} /> : children}
     </button>
   );
 };

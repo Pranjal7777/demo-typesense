@@ -32,11 +32,11 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
    const userId = useSelector((state: RootState) => state.auth.userInfo?._id);
   const { theme } = useTheme();
   const router = useRouter();
-  const userAccountId = product.accountId;
+  const userAccountId = product?.accountId;
   const handleProductClick = () => {
     router.push(
-      `/product/${product.assetTitle || product.title?.en || ''}-${
-        isTypeSenseData ? product.id : product.assetId || product._id
+      `/product/${product?.assetTitle || product?.title?.en || ''}-${
+        isTypeSenseData ? product?.id : product?.assetId || product?._id
       }`
     );
   };
@@ -50,7 +50,7 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
         ? imageUrl?.url
         : `${STATIC_IMAGE_URL}/${imageUrl?.url}`;
 
-  const [isLiked, setIsLiked] = useState(product.isLiked);
+  const [isLiked, setIsLiked] = useState(product?.isLiked);
 
   const handleLike = async () => {
 
@@ -61,10 +61,10 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
     }
 
     try {      
-      const result = await likeAndDislikeProduct({ assetid: product.assetId || product._id || product.id || '', like: !isLiked, userId: userID || userId || '' }).unwrap();
+      const result = await likeAndDislikeProduct({ assetid: product?.assetId || product?._id || product?.id || '', like: !isLiked, userId: userID || userId || '' }).unwrap();
       showToast({ message: result?.message, messageType: 'success', position: 'bottom-right' });
       setIsLiked(!isLiked);
-      onLikeClick?.(product.assetId || product._id);
+      onLikeClick?.(product?.assetId || product?._id);
     } catch (error) {
       const errorData = error as AddressErrorType;
       showToast({ message: errorData?.data?.message, messageType: 'error', position: 'bottom-right' });
@@ -114,7 +114,7 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
                 </strong>
                 {/* here we can write time coming from api or we can calculate later */}
                 <p className="text-text-quaternary-dark dark:text-text-senary-dark text-[10px] md:text-xs font-normal">
-                  {timeSince(product.creationTs)}
+                  {timeSince(product?.creationTs || 0)}
                 </p>
               </div>
             </div>
@@ -144,7 +144,7 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
           {/* <div> */}
           {/* this span will take image name from the api, product?.imageName  */}
           <span className="text-[10px] leading-[15px] md:text-sm font-normal text-[#202022] dark:text-white">
-            {product.assetTitle || product.title?.en || ''}
+            {product?.assetTitle || product?.title?.en || ''}
           </span>
           {/* </div> */}
           <div className="text-sm sm:text-[16px] sm:leading-6 font-semibold text-text-primary-light dark:text-text-primary-dark leading-5">
@@ -154,7 +154,7 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
             <div className="flex items-center">
               <LocationSvg height="12" width="12" color={theme ? 'var(--text-light)' : 'var(--text-secondary-color)'} />
               <div className="ml-[2px] text-[10px] leading-[15px] md:text-xs font-normal md:ml-[6px] md:leading-[18px] dark:text-text-tertiary-dark">
-                {product.city + ', ' + (product.zip || product?.zipCode || '')}
+                {product?.city + ', ' + (product?.zip || product?.zipCode || '')}
               </div>
             </div>
             {showLikeIcon && (

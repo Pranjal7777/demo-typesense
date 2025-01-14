@@ -362,6 +362,12 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     setSelectedItemsFromFilterSection(updatedFilters);
   }, [router.query]);
 
+  const { searchTerm: routeSearchTerm } = router.query;
+  // Get the actual search term from the URL
+  const searchText = Array.isArray(routeSearchTerm) 
+    ? routeSearchTerm[0].split('-').slice(0, -1).join(' ') // Remove the ID part and join with spaces
+    : routeSearchTerm?.split('-').slice(0, -1).join(' ') || '';
+
   const {
     products,
     isLoading,
@@ -373,7 +379,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     updateFilters,
     resetFilters,
   } = useTypesenseCategory({
-    categoryId: id as string,
+    searchTerm: searchText,
     country: selectedItemsFromFilterSection.country,
   });
 

@@ -57,7 +57,7 @@ const NewProductCard: FC<ProductCardProps> = ({ product }) => {
         </span>
         <span className="flex flex-col truncate ml-3">
           <h5 className="text-xs leading-[18px] truncate md:text-sm font-medium md:leading-5 text-text-primary-light dark:text-text-primary-dark">
-            {product.firstName?.[0].toUpperCase() +
+            {product.firstName?.[0]?.toUpperCase() +
               product.firstName?.slice(1) +
               ' ' +
               product.lastName[0].toUpperCase() +

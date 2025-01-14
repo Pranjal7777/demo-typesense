@@ -50,3 +50,10 @@ export const routeToSearch = (categoryObj: categoryType) => {
 };
 
 export const routeSellerProfile = (id: string) => `/seller-profile/${id}`;
+
+export const getSearchTerm = (params: any) => {
+  if(!params) return '';
+  const paramsArray = params['searchTerm']?.split('-');
+  const searchTerm = paramsArray?.slice(0, -1).join('-');
+  return searchTerm;
+};

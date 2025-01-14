@@ -145,7 +145,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
             indexName: selectedOption === 'Items' ? 'kwibal_asset' : 'kwibal_accounts',
             params: {
               query: searchQuery,
-              query_by: selectedOption === 'Items' ? 'title.en,description' : 'first_name,last_name',
+              query_by: selectedOption === 'Items' ? 'title.en' : 'first_name,last_name',
               hitsPerPage: 1,
             },
           },
@@ -225,7 +225,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
           indexName: selectedOption === 'Items' ? 'kwibal_asset' : 'kwibal_accounts',
           params: {
             query: value,
-            query_by: selectedOption === 'Items' ? 'title.en,description' : 'first_name,last_name',
+            query_by: selectedOption === 'Items' ? 'title.en' : 'first_name,last_name',
             hitsPerPage: 1,
           },
         },
@@ -286,7 +286,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
           indexName: currentOption === 'Items' ? 'kwibal_asset' : 'kwibal_accounts',
           params: {
             query: searchText,
-            query_by: currentOption === 'Items' ? 'title.en,description' : 'first_name,last_name',
+            query_by: currentOption === 'Items' ? 'title.en' : 'first_name,last_name',
             hitsPerPage: 1,
           },
         },
@@ -295,7 +295,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
       if (results[0]?.hits?.length > 0) {
         const hit = results[0].hits[0];
         if (currentOption === 'Items') {
-          categoryRoute(hit.categories[0].id, hit.title.en, hit);
+          categoryRoute(hit.categories[0].id, searchText, hit);
         } else {
           sellerProfileRoute(hit.id, searchText);
         }

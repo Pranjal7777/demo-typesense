@@ -96,18 +96,18 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
                 {/* here we can add name coming form api as product?.name */}
                 <h5
                   title={
-                    product.firstName?.[0].toUpperCase() +
+                    product.firstName?.[0]?.toUpperCase() +
                     product.firstName?.slice(1) +
                     ' ' +
-                    product.lastName[0].toUpperCase() +
+                    product?.lastName[0]?.toUpperCase() +
                     product?.lastName?.slice(1)
                   }
                   className="text-xs leading-[18px] truncate md:text-sm font-medium md:leading-5 text-text-primary-light dark:text-text-primary-dark"
                 >
-                  {product.firstName?.[0].toUpperCase() +
+                  {product.firstName?.[0]?.toUpperCase() +
                     product.firstName?.slice(1) +
                     ' ' +
-                    product.lastName[0].toUpperCase() +
+                    product?.lastName[0]?.toUpperCase() +
                     product?.lastName?.slice(1)}
                 </h5>
                 {/* here we can write time coming from api or we can calculate later */}

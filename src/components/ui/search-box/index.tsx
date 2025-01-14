@@ -2,10 +2,10 @@
 import React, { ChangeEvent, FC, KeyboardEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { useActions, useAppSelector } from '@/store/utils/hooks';
-import { GOOGLE_MAPS_KEY, HIDE_SELLER_FLOW } from '@/config';
+import { GOOGLE_MAPS_KEY, HIDE_SELLER_FLOW, STATIC_IMAGE_URL } from '@/config';
 import isUserAuthenticated from '@/helper/validation/check-user-authentication';
 import { productsApi } from '@/store/api-slices/products-api';
-import { SearchItems, SearchUsers } from '@/store/types';
+import { Product, SearchItems, SearchUsers } from '@/store/types';
 import { useDebounce } from '@/hooks/use-debounce';
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService';
 import { HydrationGuard } from '../hydration-guard';
@@ -39,6 +39,7 @@ import { SearchResponse } from '@/types';
 import LeftArrowIcon from '../../../../public/assets/svg/left-arrow-icon';
 import { getUserLocation } from '@/helper/get-location';
 import getAddressFromLatLng from '@/helper/get-address-by-lat-lng';
+import { IMAGES } from '@/lib/images';
 
 export type NewSearchBoxProps = {
   windowWidth: number;
@@ -151,7 +152,6 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
           },
         ])
         .then(({ results }: SearchResponse) => {
-          console.log(results, 'resultsassad');
           setHasValidSearchResults(results[0]?.hits?.length > 0);
           setFormData((prev) => ({
             ...prev,
@@ -455,6 +455,16 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
     return minThreshold && theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)';
   };
 
+  const getSearchItemImageUrl = (hit: any) => {
+    return hit.images[0].type === 'VIDEO'
+      ? hit.images[0].thumbnailUrl?.includes('https')
+        ? hit.images[0].thumbnailUrl
+        : `${STATIC_IMAGE_URL}/${hit.images[0].thumbnailUrl}` || (theme ? IMAGES.FALLBACK_IMAGE_DARK : IMAGES.FALLBACK_IMAGE_LIGHT)
+      : hit.images[0].url?.includes('https')
+      ? hit.images[0].url
+      : `${STATIC_IMAGE_URL}/${hit.images[0].url}` || (theme ? IMAGES.FALLBACK_IMAGE_DARK : IMAGES.FALLBACK_IMAGE_LIGHT);
+  };
+
   return (
     <>
       {/* @todo */}
@@ -604,7 +614,8 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                                 setIsOpen(false);
                               }}
                             >
-                              <div className="truncate ml-3 flex">
+                              <div className="truncate ml-3 flex items-center gap-2">
+                                <Image src={getSearchItemImageUrl(hit)} alt={'search-product-image'} width={40} height={40} className=" h-8 w-8 rounded-full" />
                                 <div className="font-medium text-sm text-text-primary-light dark:text-text-primary-dark">
                                   {/* @ts-ignore */}
                                   {hit?.title?.en}
@@ -1018,11 +1029,11 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
               className="absolute  mobile:left-3 rtl:mobile:left-0 rtl:mobile:right-3 "
             />
             <span
-              className={`text-base  ml-9 mobile:text-sm rtl:ml-0 rtl:mr-9 truncate dark:text-text-secondary-dark ${
-                router?.query?.search ? '' : 'text-text-denary-light'
+              className={`text-base  ml-9 mobile:text-sm rtl:ml-0 rtl:mr-9 truncate text-text-secondary-dark ${
+                formData.search ? '' : 'text-text-denary-light'
               }`}
             >
-              {router?.query?.search ? (router.query.search as string) : heroSection.searchPlaceholder}
+              {formData.search ? formData.search : heroSection.searchPlaceholder}
             </span>
           </button>
         </div>
@@ -1033,6 +1044,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
 
       {/* mobile screen DROWER */}
       <SearchUserAndCategoryDrower
+        selectItemOrUserToSearch={selectItemOrUserToSearch}
         isPlacePredictionsLoading={isPlacePredictionsLoading}
         isSearchProductsAndUsersFetching={false}
         className={`sm:hidden mobile:inline-block ${searchItemAndUserDrower && '!hidden'}`}

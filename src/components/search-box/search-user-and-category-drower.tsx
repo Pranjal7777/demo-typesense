@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useEffect, useState } from 'react';
+import React, { ChangeEvent, FC, KeyboardEvent, useEffect, useState } from 'react';
 import SearchUserAndCategoryCard from './search-user-and-category-card';
 import { appClsx } from '@/lib/utils';
 import SearchLocationAutocompleteCard from './search-location-autocomplete-card';
@@ -55,6 +55,7 @@ export type Props = {
   handleGetLocationHelper: () => Promise<boolean>;
   handleRemoveLocationHelper: () => void;
   handleOnChange: (_e: ChangeEvent<HTMLInputElement>) => void;
+  selectItemOrUserToSearch?: (_searchText: string) => void;
   address: string;
   placesService: {
     getDetails: (
@@ -114,6 +115,7 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
   searchResults,
   searchClient,
   setSelectedOption,
+  selectItemOrUserToSearch,
 }) => {
   // please do not remove this -> this code is for translation of this page
   // const { t } = useTranslation('common');
@@ -191,6 +193,14 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
     }));
   }, [myLocation, myLocation?.address]);
 
+   const handleSearchEnterKeyDown = async (event: KeyboardEvent<HTMLInputElement>) => {
+     if (event.key === 'Enter') {
+       if (formData.search !== '') {
+         await selectItemOrUserToSearch?.(formData.search);       
+       }
+     }
+   };
+
   return (
     <div
       className={appClsx(
@@ -243,6 +253,7 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
               onFocus={() => setIsLocationTextBoxFocused(true)}
               value={formData.search}
               onChange={(e) => handleInstantSearchOnChange?.(e)}
+              onKeyDown={handleSearchEnterKeyDown}
               autoComplete="off"
             />
 
@@ -459,7 +470,6 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
                   <CustomSearchResults searchQuery={formData.search}>
                     <Hits
                       hitComponent={({ hit }) => {
-                        console.log(hit, 'hit==>>');
                         return (
                           <div
                             tabIndex={0}

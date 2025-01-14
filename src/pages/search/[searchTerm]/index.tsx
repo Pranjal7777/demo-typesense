@@ -34,7 +34,7 @@ import AboutUs from '@/components/about-us';
 import Accordion from '@/components/sections/accordion-card';
 import InfoSection from '@/components/sections/info-section';
 import { convertRTKQueryErrorToString } from '@/helper/convert-rtk-query-error-to-string';
-import { useTypesenseCategory } from '@/hooks/useTypesenseCategory';
+import { useTypesenseSearch } from '@/hooks/useTypesenseSearchPage';
 import { useSearchParams } from 'next/navigation';
 import Select from 'react-select';
 import { useTheme } from '@/hooks/theme';
@@ -46,6 +46,7 @@ import { categoriesApi } from '@/store/api-slices/categories-api';
 import { useNewWindowScroll } from '@/hooks/new-use-window-scroll';
 import { IMAGES } from '@/lib/images';
 import CustomHeader from '@/components/ui/custom-header';
+import Placeholder from '@/containers/placeholder/placeholder';
 
 export type filteredProducts = {
   userName: string;
@@ -378,7 +379,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     loadMore,
     updateFilters,
     resetFilters,
-  } = useTypesenseCategory({
+  } = useTypesenseSearch({
     searchTerm: searchText,
     country: selectedItemsFromFilterSection.country,
   });
@@ -525,9 +526,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                         <ProductCard key={`${product?.id}-${index}`} product={product} isTypeSenseData={true} />
                       ))
                     ) : !isLoading ? (
-                      <div className="col-span-full text-center py-8 dark:text-white">
-                        <h2>No products found</h2>
-                      </div>
+                      <Placeholder containerClassName='col-span-full mb-8' title='No products found' description='Please search for something else'/>
                     ) : null}
 
                     {isLoading && (

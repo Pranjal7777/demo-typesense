@@ -28,7 +28,6 @@ import AboutUs from '@/components/about-us';
 import Accordion from '@/components/sections/accordion-card';
 import InfoSection from '@/components/sections/info-section';
 import { convertRTKQueryErrorToString } from '@/helper/convert-rtk-query-error-to-string';
-import { useTypesenseCategory } from '@/hooks/useTypesenseCategory';
 import { useSearchParams } from 'next/navigation';
 import Select from 'react-select';
 import { useTheme } from '@/hooks/theme';
@@ -40,6 +39,8 @@ import { categoriesApi } from '@/store/api-slices/categories-api';
 import { useNewWindowScroll } from '@/hooks/new-use-window-scroll';
 import { IMAGES } from '@/lib/images';
 import CustomHeader from '@/components/ui/custom-header';
+import { useTypesenseCategory } from '@/hooks/useTypesenseCategory';
+import Placeholder from '@/containers/placeholder/placeholder';
 
 export type filteredProducts = {
   userName: string;
@@ -522,7 +523,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
           <Breadcrumb
             isLinkDisable={true}
             className="!pl-0 md:!pl-0 my-5"
-            steps={[{name: 'Home', link:'/'},{ name: 'Categories' }, { name: categoryName || '' }]}
+            steps={[{ name: 'Home', link: '/' }, { name: 'Categories' }, { name: categoryName || '' }]}
           ></Breadcrumb>
           {/* categories section starts */}
           <div className="mobile:pb-9">
@@ -573,7 +574,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
               )}
               <div className=" w-full pt-9 sm:py-8 lg:py-12 flex flex-col items-center justify-center">
                 <div
-                style={{zIndex: 1}}
+                  style={{ zIndex: 1 }}
                   className={`w-full ${
                     minThreshold
                       ? `fixed ${
@@ -650,9 +651,11 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                         <ProductCard key={`${product?.id}-${index}`} product={product} isTypeSenseData={true} />
                       ))
                     ) : !isLoading ? (
-                      <div className="col-span-full text-center py-8 dark:text-white">
-                        <h2>No products found</h2>
-                      </div>
+                      <Placeholder
+                        containerClassName="col-span-full mb-8"
+                        title="No products found"
+                        description="Please search for something else"
+                      />
                     ) : null}
 
                     {isLoading && (

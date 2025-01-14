@@ -145,7 +145,6 @@ export const useTypesenseSearch = ({ searchTerm, initialFilters, country }: UseT
   const fetchProducts = async (resetProducts = false) => {
     setIsLoading(true);
     setError(null);
-console.log(searchTerm, 'asdadasd==>>searchTerm');
     try {
       const searchParameters = {
         q: searchTerm || '*',

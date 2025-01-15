@@ -405,6 +405,14 @@ const OTPForm: React.FC = () => {
     router.back();
   };
 
+  const onOtherLoginOptionsClick = () => {
+    if (router.pathname.includes(SIGN_UP_PAGE)){
+      router.push(SIGN_UP_PAGE);
+    } else if (router.pathname.includes(SIGN_IN_PAGE)){
+      router.push(SIGN_IN_PAGE);
+    }
+  };
+
   return (
     <>
       {/* <div className={` lg:w-[40%] sm:w-full mobile:w-full px-10 py-7 !pt-[60px] w-[40%] flex flex-col items-center justify-between`}> */}
@@ -440,7 +448,7 @@ const OTPForm: React.FC = () => {
               // type='number'
               autoComplete="one-time-code"
               inputMode="numeric"
-              value={digit} 
+              value={digit}
               maxLength={1}
               onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(index, e.target.value)}
               onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => handleKeyPress(index, e)}
@@ -471,10 +479,12 @@ const OTPForm: React.FC = () => {
             className={`mt-6 hover:cursor-pointer w-[70%] min-w-[303px] my-2 outline-none h-11 rounded
                  text-sm font-semibold
                  ${
-              (isCompleted || isLoading) ? '!text-text-tertiary-color !bg-brand-color' : 'bg-bg-tertiary-light dark:bg-bg-undenary-dark !text-[#888888]'
-            }`}
+                   isCompleted || isLoading
+                     ? '!text-text-tertiary-color !bg-brand-color'
+                     : 'bg-bg-tertiary-light dark:bg-bg-undenary-dark !text-[#888888]'
+                 }`}
             disabled={!isCompleted}
-            onClick={ handleSubmit}
+            onClick={handleSubmit}
           >
             {otpVerification.verifyButton}
           </Button>
@@ -494,6 +504,8 @@ const OTPForm: React.FC = () => {
             {otpVerification.sendAgain}
           </span>
         )}
+
+        <p onClick={onOtherLoginOptionsClick} className="text-brand-color text-sm font-semibold mt-2 cursor-pointer">Other Login Options</p>
       </div>
 
       {/* </div> */}

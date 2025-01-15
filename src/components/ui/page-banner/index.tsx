@@ -11,6 +11,7 @@ type PageBannerProps = {
   headerText?: string;
   headerDescription?: string;
   headerDescriptionForMobile?: string;
+  priority?: boolean;
 };
 
 const PageBanner: FC<PageBannerProps> = ({
@@ -19,6 +20,7 @@ const PageBanner: FC<PageBannerProps> = ({
   headerText,
   headerDescription,
   headerDescriptionForMobile,
+  priority = false,
 }) => {
   return (
     <div className="relative  flex items-center justify-center">
@@ -30,7 +32,8 @@ const PageBanner: FC<PageBannerProps> = ({
           alt="page_banner_for_web"
           // priority={true}
           loading='lazy'
-          quality={100}
+            priority={priority}
+          quality={80}
         />
       </div>
       {bannerUrlForMobile ? (
@@ -40,9 +43,10 @@ const PageBanner: FC<PageBannerProps> = ({
             className={'object-cover'}
             src={bannerUrlForMobile}
             alt="page_banner_for_web"
-            // priority={true}
+            // priority={true}  
             loading='lazy'
-            quality={30}
+            priority={priority}
+            quality={50}
           />
         </div>
       ) : null}

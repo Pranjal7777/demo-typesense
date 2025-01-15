@@ -1,13 +1,11 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Product } from '@/store/types';
 import { STATIC_IMAGE_URL } from '@/config';
 import LocationSvg from '../../../../public/assets/svg/location';
-// import { PROFILE_IMAGE } from '../../../../public/images/productcard';
 import ImageContainer from '../image-container';
 import { useTheme } from '@/hooks/theme';
 import { timeSince } from '@/helper/time-since';
 import { useRouter } from 'next/router';
-import UserPlaceholderIcon from '../../../../public/assets/svg/user-placeholder-icon';
 import Link from 'next/link';
 import keyDownHandler from '@/helper/key-down-handler';
 import {  formatPriceWithoutCents } from '@/utils/price-formatter';
@@ -15,7 +13,6 @@ import HartSvg from '../../../../public/assets/svg/heart';
 import { productsApi } from '@/store/api-slices/products-api';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-import { Toaster } from 'sonner';
 import FullScreenSpinner from '../full-screen-spinner';
 import showToast from '@/helper/show-toaster';
 import { AddressErrorType } from '@/store/types/profile-type';
@@ -82,7 +79,12 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
         role="button"
         className="card flex flex-col p-1 gap-2 sm:gap-3 hover:scale-102 transition-all duration-300 ease-in hover:cursor-pointer mobile:max-w-[100%] w-full h-full pb-[10px] max-w-[313px] hover:shadow-lg"
       >
-        <Link href={`/profile/seller/${product?.firstName?.replace(/\s+/g, '')}${product?.lastName?.replace(/\s+/g, '')}/${userAccountId}`}>
+        <Link
+          href={`/profile/seller/${product?.firstName?.replace(/\s+/g, '')}${product?.lastName?.replace(
+            /\s+/g,
+            ''
+          )}/${userAccountId}`}
+        >
           {showProfilePic && (
             <div className="flex gap-1 md:gap-4 items-center">
               <UserProfile
@@ -94,7 +96,7 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
 
               <div className="overflow-overlay overflow-hidden">
                 {/* here we can add name coming form api as product?.name */}
-                <h5
+                <strong
                   title={
                     product?.firstName?.[0]?.toUpperCase() +
                     product?.firstName?.slice(1) +
@@ -109,7 +111,7 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
                     ' ' +
                     product?.lastName?.[0]?.toUpperCase() +
                     product?.lastName?.slice(1)}
-                </h5>
+                </strong>
                 {/* here we can write time coming from api or we can calculate later */}
                 <p className="text-text-quaternary-dark dark:text-text-senary-dark text-[10px] md:text-xs font-normal">
                   {timeSince(product?.creationTs || 0)}
@@ -129,10 +131,12 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
           tabIndex={0}
         >
           <ImageContainer
-            // className="object-cover !aspect-square"
-            className="absolute inset-0"
+            className="object-cover !aspect-square"
+            height={400}
+            width={400}
+            // className="absolute inset-0"
             // className=" border-error object-fill aspect-square w-full h-[170px] md:h-[190px]"
-            src={src ? src : 'https://leoffer-media.s3.ap-south-1.amazonaws.com/web_a65038706e.webp'}
+            src={src}
             alt="eq.svg"
           />
         </div>

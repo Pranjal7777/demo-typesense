@@ -125,6 +125,8 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
       productsApi.useLikeAndDislikeProductMutation();
       const [isLiked, setIsLiked] = useState(apidata?.isLiked);
 
+      const [isLikeChange, setIsLikeChange] = useState(false);
+
        const handleLike = async () => {
          if (userInfo) {
            try {
@@ -135,6 +137,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
                setIsLiked(newLikeState);
                setTotalLikeCount((prev) => (newLikeState ? prev + 1 : prev - 1));
                showToast({ message: result.message });
+               setIsLikeChange((prev) => !prev);
              }
            } catch (error) {
             const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
@@ -189,11 +192,11 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
   const ToggleInfo = [
     {
       label: togglePanelText[0].toggleOne,
-      content: <UserProductList accoundId={sellerAccountId} page="1" />,
+      content: <UserProductList isLikeChange={isLikeChange} accoundId={sellerAccountId} page="1" />,
     },
     {
       label: togglePanelText[0].toggleTwo,
-      content: <SimilarProductsList assetId={assetId} categoryId={categoryId} />,
+      content: <SimilarProductsList isLikeChange={isLikeChange} assetId={assetId} categoryId={categoryId} />,
     },
   ];
 
@@ -402,9 +405,11 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
                   isFollow={apidata?.isFollow}
                 />
               </div> */}
-              <div className="mt-5">
-                <InfoBox question={desc} answer={prodDesc} width={'100%'} />
-              </div>
+              {prodDesc && (
+                <div className="mt-5">
+                  <InfoBox question={desc} answer={prodDesc} width={'100%'} />
+                </div>
+              )}
               {prodDetails?.length > 0 ? (
                 <div className="mt-5 mobile:w-full mobile:p-4 h-auto">
                   <span className="text-lg md:text-xl font-semibold h-5 md:h-10 text-text-primary-light dark:text-text-primary-dark">

@@ -63,13 +63,21 @@ const WhatAreYouLookingFor: FC<Props> = ({ categories }) => {
       <div className="w-full">
         <div className="my-12 mobile:my-9 m-auto h-full">
           <div className="flex items-center justify-between">
-            <SectionTitle className="py-0">{categoriesSection.title}</SectionTitle>
-            <div className="flex items-center justify-between mobile:hidden cursor-pointer" onClick={changMenu} role='button'tabIndex={0} onKeyUp={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                changMenu();
-              }
-            }}>
+            <h2 className="font-semibold py-0 text-lg leading-[27px] md:text-2xl md:leading-9 text-text-primary-light dark:text-text-secondary-light">
+              {categoriesSection.title}
+            </h2>
+            <div
+              className="flex items-center justify-between mobile:hidden cursor-pointer"
+              onClick={changMenu}
+              role="button"
+              tabIndex={0}
+              onKeyUp={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  changMenu();
+                }
+              }}
+            >
               <CategoriesIcon color="var(--brand-color)" />
               <span className="ml-2 rtl:mr-2 rtl:ml-0 text-base text-brand-color font-medium">
                 {categoriesSection.seeAllCategories}
@@ -80,10 +88,10 @@ const WhatAreYouLookingFor: FC<Props> = ({ categories }) => {
           <div className="mt-8 mobile:mt-4 text-text-primary-light dark:text-text-primary-dark border-primary-color h-full grid xl:grid-cols-6 2lg:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-3 mobile:grid-cols-4 gap-5 sm:gap-16 md:gap-6">
             {categories?.data?.slice(0, isMobile ? 7 : 6).map((item, index) => (
               <div
-                onClick={()=>categoryRoute(item.id, item.title)}
+                onClick={() => categoryRoute(item.id, item.title)}
                 role="button"
                 tabIndex={0}
-                onKeyUp={(e) => keyDownHandler(e,()=>categoryRoute(item.id, item.title))}
+                onKeyUp={(e) => keyDownHandler(e, () => categoryRoute(item.id, item.title))}
                 className="cursor-pointer mobile:h-full max-h-[224] md:h-[224px] flex items-center justify-center"
                 key={index}
               >
@@ -104,11 +112,11 @@ const WhatAreYouLookingFor: FC<Props> = ({ categories }) => {
               }}
             >
               <div className=" bg-bg-quattuordenary-light h-[60px] w-[60px] md:h-[203px] md:w-[203px] flex-wrap rounded-full md:rounded-lg flex justify-center items-center p-2 ">
-                <RightArrowRoundedEdge primaryColor='var(--brand-color)' />
+                <RightArrowRoundedEdge primaryColor="var(--brand-color)" />
               </div>
-              <h6 className="mt-6 sm:mt-5 text-xs text-primary md:text-base  font-primary font-normal text-center max-w-[154.6px]">
+              <span className="mt-6 sm:mt-5 text-xs text-primary md:text-base  font-primary font-normal text-center max-w-[154.6px]">
                 See All
-              </h6>
+              </span>
             </div>
           </div>
         </div>

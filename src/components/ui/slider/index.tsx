@@ -2,6 +2,7 @@ import React, { FC, Fragment, isValidElement, ReactElement, ReactNode } from 're
 import SliderLeftArrowBtn from '../../../../public/assets/svg/slider-left-arrow-btn';
 import SliderRightArrowBtn from '../../../../public/assets/svg/slider-right-arrow-btn';
 import { appClsx } from '@/lib/utils';
+import { useTheme } from '@/hooks/theme';
 type SliderSettings = {
   dots: boolean;
   infinite: boolean;
@@ -28,6 +29,8 @@ type SliderProps = {
 
 const Slider: FC<SliderProps> = ({ children, leftBtn, rightBtn, className, sliderClassName, settings = {} }) => {
   const uniqueClassName = `unique-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
+
+  const {theme} = useTheme();
 
   const isSingleValidElement = (child: ReactNode): child is ReactElement => {
     if (isValidElement(child)) {
@@ -118,7 +121,7 @@ const Slider: FC<SliderProps> = ({ children, leftBtn, rightBtn, className, slide
           bg-gradient-to-r from-transparent to-[#FFF] dark:bg-gradient-to-r dark:from-transparent dark:to-[#1A1A1A]
         `}
         ></div>
-        
+
         {mySettings.leftRightBtn &&
           (leftBtn ? (
             React.cloneElement(leftBtn as React.ReactElement, {
@@ -128,6 +131,8 @@ const Slider: FC<SliderProps> = ({ children, leftBtn, rightBtn, className, slide
             })
           ) : (
             <SliderLeftArrowBtn
+              bgColor={theme ? '#737373' : '#9c9c9c'}
+              opacity={theme ? 0.8 : 1}
               onClick={scrollLeftBtn}
               className="hidden md:inline-block  absolute left-0 hover:scale-102 cursor-pointer transition-all duration-200 ease-in"
             />
@@ -148,6 +153,8 @@ const Slider: FC<SliderProps> = ({ children, leftBtn, rightBtn, className, slide
             })
           ) : (
             <SliderRightArrowBtn
+              opacity={theme ? 0.8 : 1}
+              bgColor={theme ? '#737373' : '#9c9c9c'}
               onClick={scrollRightBtn}
               className="hidden md:inline-block absolute right-0 hover:scale-102 cursor-pointer transition-all duration-200 ease-in"
             />

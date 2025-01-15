@@ -1,21 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ProductCard from '../ui/product-card';
 import SimilarProductsAPI from '@/store/api-slices/similar-products-api';
 import ProductCardSkeleton from '../ui/product-card-skeleton';
 type SimilarProductsProps = {
   assetId: string;
   categoryId: string;
+  isLikeChange?: boolean;
 };
 
-const SimilarProductsList: React.FC<SimilarProductsProps> = ({ assetId, categoryId }) => {
-  const { data, isLoading, isError, error } = SimilarProductsAPI.useGetSimilarProductsQuery({
+const SimilarProductsList: React.FC<SimilarProductsProps> = ({ assetId, categoryId, isLikeChange }) => {
+  const { data, isLoading, isError, error, refetch } = SimilarProductsAPI.useGetSimilarProductsQuery({
     assetId,
     categoryId,
   });
 
+  useEffect(() => {
+      refetch();
+  }, [isLikeChange]);
+
   if (isError) {
     console.error('Error fetching similar products:', error);
-  }  
+  }
   return (
     <div className="lg:mt-[52px] mobile:mt-[16px] w-full">
       {isLoading && (

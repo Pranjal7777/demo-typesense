@@ -15,6 +15,7 @@ import { LinksTypes } from '../faq';
 import SvgWrapper from '@/components/ui/svg-wrapper';
 import SVG_PATH from '@/lib/svg-path';
 import { useTheme } from '@/hooks/theme';
+import CustomHeader from '@/components/ui/custom-header';
 
 export interface blogs_detailsProps {
   post: {
@@ -46,6 +47,11 @@ function BlogsDetails({ post, id }: blogs_detailsProps) {
   useEffect(handleFilter, [id]);
 
   return (
+    <>
+    <CustomHeader
+    title={slugData[0]?.title}
+    image={slugData[0]?.cover_image?.data.attributes.url}
+    />
     <Layout excludeHeroSection={true} stickyHeader={true}>
       {post?.data && slugData ? (
         <>
@@ -127,9 +133,9 @@ function BlogsDetails({ post, id }: blogs_detailsProps) {
                     src={slugData[0]?.cover_image?.data.attributes.url}
                     alt={slugData[0]?.cover_image?.data.attributes?.name}
                   />
-                  <div className="mt-2 text-xl font-semibold text-text-primary-light dark:text-white">
+                  <h2 className="mt-2 text-xl font-semibold text-text-primary-light dark:text-white">
                     {slugData[0]?.title}
-                  </div>
+                  </h2>
                   <div className="mt-3 text-base font-normal h-[140px] overflow-hidden text-text-tertiary-light dark:text-text-tertiary-dark">
                     {slugData[0]?.blog_section[0]?.slug_paragraphs[0]?.paragraph?.slice(0, 250)}
                   </div>
@@ -182,6 +188,7 @@ function BlogsDetails({ post, id }: blogs_detailsProps) {
         </h3>
       )}
     </Layout>
+    </>
   );
 }
 

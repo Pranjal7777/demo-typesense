@@ -77,7 +77,6 @@ export async function getServerSideProps({
         }
       );
       apidata = await res.json();
-
       const translations = await serverSideTranslations(locale, ['categories', 'common', 'productDetails']);
 
       return {

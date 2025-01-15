@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import CustomerTestimonial from '../customer-testimonial';
 import { useTranslation } from 'next-i18next';
 import SectionTitle from '@/components/ui/section-title';
@@ -31,4 +31,4 @@ const TestimonialSection: React.FC = () => {
   );
 };
 
-export default TestimonialSection;
+export default memo(TestimonialSection);

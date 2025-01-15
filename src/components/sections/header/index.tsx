@@ -186,8 +186,9 @@ const Header: FC<Props> = ({
       >
         <div className=" max-w-[1440px] px-[64px] m-auto h-full flex items-center justify-between">
           <div className="flex items-center h-full w-[65%]">
-            <Link className="sm:mb-2" href="/">
+            <Link aria-label="Brand Logo" className="sm:mb-2" href="/">
               <PrimaryLogo
+                ariaLabel="primary-logo"
                 primaryColor={`${
                   stickyHeaderWithSearchBox
                     ? theme
@@ -324,7 +325,7 @@ const Header: FC<Props> = ({
                   }`}
                 />
               ) : (
-                <Link className="mx-9 " href={SIGN_IN_PAGE}>
+                <Link aria-label="Login" className="mx-9 " href={SIGN_IN_PAGE}>
                   {' '}
                   {loginOrUserName.login}
                 </Link>
@@ -355,8 +356,9 @@ const Header: FC<Props> = ({
                 !(minThreshold && theme !== true) ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'
               }`}
             />
-            <Link className="pl-5 rtl:pl-0 rtl:pr-6 mb-[5px]" href="/">
+            <Link aria-label="Brand Logo" className="pl-5 rtl:pl-0 rtl:pr-6 mb-[5px]" href="/">
               <PrimaryLogo
+                ariaLabel="primary-logo"
                 height={28}
                 width={99}
                 primaryColor={`${
@@ -380,6 +382,7 @@ const Header: FC<Props> = ({
               <HydrationGuard>
                 {!userInfo && (
                   <Link
+                    aria-label="Login"
                     className={'rtl:mr-0 mr-4 flex items-center justify-center text-text-secondary-light'}
                     href={SIGN_IN_PAGE}
                   >
@@ -403,8 +406,9 @@ const Header: FC<Props> = ({
           {stickyHeaderWithSearchBox && (
             <>
               <div className=" relative w-12 h-12 flex items-center justify-center">
-                <Link className="relative w-12 h-12 flex items-center justify-center" href="/">
+                <Link aria-label="left-arrow" className="relative w-12 h-12 flex items-center justify-center" href="/">
                   <LeftArrowIcon
+                    ariaLabel="left-arrow"
                     className="hover:cursor-pointer absolute left-0"
                     height="18"
                     width="18"

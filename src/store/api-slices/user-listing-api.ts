@@ -14,6 +14,7 @@ const UserProductListing = rootApi.injectEndpoints({
         url: `${GET_ALL_SELLER_ASSETS}/?accountId=${accoundId}&page=${page}`,
         method: 'GET'
       }),
+      keepUnusedDataFor: 0,
     }),
   }),
 });

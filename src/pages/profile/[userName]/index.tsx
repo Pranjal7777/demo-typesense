@@ -60,7 +60,7 @@ const Profile: FC<Props> = ({ userProfileData, followCountData }) => {
   const { data, isLoading, isFetching } = sellerProfileApi.useGetAllProductsQuery({
     page,
     search: debouncedSearchTerm,
-    accountId: profileData.accountId,
+    accountId: profileData?.accountId || '',
   });
 
   useEffect(() => {
@@ -233,7 +233,7 @@ const Profile: FC<Props> = ({ userProfileData, followCountData }) => {
                         </>
                       ) : (
                         <div className="review">
-                          <AllReviewsSection accountId={profileData.accountId || ''} />
+                          <AllReviewsSection accountId={profileData?.accountId || ''} />
                           {!HIDE_SELLER_FLOW && (
                             <>
                               <nav className="border-b md:pl-[20px]">

@@ -121,3 +121,22 @@ export interface BuyerRatingApiResponse {
   data: BuyerRatingResponseData;
 }
   
+export interface Followee {
+  _id: string;
+  start: number;
+  accountId: string;
+  accountUsername: string;
+  accountLogo: string;
+  userId: string;
+  profilePic: string;
+  firstName: string;
+  lastName: string;
+  isFollow: boolean;
+}
+
+export interface FollowersAndFollowingResponse {
+  data: {
+    followeeData: Followee[];
+     totalCount: number;
+}
+}

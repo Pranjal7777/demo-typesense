@@ -10,7 +10,7 @@ export default function Document() {
         <meta name="apple-mobile-web-app-title" content="Expo" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
         <link rel="preload" as="image" href={`${GUMLET_API_URL}/${IMAGES.PRIMARY_BANNER}`}></link>
       </Head>
       <body>

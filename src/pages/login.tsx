@@ -24,7 +24,6 @@ import { Token } from '@/store/types';
 import { useDispatch } from 'react-redux';
 
 const Auth = ({ token }: { token: Token | null }) => {
-  console.log(token, 'token');
   const router = useRouter();
   const { step } = router.query;
   const { theme } = useTheme();

@@ -19,10 +19,8 @@ const UserProductList: React.FC<SimilarProductsProps> = ({ accoundId, page:pageN
     accoundId,
     page: page,
   });
-  // console.log(isLikeChange, 'isLikeChange in user product list');
 
   useEffect(() => {
-    console.log(isLikeChange, 'isLikeChange in user product list');
       refetch();
   }, [isLikeChange,refetch]);
 

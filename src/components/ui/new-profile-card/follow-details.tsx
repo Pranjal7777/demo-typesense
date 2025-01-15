@@ -31,7 +31,6 @@ const FollowDetails: FC<FollowDetailsProps> = ({ title, setTotalUserFollowers, s
     userId: userInfo?._id || '',
     searchText: debouncedSearchTerm || '',
   });
-  console.log(data?.data?.followeeData, 'followers');
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);

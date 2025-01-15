@@ -77,8 +77,6 @@ export async function getServerSideProps({
         }
       );
       apidata = await res.json();
-      console.log(apidata, `${BASE_API_URL}/v2/${ADD_RECENT_SEARCH_DATA_WITH_SINGLE_PRODUCT_SEARCH_URL}/?assetId=${id}` , 'apidata in pdp');
-
       const translations = await serverSideTranslations(locale, ['categories', 'common', 'productDetails']);
 
       return {

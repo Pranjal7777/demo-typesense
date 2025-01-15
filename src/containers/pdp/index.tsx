@@ -86,8 +86,6 @@ export type StickyHeaderDetails = {
 };
 
 const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
-  console.log(data, 'data in pdp');
-  
   const sellerAccountId = data?.result?.users?.accountId;
   const router = useRouter();
   const apidata = data.result;

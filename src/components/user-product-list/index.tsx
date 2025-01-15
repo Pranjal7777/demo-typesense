@@ -7,17 +7,24 @@ import ProductCardSkeleton from '../ui/product-card-skeleton';
 type SimilarProductsProps = {
   accoundId: string;
   page: string;
+  isLikeChange?: boolean;
 };
 
-const UserProductList: React.FC<SimilarProductsProps> = ({ accoundId, page:pageNo }) => {
+const UserProductList: React.FC<SimilarProductsProps> = ({ accoundId, page:pageNo, isLikeChange }) => {
   const [displayedProducts, setDisplayedProducts] = useState<number>(20);
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
   const [page, setPage] = useState<number>(Number(pageNo));
   
-  const { data, isLoading, isError, error } = UserProductListing.useGetUserProductsListingQuery({
+  const { data, isError, error, refetch,isFetching } = UserProductListing.useGetUserProductsListingQuery({
     accoundId,
     page: page,
   });
+  // console.log(isLikeChange, 'isLikeChange in user product list');
+
+  useEffect(() => {
+    console.log(isLikeChange, 'isLikeChange in user product list');
+      refetch();
+  }, [isLikeChange,refetch]);
 
   // const fetchMoreData = () => {
   //   if (isLoadingMore) return; 
@@ -52,7 +59,7 @@ const UserProductList: React.FC<SimilarProductsProps> = ({ accoundId, page:pageN
 
   return (
     <div className="lg:mt-[52px] mobile:mt-[16px] w-full">
-      {(isLoading || isLoadingMore) && (
+      {(isFetching || isLoadingMore) && (
         <div className="w-full grid grid-cols-2 sm:grid-cols-3 2lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {[...Array(10)].map((_, index) => (
             <div key={index}>
@@ -62,9 +69,9 @@ const UserProductList: React.FC<SimilarProductsProps> = ({ accoundId, page:pageN
         </div>
       )}
 
-      {!isLoading && !isError && productsToShow.length === 0 && <div className="text-center">No Products found</div>}
+      {!isFetching && !isError && productsToShow.length === 0 && <div className="text-center">No Products found</div>}
 
-      {data && !isLoading && !isError && productsToShow.length > 0 && (
+      {data && !isFetching && !isError && productsToShow.length > 0 && (
         <div className="w-full grid grid-cols-2 sm:grid-cols-3 2lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {productsToShow.map((product: any, index: number) => (
             <div key={index}>
@@ -74,7 +81,7 @@ const UserProductList: React.FC<SimilarProductsProps> = ({ accoundId, page:pageN
         </div>
       )}
 
-      {data && !isLoading && !isError && data.Totalcount > allProducts.length && (
+      {data && !isFetching && !isError && data.Totalcount > allProducts.length && (
         <div className="text-center mt-4">
           <Button onClick={() => setPage(page + 1)} buttonType="tertiary" className="w-1/3 md:1/4 lg:1/6 mx-auto">
             {'View More'}

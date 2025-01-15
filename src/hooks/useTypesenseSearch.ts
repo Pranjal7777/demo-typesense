@@ -12,7 +12,7 @@ interface UseTypesenseSearchProps {
 }
 
 const useTypesenseSearch = ({
-  queryBy = 'title.en,description',
+  queryBy = 'title.en',
   searchItem,
   selectedOption,
   accountId,

@@ -11,7 +11,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({title, url}) => {
       try {
         await navigator.share({
           title: title,
-          text: 'Product from LeOffer',
+          text: 'Product from Kwibal',
           url: url,
         });
       } catch (error) {

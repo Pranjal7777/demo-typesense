@@ -3,7 +3,6 @@ import { StateResultsProvided, Hit } from "react-instantsearch-core";
 
 export const CustomSearchResults = connectStateResults(({ searchState, searchResults, children, searchQuery }: StateResultsProvided<Hit> & { children: React.ReactNode, searchQuery: string }) => {
     // Showing nothing if no query
-    console.log(searchState, searchResults, children, 'searchState==>>');
     // if (!searchState?.query) {
     //   return null;
     // }

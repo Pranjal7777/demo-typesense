@@ -11,6 +11,7 @@ import { useRouter } from 'next/router';
 import { RootState } from '@/store/store';
 import { useAppSelector } from '@/store/utils/hooks';
 import { PROJECT_NAME } from '@/config';
+import { getSearchTerm } from '@/store/utils/route-helper';
 
 export type heroSection = {
   title: string;
@@ -61,14 +62,14 @@ const HeroSection: FC<HeroSectionProps> = ({
   const [selectedOption, setSelectedOption] = useState<'Items' | 'Users'>('Items');
   const router = useRouter();
   const [formData, setFormData] = useState<FormDataT>({
-    search: (router?.query?.search as string) ?? '',
+    search: getSearchTerm(router?.query) ?? '',
     resultDropdown: false,
     location: '',
   });
   
   useEffect(() => {
-    setFormData((prev) => ({ ...prev, search: (router?.query?.search as string) ?? '' }));
-  }, [router?.query?.search]);
+    setFormData((prev) => ({ ...prev, search: getSearchTerm(router?.query) ?? '' }));
+  }, [router?.query?.searchTerm]);
 
   const { userInfo } = useAppSelector((state: RootState) => state.auth);
   const { searchClient } = useTypesenseSearch({
@@ -78,7 +79,7 @@ const HeroSection: FC<HeroSectionProps> = ({
     skip: 0,
     limit: 10,
     time: Math.floor(Date.now() / 1000),
-    queryBy: selectedOption === 'Items' ? 'title.en,description' : 'first_name,last_name',
+    queryBy: selectedOption === 'Items' ? 'title.en' : 'first_name,last_name',
   });
 
   return (

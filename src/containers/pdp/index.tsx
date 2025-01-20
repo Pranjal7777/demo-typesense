@@ -190,10 +190,10 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
     },
   ];
   const ToggleInfo = [
-    {
-      label: togglePanelText[0].toggleOne,
-      content: <UserProductList isLikeChange={isLikeChange} accoundId={sellerAccountId} page="1" />,
-    },
+    // {
+    //   label: togglePanelText[0].toggleOne,
+    //   content: <UserProductList isLikeChange={isLikeChange} accoundId={sellerAccountId} page="1" />,
+    // },
     {
       label: togglePanelText[0].toggleTwo,
       content: <SimilarProductsList isLikeChange={isLikeChange} assetId={assetId} categoryId={categoryId} />,
@@ -259,7 +259,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
       showBackArrowInSearchBox={true}
     >
       {(stickyHeaderDetails?.showProductImage || stickyHeaderDetails?.showShareIcon) && (
-        <div style={{zIndex: 1}} className="hidden  fixed md:flex justify-between items-center h-[80px]  top-[145px] left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-5 mx-auto max-w-[1440px]">
+        <div style={{zIndex: 9999}} className="hidden  fixed md:flex justify-between items-center h-[80px]  top-[0px] left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] py-2 mx-auto max-w-[1440px]">
           <div className="flex gap-4">
             {stickyHeaderDetails.showProductImage && (
               <ImageContainer

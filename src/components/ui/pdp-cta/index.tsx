@@ -183,7 +183,7 @@ const PdpCta: React.FC<PdpCtaProps> = ({
             let newDetails = { ...prevDetails };
 
             // Set showProductImage to true when the imageElement is either scrolled past 145px from the top or completely out of viewport
-            if (buttonsRect.top <= 235 || buttonsRect.bottom < 0) {
+            if (buttonsRect.top <= 145 || buttonsRect.bottom < 0) {
               newDetails.showButtons = true;
             } else {
               newDetails.showButtons = false;

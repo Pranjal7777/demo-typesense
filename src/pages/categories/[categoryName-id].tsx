@@ -131,7 +131,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     address: searchParams.get('address') || '',
     latitude: searchParams.get('latitude') || '',
     longitude: searchParams.get('longitude') || '',
-    country: searchParams.get('country') || 'India',
+    country: searchParams.get('country') || myLocation?.country || 'India',
     category: { title: searchParams.get('categoryTitle') || '', _id: searchParams.get('categoryId') || '' },
   };
 
@@ -163,13 +163,16 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   const addFiltersToQuery = (selectedFilters: filterTypes) => {
     const { pathname, query } = router;
     const updatedQuery = { ...query };
-
+    
     (Object.keys(selectedFilters) as (keyof filterTypes)[]).forEach((filterName) => {
       const filterValue = selectedFilters[filterName];
 
       if (filterName === 'category' && typeof filterValue === 'object') {
+        
         if ('_id' in filterValue) {
-          if (!filterValue._id || !filterValue.title) {
+
+          if (!filterValue._id || filterValue._id == 'undefined' || !filterValue.title) {
+            
             delete updatedQuery.categoryId;
             delete updatedQuery.categoryTitle;
           } else {
@@ -577,7 +580,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                   style={{ zIndex: 1 }}
                   className={`w-full ${
                     minThreshold
-                      ? `fixed ${
+                      ? `fixed !z-1 ${
                           threshold < 700 ? 'top-[175px]' : 'top-[145px]'
                         } left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-5 mx-auto max-w-[1440px]`
                       : ''

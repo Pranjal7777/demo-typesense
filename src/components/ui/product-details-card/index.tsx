@@ -68,13 +68,13 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
           let newDetails = { ...prevDetails };
 
           // Set showProductImage to true when the imageElement is either scrolled past 145px from the top or completely out of viewport
-          if (productNameRect.top <= 180 || productNameRect.bottom < 0) {
+          if (productNameRect.top <= 145 || productNameRect.bottom < 0) {
             newDetails.showProductName = true;
           } else {
             newDetails.showProductName = false;
           }
 
-          if (priceRect.top <= 235) {
+          if (priceRect.top <= 145) {
             newDetails.showPrice = true;
           } else {
             newDetails.showPrice = false;

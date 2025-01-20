@@ -33,8 +33,8 @@ const SoldContainer: FC<SoldContainerProps> = ({
       setShowSoldDetailsMobile(true);
     }
     setCurrenOrderId(id);
-    setCurrenOrderId(id);
-  };
+    setShowOrderId(id);
+    };
   return (
     <>
       {(!data && !isPurchaseDetailsFetching) || !data?.data?.length ? (

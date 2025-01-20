@@ -460,7 +460,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
       >
         {/* header with image and search box */}
         {/* Section:- What are you looking for? */}
-        <div className={`relative custom-container mx-auto sm:px-16 mobile:px-4 `}>
+        <div className={`relative  custom-container mx-auto sm:px-16 mobile:px-4 `}>
           {/* start */}
           {/* subcategories card section start */}
           {!HIDE_SELLER_FLOW && subCategories.length > 0 && (
@@ -475,7 +475,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
               <div className=" w-full flex flex-col justify-center">
                 <div
                   style={{ zIndex: 1 }}
-                  className={`w-full ${`fixed top-[130px] sm:top-[145px] left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-2 mx-auto max-w-[1440px]`}`}
+                  className={`w-full ${`fixed top-[130px] z-auto sm:top-[145px] left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-2 mx-auto max-w-[1440px]`}`}
                 >
                   <div
                     className={`flex  w-full justify-end filterselectContainer ${

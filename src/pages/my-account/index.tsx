@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import AddBankAccount from './payment';
 
 
 const MyAccount = () => {
@@ -77,6 +78,7 @@ const MyAccount = () => {
         </div>
       </div>
       <PaymentOptionForm selectedAddressId={selectedAddress?._id ?? ''} />
+      <AddBankAccount />
     </div>
   );
 }

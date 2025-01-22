@@ -29,7 +29,6 @@ const MyAccount = () => {
       }, [addressData?.data]);
     const {theme} = useTheme();
     const {data: accountsData, isFetching: isFetchingAccounts} = myAccountApi.useGetAllAccountsQuery({userId: userInfo?._id || ''});
-    console.log(accountsData, 'accountsData');
   return (
     <div className="w-full text-text-primary-light min-h-screen  overflow-x-hidden dark:text-text-secondary-light">
       <div className=" hidden md:block text-text-primary-light dark:text-text-secondary-light">

@@ -43,7 +43,7 @@ export const routeToSearch = (categoryObj: categoryType) => {
   const selectedId = category?.id || subCategory?.id || subSubCategory?.id || '';
   const selectedName = category?.name || subCategory?.name || subSubCategory?.name || '';
 
-  const baseRoute = `/search/${selectedName?.trim()?.replace(/\s+/g, '-')}-${selectedId}`;
+  const baseRoute = `/search/${selectedName?.trim()?.replace(/\s+/g, '-')}${selectedId ? `-${selectedId}` : ''}`;
   // const queryParam = selectedName ? `?selectedCategory=${encodeURIComponent(selectedName)}` : '';
 
   return `${baseRoute}`;

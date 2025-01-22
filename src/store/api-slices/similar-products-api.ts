@@ -84,9 +84,9 @@ export interface CategoryPath {
 
 const SimilarProductsAPI = rootApi.injectEndpoints({
   endpoints: (builder) => ({
-    getSimilarProducts: builder.query<SimilarProduct, { categoryId: string; assetId: string }>({
-      query: ({ categoryId, assetId }) => ({
-        url: `${AUTH_URL_V2}/${SIMILAR_PRODUCTS_URL}/?categoryId=${categoryId}&assetId=${assetId}`,
+    getSimilarProducts: builder.query<SimilarProduct, { categoryId: string; assetName: string }>({
+      query: ({ categoryId, assetName }) => ({
+        url: `${AUTH_URL_V2}/${SIMILAR_PRODUCTS_URL}/?categoryId=${categoryId}&assetName=${assetName}`,
         method: 'GET',
       }),
     }),

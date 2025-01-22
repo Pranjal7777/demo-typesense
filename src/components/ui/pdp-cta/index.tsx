@@ -225,6 +225,7 @@ const PdpCta: React.FC<PdpCtaProps> = ({
           )}
 
           <ChatIcon
+            aria-label="Chat"
             onClick={chatIconClickHandler}
             bgFillcolor={theme.theme ? '#fff' : '#F4F4F4'}
             size={isMobile ? 'mobile' : 'pc'}

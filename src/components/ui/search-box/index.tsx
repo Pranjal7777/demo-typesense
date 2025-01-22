@@ -289,7 +289,8 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
   };
   // recent search api end --------------------------
   const handleSearchEnterKeyDown = async (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter' && hasValidSearchResults) {
+    // if (event.key === 'Enter' && hasValidSearchResults) {
+    if (event.key === 'Enter') {
       if (formData.search !== '') {
         await selectItemOrUserToSearch(formData.search);
         if (selectedOption !== 'Users') {

@@ -473,10 +473,13 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     }),
   };
 
+  // const [stickyFilterRef, setStickyFilterRef] = useState<HTMLDivElement | null>(null);
+
+
   return (
     <>
       <CustomHeader
-        title={`Explore the best products from ${categoriesBannerData?.parentCategoryName} category in kwibal`}
+        title={` Explore the best products from ${categoriesBannerData?.parentCategoryName} category in kwibal`}
         description={`Explore the ${categoriesBannerData?.parentCategoryName} category on kwibal. Discover a wide range of products designed to meet your needs, from ${categoriesBannerData?.parentCategoryName} essentials to premium options.`}
         image={
           categoriesBannerData?.webBanner?.includes('http')
@@ -586,6 +589,17 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                       : ''
                   }`}
                 >
+                {/* <div
+                  ref={setStickyFilterRef}
+                  style={{ zIndex: 1 }}
+                  className={`w-full ${
+                    minThreshold
+                      ? `fixed !z-1 ${
+                          threshold < 700 ? 'top-[175px]' : 'top-[145px]'
+                        } left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-5 mx-auto max-w-[1440px]`
+                      : ''
+                  }`}
+                > */}
                   <div className=" flex  w-full justify-between filterselectContainer">
                     <SectionTitle>All Products</SectionTitle>
                     <div className="ml-auto mr-[24px] relative inline-flex items-center gap-2">

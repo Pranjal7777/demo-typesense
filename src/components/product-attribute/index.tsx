@@ -36,4 +36,4 @@ const ProductAttribute: FC<Props> = ({ data }) => {
   );
 };
 
-export default ProductAttribute;
+export default React.memo(ProductAttribute);

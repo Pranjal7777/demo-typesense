@@ -46,8 +46,8 @@ const SoldContainer: FC<SoldContainerProps> = ({
             alt="no data"
             src={NO_SALE}
           />
-          <h3 className=" font-semibold">No Sales to Show Yet!</h3>
-          <p className=" text-xs md:text-sm text-text-tertiary-light dark:text-text-septenary-light">
+          <h3 className=" font-semibold text-center">No Sales to Show Yet!</h3>
+          <p className=" text-xs md:text-sm text-text-tertiary-light dark:text-text-septenary-light text-center">
             List your items and watch them appear here once they’re sold!
           </p>
         </div>

@@ -21,11 +21,13 @@ type PurchaseDetailsCardProps = {
   cardClass?: string;
   currenOrderId: string;
   refetchPurchaseData?: () => void;
+  setShowPurchaseDetailsMobile?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const PurchaseDetailsCard: FC<PurchaseDetailsCardProps> = ({
   currenOrderId,
   cardClass,
-  refetchPurchaseData
+  refetchPurchaseData,
+  setShowPurchaseDetailsMobile
 }) => {
   const [selectedCancelOption, setSelectedCancelOption] = useState<string[]>([]);
   const [showConfirmationPopup, setShowConfirmationPopup] = useState<boolean>(false)
@@ -108,6 +110,7 @@ const {data: dealCancelReasons} = myPurchaseApi.useGetDealCancelReasonsQuery()
       setShowCancelPopup(false);
       refetch()
       refetchPurchaseData?.()
+      setShowPurchaseDetailsMobile?.(false)
     }catch(error){
       showToast({message:'Something went wrong', messageType:'error'})
     }

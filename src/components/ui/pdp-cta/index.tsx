@@ -218,11 +218,11 @@ const PdpCta: React.FC<PdpCtaProps> = ({
           >
             {firstButtonText}
           </Button>
-          {secondButtonText && (
+          {/* {secondButtonText && (
             <Button className="w-[15rem] mobile:w-[12rem] text-sm mb-0" buttonType="secondary">
               {secondButtonText}
             </Button>
-          )}
+          )} */}
 
           <ChatIcon
             aria-label="Chat"

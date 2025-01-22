@@ -63,8 +63,8 @@ const PurchaseContainer: FC<PurchaseContainerProps> = ({
             alt="no data"
             src={NO_PURCHASE}
           />
-          <h3 className=" font-semibold">No Purchases Yet!</h3>
-          <p className=" text-xs md:text-sm text-text-tertiary-light dark:text-text-septenary-light">
+          <h3 className=" font-semibold text-center">No Purchases Yet!</h3>
+          <p className=" text-xs md:text-sm text-text-tertiary-light dark:text-text-septenary-light text-center">
             Your purchases will appear here once you buy something
           </p>
         </div>
@@ -101,6 +101,7 @@ const PurchaseContainer: FC<PurchaseContainerProps> = ({
           {showPurchaseDetailsMobile ? (
             <div className="right flex-1 overflow-y-scroll  md:hidden">
               <PurchaseDetailsCard
+                setShowPurchaseDetailsMobile={setShowPurchaseDetailsMobile}
                 refetchPurchaseData={refetchPurchaseData}
                 currenOrderId={currenOrderId}
                 cardClass=" flex-1 h-full overflow-y-scroll  md:hidden p-0 border-0"

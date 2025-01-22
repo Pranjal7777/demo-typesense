@@ -215,12 +215,15 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
         isExchange: false,
         userLocation: myLocation,
       };
-      const chatIdentifier = await getChatIdentifier(payload);
+      // const chatIdentifier = await getChatIdentifier(payload);
       if (data) {
         dispatch(setCheckoutProduct(data.result));
       }
+      // await router.push(
+      //   `/checkout/select-address?assetId=${assetId}&sellerId=${sellerAccountId}&chatId=${chatIdentifier.data.chatId}`
+      // );
       await router.push(
-        `/checkout/select-address?assetId=${assetId}&sellerId=${sellerAccountId}&chatId=${chatIdentifier.data.chatId}`
+        `/checkout/select-address?assetId=${assetId}&sellerId=${sellerAccountId}`
       );
     } catch (error) {
       console.error(error);
@@ -321,12 +324,12 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
                   {data.result?.isNegotiable ? ctaText[0].makeOfferBtn : ctaText[0].firstBtn}
                 </Button>
 
-                <Button
+                {/* <Button
                   className="w-[174px] text-sm mb-0 dark:bg-bg-tertiary-dark dark:text-text-primary-dark"
                   buttonType="secondary"
                 >
                   {ctaText[0].secondBtn}
-                </Button>
+                </Button> */}
 
                 <ChatIcon
                   // onClick={chatIconClickHandler}

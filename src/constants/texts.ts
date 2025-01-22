@@ -40,3 +40,6 @@ export const CONFIRM = 'Confirm';
 export const MANAGE_ACCOUNTS = 'Manage Accounts';
 export const ADD_NEW_ACCOUNT = 'Add New Account';
 export const ADD_NEW_ACCOUNT_PLACEHOLDER = 'Add a new account to manage your payments';
+export const RECENT_SEARCHES = 'Recent Searches';
+export const NO_RECENT_SEARCHES = 'No Recent Searches';
+

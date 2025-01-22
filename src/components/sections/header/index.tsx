@@ -63,7 +63,7 @@ type menuOptions = {
 
 const Header: FC<Props> = ({
   stickyHeaderWithSearchBox = false,
-  showItems = 4,
+  showItems = 6,
   // categoriesWithChildCategories,
   containerClassName,
   mobileContainerClassName,
@@ -216,15 +216,15 @@ const Header: FC<Props> = ({
                       windowWidth > 1440
                         ? showItems
                         : windowWidth > 1320
-                        ? 4
+                        ? 6
                         : windowWidth > 1144
-                        ? 3
+                        ? 5
                         : windowWidth >= 1144
                         ? 3
                         : windowWidth >= 963
                         ? 3
                         : windowWidth >= 831
-                        ? 0
+                        ? 2
                         : windowWidth >= 634
                         ? 1
                         : 0

@@ -25,6 +25,8 @@ import { CustomSearchResults } from '../ui/search-box/custom-hits';
 import { productsApi } from '@/store/api-slices/products-api';
 import LeftArrowIcon from '../../../public/assets/svg/left-arrow-icon';
 import Image from 'next/image';
+import { HIDE_SELLER_FLOW } from '@/config';
+import { NO_RECENT_SEARCHES, RECENT_SEARCHES } from '@/constants/texts';
 
 interface PlacePredictions {
   place_id: string;
@@ -415,66 +417,70 @@ const [isRecentSearchOpen, setIsRecentSearchOpen] = useState(false);
 
         {isLocationTextBoxFocused ? (
           <>
-            <div className="sticky top-[196px] dark:bg-bg-primary-dark  bg-bg-secondary-light flex items-center justify-around mb-4 h-12 border-b-2 dark:border-b-border-tertiary-dark border-border-tertiary-light">
-              <div
-                className="hover:cursor-pointer h-[98%] w-[25%] flex flex-col items-center justify-center"
-                onClick={() => {
-                  setIsUserOrItem(true);
-                  // handleOptionSelect('Items');
-                  setSelectedOption?.('Items');
-                }}
-                tabIndex={0}
-                role="button"
-                onKeyUp={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
+            {!HIDE_SELLER_FLOW && (
+              <div className="sticky top-[196px] dark:bg-bg-primary-dark  bg-bg-secondary-light flex items-center justify-around mb-4 h-12 border-b-2 dark:border-b-border-tertiary-dark border-border-tertiary-light">
+                <div
+                  className="hover:cursor-pointer h-[98%] w-[25%] flex flex-col items-center justify-center"
+                  onClick={() => {
                     setIsUserOrItem(true);
-                    handleOptionSelect('Items');
-                  }
-                }}
-              >
-                <div
-                  className={` h-full w-full ${isUserOrItem ? 'text-primary' : ''}  flex items-center justify-center `}
+                    // handleOptionSelect('Items');
+                    setSelectedOption?.('Items');
+                  }}
+                  tabIndex={0}
+                  role="button"
+                  onKeyUp={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setIsUserOrItem(true);
+                      handleOptionSelect('Items');
+                    }
+                  }}
                 >
-                  Items
+                  <div
+                    className={` h-full w-full ${
+                      isUserOrItem ? 'text-primary' : ''
+                    }  flex items-center justify-center `}
+                  >
+                    Items
+                  </div>
+                  <div
+                    className={`transition-all duration-100 ease-in ${
+                      isUserOrItem ? 'border-brand-color border-[3px] rounded-t-2xl' : ''
+                    }  w-full`}
+                  ></div>
                 </div>
-                <div
-                  className={`transition-all duration-100 ease-in ${
-                    isUserOrItem ? 'border-brand-color border-[3px] rounded-t-2xl' : ''
-                  }  w-full`}
-                ></div>
-              </div>
 
-              {/* <div
-                className="h-[98%] w-[25%] flex flex-col items-center justify-center"
-                onClick={() => {
-                  setIsUserOrItem(false);
-                  // handleOptionSelect('Users');
-                  setSelectedOption?.('Users');
-                }}
-                role="button"
-                tabIndex={0}
-                onKeyUp={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    handleOptionSelect('Users');
-                  }
-                }}
-              >
                 <div
-                  className={` hover:cursor-pointer ${
-                    !isUserOrItem ? 'text-primary' : ''
-                  } h-full w-full flex items-center justify-center`}
+                  className="h-[98%] w-[25%] flex flex-col items-center justify-center"
+                  onClick={() => {
+                    setIsUserOrItem(false);
+                    // handleOptionSelect('Users');
+                    setSelectedOption?.('Users');
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  onKeyUp={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleOptionSelect('Users');
+                    }
+                  }}
                 >
-                  Users
+                  <div
+                    className={` hover:cursor-pointer ${
+                      !isUserOrItem ? 'text-primary' : ''
+                    } h-full w-full flex items-center justify-center`}
+                  >
+                    Users
+                  </div>
+                  <div
+                    className={`transition-all duration-100 ease-in ${
+                      !isUserOrItem ? 'border-brand-color border-[3px] rounded-t-2xl' : ''
+                    } w-full `}
+                  ></div>
                 </div>
-                <div
-                  className={`transition-all duration-100 ease-in ${
-                    !isUserOrItem ? 'border-brand-color border-[3px] rounded-t-2xl' : ''
-                  } w-full `}
-                ></div>
-              </div> */}
-            </div>
+              </div>
+            )}
 
             <div className="h-fit overflow-y-scroll border-primary px-4 divide-y-2 dark:divide-border-tertiary-dark divide-border-tertiary-light">
               {isSearchProductsAndUsersFetching ? (
@@ -551,7 +557,7 @@ const [isRecentSearchOpen, setIsRecentSearchOpen] = useState(false);
                 <div className=" flex items-center justify-center h-[50%]">
                   <Spinner />
                 </div>
-              ) : (placePredictions.length === 0 && !isPlacePredictionsLoading && !isRecentSearchOpen) ? (
+              ) : placePredictions.length === 0 && !isPlacePredictionsLoading && !isRecentSearchOpen ? (
                 <div className=" border-error bg-bg-secondary-light dark:bg-bg-primary-dark flex items-center h-[50%] justify-center">
                   <p className="truncate ml-3 flex dark:text-text-primary-dark ">No Data Found!</p>
                 </div>
@@ -612,13 +618,13 @@ const [isRecentSearchOpen, setIsRecentSearchOpen] = useState(false);
                 </div>
               ) : recentSearchData?.data.data.length === 0 ? (
                 <div className="px-4 py-3 text-sm text-text-primary-light dark:text-text-primary-dark">
-                  <h3 className="text-sm pt-4 flex items-center px-3 font-semibold">Recent Searches</h3>
-                  <p className="text-sm font-normal">No Recent Searches</p>
+                  <h3 className="text-sm pt-4 flex items-center px-3 font-semibold">{RECENT_SEARCHES}</h3>
+                  <p className="text-sm font-normal">{NO_RECENT_SEARCHES}</p>
                 </div>
               ) : (
                 <>
                   <h3 className="text-sm pt-4 flex text-text-primary-light dark:text-text-primary-dark items-center px-3 font-semibold">
-                    Recent Searches
+                    {RECENT_SEARCHES}
                   </h3>
                   {selectedOption === 'Items' &&
                     recentSearchData?.data?.data?.map((search, index) => (

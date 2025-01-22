@@ -15,17 +15,19 @@ import showToast from '@/helper/show-toaster';
 import FullScreenSpinner from '../full-screen-spinner';
 import ReasonFilter from '../reason-filter';
 import Model from '@/components/model';
-import { STATIC_IMAGE_URL } from '@/config';
+import { HIDE_SELLER_FLOW, STATIC_IMAGE_URL } from '@/config';
 import { formatPriceWithoutCents } from '@/utils/price-formatter';
 type PurchaseDetailsCardProps = {
   cardClass?: string;
   currenOrderId: string;
   refetchPurchaseData?: () => void;
+  setShowPurchaseDetailsMobile?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const PurchaseDetailsCard: FC<PurchaseDetailsCardProps> = ({
   currenOrderId,
   cardClass,
-  refetchPurchaseData
+  refetchPurchaseData,
+  setShowPurchaseDetailsMobile
 }) => {
   const [selectedCancelOption, setSelectedCancelOption] = useState<string[]>([]);
   const [showConfirmationPopup, setShowConfirmationPopup] = useState<boolean>(false)
@@ -108,6 +110,7 @@ const {data: dealCancelReasons} = myPurchaseApi.useGetDealCancelReasonsQuery()
       setShowCancelPopup(false);
       refetch()
       refetchPurchaseData?.()
+      setShowPurchaseDetailsMobile?.(false)
     }catch(error){
       showToast({message:'Something went wrong', messageType:'error'})
     }
@@ -174,7 +177,7 @@ const {data: dealCancelReasons} = myPurchaseApi.useGetDealCancelReasonsQuery()
             </div>
           </div>
           <div className="seller-info flex-1 mt-5 md:p-3 md:border dark:border-border-tertiary-dark border-border-tertiary-light rounded-lg">
-            {orderDetails?.data?.sellerAccountId && (
+            {!HIDE_SELLER_FLOW && orderDetails?.data?.sellerAccountId && (
               <div className=" md:border-b dark:border-border-tertiary-dark border-border-tertiary-light pb-4">
                 <h3 className="text-base font-semibold">Seller information</h3>
                 <PurchaseProductDetails

@@ -22,7 +22,7 @@ export default function PaymentOptionForm({
     try {
       const payload = {
         billingAddressId: selectedAddressId,
-        chatId: chatId,
+        // chatId: chatId,
         assetId: assetId,
         paymentType: 'PAYMENT_ELEMENT',
       };

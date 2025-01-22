@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { ChangeEvent, FC, KeyboardEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, FC, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { useActions, useAppSelector } from '@/store/utils/hooks';
 import { GOOGLE_MAPS_KEY, HIDE_SELLER_FLOW, STATIC_IMAGE_URL } from '@/config';
@@ -104,6 +104,25 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
 
   const [searchItemAndUserDrower, setSearchItemAndUserDrower] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  const [showRecentSearch, setShowRecentSearch] = useState(false);
+  const recentSearchRef = useRef<HTMLDivElement | null>(null);
+
+   const handleClickOutside = (event: MouseEvent) => {
+     if (
+       recentSearchRef.current &&
+       !recentSearchRef.current.contains(event.target as Node)
+     ) {
+       setShowRecentSearch(false);
+     }
+   };
+
+   useEffect(() => {
+     document.addEventListener('mousedown', handleClickOutside);
+     return () => {
+       document.removeEventListener('mousedown', handleClickOutside);
+     };
+   }, []);
+
 
   const [, setCrossAndLocationImage] = useState(false);
   const [isRecentSearchOpen, setIsRecentSearchOpen] = useState(false);
@@ -152,7 +171,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
           },
         ])
         .then(({ results }: SearchResponse) => {
-          setHasValidSearchResults(results[0]?.hits?.length > 0);
+          // setHasValidSearchResults(results[0]?.hits?.length > 0);
           setFormData((prev) => ({
             ...prev,
             search: searchQuery,
@@ -202,6 +221,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
       search: '',
     }));
     setIsOpen(false);
+    setShowRecentSearch(false);
 
     // Store selection in cookie
     setCookie('searchType', newOption);
@@ -212,6 +232,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
   };
 
   const handleInstantSearchOnChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    setShowRecentSearch(true);
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
@@ -268,7 +289,8 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
   };
   // recent search api end --------------------------
   const handleSearchEnterKeyDown = async (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter' && hasValidSearchResults) {
+    // if (event.key === 'Enter' && hasValidSearchResults) {
+    if (event.key === 'Enter') {
       if (formData.search !== '') {
         await selectItemOrUserToSearch(formData.search);
         if (selectedOption !== 'Users') {
@@ -292,15 +314,15 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
         },
       ]);
 
-      if (results[0]?.hits?.length > 0) {
+      // if (results[0]?.hits?.length > 0) {
         const hit = results[0].hits[0];
         if (currentOption === 'Items') {
-          categoryRoute(hit.categories[0].id, searchText, hit);
+          categoryRoute(hit?.categories[0]?.id || '', searchText, hit);
         } else {
-          sellerProfileRoute(hit.id, searchText);
+          sellerProfileRoute(hit?.id || '', searchText);
         }
         setIsOpen(false);
-      }
+      // }
     } catch (error) {
       console.error('Error searching:', error);
     }
@@ -496,59 +518,62 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
               : ''
           }`}
         >
-          <div
-            className={`border-r  rtl:border-r-0 rtl:border-l relative rtl:rounded-r rtl:rounded-l-none rounded-l w-full h-full flex-[1.5] 2lg:flex-[1.8]  ${
-              minThreshold && theme ? 'dark:border-border-tertiary-dark' : 'border-border-undenary-light'
-            } `}
-          >
-            <button
-              type="button"
-              onClick={toggleDropdown}
-              onBlur={() => setTimeout(() => setIsOpen(false), 300)}
-              className={` border-error ${stickyHeaderWithSearchBox && 'dark:!text-text-primary-dark'} ${
-                minThreshold ? 'dark:text-text-primary-dark' : 'dark:text-text-secondary-dark'
-              }  hover:bg-bg-tertiary-light dark:hover:bg-bg-octonary-dark dark:hover:text-text-secondary-dark rtl:rounded-r rtl:rounded-l-none rounded-l w-full h-full outline-none flex items-center justify-center`}
+          {!HIDE_SELLER_FLOW && (
+            <div
+              className={`border-r  rtl:border-r-0 rtl:border-l relative rtl:rounded-r rtl:rounded-l-none rounded-l w-full h-full flex-[1.5] 2lg:flex-[1.8]  ${
+                minThreshold && theme ? 'dark:border-border-tertiary-dark' : 'border-border-undenary-light'
+              } `}
             >
-              {selectedOption === 'Items'
-                ? heroSection?.searchUserandItem?.items
-                : heroSection?.searchUserandItem?.users}
-              {!HIDE_SELLER_FLOW &&
-                (isOpen ? (
-                  <UpArrowRoundedEdge primaryColor={getPrimaryColor()} className="ml-2 rtl:ml-0 rtl:mr-2" />
-                ) : (
-                  <DownArrowRoundedEdge primaryColor={getPrimaryColor()} className="ml-2 rtl:ml-0 rtl:mr-2" />
-                ))}
-            </button>
+              <button
+                type="button"
+                onClick={toggleDropdown}
+                onBlur={() => setTimeout(() => setIsOpen(false), 300)}
+                className={` border-error ${stickyHeaderWithSearchBox && 'dark:!text-text-primary-dark'} ${
+                  minThreshold ? 'dark:text-text-primary-dark' : 'dark:text-text-secondary-dark'
+                }  hover:bg-bg-tertiary-light dark:hover:bg-bg-octonary-dark dark:hover:text-text-secondary-dark rtl:rounded-r rtl:rounded-l-none rounded-l w-full h-full outline-none flex items-center justify-center`}
+              >
+                {selectedOption === 'Items'
+                  ? heroSection?.searchUserandItem?.items
+                  : heroSection?.searchUserandItem?.users}
+                {!HIDE_SELLER_FLOW &&
+                  (isOpen ? (
+                    <UpArrowRoundedEdge primaryColor={getPrimaryColor()} className="ml-2 rtl:ml-0 rtl:mr-2" />
+                  ) : (
+                    <DownArrowRoundedEdge primaryColor={getPrimaryColor()} className="ml-2 rtl:ml-0 rtl:mr-2" />
+                  ))}
+              </button>
 
-            {!HIDE_SELLER_FLOW && isOpen && (
-              <div
-                className={`flex flex-col ${
-                  stickyHeaderWithSearchBox && 'dark:!text-text-primary-dark dark:bg-bg-quinary-dark'
-                }  absolute z-10 w-full  bg-bg-secondary-light 
+              {!HIDE_SELLER_FLOW && isOpen && (
+                <div
+                  className={`flex flex-col ${
+                    stickyHeaderWithSearchBox && 'dark:!text-text-primary-dark dark:bg-bg-quinary-dark'
+                  }  absolute z-10 w-full  bg-bg-secondary-light 
                 dark:bg-bg-secondary-dark dark:text-text-primary-dark
                 shadow-lg text-center rounded-b-md`}
-              >
-                <button
-                  className={` p-2 cursor-pointer  hover:bg-bg-octonary-light 
+                >
+                  <button
+                    className={` p-2 cursor-pointer  hover:bg-bg-octonary-light 
                     dark:text-text-primary-dark dark:hover:bg-menu-hover dark:hover:text-text-secondary-dark
                   hover:rounded-b-md`}
-                  onClick={() => handleOptionSelect('Items')}
-                >
-                  {heroSection?.searchUserandItem?.items}
-                </button>
-                {!HIDE_SELLER_FLOW && (
-                  <button
-                    className={` border-error p-2 cursor-pointer hover:bg-bg-octonary-light
+                    onClick={() => handleOptionSelect('Items')}
+                  >
+                    {heroSection?.searchUserandItem?.items}
+                  </button>
+                  {!HIDE_SELLER_FLOW && (
+                    <button
+                      className={` border-error p-2 cursor-pointer hover:bg-bg-octonary-light
                     dark:text-text-primary-dark dark:hover:bg-menu-hover dark:hover:text-text-secondary-dark
                   hover:rounded-b-md `}
-                    onClick={() => handleOptionSelect('Users')}
-                  >
-                    {heroSection?.searchUserandItem?.users}
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
+                      onClick={() => handleOptionSelect('Users')}
+                    >
+                      {heroSection?.searchUserandItem?.users}
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
           <div
             className={
               'relative flex-[15] flex items-center justify-center 2lg:flex-[10] lg:flex-[8] md:flex-[6] sm:flex-[4] '
@@ -595,9 +620,12 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                 onKeyDownHandeler={handleSearchEnterKeyDown}
               />
 
-              {!!formData?.search && formData.resultDropdown && (
+              {!!formData?.search && formData.resultDropdown && showRecentSearch && (
                 <SearchResults>
-                  <div className="absolute top-[48px] shadow-2xl bg-bg-secondary-light dark:bg-bg-secondary-dark left-0 right-0 rounded-b-md overflow-hidden max-h-[263px]">
+                  <div
+                    ref={recentSearchRef}
+                    className="absolute top-[48px] z-50 shadow-2xl bg-bg-secondary-light dark:bg-bg-secondary-dark left-0 right-0 rounded-b-md overflow-hidden max-h-[263px]"
+                  >
                     <CustomSearchResults searchQuery={formData.search}>
                       <Hits
                         hitComponent={({ hit }) => {
@@ -615,7 +643,13 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                               }}
                             >
                               <div className="truncate ml-3 flex items-center gap-2">
-                                <Image src={getSearchItemImageUrl(hit)} alt={'search-product-image'} width={40} height={40} className=" h-8 w-8 rounded-full" />
+                                <Image
+                                  src={getSearchItemImageUrl(hit)}
+                                  alt={'search-product-image'}
+                                  width={40}
+                                  height={40}
+                                  className=" h-8 w-8 rounded-full"
+                                />
                                 <div className="font-medium text-sm text-text-primary-light dark:text-text-primary-dark">
                                   {/* @ts-ignore */}
                                   {hit?.title?.en}

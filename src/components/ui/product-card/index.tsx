@@ -27,7 +27,7 @@ interface ProductCardProps {
   userID?: string;
 }
 
-const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isTypeSenseData = false, showLikeIcon = true, onLikeClick, userID }) => {
+const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = false, isTypeSenseData = false, showLikeIcon = true, onLikeClick, userID }) => {
   const [likeAndDislikeProduct, { isLoading: isLikeAndDislikeLoading }] = productsApi.useLikeAndDislikeProductMutation();
    const userId = useSelector((state: RootState) => state.auth.userInfo?._id);
   const { theme } = useTheme();
@@ -77,15 +77,16 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
       {isLikeAndDislikeLoading && <FullScreenSpinner />}
       <div
         role="button"
-        className="card flex flex-col p-1 gap-2 sm:gap-3 hover:scale-102 transition-all duration-300 ease-in hover:cursor-pointer mobile:max-w-[100%] w-full h-full pb-[10px] max-w-[313px] hover:shadow-lg"
+        className="card flex flex-col p-1 gap-2 sm:gap-3 hover:scale-102  transition-all duration-300 ease-in hover:cursor-pointer mobile:max-w-[100%] w-full h-full pb-[10px] max-w-[313px] hover:shadow-lg"
       >
+        {showProfilePic && (
         <Link
           href={`/profile/seller/${product?.firstName?.replace(/\s+/g, '')}${product?.lastName?.replace(
             /\s+/g,
             ''
           )}/${userAccountId}`}
         >
-          {showProfilePic && (
+          
             <div className="flex gap-1 md:gap-4 items-center">
               <UserProfile
                 className="min-w-8 max-w-8 min-h-8 max-h-8 md:min-w-9 md:max-w-9 md:min-h-9 md:max-h-9"
@@ -118,11 +119,11 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = true, isT
                 </p>
               </div>
             </div>
-          )}
         </Link>
+          )}
 
         <div
-          className="image  relative  w-full aspect-w-1 aspect-h-1   border-brand-color rounded-t-xl"
+          className="image  w-full aspect-w-1 aspect-h-1 border-brand-color rounded-t-xl"
           onClick={handleProductClick}
           role="button"
           onKeyDown={(e) => {

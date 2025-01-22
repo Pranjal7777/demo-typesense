@@ -3,14 +3,14 @@ import ProductCard from '../ui/product-card';
 import SimilarProductsAPI from '@/store/api-slices/similar-products-api';
 import ProductCardSkeleton from '../ui/product-card-skeleton';
 type SimilarProductsProps = {
-  assetId: string;
+  assetName: string;
   categoryId: string;
   isLikeChange?: boolean;
 };
 
-const SimilarProductsList: React.FC<SimilarProductsProps> = ({ assetId, categoryId, isLikeChange }) => {
+const SimilarProductsList: React.FC<SimilarProductsProps> = ({ assetName, categoryId, isLikeChange }) => {
   const { data, isLoading, isError, error, refetch } = SimilarProductsAPI.useGetSimilarProductsQuery({
-    assetId,
+    assetName,
     categoryId,
   });
 

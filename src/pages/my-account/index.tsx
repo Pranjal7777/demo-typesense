@@ -10,8 +10,15 @@ import Placeholder from '@/containers/placeholder/placeholder';
 import { NO_ACCOUNT } from '../../../public/images/placeholder';
 import { addressApi } from '@/store/api-slices/profile/address-api';
 import PaymentOptionForm from '@/components/form/payment-option-form';
+import { myAccountApi } from '@/store/api-slices/my-account/my-account';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+
 
 const MyAccount = () => {
+    const {userInfo} = useSelector((state: RootState) => state.auth);
     const { refetch, data: addressData } = addressApi.useGetAllSavedAddressQuery();
     const [selectedAddress, setSelectedAddress] = useState(addressData?.data?.filter((item) => item.isDefault)?.[0]);
       useEffect(() => {
@@ -21,6 +28,7 @@ const MyAccount = () => {
         }
       }, [addressData?.data]);
     const {theme} = useTheme();
+    const {data: accountsData, isFetching: isFetchingAccounts} = myAccountApi.useGetAllAccountsQuery({userId: userInfo?._id || ''});
   return (
     <div className="w-full text-text-primary-light min-h-screen  overflow-x-hidden dark:text-text-secondary-light">
       <div className=" hidden md:block text-text-primary-light dark:text-text-secondary-light">
@@ -35,24 +43,29 @@ const MyAccount = () => {
             className="md:hidden absolute left-4"
           />
           <h1 className="text-lg md:text-2xl font-semibold">Payment Methods</h1>
-          <Button className="w-[198px] mb-0 mobile:hidden">{CONTINUE}</Button>
+          {/* <Button className="w-[198px] mb-0 mobile:hidden">{CONTINUE}</Button> */}
         </div>
-        {'s' == 's' && (
+        {((accountsData?.financialConnectionsData && accountsData?.financialConnectionsData?.length > 0) ||
+          isFetchingAccounts) && (
           <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-[76px] mb-[70px]">
             <div className="w-full hidden md:block cursor-pointer p-5 border text-brand-color text-center border-border-tertiary-light dark:border-border-tertiary-dark rounded-lg">
               {MANAGE_ACCOUNTS}
             </div>
-            {[...Array(10)].map((_, index) => (
-              <div
-                key={index}
-                className="w-full p-5 border border-border-tertiary-light dark:border-border-tertiary-dark rounded-lg"
-              >
-                STRIPE TEST BANK xxxx xxxx 4545
-              </div>
-            ))}
+            {accountsData?.financialConnectionsData &&
+              accountsData?.financialConnectionsData?.length > 0 &&
+              accountsData?.financialConnectionsData?.map((item) => (
+                <div
+                  key={item.id}
+                  className="w-full p-5 border border-border-tertiary-light dark:border-border-tertiary-dark rounded-lg"
+                >
+                  {`${item?.us_bank_account?.bank_name || ''} xxxx ${item?.us_bank_account?.last4 || ''}`}
+                </div>
+              ))}
+            {isFetchingAccounts && [...Array(10)].map((_, index) => <Skeleton key={index} height={60} width="100%" />)}
           </div>
         )}
-        {'s' != 's' && (
+
+        {(!isFetchingAccounts && (!accountsData || accountsData?.financialConnectionsData?.length < 1 ))&& (
           <div className="w-full px-4 max-w-[413px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
             <Placeholder src={NO_ACCOUNT} title={ADD_NEW_ACCOUNT} description={ADD_NEW_ACCOUNT_PLACEHOLDER} />
             <Button className="w-full mb-0 mt-7 md:block hidden">{ADD_NEW_ACCOUNT}</Button>

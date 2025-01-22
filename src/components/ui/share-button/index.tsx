@@ -29,7 +29,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({title, url}) => {
         handleShareClick();
       }
     }}>
-      <ShareIconSVG />
+      <ShareIconSVG aria-label="Share" />
     </div>
   );
 };

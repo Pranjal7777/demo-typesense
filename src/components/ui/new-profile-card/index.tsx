@@ -63,6 +63,9 @@ const NewProfileCard: FC<Props> = ({
 }) => {
   // const profileSrc = profilePic ? (profilePic.includes('http') ? profilePic : `${STATIC_IMAGE_URL}/${profilePic}`) : '';
   // const { theme } = useTheme();
+
+  // follow and followers code start
+
   const [totalUserFollowers, setTotalUserFollowers] = useState(totalFollowers || 0);
   const [totalUserFollowing, setTotalUserFollowing] = useState(totalFollowing || 0);
 
@@ -75,6 +78,8 @@ const NewProfileCard: FC<Props> = ({
     setActiveTab(tab);
     setIsOpen(true);
    }
+  // follow and followers code end
+
   return (
     <>
       <div className={appClsx('w-full flex flex-col items-center md:items-start gap-1', cardClass)}>
@@ -130,7 +135,7 @@ const NewProfileCard: FC<Props> = ({
           </div>
         </div>
 
-        {HIDE_SELLER_FLOW && showFollowingSection && (
+        {!HIDE_SELLER_FLOW && showFollowingSection && (
           <div
             className={appClsx(
               'w-full flex gap-4 mt-1 md:mt-2 text-sm font-medium text-text-secondary-dark dark:text-text-primary-dark',
@@ -146,7 +151,7 @@ const NewProfileCard: FC<Props> = ({
           </div>
         )}
       </div>
-      {isOpen && <Model closeIconClassName='top-[26px]' className='sm:rounded-[12px] min-h-screen sm:min-h-fit rounded-none sm:h-[500px] max-w-screen sm:max-w-[460px] flex flex-col dark:bg-bg-secondary-dark' onClose={handleClose} >
+      {!HIDE_SELLER_FLOW && isOpen && <Model closeIconClassName='top-[26px]' className='sm:rounded-[12px] min-h-screen sm:min-h-fit rounded-none sm:h-[500px] max-w-screen sm:max-w-[460px] flex flex-col dark:bg-bg-secondary-dark' onClose={handleClose} >
         <FollowDetails setTotalUserFollowers={setTotalUserFollowers} setTotalUserFollowing={setTotalUserFollowing} title={activeTab === 'followers' ? 'Followers' : 'Following'}/>
         </Model>}
     </>

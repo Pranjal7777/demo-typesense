@@ -259,13 +259,13 @@ const HomePage: FC<HomeProps> = ({
   
                 isErrorBannersAndRecommendedProducts ? null : (bannersAndRecommendedProducts?.result !== undefined && bannersAndRecommendedProducts?.Totalcount !== 0 ) ? ( // <h2>{convertRTKQueryErrorToString(errorBannersAndRecommendedProducts)}</h2>
                   recommendedProducts.map((product, index) => (
-                    <ProductCard showLikeIcon={true} key={index} product={product} onLikeClick={onLikeClick}/>
+                    <ProductCard showProfilePic={false} showLikeIcon={true} key={index} product={product} onLikeClick={onLikeClick}/>
                   ))
                 ) : null
               }
               {isFetchingBannersAndRecommendedProducts && (
                 <>
-                  {Array.from({ length: 10 }).map((_, index) => (
+                  {Array.from({ length: 5 }).map((_, index) => (
                     <Skeleton key={index} />
                   ))}
                 </>

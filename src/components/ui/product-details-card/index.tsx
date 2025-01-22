@@ -4,7 +4,8 @@ import { useTheme } from '@/hooks/theme';
 import { useRouter } from 'next/router';
 import { getCookie } from '@/utils/cookies';
 import { getFormattedDateFromTimestamp } from '@/helper/get-formatted-date';
-import ProductReport from './product-report';
+const ProductReport = React.lazy(() => import('./product-report'));
+// import ProductReport from './product-report';
 import LocationSvg from '../../../../public/assets/svg/location';
 import { StickyHeaderDetails } from '@/containers/pdp';
 
@@ -68,13 +69,13 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
           let newDetails = { ...prevDetails };
 
           // Set showProductImage to true when the imageElement is either scrolled past 145px from the top or completely out of viewport
-          if (productNameRect.top <= 180 || productNameRect.bottom < 0) {
+          if (productNameRect.top <= 145 || productNameRect.bottom < 0) {
             newDetails.showProductName = true;
           } else {
             newDetails.showProductName = false;
           }
 
-          if (priceRect.top <= 235) {
+          if (priceRect.top <= 145) {
             newDetails.showPrice = true;
           } else {
             newDetails.showPrice = false;
@@ -118,21 +119,26 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
               }
             }}
           >
-            {!isSeller && <ReportFlagSVG fillColor={currentTheme ? '#fff' : '#000'} />}
+            {!isSeller && <ReportFlagSVG aria-label="Report" fillColor={currentTheme ? '#fff' : '#000'} />}
           </div>
         </div>
-        <h1 ref={productNameElementRef} className="text-lg md:text-2xl leading-[27px] md:leading-[36px] font-semibold text-text-primary-light dark:text-text-quinary-dark">
+        <h1
+          ref={productNameElementRef}
+          className="text-lg md:text-2xl leading-[27px] md:leading-[36px] font-semibold text-text-primary-light dark:text-text-quinary-dark"
+        >
           {categoryTitle}
         </h1>
         <div className="flex justify-between mt-1">
           <span className="text-xs md:text-base text-text-tertiary-light dark:text-text-tertiary-dark flex items-center gap-1">
             <LocationSvg
+              aria-label="Location"
               className="hidden md:block"
               height="16"
               width="16"
               color={theme ? 'var(--text-light)' : 'var(--text-secondary-color)'}
-            /> 
+            />
             <LocationSvg
+              aria-label="Location"
               className="md:hidden"
               height="12"
               width="12"
@@ -147,7 +153,10 @@ const ProductDetailsCard: React.FC<ProductDetailsCardProps> = ({
       </div>
 
       <div className="flex flex-col mobile:flex-row  mobile:justify-between mobile:items-center">
-        <span ref={priceElementRef} className=" mt-3 md:mt-5 text-xl md:text-[28px] font-bold text-text-primary-light dark:text-text-quinary-dark">
+        <span
+          ref={priceElementRef}
+          className=" mt-3 md:mt-5 text-xl md:text-[28px] font-bold text-text-primary-light dark:text-text-quinary-dark"
+        >
           {currency} {price}
         </span>
       </div>

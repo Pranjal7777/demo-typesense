@@ -271,6 +271,7 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
                 >
                   <div className="w-12 h-12 bg-black bg-opacity-50 flex items-center justify-center rounded-full">
                     <svg
+                      aria-label="Play Video"
                       className="w-6 h-6 text-white"
                       viewBox="0 0 24 24"
                       fill="none"
@@ -305,7 +306,7 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
                 }
               }}
             >
-              <HartSvg color="#ff0000" height="20" width="20" isFilled={isProductLiked} />
+              <HartSvg aria-label="Like" color="#ff0000" height="20" width="20" isFilled={isProductLiked} />
             </button>
           </div>
 

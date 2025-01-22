@@ -440,30 +440,30 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
 
   const renderFilterSection = (filter: FilterParameter) => {
     switch (filter.typeCode) {
-      case 6: // Category type
-        return (
-          <div className="type">
-            <TextWrapper className="text-base font-semibold leading-6">Category Type</TextWrapper>
-            <div
-              className="flex justify-between items-center cursor-pointer mt-[16px] border border-[#DBDBDB] dark:border-[#3D3B45] p-[12px] w-full rounded"
-              onClick={() => changMenu()}
-              role="button"
-              tabIndex={0}
-              onKeyUp={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  changMenu();
-                }
-              }}
-            >
-              <TextWrapper className="text-sm font-normal leading-5">
-                {' '}
-                {selectedFilters?.category?.title ? selectedFilters?.category?.title : 'Select Type'}
-              </TextWrapper>
-              <RightArrowSVG primaryColor={theme ? '#fff' : '#000'} />
-            </div>
-          </div>
-        );
+      // case 6: // Category type
+      //   return (
+      //     <div className="type">
+      //       <TextWrapper className="text-base font-semibold leading-6">Category Type</TextWrapper>
+      //       <div
+      //         className="flex justify-between items-center cursor-pointer mt-[16px] border border-[#DBDBDB] dark:border-[#3D3B45] p-[12px] w-full rounded"
+      //         onClick={() => changMenu()}
+      //         role="button"
+      //         tabIndex={0}
+      //         onKeyUp={(e) => {
+      //           if (e.key === 'Enter' || e.key === ' ') {
+      //             e.preventDefault();
+      //             changMenu();
+      //           }
+      //         }}
+      //       >
+      //         <TextWrapper className="text-sm font-normal leading-5">
+      //           {' '}
+      //           {selectedFilters?.category?.title ? selectedFilters?.category?.title : 'Select Type'}
+      //         </TextWrapper>
+      //         <RightArrowSVG primaryColor={theme ? '#fff' : '#000'} />
+      //       </div>
+      //     </div>
+      //   );
 
       case 3: // Price
         return (

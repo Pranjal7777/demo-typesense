@@ -66,7 +66,7 @@ const MyFavorites = ({ profileData }: { profileData: SellerProfileType }) => {
         </h2>
         <div className="flex-1 mt-[68px] md:mt-0 overflow-y-scroll grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-x-3 gap-y-4">
           {allFavorites.map((product: Product) => (
-            <ProductCard onLikeClick={onLikeClick} userID = {profileData._id} showLikeIcon={true} showProfilePic={true} key={product._id} product={product} />
+            <ProductCard onLikeClick={onLikeClick} userID = {profileData._id} showLikeIcon={true} key={product._id} product={product} />
           ))}
           {isFetching && [...Array(10)].map((_, index) => <ProductCardSkeleton key={index} />)}
         </div>

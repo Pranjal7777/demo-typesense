@@ -90,3 +90,7 @@ export const CHAT_USER_DETAILS = '/chat/user';
 export const CHAT_USERS = '/chat/users';
 export const CHAT_USER_TOKEN = '/chat/user/authenticate';
 export const CHAT_CONVERSATION = '/chat/conversation';
+
+
+// my account
+export const GET_ALL_SAVED_ACCOUNT = '/v1/customer';

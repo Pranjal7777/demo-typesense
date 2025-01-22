@@ -12,6 +12,7 @@ import { useAppSelector } from '@/store/utils/hooks';
 import { RootState } from '@/store/store';
 import CloseIcon from '../../../public/assets/svg/close-icon';
 import SearchIcon from '../../../public/assets/svg/search-icon';
+import HistoryIcon from '../../../public/images/history-icon.svg';
 import LocationSvg from '../../../public/assets/svg/location';
 import { routeSellerProfile, routeToCategories, routeToSearch } from '@/store/utils/route-helper';
 import keyDownHandler from '@/helper/key-down-handler';
@@ -23,6 +24,7 @@ import SearchResults from '../typesense/SearchResults';
 import { CustomSearchResults } from '../ui/search-box/custom-hits';
 import { productsApi } from '@/store/api-slices/products-api';
 import LeftArrowIcon from '../../../public/assets/svg/left-arrow-icon';
+import Image from 'next/image';
 
 interface PlacePredictions {
   place_id: string;
@@ -133,12 +135,22 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
   //   handleRemoveLocationHelper();
   //   setIsLocationTextBoxFocused(false);
   // };
+const [isRecentSearchOpen, setIsRecentSearchOpen] = useState(false);
+    const { data: recentSearchData, isFetching: isRecentSearchDataFetching } = productsApi.useGetRecentSearchDataQuery(
+      undefined,
+      { skip: !isRecentSearchOpen }
+    );
 
   const removeUserAndItem = () => {
     setFormData((prevState) => ({
       ...prevState,
       search: '',
     }));
+  };
+
+  const handleFocusSearchBox = () => {
+    setIsRecentSearchOpen(true);
+    setIsLocationTextBoxFocused(true);
   };
 
   const clearLocationFromLocationSearchBox = () => {
@@ -250,8 +262,13 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
               className="truncate border-border-tertiary-light dark:border-border-tertiary-dark dark:bg-bg-quinary-dark focus:border-2 focus:!border-brand-color dark:text-bg-tertiary-light px-11 rtl:px-5 pr-9 rtl:pr-12 text-sm outline-none border rounded-md h-12 w-full focus:border-primary bg-bg-tertiary-light"
               type="text"
               name="search"
-              onFocus={() => setIsLocationTextBoxFocused(true)}
+              onFocus={handleFocusSearchBox}
               value={formData.search}
+              onBlur={() =>
+                setTimeout(() => {
+                  setIsRecentSearchOpen(false);
+                }, 300)
+              }
               onChange={(e) => handleInstantSearchOnChange?.(e)}
               onKeyDown={handleSearchEnterKeyDown}
               autoComplete="off"
@@ -264,8 +281,7 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
                     searchResults?.map((hit: Hit) => (
                       <div
                         className="flex dark:hover:text-text-primary-dark border-border-tertiary-light h-14 items-center cursor-pointer hover:bg-bg-octonary-light dark:hover:bg-bg-duodenary-dark"
-                        onClick={async () => {
-                        }}
+                        onClick={async () => {}}
                       >
                         <div className="truncate ml-3 flex">
                           <div className="font-medium text-sm text-text-primary-light dark:text-text-primary-dark">
@@ -477,9 +493,9 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
                             key={hit.id}
                             onClick={() => {
                               // @ts-ignore
-                              categoryRoute(hit.categories[0]?.id , hit.title.en, hit);
+                              categoryRoute(hit.categories[0]?.id, hit.title.en, hit);
                               // @ts-ignore
-                              triggerSingleProductSearch({assetId:hit.id,search:hit.title.en})
+                              triggerSingleProductSearch({ assetId: hit.id, search: hit.title.en });
                             }}
                             // onKeyDown={(e) => keyDownHandler(e, ()=>categoryRoute(hit.categoryPath[0].id as string))}
                           >
@@ -510,11 +526,7 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
                     />
                   </CustomSearchResults>
                 )
-              ) : (
-                <div className=" border-error bg-bg-secondary-light dark:bg-bg-primary-dark flex items-center h-[50%] justify-center">
-                  <p className="truncate ml-3 fixed flex dark:text-text-primary-dark ">No Data Found!</p>
-                </div>
-              )}
+              ) : null}
             </div>
           </>
         ) : placePredictions.length ? (
@@ -539,7 +551,7 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
                 <div className=" flex items-center justify-center h-[50%]">
                   <Spinner />
                 </div>
-              ) : placePredictions.length === 0 ? (
+              ) : (placePredictions.length === 0 && !isPlacePredictionsLoading && !isRecentSearchOpen) ? (
                 <div className=" border-error bg-bg-secondary-light dark:bg-bg-primary-dark flex items-center h-[50%] justify-center">
                   <p className="truncate ml-3 flex dark:text-text-primary-dark ">No Data Found!</p>
                 </div>
@@ -583,6 +595,76 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
             </div>
           </div>
         )}
+        {/* //// new added */}
+        {isRecentSearchOpen === true && !formData.search ? (
+          <div
+            className="h-fit overflow-y-scroll border-primary px-4 divide-y-2 dark:divide-border-tertiary-dark divide-border-tertiary-light"
+            style={{
+              overflowY: 'auto',
+              msOverflowStyle: 'none',
+              scrollbarWidth: 'none',
+            }}
+          >
+            <div className="overflow-y-auto">
+              {isRecentSearchDataFetching ? (
+                <div className="flex items-center justify-center h-[120px]">
+                  <Spinner />
+                </div>
+              ) : recentSearchData?.data.data.length === 0 ? (
+                <div className="px-4 py-3 text-sm text-text-primary-light dark:text-text-primary-dark">
+                  <h3 className="text-sm pt-4 flex items-center px-3 font-semibold">Recent Searches</h3>
+                  <p className="text-sm font-normal">No Recent Searches</p>
+                </div>
+              ) : (
+                <>
+                  <h3 className="text-sm pt-4 flex text-text-primary-light dark:text-text-primary-dark items-center px-3 font-semibold">
+                    Recent Searches
+                  </h3>
+                  {selectedOption === 'Items' &&
+                    recentSearchData?.data?.data?.map((search, index) => (
+                      <div
+                        className="flex dark:hover:text-text-primary-dark border-border-tertiary-light h-14 items-center cursor-pointer hover:bg-bg-octonary-light dark:hover:bg-bg-duodenary-dark"
+                        key={index}
+                        onClick={() => selectItemOrUserToSearch?.(`${search.searchText}`)}
+                      >
+                        <Image src={HistoryIcon} alt={''} width={16} height={16} className="ml-3" />
+                        <div className="truncate ml-3 flex">
+                          <div className="font-medium text-sm text-text-primary-light dark:text-text-primary-dark">
+                            {search.searchText}
+                          </div>
+                          {/* {search.mainCategory && (
+                                <>
+                                  <div className="font-semibold text-sm text-brand-color ml-1">in</div>
+                                  <div className="font-medium text-sm text-text-primary-light dark:text-text-primary-dark ml-1">
+                                    {search.mainCategory}
+                                  </div>
+                                </>
+                              )} */}
+                        </div>
+                      </div>
+                    ))}
+
+                  {selectedOption === 'Users' &&
+                    recentSearchData?.data?.user.map((search, index) => (
+                      <button
+                        className="w-full flex dark:hover:text-text-primary-dark text-text-secondary-light dark:text-text-primary-dark border-border-tertiary-light h-14 items-center cursor-pointer hover:bg-bg-octonary-light dark:hover:bg-bg-duodenary-dark"
+                        key={index}
+                        onClick={() => selectItemOrUserToSearch?.(`${search.searchText}`)}
+                      >
+                        <Image src={HistoryIcon} alt={''} width={16} height={16} className="ml-3" />
+                        <div className="truncate ml-3 flex">
+                          <div className="border-3 font-medium text-sm text-text-primary-light dark:text-text-primary-dark">
+                            {search.searchText}
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                </>
+              )}
+            </div>
+          </div>
+        ) : null}
+        {/* //// */}
       </InstantSearch>
     </div>
   );

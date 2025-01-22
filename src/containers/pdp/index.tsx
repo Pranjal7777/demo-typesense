@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import React, { useState } from 'react';
+import React, { Suspense, useCallback, useState } from 'react';
 import ProductSlider from '@/components/ui/product-slider';
 import Layout from '@/components/layout';
 import ProductAttribute from '@/components/product-attribute';
@@ -7,36 +7,35 @@ import Breadcrumb from '@/components/ui/breadcrumb';
 import { useTheme } from '@/hooks/theme';
 import EngagementStats from '@/components/ui/engagement-stats';
 import HartSvg from '../../../public/assets/svg/heart';
-import ProfileCard from '@/components/ui/profile-card';
-import ProductDetailsCard from '@/components/ui/product-details-card';
+// import ProfileCard from '@/components/ui/profile-card';
+// import ProductDetailsCard from '@/components/ui/product-details-card';
 import InfoBox from '@/components/ui/info-box';
 import InfoSection from '@/components/sections/info-section';
 import TogglePanel from '@/components/toggle-panel';
-import PdpCta from '@/components/ui/pdp-cta';
+// import PdpCta from '@/components/ui/pdp-cta';
 import ViewsIcon from '../../../public/assets/svg/views-icon';
 import OffersIconSVG from '../../../public/assets/svg/offers-icon';
 import { useRouter } from 'next/router';
-import SimilarProductsList from '@/components/similar-products';
-import UserProductList from '@/components/user-product-list';
+// import SimilarProductsList from '@/components/similar-products';
+const SimilarProductsList = React.lazy(() => import('@/components/similar-products'));
+// import UserProductList from '@/components/user-product-list';
 import { RootState } from '@/store/store';
 import { useAppSelector } from '@/store/utils/hooks';
 import { setCheckoutProduct } from '@/store/slices/checkout-slice';
 import { useDispatch } from 'react-redux';
 import { getChatIdentifier } from '@/helper/payment';
 import { formatPriceWithoutCents } from '@/utils/price-formatter';
-import LeftArrowIcon from '../../../public/assets/svg/left-arrow-icon';
 import ImageContainer from '@/components/ui/image-container';
 import { STATIC_IMAGE_URL } from '@/config';
-import ShareIconSVG from '../../../public/assets/svg/share-icon';
-import SearchIcon from '../../../public/assets/svg/search-icon';
-import SvgWrapper from '@/components/ui/svg-wrapper';
-import SVG_PATH from '@/lib/svg-path';
 import ShareIcon from '../../../public/assets/svg/share-icon-flat';
 import ChatIcon from '../../../public/assets/svg/chat-icon';
 import Button from '@/components/ui/button';
 import { productsApi } from '@/store/api-slices/products-api';
 import showToast from '@/helper/show-toaster';
 import FullScreenSpinner from '@/components/ui/full-screen-spinner';
+const ProductDetailsCard = React.lazy(() => import('@/components/ui/product-details-card'));
+const PdpCta = React.lazy(() => import('@/components/ui/pdp-cta'));
+
 export type filteredProducts = {
   userName: string;
   timeStamp: string;
@@ -86,9 +85,12 @@ export type StickyHeaderDetails = {
 };
 
 const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
+  console.log(data, 'pdp data');
+  
   const sellerAccountId = data?.result?.users?.accountId;
   const router = useRouter();
   const apidata = data.result;
+
   const assetId = apidata?._id;
   const categoryId = apidata?.categoryPath[0].id;
   const { t: productDetails } = useTranslation('productDetails');
@@ -127,12 +129,12 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
 
       const [isLikeChange, setIsLikeChange] = useState(false);
 
-       const handleLike = async () => {
+       const handleLike = useCallback(async () => {
          if (userInfo) {
            try {
              const newLikeState = !isLiked;
              if (typeof userInfo.accountId === 'string' && typeof assetId === 'string') {
-               const userId: string = userInfo.accountId;
+               const userId: string = userInfo._id;
                const result = await likeAndDislikeProduct({ assetid: assetId, like: newLikeState, userId }).unwrap();
                setIsLiked(newLikeState);
                setTotalLikeCount((prev) => (newLikeState ? prev + 1 : prev - 1));
@@ -146,7 +148,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
          } else {
            router.push('/login');
          }
-       };
+       }, [ isLiked, likeAndDislikeProduct]);
 
   const [stickyHeaderDetails, setStickyHeaderDetails] = useState<StickyHeaderDetails>({
     showShareIcon: false,
@@ -190,17 +192,18 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
     },
   ];
   const ToggleInfo = [
-    {
-      label: togglePanelText[0].toggleOne,
-      content: <UserProductList isLikeChange={isLikeChange} accoundId={sellerAccountId} page="1" />,
-    },
+    // {
+    //   label: togglePanelText[0].toggleOne,
+    //   content: <UserProductList isLikeChange={isLikeChange} accoundId={sellerAccountId} page="1" />,
+    // },
     {
       label: togglePanelText[0].toggleTwo,
-      content: <SimilarProductsList isLikeChange={isLikeChange} assetId={assetId} categoryId={categoryId} />,
+      content: <SimilarProductsList isLikeChange={isLikeChange} assetName={prodTitle.replace(/ /g, '-') || ''} categoryId={categoryId} />,
     },
   ];
 
-  const handleFirstButtonClick = async () => {
+  const handleFirstButtonClick = useCallback(async () => {
+    console.log(data.result, 'data.result');
     if (!userInfo) return router.push('/login');
     if (data.result.isNegotiable) return;
     try {
@@ -224,7 +227,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
     } finally {
       setIsFirstButtonLoading(false);
     }
-  };
+  }, [ myLocation]);
 
   const [activeProductImage, setActiveProductImage] = useState<string>('');
 
@@ -233,7 +236,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
     return src;
   };
 
-  const handleShareClick = async () => {
+  const handleShareClick = useCallback(async () => {
     if (navigator.share) {
       try {
         await navigator.share({
@@ -247,7 +250,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
     } else {
       alert('Sharing not supported.');
     }
-  };
+  }, [prodTitle, shareLink]);
 
   return (
     <Layout
@@ -259,7 +262,10 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
       showBackArrowInSearchBox={true}
     >
       {(stickyHeaderDetails?.showProductImage || stickyHeaderDetails?.showShareIcon) && (
-        <div style={{zIndex: 1}} className="hidden  fixed md:flex justify-between items-center h-[80px]  top-[145px] left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-5 mx-auto max-w-[1440px]">
+        <div
+          style={{ zIndex: 9999 }}
+          className="hidden  fixed md:flex justify-between items-center h-[80px]  top-[0px] left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] py-2 mx-auto max-w-[1440px]"
+        >
           <div className="flex gap-4">
             {stickyHeaderDetails.showProductImage && (
               <ImageContainer
@@ -281,6 +287,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
               </div>
               {stickyHeaderDetails.showShareIcon && (
                 <ShareIcon
+                  aria-label="Share"
                   onClick={handleShareClick}
                   height={28}
                   width={28}
@@ -294,6 +301,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
           <div className="flex items-center gap-2">
             {stickyHeaderDetails.showShareIcon && (
               <HartSvg
+                aria-label="Like"
                 onClick={handleLike}
                 height="24"
                 width="24"
@@ -310,14 +318,14 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
                   onClick={handleFirstButtonClick}
                   className={`w-[174px]  text-sm mb-0`}
                 >
-                  Buy Now
+                  {data.result?.isNegotiable ? ctaText[0].makeOfferBtn : ctaText[0].firstBtn}
                 </Button>
 
                 <Button
                   className="w-[174px] text-sm mb-0 dark:bg-bg-tertiary-dark dark:text-text-primary-dark"
                   buttonType="secondary"
                 >
-                  Offer Trade
+                  {ctaText[0].secondBtn}
                 </Button>
 
                 <ChatIcon
@@ -356,43 +364,44 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
             <div className="lg:mt-5 md:mt-3 sm:mt-2 flex items-end justify-between mobile:hidden"></div>
           </div>
 
-          <div className="w-full flex-2 lg:w-[40%] h-full  rtl:ml-0 rtl:mr-12 overflow-y-scroll">
-            <div>
-              <div className="mobile:mt-5 w-full flex flex-col">
-                <ProductDetailsCard
-                  setStickyHeaderDetails={setStickyHeaderDetails}
-                  stickyHeaderDetails={stickyHeaderDetails}
-                  assetId={assetId}
-                  familyName={prodCategory}
-                  categoryTitle={prodTitle}
-                  postTimeStamp={prodTimeStamp}
-                  price={formatPriceWithoutCents(prodPrice)}
-                  timestampLabel={postingLabel}
-                  isSeller={apidata?.users?.accountId === userInfo?.accountId}
-                  // currency={currencyCode}
-                  assetCondition={`${apidata.city}, ${apidata.state}, ${apidata.country}`}
-                />
-                {apidata?.users?.accountId !== userInfo?.accountId && (
-                  <div className="mobile:hidden">
-                    <PdpCta
-                      setStickyHeaderDetails={setStickyHeaderDetails}
-                      stickyHeaderDetails={stickyHeaderDetails}
-                      apiData={apidata}
-                      firstButtonText={data.result?.isNegotiable ? ctaText[0].makeOfferBtn : ctaText[0].firstBtn}
-                      isSold={isSold}
-                      secondButtonText={ctaText[0].secondBtn}
-                      noStockButtonText={ctaText[0].nostock}
-                      handleFirstButtonClick={handleFirstButtonClick}
-                      isFirstButtonLoading={isFirstButtonLoading}
-                    />
-                  </div>
-                )}
+          <Suspense fallback={<div>Loading Product Details...</div>}>
+            <div className="w-full flex-2 lg:w-[40%] h-full  rtl:ml-0 rtl:mr-12 overflow-y-scroll">
+              <div>
+                <div className="mobile:mt-5 w-full flex flex-col">
+                  <ProductDetailsCard
+                    setStickyHeaderDetails={setStickyHeaderDetails}
+                    stickyHeaderDetails={stickyHeaderDetails}
+                    assetId={assetId}
+                    familyName={prodCategory}
+                    categoryTitle={prodTitle}
+                    postTimeStamp={prodTimeStamp}
+                    price={formatPriceWithoutCents(prodPrice)}
+                    timestampLabel={postingLabel}
+                    isSeller={apidata?.users?.accountId === userInfo?.accountId}
+                    // currency={currencyCode}
+                    assetCondition={`${apidata.city}, ${apidata.state}, ${apidata.country}`}
+                  />
+                  {apidata?.users?.accountId !== userInfo?.accountId && (
+                    <div className="mobile:hidden">
+                      <PdpCta
+                        setStickyHeaderDetails={setStickyHeaderDetails}
+                        stickyHeaderDetails={stickyHeaderDetails}
+                        apiData={apidata}
+                        firstButtonText={data.result?.isNegotiable ? ctaText[0].makeOfferBtn : ctaText[0].firstBtn}
+                        isSold={isSold}
+                        secondButtonText={ctaText[0].secondBtn}
+                        noStockButtonText={ctaText[0].nostock}
+                        handleFirstButtonClick={handleFirstButtonClick}
+                        isFirstButtonLoading={isFirstButtonLoading}
+                      />
+                    </div>
+                  )}
 
-                <EngagementStats data={EngagementStatsData} />
-              </div>
+                  <EngagementStats data={EngagementStatsData} />
+                </div>
 
-              {/* hide seller info */}
-              {/* <div className="h-[30%]">
+                {/* hide seller info */}
+                {/* <div className="h-[30%]">
                 <ProfileCard
                   sellerName={sellerUserName}
                   sellerRating={sellerRating}
@@ -405,23 +414,24 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
                   isFollow={apidata?.isFollow}
                 />
               </div> */}
-              {prodDesc && (
-                <div className="mt-5">
-                  <InfoBox question={desc} answer={prodDesc} width={'100%'} />
-                </div>
-              )}
-              {prodDetails?.length > 0 ? (
-                <div className="mt-5 mobile:w-full mobile:p-4 h-auto">
-                  <span className="text-lg md:text-xl font-semibold h-5 md:h-10 text-text-primary-light dark:text-text-primary-dark">
-                    Features
-                  </span>
-                  <div className="overflow-y-scroll flex flex-col">
-                    <ProductAttribute data={prodDetails} />
+                {prodDesc && (
+                  <div className="mt-5">
+                    <InfoBox question={desc} answer={prodDesc} width={'100%'} />
                   </div>
-                </div>
-              ) : null}
+                )}
+                {prodDetails?.length > 0 ? (
+                  <div className="mt-5 mobile:w-full mobile:p-4 h-auto">
+                    <span className="text-lg md:text-xl font-semibold h-5 md:h-10 text-text-primary-light dark:text-text-primary-dark">
+                      Features
+                    </span>
+                    <div className="overflow-y-scroll flex flex-col">
+                      <ProductAttribute data={prodDetails} />
+                    </div>
+                  </div>
+                ) : null}
+              </div>
             </div>
-          </div>
+          </Suspense>
         </div>
         {/* first section box end */}
       </div>
@@ -431,12 +441,12 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
         <div className=" px-2 z-10 sm:hidden flex items-center justify-between h-[76px] w-full fixed bottom-0 right-0 left-0 bg-bg-secondary-light dark:bg-bg-secondary-dark">
           <PdpCta
             apiData={apidata}
-          firstButtonText={data.result?.isNegotiable ? ctaText[0].makeOfferBtn : ctaText[0].firstBtn}
-          isSold={isSold}
-          secondButtonText={ctaText[0].secondBtn}
-          noStockButtonText={ctaText[0].nostock}
-          handleFirstButtonClick={handleFirstButtonClick}
-          isFirstButtonLoading={isFirstButtonLoading}
+            firstButtonText={data.result?.isNegotiable ? ctaText[0].makeOfferBtn : ctaText[0].firstBtn}
+            isSold={isSold}
+            secondButtonText={ctaText[0].secondBtn}
+            noStockButtonText={ctaText[0].nostock}
+            handleFirstButtonClick={handleFirstButtonClick}
+            isFirstButtonLoading={isFirstButtonLoading}
           />
         </div>
       )}
@@ -448,15 +458,17 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
 
       <div className=" relative mb-11 custom-container mx-auto sm:px-16 mobile:px-4 ">
         {/*product section start */}
+        <Suspense fallback={<div>Loading Similar Products...</div>}>
         <div className="mt-12">
           <TogglePanel panelInfo={ToggleInfo} />
         </div>
+        </Suspense>
         {/*product section end */}
       </div>
       <div className="custom-container mobile:px-4">
         <InfoSection />
       </div>
-      {isLikeAndDislikeLoading && <FullScreenSpinner/>}
+      {isLikeAndDislikeLoading && <FullScreenSpinner />}
     </Layout>
   );
 };

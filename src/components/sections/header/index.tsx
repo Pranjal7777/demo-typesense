@@ -220,13 +220,13 @@ const Header: FC<Props> = ({
                         : windowWidth > 1144
                         ? 3
                         : windowWidth >= 1144
-                        ? 2
+                        ? 3
                         : windowWidth >= 963
-                        ? 1
+                        ? 3
                         : windowWidth >= 831
                         ? 0
                         : windowWidth >= 634
-                        ? 0
+                        ? 1
                         : 0
                     )
                     .map((item, index) => (

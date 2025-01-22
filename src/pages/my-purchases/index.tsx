@@ -133,7 +133,7 @@ const [page, setPage] = useState(1);
                 className="md:hidden absolute left-0"
               />
               <h1 className='text-base'> Order Details</h1>
-              <span className=' text-sm font-normal text-text-septenary-light'>OID:{showOrderId}</span>
+              <span className=' text-sm font-normal text-text-septenary-light'>OID: {showOrderId}</span>
             </div>
           </div>
         ) : null}

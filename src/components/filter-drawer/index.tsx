@@ -43,6 +43,7 @@ export type filterTypes = {
   latitude:string,
   longitude:string,
   country:string,
+  sort:string
 };
 
 type FilterDrawerProps = {
@@ -105,7 +106,8 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
     address: '',
     latitude:'',
     longitude:'',
-    country:''
+    country:'',
+    sort:''
   });
   const searchParams = useSearchParams();
 
@@ -129,6 +131,8 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
     address: '',
   });
   const [selectedLocationFromBox, setSelectedLocationFromBox] = useState(searchParams.get('address') || '');
+  console.log(selectedLocationFromBox, 'selectedLocationFromBox');
+  
   const priceFilter = filterParameters?.data.filters.find((f) => f.typeCode === 3);
   const initialMinPrice = priceFilter?.data?.[0]?.minPrice ?? 2500;
   const initialMaxPrice = priceFilter?.data?.[0]?.maxPrice ?? 7500;
@@ -367,7 +371,8 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
       category: { title: '', _id: '' },
       latitude:'',
       longitude:'',
-      country:'India'
+      country:'India',
+      sort:''
     };
     setSelectedFilters(initialData);
     setInputFocus('');
@@ -377,6 +382,7 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
   };
 
   const handleFilterClick = (filterType: keyof filterTypes, label: string) => {
+    console.log(filterType, label, 'filterType, label');
     setSelectedFilters((prevFilters) => ({
       ...prevFilters,
       [filterType]: prevFilters[filterType] === label ? '' : label,

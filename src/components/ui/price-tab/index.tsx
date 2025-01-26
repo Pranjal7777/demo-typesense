@@ -25,7 +25,7 @@ const PriceTab: React.FC<PriceTabProps> = ({
     <div
       className={`flex items-center justify-center h-[45px] border border-[#3D3B45] max-w-[180px] w-full ${
         inputFocus === focus
-          ? 'bg-[#F7F5FC] dark:bg-[#221D2A] border-brand-color text-brand-color'
+          ? 'bg-brand-color-hover border-brand-color text-brand-color'
           : 'bg-white dark:bg-bg-primary-dark border-[#3D3B45]'
       }  rounded text-sm`}
     >

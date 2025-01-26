@@ -340,8 +340,9 @@ const Header: FC<Props> = ({
 
       {/* <CategoryDrower className={`sm:hidden mobile:inline-block ${searchCategoryDrower && "!hidden"} transition duration-700`} searchCategoryDrower={searchCategoryDrower} setsearchCategoryDrower={setsearchCategoryDrower}/> */}
       <nav
+        style={{zIndex: 1}}
         className={appClsx(
-          `z-[2] border-error ${stickyHeaderWithSearchBox && 'bg-bg-secondary-light dark:bg-bg-secondary-dark'} ${
+          ` border-error ${stickyHeaderWithSearchBox && 'bg-bg-secondary-light dark:bg-bg-secondary-dark'} ${
             minThreshold && 'dark:bg-bg-primary-dark bg-bg-secondary-light'
           } mobile:inline-block sm:hidden h-[69px] w-full fixed top-0  flex items-center justify-center px-[16px]`,
           mobileContainerClassName

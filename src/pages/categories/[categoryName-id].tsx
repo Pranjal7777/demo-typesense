@@ -133,6 +133,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     longitude: searchParams.get('longitude') || '',
     country: searchParams.get('country') || myLocation?.country || 'India',
     category: { title: searchParams.get('categoryTitle') || '', _id: searchParams.get('categoryId') || '' },
+    sort: searchParams.get('sort') || '',
   };
 
   const [filtersDrawer, setFilterDrawer] = useState(false);
@@ -204,6 +205,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
       { shallow: true }
     );
   };
+
   const removeFilter = (key: string) => {
     const updatedFeaturedFilters = { ...selectedItemsFromFilterSection };
     if (key === 'category') {
@@ -354,6 +356,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
       latitude: getQueryParam(router.query.latitude),
       longitude: getQueryParam(router.query.longitude),
       country: getQueryParam(router.query.couuntry),
+      sort: getQueryParam(router.query.sort),
     };
     setSelectedItemsFromFilterSection(updatedFilters);
   }, [router.query]);
@@ -617,6 +620,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                           { value: 'price_desc', label: 'High to Low' },
                         ]}
                         defaultValue={{ value: 'newest', label: 'Newest First' }}
+                        // value={{ value: 'newest', label: 'Newest First' }}
                         formatOptionLabel={({ label }, { context }) => <span className="pl-2">{label}</span>}
                         styles={customStyles}
                         theme={(theme) => ({

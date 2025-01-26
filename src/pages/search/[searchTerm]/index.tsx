@@ -8,7 +8,7 @@ import { filterTypes } from '@/components/filter-drawer';
 const FilterDrawer = dynamic(() => import('@/components/filter-drawer'), {
   ssr: false,
 });
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import SelectedFilterCard from '@/components/selected-filter-card';
 import Skeleton from '@/components/ui/product-card-skeleton';
 import { useRouter } from 'next/router';
@@ -47,6 +47,9 @@ import { useNewWindowScroll } from '@/hooks/new-use-window-scroll';
 import { IMAGES } from '@/lib/images';
 import CustomHeader from '@/components/ui/custom-header';
 import Placeholder from '@/containers/placeholder/placeholder';
+import FilterButtonDropdown from '@/components/ui/filter-button-dropdown';
+import { useSelector } from 'react-redux';
+import CategoriesDropDown from '@/components/ui/filter-button-dropdown/categoriesDropDown';
 
 export type filteredProducts = {
   userName: string;
@@ -115,6 +118,27 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   const { myLocation } = useAppSelector((state: RootState) => state.auth);
   const { data: filterParameters, error: filterParametersError } = productsApi.useGetFilterParametersQuery();
   const theme = useTheme();
+  console.log(filterParameters?.data?.filters, 'mirh filterParameters');
+
+  const conditionOptions = filterParameters?.data?.filters
+    .find((filter: any) => filter.typeCode === 20)
+    ?.data?.map((item: any) => ({ value: item?.value, label: item?.name }));
+  const sortOptions = filterParameters?.data?.filters
+    ?.find((filter: any) => filter.typeCode === 5)
+    ?.data?.map((item: any) => ({ value: item?.value, label: item?.name }));
+
+  const getSortOptionTitle = (value: string) => {
+    return sortOptions?.find((option: any) => option.value === value)?.label;
+  };
+
+  const { currencySymbol, initialMinPrice, initialMaxPrice } = useMemo(() => {
+    const priceFilter = filterParameters?.data?.filters?.find((filter: any) => filter.typeCode === 3);
+    return {
+      currencySymbol: priceFilter?.currencySymbol,
+      initialMinPrice: priceFilter?.data?.[0]?.minPrice || 0,
+      initialMaxPrice: priceFilter?.data?.[0]?.maxPrice || 0,
+    };
+  }, [filterParameters]);
 
   const router = useRouter();
 
@@ -138,21 +162,39 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     longitude: searchParams.get('longitude') || '',
     country: searchParams.get('country') || 'India',
     category: { title: searchParams.get('categoryTitle') || '', _id: searchParams.get('categoryId') || '' },
+    sort: searchParams.get('sort') || '',
   };
 
   const [filtersDrawer, setFilterDrawer] = useState(false);
   const [selectedItemsFromFilterSection, setSelectedItemsFromFilterSection] = useState<filterTypes>(initialFilters);
-  const [threshold, setThreshold] = useState(700);
 
+  console.log(selectedItemsFromFilterSection, 'mirhf selectedItemsFromFilterSection');
+
+  const [threshold, setThreshold] = useState(60);
   const minThreshold = useNewWindowScroll(threshold);
+
+  //  const handleFilterClick = (filterType: keyof filterTypes, value: string) => {
+  //   console.log(filterType, value, 'filterType, value');
+  //   setSelectedItemsFromFilterSection((prevFilters) => ({
+  //     ...prevFilters,
+  //     [filterType]: prevFilters[filterType] === value ? '' : value,
+  //   }));
+  // };
+  useEffect(() => {
+    if (window.innerWidth < 643) {
+      setThreshold(50);
+    } else {
+      setThreshold(60);
+    }
+  }, []);
 
   useEffect(() => {
     window.addEventListener('resize', () => {
-      setThreshold(window.innerWidth < 643 ? 540 : 700);
+      setThreshold(window.innerWidth < 643 ? 50 : 60);
     });
     return () => {
       window.removeEventListener('resize', () => {
-        setThreshold(window.innerWidth < 643 ? 540 : 700);
+        setThreshold(window.innerWidth < 643 ? 50 : 60);
       });
     };
   }, []);
@@ -206,8 +248,29 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     );
   };
 
+  const handleFilterClick = (filterType: keyof filterTypes, value: string) => {
+    console.log(filterType, value, 'filterType, value');
+    const updatedFilters = { ...selectedItemsFromFilterSection };
+    if (value && filterType !== 'address' && filterType !== 'category') {
+      updatedFilters[filterType] = value;
+    }
+    addFiltersToQuery(updatedFilters);
+
+    // updateFilters(typesenseFilters);
+  };
+
+  const handleCategoryClick = (category: { categoryId: string; categoryTitle: string }) => {
+    console.log(category, 'onCategoryClick category');
+    const newFilters = { ...selectedItemsFromFilterSection };
+    newFilters.category = { title: category.categoryTitle, _id: category.categoryId };
+    setSelectedItemsFromFilterSection(newFilters);
+    addFiltersToQuery(newFilters);
+    // handleFilterClick('category', categoryId);
+    // handleFilterClick('categoryTitle', categoryTitle);
+  };
+
   console.log(router.pathname, 'router pathname');
-  
+
   const removeFilter = (key: string) => {
     console.log(key, 'key remove');
     const updatedFeaturedFilters = { ...selectedItemsFromFilterSection };
@@ -359,13 +422,14 @@ const Categories: NextPage<CategoriesPageProps> = function ({
       latitude: getQueryParam(router.query.latitude),
       longitude: getQueryParam(router.query.longitude),
       country: getQueryParam(router.query.couuntry),
+      sort: getQueryParam(router.query.sort),
     };
     setSelectedItemsFromFilterSection(updatedFilters);
   }, [router.query]);
 
   const { searchTerm: routeSearchTerm } = router.query;
   // Get the actual search term from the URL
-  const searchText = Array.isArray(routeSearchTerm) 
+  const searchText = Array.isArray(routeSearchTerm)
     ? routeSearchTerm[0].split('-').slice(0, -1).join(' ') // Remove the ID part and join with spaces
     : routeSearchTerm?.split('-').slice(0, -1).join(' ') || '';
 
@@ -384,7 +448,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     country: selectedItemsFromFilterSection.country,
   });
 
-  console.log(products, 'products-search');
+  console.log(totalCount, 'products-search');
 
   useEffect(() => {
     resetFilters();
@@ -436,7 +500,32 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     const typesenseFilters = transformFilters(initialFilters);
     updateFilters(typesenseFilters);
   }, []);
-  
+
+  const hasValue = (key: string) => {
+    if (key === 'category') {
+      return selectedItemsFromFilterSection.category.title !== '' && selectedItemsFromFilterSection.category._id !== '';
+    }
+    return (
+      selectedItemsFromFilterSection[key as keyof filterTypes] !== undefined &&
+      selectedItemsFromFilterSection[key as keyof filterTypes] !== ''
+    );
+  };
+
+  const handleClearAll = () => {
+    const { query } = router;
+
+    if (Object.keys(query).length > 0 && query.searchTerm) {
+      router.replace(
+        {
+          pathname: `/search/${query.searchTerm}`, // Pass the dynamic param
+        },
+        undefined,
+        { shallow: true }
+      );
+    }
+  };
+
+
   return (
     <>
       <FilterDrawer
@@ -458,103 +547,188 @@ const Categories: NextPage<CategoriesPageProps> = function ({
         myLocationFromServer={myLocationFromServer}
         categories={categories}
       >
+        <div className="w-full custom-container mx-auto sm:px-16 mobile:px-4">
+          <Breadcrumb
+            isLinkDisable={true}
+            className="!pl-0 md:!pl-0 !my-2 md:my-3"
+            steps={[{ name: 'Home', link: '/' }, { name: `Search results for "${categoryName?.replace(/-/g, ' ')}"` }]}
+          ></Breadcrumb>
+          <h1 className=" text-xl md:text-2xl font-semibold text-text-primary-light dark:text-text-primary-dark">
+            {totalCount ? totalCount : 'No'} search results for "{categoryName?.replace(/-/g, ' ')}"
+          </h1>
+        </div>
+        {/* <div className={`mobile:pb-9 w-full `}> */}
+        {/* <div className="w-full "> */}
+        {/* <div className=" w-full flex flex-col justify-center"> */}
+        <div
+          style={{ zIndex: 1 }}
+          className={`w-full ${
+            minThreshold ? `fixed pt-2 !z-1 ${threshold < 60 ? 'top-[132px]' : 'top-[140px]'} left-0 right-0 ` : 'pt-5'
+          } bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pb-5 mx-auto max-w-[1440px]`}
+        >
+          <div
+            className={`flex  w-full gap-4 justify-end overflow-visible  ${
+              hasActiveFilters() ? 'justify-between' : 'justify-end'
+            }`}
+          >
+            {/* <SectionTitle>All Products</SectionTitle> */}
+            {(!hasActiveFilters() || hasActiveFilters()) && (
+              <div className=" flex gap-4 flex-nowrap items-center w-full whitespace-nowrap md:border-r border-r-border-tertiary-light dark:border-r-border-senary-light">
+                <CategoriesDropDown
+                  title={`${
+                    selectedItemsFromFilterSection.category.title
+                      ? `${selectedItemsFromFilterSection.category.title}`
+                      : 'Categories'
+                  }`}
+                  onCategoryClick={handleCategoryClick}
+                  isActive={hasValue('category')}
+                />
+                <FilterButtonDropdown
+                  // containerClassName={`${hasValue('condition') ? 'bg-brand-color-hover' : ''}`}
+                  containerClassName="hidden sm:block"
+                  title={`Condition ${
+                    selectedItemsFromFilterSection.condition ? `: ${selectedItemsFromFilterSection.condition}` : ''
+                  }`}
+                  options={conditionOptions || []}
+                  // buttonClassName={`${hasValue('condition') ? 'text-brand-color' : ''}`}
+                  type="radio"
+                  isActive={hasValue('condition')}
+                  allSelectedValues={selectedItemsFromFilterSection.condition || ''}
+                  onChange={(selected) => {
+                    handleFilterClick('condition', selected as string);
+                    // updateFilters({ sort: selected as string });
+                    console.log(selected, 'selected');
+                  }}
+                />
+
+                <FilterButtonDropdown
+                  isActive={hasValue('sort')}
+                  containerClassName="hidden lg:block"
+                  title={`Sort by ${
+                    selectedItemsFromFilterSection.sort
+                      ? `: ${getSortOptionTitle(selectedItemsFromFilterSection.sort)}`
+                      : ''
+                  }`}
+                  options={sortOptions || []}
+                  allSelectedValues={selectedItemsFromFilterSection.sort || ''}
+                  type="radio"
+                  onChange={(selected) => {
+                    handleFilterClick('sort', selected as string);
+                  }}
+                />
+                <FilterButtonDropdown
+                  isActive={hasValue('price')}
+                  containerClassName="hidden md:block"
+                  title={`Price ${
+                    selectedItemsFromFilterSection.price ? `: ${selectedItemsFromFilterSection.price}` : ''
+                  }`}
+                  type="scale"
+                  currencySymbol={currencySymbol}
+                  initialMinPrice={initialMinPrice}
+                  initialMaxPrice={initialMaxPrice}
+                  allSelectedValues={(selectedItemsFromFilterSection.price as string) || ''}
+                  onChange={(selected) => {
+                    console.log(selected, 'selected');
+                    handleFilterClick('price', selected as string);
+                  }}
+                />
+              </div>
+            )}
+
+            <button
+              className=" md:w-[148px] mobile:min-w-[36px] md:min-w-[148px] h-11 text-text-primary-light dark:text-text-primary-dark md:border-2 items-center flex  cursor-pointer justify-end md:justify-center gap-1 rounded-[100px]"
+              onClick={handleFilterDrawer}
+            >
+              <span className="hidden md:block">More filters</span>
+              <div>
+                <img
+                  className=" inline-block mobile:hidden h-6 w-6"
+                  width={28}
+                  height={24}
+                  src={'/images/filters_icon_white.svg'}
+                  alt="dollar_coin_icon"
+                />
+                <img
+                  className=" mobile:block hidden h-6 w-6"
+                  width={20}
+                  height={18}
+                  src={'/images/filters_icon_white.svg'}
+                  alt="dollar_coin_icon"
+                />
+              </div>
+            </button>
+            <span
+              onClick={handleClearAll}
+              className="hidden sm:flex items-center  font-medium text-nowrap text-brand-color cursor-pointer"
+            >
+              Clear all
+            </span>
+          </div>
+          <p
+            onClick={handleClearAll}
+            className=" sm:hidden py-3  font-medium text-nowrap text-brand-color cursor-pointer"
+          >
+            Clear all
+          </p>
+        </div>
+        <div className={`mt-10 custom-container mx-auto sm:px-16 mobile:px-4 w-full mobile:mt-6`}>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-x-3 gap-y-4 md:gap-x-2 md:gap-y-7 mb-5">
+            {errorTypesense ? (
+              <div className="col-span-full">
+                <h2 className="text-center text-red-500">{errorTypesense}</h2>
+              </div>
+            ) : products.length > 0 ? (
+              products.map((product, index) => (
+                <ProductCard key={`${product?.id}-${index}`} product={product} isTypeSenseData={true} />
+              ))
+            ) : !isLoading ? (
+              <Placeholder
+                containerClassName="col-span-full mb-8"
+                title="No products found"
+                description="Please search for something else"
+              />
+            ) : null}
+
+            {isLoading && (
+              <>
+                {Array.from({ length: 10 }).map((_, index) => (
+                  <Skeleton key={`skeleton-${index}`} />
+                ))}
+              </>
+            )}
+          </div>
+
+          {hasMore && (
+            <div className="mt-7 w-full flex items-center justify-center">
+              <button
+                className="border-2 text-sm font-medium px-4 py-2 rounded dark:text-text-primary-dark
+                          hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors
+                          disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={loadMore}
+                disabled={isLoading}
+              >
+                {isLoading ? 'Loading...' : 'View more'}
+              </button>
+            </div>
+          )}
+        </div>
+        {/* </div> */}
+        {/* </div> */}
+        {/* </div> */}
         {/* header with image and search box */}
         {/* Section:- What are you looking for? */}
         <div className={`relative  custom-container mx-auto sm:px-16 mobile:px-4 `}>
-          {/* start */}
-          {/* subcategories card section start */}
           {!HIDE_SELLER_FLOW && subCategories.length > 0 && (
             <Slider className="pt-5 sm:py-8 lg:py-12  border-error">
               <SectionTitle className="mb-4 sm:mb-3">Shop by category</SectionTitle>
               <CategorySlider className="border-error" data={subCategories} />
             </Slider>
           )}
+          {/* <div className="mt-[0px]">
+            
+          </div> */}
           {/* categories section starts */}
-          <div className={`mobile:pb-9 w-full ${hasActiveFilters() ? 'mt-[80px]' : 'mt-[40px]'}`}>
-            <div className="w-full ">
-              <div className=" w-full flex flex-col justify-center">
-                <div
-                  style={{ zIndex: 1 }}
-                  className={`w-full ${`fixed top-[130px] z-auto sm:top-[145px] left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-2 mx-auto max-w-[1440px]`}`}
-                >
-                  <div
-                    className={`flex  w-full justify-end filterselectContainer ${
-                      hasActiveFilters() ? 'justify-between' : 'justify-end'
-                    }`}
-                  >
-                    {/* <SectionTitle>All Products</SectionTitle> */}
-                    {hasActiveFilters() && (
-                      <div className="border-2 boreder-error flex gap-10 items-center w-full flex-wrap  mobile:overflow-x-scroll border-none">
-                        <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide">
-                          {selectedItemsFromFiltersSectionList()}
-                        </div>
-                      </div>
-                    )}
-          
-                    <button
-                      className=" md:w-[148px] mobile:min-w-[36px] md:min-w-[148px] h-11 text-text-primary-light dark:text-text-primary-dark md:border-2 items-center flex  cursor-pointer justify-end md:justify-center gap-1 rounded-[100px]"
-                      onClick={handleFilterDrawer}
-                    >
-                      <span className="hidden md:block">More filters</span>
-                      <div>
-                        <img
-                          className=" inline-block mobile:hidden h-[18px] w-[18px]"
-                          width={28}
-                          height={24}
-                          src={'/images/filters_icon_white.svg'}
-                          alt="dollar_coin_icon"
-                        />
-                        <img
-                          className=" mobile:block hidden h-[18px] w-[18px]"
-                          width={20}
-                          height={18}
-                          src={'/images/filters_icon_white.svg'}
-                          alt="dollar_coin_icon"
-                        />
-                      </div>
-                    </button>
-                  </div>
-                   </div>
-                <div className={`mt-10 w-full mobile:mt-6`}>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-x-3 gap-y-4 md:gap-x-2 md:gap-y-7">
-                    {errorTypesense ? (
-                      <div className="col-span-full">
-                        <h2 className="text-center text-red-500">{errorTypesense}</h2>
-                      </div>
-                    ) : products.length > 0 ? (
-                      products.map((product, index) => (
-                        <ProductCard key={`${product?.id}-${index}`} product={product} isTypeSenseData={true} />
-                      ))
-                    ) : !isLoading ? (
-                      <Placeholder containerClassName='col-span-full mb-8' title='No products found' description='Please search for something else'/>
-                    ) : null}
 
-                    {isLoading && (
-                      <>
-                        {Array.from({ length: 10 }).map((_, index) => (
-                          <Skeleton key={`skeleton-${index}`} />
-                        ))}
-                      </>
-                    )}
-                  </div>
-
-                  {hasMore && (
-                    <div className="mt-7 w-full flex items-center justify-center">
-                      <button
-                        className="border-2 text-sm font-medium px-4 py-2 rounded dark:text-text-primary-dark
-                          hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors
-                          disabled:opacity-50 disabled:cursor-not-allowed"
-                        onClick={loadMore}
-                        disabled={isLoading}
-                      >
-                        {isLoading ? 'Loading...' : 'View more'}
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
           {!HIDE_SELLER_FLOW && (
             <>
               <div className="border-b border-border-tertiary-light dark:border-border-tertiary-dark mt-12"></div>

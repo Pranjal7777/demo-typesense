@@ -47,12 +47,13 @@ export const useTypesenseSearch = ({ searchTerm, initialFilters, country }: UseT
       address: query.address as string || '',
       latitude: query.latitude as string || myLocation?.latitude || '',
       longitude: query.longitude as string || myLocation?.longitude || '',
-      country: query.country || 'India',
+      country: query.country || myLocation?.country || '',
       category: query.categoryId ? {
         _id: query.categoryId as string,
         title: query.categoryTitle as string
       } : undefined,
       searchTerm: searchTerm || '',
+      sort: query.sort as string || '',
     };
   };
 
@@ -77,7 +78,7 @@ export const useTypesenseSearch = ({ searchTerm, initialFilters, country }: UseT
     let filterBy = `statusCode:=1 && sold:=false && expiredTs:>=${currentTime}`;
 
     if (filters.category?._id) {
-      filterBy += ` && categories.id:=${filters.category._id}`;
+      filterBy += ` && categories.id:=[${filters.category._id}]`;
     }
 
     if (filters.price) {
@@ -137,6 +138,8 @@ export const useTypesenseSearch = ({ searchTerm, initialFilters, country }: UseT
         return `${baseSort},listingTs:desc`;
       case 'oldest':
         return `${baseSort},listingTs:asc`;
+      case 'distance':
+        return `${baseSort},geo_location:asc`;
       default:
         return `${baseSort},listingTs:desc`;
     }

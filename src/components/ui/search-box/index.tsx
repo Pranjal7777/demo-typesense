@@ -1019,7 +1019,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
           className={appClsx(
             ` mobile:order-3 sm:hidden ${
               stickyHeaderWithSearchBox && '!fixed top-[69px] bg-bg-secondary-light dark:bg-bg-secondary-dark'
-            }  z-49 sticky top-[69px] ${
+            }  z-50 sticky top-[69px] ${
               minThreshold
                 ? '!fixed top-[69px] mobile:px-4 w-full bg-bg-secondary-light dark:bg-bg-primary-dark'
                 : 'max-w-[1083px] mobile:px-4'
@@ -1058,8 +1058,8 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
             onClick={() => setSearchItemAndUserDrower(!searchItemAndUserDrower)}
           >
             <SearchIcon
-              width={14}
-              height={14}
+              width={16}
+              height={16}
               className="absolute  mobile:left-3 rtl:mobile:left-0 rtl:mobile:right-3 "
             />
             <span

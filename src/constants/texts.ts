@@ -42,4 +42,6 @@ export const ADD_NEW_ACCOUNT = 'Add New Account';
 export const ADD_NEW_ACCOUNT_PLACEHOLDER = 'Add a new account to manage your payments';
 export const RECENT_SEARCHES = 'Recent Searches';
 export const NO_RECENT_SEARCHES = 'No Recent Searches';
+export const SEARCH_PLACEHOLDER_TEXT = 'Search for anything and everything';
+export const SEARCH_BY_ZIP_CODE_PLACEHOLDER = 'Search by zip code';
 

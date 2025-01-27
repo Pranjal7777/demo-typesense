@@ -1,9 +1,6 @@
-import React, { ChangeEvent, KeyboardEvent, useCallback, useEffect, useState, useMemo, useRef } from 'react';
+import React, { ChangeEvent, KeyboardEvent, useCallback, useEffect, useState, useRef } from 'react';
 import Button, { BUTTON_TYPE_CLASSES } from '../ui/button';
 import Image from 'next/image';
-import { IMAGES } from '@/lib/images';
-import { gumletLoader } from '@/lib/gumlet';
-import RightArrowSVG from '../../../public/images/subcategorypage/filter/right-arrow-svg';
 import { useTheme } from '@/hooks/theme';
 import TypeCard from '../ui/type-card/type-card';
 import ConditionCard from '../ui/conditions-card/condition-card';
@@ -29,6 +26,7 @@ import { categories } from '@/store/types';
 import { useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { toggleScrollLock } from '@/utils/scroll-lock';
+import { SEARCH_BY_ZIP_CODE_PLACEHOLDER } from '@/constants/texts';
 
 export type filterTypes = {
   type: string;
@@ -124,15 +122,15 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
   const { t } = useTranslation('common');
   const heroSection = t('page.header.heroSection', { returnObjects: true }) as heroSection;
   const address = useAppSelector((state) => state.auth.myLocation?.address);
+  const myLocation = useAppSelector((state) => state.auth.myLocation);
   const [zipCode, setZipCode] = useState('');
   const [formData, setFormData] = useState({
     location: searchParams.get('address') || '',
     selectedLocation: searchParams.get('address') ? true : false,
     address: '',
   });
-  const [selectedLocationFromBox, setSelectedLocationFromBox] = useState(searchParams.get('address') || '');
-  console.log(selectedLocationFromBox, 'selectedLocationFromBox');
   
+  const [selectedLocationFromBox, setSelectedLocationFromBox] = useState(searchParams.get('address') || '');  
   const priceFilter = filterParameters?.data.filters.find((f) => f.typeCode === 3);
   const initialMinPrice = priceFilter?.data?.[0]?.minPrice ?? 2500;
   const initialMaxPrice = priceFilter?.data?.[0]?.maxPrice ?? 7500;
@@ -600,7 +598,8 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
                     }
                     placeholder={heroSection?.searchPlace?.placeholder}
                     autoComplete="off"
-                    value={selectedLocationFromBox}
+                    // value={selectedLocationFromBox}
+                    value={myLocation?.address || formData.address}
                     onChange={(e) => {
                       setSelectedLocationFromBox(e.target.value);
                       handleOnChange(e);
@@ -696,6 +695,7 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
                   <input
                     type="number"
                     className="w-[100%] h-full bg-transparent p-4"
+                    placeholder={SEARCH_BY_ZIP_CODE_PLACEHOLDER}
                     value={zipCode}
                     onChange={handleInputChange}
                   />

@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Button from '../../ui/button';
@@ -63,7 +63,7 @@ type menuOptions = {
 
 const Header: FC<Props> = ({
   stickyHeaderWithSearchBox = false,
-  showItems = 6,
+  showItems:showNoOfItems = 6,
   // categoriesWithChildCategories,
   containerClassName,
   mobileContainerClassName,
@@ -72,6 +72,7 @@ const Header: FC<Props> = ({
   const minThreshold = useNewWindowScroll(0);
   const maxThreshold = useNewWindowScroll(130);
   const windowWidth = useWindowResize();
+  const [showItems, setShowItems] = useState(showNoOfItems);
 
   const { categories } = useAppSelector((state: RootState) => state.auth);
 
@@ -100,6 +101,20 @@ const Header: FC<Props> = ({
       router.push(SIGN_IN_PAGE);
     }
   };
+
+ useEffect(() => {
+   if (window.innerWidth > 1144) {
+     setShowItems(6);
+   } else if (window.innerWidth > 963) {
+     setShowItems(3);
+   } else if (window.innerWidth > 831) {
+     setShowItems(2);
+   } else if (window.innerWidth > 634) {
+     setShowItems(1);
+   } else {
+     setShowItems(0);
+   }
+ }, []);
 
   ///// profile drop down data start
   const menuOptions = t('page.menuOptions', { returnObjects: true }) as menuOptions[];

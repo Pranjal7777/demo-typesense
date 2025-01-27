@@ -8,10 +8,11 @@ export type Props = {
     link?: string;
   }[];
   className?: string;
+  listClassName?: string;
   isLinkDisable?: boolean;
 };
 
-const Breadcrumb: FC<Props> = ({ steps, className}) => {
+const Breadcrumb: FC<Props> = ({ steps, className, listClassName}) => {
   return (
     <ol
       className={appClsx(
@@ -20,7 +21,7 @@ const Breadcrumb: FC<Props> = ({ steps, className}) => {
       )}
     >
       {steps.map((step, index) => (
-        <li key={index} className="">
+        <li key={index} className={appClsx(listClassName)}>
           {step.link ? (
             <Link
               href={step.link || '#'}
@@ -29,7 +30,11 @@ const Breadcrumb: FC<Props> = ({ steps, className}) => {
               {step.name}&nbsp;
             </Link>
           ) : (
-            <span className={`rtl:ml-2 ${index === steps.length - 1 ? 'text-brand-color ' : 'text-gray-500'} `}>
+            <span
+              className={`rtl:ml-2 ${
+                index === steps.length - 1 ? 'text-brand-color ' : 'text-gray-500'
+              } `}
+            >
               {step.name}&nbsp;
             </span>
           )}

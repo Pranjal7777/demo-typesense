@@ -25,6 +25,7 @@ import Link from 'next/link';
 import validatePhoneNumber from '@/helper/validation/phone-number-validation';
 import { PHONE_NUMBER, PHONE_NUMBER_INVALID_MESSAGE, USER_NAME } from '@/constants/texts';
 import { getCountryCodeFromName } from '@/helper';
+import { HIDE_SELLER_FLOW } from '@/config';
 
 export type CompleteSignUp = {
   completeRegistration: string;
@@ -630,29 +631,31 @@ const RegistrationDetails: React.FC = () => {
         </div>
 
         <div className="w-full max-h-[61vh] sm:mt-8  overflow-x-visible overflow-y-scroll px-1">
+            {!HIDE_SELLER_FLOW && (
           <div className="w-full flex flex-col">
             <FormLabel className="text-sm mb-2">{CompleteSignUp.accountTypeLabel}</FormLabel>
-            <div className="flex items-center justify-between">
-              <Button
-                buttonType="tertiary"
-                className={`${
-                  isIndividualOrCompany && ' bg-brand-color text-[#FFF] dark:bg-bg-secondary-dark'
-                }dark:!border-border-tertiary-dark border border-border-tertiary-light w-[48%] h-11 rounded`}
-                onClick={() => setIsIndividualOrCompany(true)}
-              >
-                {CompleteSignUp.individualOption}
-              </Button>
-              <Button
-                buttonType="tertiary"
-                className={`${
-                  !isIndividualOrCompany && ' bg-brand-color text-[#FFF] dark:bg-bg-secondary-dark'
-                }dark:!border-border-tertiary-dark border border-border-tertiary-light w-[48%] h-11 rounded`}
-                onClick={() => setIsIndividualOrCompany(false)}
-              >
-                {CompleteSignUp.companyOption}
-              </Button>
-            </div>
+              <div className="flex items-center justify-between">
+                <Button
+                  buttonType="tertiary"
+                  className={`${
+                    isIndividualOrCompany && ' bg-brand-color text-[#FFF] dark:bg-bg-secondary-dark'
+                  }dark:!border-border-tertiary-dark border border-border-tertiary-light w-[48%] h-11 rounded`}
+                  onClick={() => setIsIndividualOrCompany(true)}
+                >
+                  {CompleteSignUp.individualOption}
+                </Button>
+                <Button
+                  buttonType="tertiary"
+                  className={`${
+                    !isIndividualOrCompany && ' bg-brand-color text-[#FFF] dark:bg-bg-secondary-dark'
+                  }dark:!border-border-tertiary-dark border border-border-tertiary-light w-[48%] h-11 rounded`}
+                  onClick={() => setIsIndividualOrCompany(false)}
+                >
+                  {CompleteSignUp.companyOption}
+                </Button>
+              </div>
           </div>
+            )}
 
           {isIndividualOrCompany ? (
             <>

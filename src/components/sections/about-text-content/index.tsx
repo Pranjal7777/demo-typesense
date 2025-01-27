@@ -27,7 +27,7 @@ const AboutTextContent: FC<Props> = ({title,desc,className,sectionTitleClassName
         }
         {
           desc?.map((item,key)=><p
-            className={appClsx('text-base mb-5 lg:mb-12  mobile:!text-xs text-text-primary-light dark:text-text-tertiary-dark','')}
+            className={appClsx('text-base mb-5 lg:mb-12  mobile:!text-sm text-text-primary-light dark:text-text-tertiary-dark','')}
             key={key}
           >
             {item.para.toString()}

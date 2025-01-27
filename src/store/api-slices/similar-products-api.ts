@@ -89,6 +89,7 @@ const SimilarProductsAPI = rootApi.injectEndpoints({
         url: `${AUTH_URL_V2}/${SIMILAR_PRODUCTS_URL}/?categoryId=${categoryId}&assetName=${assetName}`,
         method: 'GET',
       }),
+      keepUnusedDataFor: 0,
     }),
   }),
 });

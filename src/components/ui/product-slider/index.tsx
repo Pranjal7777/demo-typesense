@@ -27,9 +27,10 @@ export type Props = {
   stickyHeaderDetails: StickyHeaderDetails;  
   setActiveProductImage: React.Dispatch<React.SetStateAction<string>>;
   assetId?: string;
+  handleLike: () => void;
 };
 
-const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shareTitle, isProductLiked, setTotalLikeCount, productCondition, setStickyHeaderDetails, stickyHeaderDetails, setActiveProductImage, assetId, setIsLiked }) => {
+const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shareTitle, isProductLiked, setTotalLikeCount, productCondition, setStickyHeaderDetails, stickyHeaderDetails, setActiveProductImage, assetId, setIsLiked, handleLike }) => {
 
 
 // const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shareTitle, isProductLiked, setTotalLikeCount, productCondition, assetId }) => {
@@ -133,25 +134,25 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
   };
   const userID = useSelector((state: RootState) => state.auth.userInfo?._id);
 
-  const handleLike = async () => {
-    if (isLoggedIn) {
-      try {
-        const newLikeState = !isProductLiked;
-        // if (typeof userID === 'string' && typeof id === 'string') {
-          const userId: string = userID || '';
-          // const assetId: string = assetId || '';
-          const result = await likeAndDislikeProduct({ assetid: assetId || '', like: newLikeState, userId: userId || '' }).unwrap();
-          setIsLiked(newLikeState);
-          setTotalLikeCount((prev) => (newLikeState ? prev + 1 : prev - 1));
-          toast.success(result.message);
-        // }
-      } catch (error) {
-        toast.error('Error updating like count');
-      }
-    } else {
-      router.push('/login');
-    }
-  };
+  // const handleLike = async () => {
+  //   if (isLoggedIn) {
+  //     try {
+  //       const newLikeState = !isProductLiked;
+  //       // if (typeof userID === 'string' && typeof id === 'string') {
+  //         const userId: string = userID || '';
+  //         // const assetId: string = assetId || '';
+  //         const result = await likeAndDislikeProduct({ assetid: assetId || '', like: newLikeState, userId: userId || '' }).unwrap();
+  //         setIsLiked(newLikeState);
+  //         setTotalLikeCount((prev) => (newLikeState ? prev + 1 : prev - 1));
+  //         toast.success(result.message);
+  //       // }
+  //     } catch (error) {
+  //       toast.error('Error updating like count');
+  //     }
+  //   } else {
+  //     router.push('/login');
+  //   }
+  // };
 
   const getImageSrc = (item: { type: string; url?: string; thumbnailUrl?: string }) => {
     const src =

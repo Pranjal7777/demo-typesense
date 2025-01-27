@@ -1054,7 +1054,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
           <button
             className={`relative ${
               stickyHeaderWithSearchBox && '!bg-bg-octonary-light dark:bg-bg-quinary-dark text-text-tertiary-dark '
-            } bg-bg-tertiary-light w-full pr-2 hover:bg-bg-tertiary-light text-text-secondary-color rounded-lg h-[42px] mobile:mb-3 mt-3 flex items-center`}
+            } bg-bg-tertiary-light w-full pr-2 hover:bg-bg-tertiary-light text-text-secondary-color rounded-lg h-[42px] mobile:mb-3 flex items-center`}
             onClick={() => setSearchItemAndUserDrower(!searchItemAndUserDrower)}
           >
             <SearchIcon

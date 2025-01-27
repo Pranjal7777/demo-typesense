@@ -7,23 +7,17 @@ import Breadcrumb from '@/components/ui/breadcrumb';
 import { useTheme } from '@/hooks/theme';
 import EngagementStats from '@/components/ui/engagement-stats';
 import HartSvg from '../../../public/assets/svg/heart';
-// import ProfileCard from '@/components/ui/profile-card';
-// import ProductDetailsCard from '@/components/ui/product-details-card';
 import InfoBox from '@/components/ui/info-box';
 import InfoSection from '@/components/sections/info-section';
 import TogglePanel from '@/components/toggle-panel';
-// import PdpCta from '@/components/ui/pdp-cta';
 import ViewsIcon from '../../../public/assets/svg/views-icon';
 import OffersIconSVG from '../../../public/assets/svg/offers-icon';
 import { useRouter } from 'next/router';
-// import SimilarProductsList from '@/components/similar-products';
 const SimilarProductsList = React.lazy(() => import('@/components/similar-products'));
-// import UserProductList from '@/components/user-product-list';
 import { RootState } from '@/store/store';
 import { useAppSelector } from '@/store/utils/hooks';
 import { setCheckoutProduct } from '@/store/slices/checkout-slice';
 import { useDispatch } from 'react-redux';
-import { getChatIdentifier } from '@/helper/payment';
 import { formatPriceWithoutCents } from '@/utils/price-formatter';
 import ImageContainer from '@/components/ui/image-container';
 import { STATIC_IMAGE_URL } from '@/config';
@@ -111,11 +105,9 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
   const shareLink = apidata?.shareLink;
   const desc: string = productDetails('page.desc');
   const postingLabel: string = productDetails('page.postedLabel');
-  const followingBtn: string = productDetails('page.follwingBtn');
   const hamburger = productDetails('page.hamburger', { returnObjects: true }) as hamburger;
   const engagementStats = productDetails('page.engagementStats', { returnObjects: true }) as engagementStats;
   const ctaText = productDetails('page.prodCTA', { returnObjects: true }) as ctas;
-  const profileCard = productDetails('page.profileCard', { returnObjects: true }) as profileCard;
   const togglePanelText = productDetails('page.toggleInfo', { returnObjects: true }) as togglePanelText;
   const prodDetails = apidata?.details;
   const [totalLikedCount, setTotalLikeCount] = useState<number>(apidata?.likeCount || 0);
@@ -257,10 +249,10 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
 
   return (
     <Layout
-      containerClass="mobile:mt-[88px]"
+      containerClass="mobile:mt-[80px]"
       mobileHeaderContainerClassName="mobile:!hidden"
       mobileSearchBoxContainerClassName="mobile:top-0 !pl-[50px]"
-      stickyHeader={true}
+      stickyHeader={true}  
       stickyHeroSection={true}
       showBackArrowInSearchBox={true}
     >
@@ -351,6 +343,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
         <div className="flex gap-8 mobile:gap-2 w-full xl:h-[576px] lg:h-[530px] md:h-full sm:h-[400px] flex-col lg:flex-row overflow-y-scroll">
           <div className=" h-full w-full lg:w-[60%]">
             <ProductSlider
+              handleLike={handleLike}
               setActiveProductImage={setActiveProductImage}
               setStickyHeaderDetails={setStickyHeaderDetails}
               stickyHeaderDetails={stickyHeaderDetails}

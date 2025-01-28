@@ -21,7 +21,6 @@ const CategoriesDropDown = ({ isActive, containerClassName, buttonClassName, tit
     const {theme} = useTheme();
     const [isOpen, setIsOpen] = useState(false);
     const { categories } = useSelector((state: RootState) => state.auth);
-    console.log(categories, 'mirh categories');
     const [filteredCategories, setFilteredCategories] = useState<Category[]>(categories?.data ||[]);
     const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const search = e.target.value;

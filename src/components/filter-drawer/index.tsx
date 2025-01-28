@@ -380,7 +380,6 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
   };
 
   const handleFilterClick = (filterType: keyof filterTypes, label: string) => {
-    console.log(filterType, label, 'filterType, label');
     setSelectedFilters((prevFilters) => ({
       ...prevFilters,
       [filterType]: prevFilters[filterType] === label ? '' : label,

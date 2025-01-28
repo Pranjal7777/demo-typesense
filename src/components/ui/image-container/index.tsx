@@ -11,6 +11,7 @@ type ImageContainerProps = {
   className?: string;
   layout?: string;
   loading?: any;
+  priority?: boolean;
 };
 
 const ImageContainer: React.FC<ImageContainerProps> = ({
@@ -21,6 +22,7 @@ const ImageContainer: React.FC<ImageContainerProps> = ({
   layout,
   className,
   loading,
+  priority,
   ...props
 }) => {
   const [imgSrc, setImgSrc] = useState<string>(src);

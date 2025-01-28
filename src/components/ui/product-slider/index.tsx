@@ -1,19 +1,12 @@
 import { appClsx } from '@/lib/utils';
 import React, { MouseEvent, useEffect, useRef, useState } from 'react';
 import HartSvg from '../../../../public/assets/svg/heart';
-import { getCookie } from '@/utils/cookies';
-import { useRouter } from 'next/router';
 import ShareButton from '../share-button';
 import { STATIC_IMAGE_URL, STATIC_VIDEO_URL } from '@/config';
 import ImageContainer from '../image-container';
 import { productsApi } from '@/store/api-slices/products-api';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@/store/store';
 import FullScreenSpinner from '../full-screen-spinner';
-import { toast } from 'sonner';
 import { StickyHeaderDetails } from '@/containers/pdp';
-// import { setLikeCount, toggleLike } from '@/store/slices/product-detaill-slice';
-
 export type Props = {
   imagesArray: { url: string; type: string; thumbnailURL: string }[];
   className: string;
@@ -31,12 +24,7 @@ export type Props = {
 };
 
 const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shareTitle, isProductLiked, setTotalLikeCount, productCondition, setStickyHeaderDetails, stickyHeaderDetails, setActiveProductImage, assetId, setIsLiked, handleLike }) => {
-
-
-// const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shareTitle, isProductLiked, setTotalLikeCount, productCondition, assetId }) => {
-  const route = useRouter();
-  const { id } = route.query;
-  const [likeAndDislikeProduct, { isLoading: isLikeAndDislikeLoading }] = productsApi.useLikeAndDislikeProductMutation();
+  const [_,{ isLoading: isLikeAndDislikeLoading }] = productsApi.useLikeAndDislikeProductMutation();
   const [isLoading, setIsLoading] = useState(false);
   const [isHoveringCTAs, setIsHoveringCTAs] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -45,11 +33,7 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
   const [zoomPos, setZoomPos] = useState({ x: 0, y: 0 });
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const [isZoomed, setIsZoomed] = useState(false);
-  const router = useRouter();
-  const isLoggedIn = getCookie('isUserAuth');
   const [showVideo, setShowVideo] = useState(false);
-  // const [isLiked, setIsLiked] = useState(isProductLiked)
-  
   // Handlers for next and previous buttons
   const btnPressPrev = () => {
     setCurrentImageIndex((prevIndex) => {
@@ -132,28 +116,6 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
   const handleMouseLeave = () => {
     setIsZoomed(false);
   };
-  const userID = useSelector((state: RootState) => state.auth.userInfo?._id);
-
-  // const handleLike = async () => {
-  //   if (isLoggedIn) {
-  //     try {
-  //       const newLikeState = !isProductLiked;
-  //       // if (typeof userID === 'string' && typeof id === 'string') {
-  //         const userId: string = userID || '';
-  //         // const assetId: string = assetId || '';
-  //         const result = await likeAndDislikeProduct({ assetid: assetId || '', like: newLikeState, userId: userId || '' }).unwrap();
-  //         setIsLiked(newLikeState);
-  //         setTotalLikeCount((prev) => (newLikeState ? prev + 1 : prev - 1));
-  //         toast.success(result.message);
-  //       // }
-  //     } catch (error) {
-  //       toast.error('Error updating like count');
-  //     }
-  //   } else {
-  //     router.push('/login');
-  //   }
-  // };
-
   const getImageSrc = (item: { type: string; url?: string; thumbnailUrl?: string }) => {
     const src =
       item?.type === 'VIDEO'
@@ -256,11 +218,13 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
             <>
               {imagesArray?.length > 0 && (
                 <ImageContainer
+                  loading={'eager'}
                   className="mobile:cursor-auto object-cover !h-full rounded-2xl"
                   src={getImageSrc(imagesArray[currentImageIndex])}
                   alt={`Image ${currentImageIndex}`}
                   width={569}
                   height={426}
+                  priority={true}
                   layout="responsive"
                   key={`${currentImageIndex}-${imagesArray[currentImageIndex].url}`}
                 />

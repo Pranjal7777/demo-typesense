@@ -563,7 +563,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
         <div
           style={{ zIndex: 1 }}
           className={`w-full ${
-            minThreshold ? `fixed pt-2 !z-1 ${threshold < 60 ? 'top-[132px]' : 'top-[140px]'} left-0 right-0 ` : 'pt-5'
+            minThreshold ? `fixed pt-2 !z-1 ${threshold < 60 ? 'top-[122px]' : 'top-[140px]'} left-0 right-0 ` : 'pt-5'
           } bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pb-5 mx-auto max-w-[1440px]`}
         >
           <div

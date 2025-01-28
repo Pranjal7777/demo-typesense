@@ -250,8 +250,8 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
   return (
     <Layout
       containerClass="mobile:mt-[80px]"
-      mobileHeaderContainerClassName="mobile:!hidden"
-      mobileSearchBoxContainerClassName="mobile:top-0 !pl-[50px]"
+      mobileHeaderContainerClassName="mobile:!hidden "
+      mobileSearchBoxContainerClassName="mobile:top-0 !pl-[50px] pt-3"
       stickyHeader={true}  
       stickyHeroSection={true}
       showBackArrowInSearchBox={true}
@@ -259,7 +259,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
       {(stickyHeaderDetails?.showProductImage || stickyHeaderDetails?.showShareIcon) && (
         <div
           style={{ zIndex: 9999 }}
-          className="hidden  fixed md:flex justify-between items-center h-[80px]  top-[0px] left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] py-2 mx-auto max-w-[1440px]"
+          className="hidden  fixed md:flex justify-between items-center h-[80px]  top-[69px] left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] py-2 mx-auto max-w-[1440px]"
         >
           <div className="flex gap-4">
             {stickyHeaderDetails.showProductImage && (

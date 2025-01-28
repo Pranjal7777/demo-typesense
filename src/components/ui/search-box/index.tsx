@@ -1035,7 +1035,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
             />
           )}
           <button
-            className={`relative  ${
+            className={`relative mb-2  ${
               stickyHeaderWithSearchBox && 'hidden'
             } bg-bg-tertiary-light w-full pr-2 hover:bg-bg-tertiary-light rounded-lg h-[42px] mobile:mt-0 mt-3 flex items-center `}
             onClick={() => setSearchItemAndUserDrower(!searchItemAndUserDrower)}

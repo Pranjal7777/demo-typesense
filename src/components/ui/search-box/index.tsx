@@ -855,7 +855,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
               </>
             ) : null} */}
 
-            {isUserLogin && isRecentSearchOpen === true && !formData.search ? (
+            {isRecentSearchOpen === true && !formData.search ? (
               <div
                 className="absolute top-[48px] z-50 shadow-2xl bg-bg-secondary-light dark:bg-bg-secondary-dark left-0 right-0 rounded-b-md max-h-[263px] no-scrollbar"
                 style={{

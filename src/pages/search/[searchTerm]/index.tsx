@@ -170,7 +170,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
 
   console.log(selectedItemsFromFilterSection, 'mirhf selectedItemsFromFilterSection');
 
-  const [threshold, setThreshold] = useState(60);
+  const [threshold, setThreshold] = useState(80);
   const minThreshold = useNewWindowScroll(threshold);
 
   //  const handleFilterClick = (filterType: keyof filterTypes, value: string) => {
@@ -184,17 +184,17 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     if (window.innerWidth < 643) {
       setThreshold(50);
     } else {
-      setThreshold(60);
+      setThreshold(80);
     }
   }, []);
 
   useEffect(() => {
     window.addEventListener('resize', () => {
-      setThreshold(window.innerWidth < 643 ? 50 : 60);
+      setThreshold(window.innerWidth < 643 ? 50 : 80);
     });
     return () => {
       window.removeEventListener('resize', () => {
-        setThreshold(window.innerWidth < 643 ? 50 : 60);
+        setThreshold(window.innerWidth < 643 ? 50 : 80);
       });
     };
   }, []);
@@ -427,11 +427,16 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     setSelectedItemsFromFilterSection(updatedFilters);
   }, [router.query]);
 
+  const getSearchTermFromQuery = (query: string) => {
+    const parts = query.split('-');
+    if (parts.length > 1) {
+      return parts.slice(0, -1).join(' ');
+    }
+    return parts.join('');
+  };
+
   const { searchTerm: routeSearchTerm } = router.query;
-  // Get the actual search term from the URL
-  const searchText = Array.isArray(routeSearchTerm)
-    ? routeSearchTerm[0].split('-').slice(0, -1).join(' ') // Remove the ID part and join with spaces
-    : routeSearchTerm?.split('-').slice(0, -1).join(' ') || '';
+  const searchText = Array.isArray(routeSearchTerm) ? getSearchTermFromQuery(routeSearchTerm[0]) : getSearchTermFromQuery(routeSearchTerm || '');
 
   const {
     products,
@@ -447,8 +452,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     searchTerm: searchText,
     country: selectedItemsFromFilterSection.country,
   });
-
-  console.log(totalCount, 'products-search');
 
   useEffect(() => {
     resetFilters();
@@ -525,7 +528,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     }
   };
 
-
   return (
     <>
       <FilterDrawer
@@ -551,10 +553,10 @@ const Categories: NextPage<CategoriesPageProps> = function ({
           <Breadcrumb
             isLinkDisable={true}
             className="!pl-0 md:!pl-0 !my-2 md:my-3"
-            steps={[{ name: 'Home', link: '/' }, { name: `Search results for "${categoryName?.replace(/-/g, ' ')}"` }]}
+            steps={[{ name: 'Home', link: '/' }, { name: `Search results for "${searchText}"` }]}
           ></Breadcrumb>
           <h1 className=" text-xl md:text-2xl font-semibold text-text-primary-light dark:text-text-primary-dark">
-            {totalCount ? totalCount : 'No'} search results for "{categoryName?.replace(/-/g, ' ')}"
+            {totalCount ? totalCount : 'No'} search results for "{searchText}"
           </h1>
         </div>
         {/* <div className={`mobile:pb-9 w-full `}> */}
@@ -563,7 +565,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
         <div
           style={{ zIndex: 1 }}
           className={`w-full ${
-            minThreshold ? `fixed pt-2 !z-1 ${threshold < 60 ? 'top-[122px]' : 'top-[140px]'} left-0 right-0 ` : 'pt-5'
+            minThreshold ? `fixed pt-2 !z-1 ${threshold < 80 ? 'top-[122px]' : 'top-[69px]'} left-0 right-0 ` : 'pt-5'
           } bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pb-5 mx-auto max-w-[1440px]`}
         >
           <div

@@ -251,15 +251,15 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
     <Layout
       containerClass="mobile:mt-[80px]"
       mobileHeaderContainerClassName="mobile:!hidden "
-      mobileSearchBoxContainerClassName="mobile:top-0 !pl-[50px] pt-3"
-      stickyHeader={true}  
+      mobileSearchBoxContainerClassName="mobile:top-0 !pl-[42px] !pr-[136px] pt-3"
+      stickyHeader={true}
       stickyHeroSection={true}
       showBackArrowInSearchBox={true}
     >
       {(stickyHeaderDetails?.showProductImage || stickyHeaderDetails?.showShareIcon) && (
         <div
           style={{ zIndex: 9999 }}
-          className="hidden  fixed md:flex justify-between items-center h-[80px]  top-[69px] left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] py-2 mx-auto max-w-[1440px]"
+          className=" fixed flex justify-between items-center h-[80px] top-[66px]  md:top-[69px] left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] py-2 mx-auto max-w-[1440px]"
         >
           <div className="flex gap-4">
             {stickyHeaderDetails.showProductImage && (
@@ -268,16 +268,18 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
                 alt={`Thumbnail`}
                 width={110}
                 height={110}
-                className={` border !aspect-square h-[70px] w-[70px] object-cover rounded-lg`}
+                className={` border !aspect-square h-9 w-9 md:h-[70px] md:w-[70px] object-cover rounded-lg`}
                 layout="fixed"
               />
             )}
 
             <div className="flex items-center gap-x-3 text-text-primary-light dark:text-text-primary-dark">
-              <div className="flex flex-col  gap-y-2">
-                {stickyHeaderDetails.showProductName && <span className="text-sm font-medium">{prodTitle}</span>}
+              <div className="flex flex-col  gap-y-[5px] md:gap-y-2">
+                {stickyHeaderDetails.showProductName && (
+                  <span className="text-xs md:text-sm font-semibold">{prodTitle}</span>
+                )}
                 {stickyHeaderDetails.showPrice && (
-                  <span className="font-semibold">{formatPriceWithoutCents(prodPrice)}</span>
+                  <span className="font-semibold text-xs md:text-sm">{formatPriceWithoutCents(prodPrice)}</span>
                 )}
               </div>
               {stickyHeaderDetails.showShareIcon && (
@@ -287,27 +289,49 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
                   height={28}
                   width={28}
                   primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
-                  className="cursor-pointer"
+                  className="cursor-pointer hidden md:block"
                 />
               )}
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4 md:gap-2 ">
             {stickyHeaderDetails.showShareIcon && (
+              <>
               <HartSvg
                 aria-label="Like"
                 onClick={handleLike}
                 height="24"
                 width="24"
-                className="hover:scale-105 cursor-pointer"
+                className="hover:scale-105 cursor-pointer hidden md:block"
                 borderColor={`${theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}`}
                 color="var(--heart-fill-color)"
                 isFilled={isLiked}
               />
+              <HartSvg
+                aria-label="Like"
+                onClick={handleLike}
+                height="20"
+                width="20"
+                className="hover:scale-105 cursor-pointer md:hidden"
+                borderColor={`${theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}`}
+                color="var(--heart-fill-color)"
+                isFilled={isLiked}
+              />
+            </>
+            )}
+            {stickyHeaderDetails.showShareIcon && (
+              <ShareIcon
+                aria-label="Share"
+                onClick={handleShareClick}
+                height={24}
+                width={24}
+                primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
+                className="cursor-pointer md:hidden"
+              />
             )}
             {stickyHeaderDetails.showButtons && (
-              <div className="flex gap-2">
+              <div className=" gap-2 hidden md:flex">
                 <Button
                   isLoading={isFirstButtonLoading}
                   onClick={handleFirstButtonClick}
@@ -455,9 +479,9 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
       <div className=" relative mb-11 custom-container mx-auto sm:px-16 mobile:px-4 ">
         {/*product section start */}
         <Suspense fallback={<div>Loading Similar Products...</div>}>
-        <div className="mt-12">
-          <TogglePanel panelInfo={ToggleInfo} />
-        </div>
+          <div className="mt-12">
+            <TogglePanel panelInfo={ToggleInfo} />
+          </div>
         </Suspense>
         {/*product section end */}
       </div>

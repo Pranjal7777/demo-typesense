@@ -6,6 +6,7 @@ type CategoriesIconProps = {
   height?: string;
   className?: string;
   color?: string;
+  onClick?:()=>void
 };
 
 const CategoriesIcon: FC<CategoriesIconProps> = ({
@@ -13,12 +14,14 @@ const CategoriesIcon: FC<CategoriesIconProps> = ({
   height = '16',
   className,
   color = '#FFF',
+  onClick,
   ...props
 }) => {
   return (
     <svg
       className={appClsx('fill-current ', className)}
       width={width}
+      onClick={onClick}
       height={height}
       {...props}
       viewBox="0 0 16 16"

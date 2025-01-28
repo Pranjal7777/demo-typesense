@@ -154,7 +154,7 @@ const CategoriesDrawer: React.FC<CategoriesDrawerProps> = ({ isSearchCategoriesD
         </div>
 
         {/* Categories List */}
-        <div className="w-full  h-[79%] overflow-y-scroll divide-y divide-border-tertiary-light dark:divide-border-tertiary-dark px-2  md:px-[24px]">
+        <div className="w-full  h-[79%] overflow-y-scroll divide-y divide-border-tertiary-light dark:divide-border-tertiary-dark mobile:px-7 px-2  md:px-[24px]">
           {/* Conditional Rendering based on filteredData */}
           {filteredData.length === 0 ? (
             <div className="text-center py-4 text-gray-500">NO RESULTS FOUND</div>

@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { ChangeEvent, FC, KeyboardEvent, useEffect, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { useTranslation } from 'next-i18next';
 import { useActions, useAppSelector } from '@/store/utils/hooks';
 import { GOOGLE_MAPS_KEY, HIDE_SELLER_FLOW, STATIC_IMAGE_URL } from '@/config';
@@ -40,6 +41,10 @@ import LeftArrowIcon from '../../../../public/assets/svg/left-arrow-icon';
 import { getUserLocation } from '@/helper/get-location';
 import getAddressFromLatLng from '@/helper/get-address-by-lat-lng';
 import { IMAGES } from '@/lib/images';
+import CategoriesIcon from '../../../../public/assets/svg/categories-icon';
+import ChatIcon from '../../../../public/assets/svg/chat-icon1';
+import { SIGN_IN_PAGE } from '@/routes';
+const CategoriesDrawer = dynamic(() => import('@/components/categories-drawer'), { ssr: false });
 
 export type NewSearchBoxProps = {
   windowWidth: number;
@@ -93,12 +98,14 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
 }) => {
   const { t } = useTranslation('common');
   const heroSection = t('page.header.heroSection', { returnObjects: true }) as heroSection;
-
+//  const { userInfo } = useAppSelector((state: RootState) => state.auth);
   const { theme } = useTheme();
   const minThreshold = useNewWindowScroll(180);
   const router = useRouter();
 
-  const { myLocation } = useAppSelector((state: RootState) => state.auth);
+  const { myLocation , userInfo } = useAppSelector((state: RootState) => state.auth);
+  const { categories } = useAppSelector((state: RootState) => state.auth);
+   const [isSearchCategoriesDrower, setIsSearchCategoriesDrower] = useState(false);
 
   const { setUpdateLocationDispatch, setMyLocationDispatch } = useActions();
 
@@ -114,6 +121,10 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
      ) {
        setShowRecentSearch(false);
      }
+   };
+
+   const changMenu = () => {
+     setIsSearchCategoriesDrower(!isSearchCategoriesDrower);
    };
 
    useEffect(() => {
@@ -489,6 +500,11 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
 
   return (
     <>
+      <CategoriesDrawer
+        isSearchCategoriesDrower={isSearchCategoriesDrower}
+        changMenu={changMenu}
+        // data={categoriesWithChildren}
+      />
       {/* @todo */}
       {/* // desktop,letop,tab screen  */}
 
@@ -1053,23 +1069,91 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
           </button>
           <button
             className={`relative ${
-              stickyHeaderWithSearchBox && '!bg-bg-octonary-light dark:bg-bg-quinary-dark text-text-tertiary-dark '
+              stickyHeaderWithSearchBox && '!bg-bg-octonary-light dark:!bg-bg-quinary-dark text-text-tertiary-dark '
             } bg-bg-tertiary-light w-full pr-2 hover:bg-bg-tertiary-light text-text-secondary-color rounded-lg h-[42px] mobile:mb-3 flex items-center`}
             onClick={() => setSearchItemAndUserDrower(!searchItemAndUserDrower)}
           >
             <SearchIcon
               width={16}
               height={16}
+              primaryColor={
+                stickyHeaderWithSearchBox
+                  ? theme
+                    ? 'var(--icon-primary-dark)'
+                    : 'var(--icon-primary-light)'
+                  : 'var(--icon-primary-light)'
+              }
               className="absolute  mobile:left-3 rtl:mobile:left-0 rtl:mobile:right-3 "
             />
             <span
-              className={`text-base  ml-9 mobile:text-sm rtl:ml-0 rtl:mr-9 truncate text-text-secondary-dark ${
-                formData.search ? '' : 'text-text-denary-light'
+              className={`text-base  ml-9 mobile:text-sm rtl:ml-0 rtl:mr-9 truncate ${
+                formData.search
+                  ? 'text-text-primary-light dark:text-text-primary-dark'
+                  : 'dark:text-text-septenary-light text-text-denary-light'
               }`}
             >
               {formData.search ? formData.search : heroSection.searchPlaceholder}
             </span>
           </button>
+
+          {/* mobile search box for pdp page start */}
+          {showBackArrow && (
+            <div className="flex items-center justify-center gap-3 absolute top-1/2 -translate-y-1/2  right-4">
+              <CategoriesIcon
+                height="19"
+                width="19"
+                onClick={() => changMenu()}
+                color={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
+              />
+              <ChatIcon
+                height="21"
+                width="21"
+                primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
+              />
+              <HydrationGuard>
+                {userInfo ? (
+                  userInfo?.profilePic ? (
+                    <Image
+                      onClick={() => router.push(`/profile/${userInfo?.fullName.replace(/\s+/g, '')}`)}
+                      src={
+                        userInfo?.profilePic.includes('http')
+                          ? userInfo?.profilePic
+                          : `${STATIC_IMAGE_URL}/${userInfo?.profilePic}`
+                      }
+                      alt="profile"
+                      width={54}
+                      height={37}
+                      className="rounded-full min-h-8 max-h-8 min-w-8 max-w-8 object-cover"
+                    />
+                  ) : (
+                    <div className="border-2 min-h-8 max-h-8 min-w-8 max-w-8 flex items-center justify-center rounded-full text-sm text-center bg-bg-tertiary-light text-text-primary-light font-semibold">
+                      {(userInfo?.firstName?.[0] + '' + (userInfo?.lastName?.[0] || '')).toLocaleUpperCase()}
+                    </div>
+                  )
+                ) : (
+                  <Link
+                    aria-label="Login"
+                    className={'rtl:mr-0  flex items-center justify-center text-text-secondary-light'}
+                    href={SIGN_IN_PAGE}
+                  >
+                    <span
+                      className={`${
+                        stickyHeaderWithSearchBox && '!text-text-primary-light dark:!text-text-secondary-light'
+                      } ${
+                        minThreshold
+                          ? '!text-text-primary-light dark:!text-text-secondary-light'
+                          : 'text-text-secondary-light'
+                      }  text-sm font-semibold rtl:ml-0 ml-0 `}
+                    >
+                      Login
+                    </span>
+                  </Link>
+                )}
+              </HydrationGuard>
+            </div>
+          )}
+
+          {/* mobile search box for pdp page end */}
         </div>
         {/* mobile search box start */}
 

@@ -2,15 +2,6 @@ import { useTheme } from '@/hooks/theme';
 import ChatIcon from '../../../../public/assets/svg/chat-icon';
 import Button from '../button';
 import React, { useEffect, useRef, useState } from 'react';
-// import 'isomtrik-quickchat';
-// import 'isomtrik-quickchat/css';
-// import { initializeChat } from 'isomtrik-quickchat/utils';
-// import { createChatUserDetails, createConversation, getChatUsers, getChatUserToken } from '@/lib/chat-sdk';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
-import { useRouter } from 'next/router';
-// import { ChatUser } from '@/store/types/chat-sdk-type';
-import { ISOMETRIK_CHAT_CONFIG, STATIC_IMAGE_URL } from '@/config';
 import FullScreenSpinner from '../full-screen-spinner';
 import { StickyHeaderDetails } from '@/containers/pdp';
 type PdpCtaProps = {
@@ -36,22 +27,7 @@ const PdpCta: React.FC<PdpCtaProps> = ({
   stickyHeaderDetails
 }) => {
   const theme = useTheme();
-  const router = useRouter();
   const [loadingChat, setLoadingChat] = useState(false);
-  const { userInfo } = useSelector((state: RootState) => state.auth);
-  const props = {
-    // baseUrl: "https://apis.isometrik.io",
-    hostUrl: 'wss://connections.isometrik.ai:2086/mqtt',
-    licenseKey: ISOMETRIK_CHAT_CONFIG.licenseKey || '',
-    appSecret: ISOMETRIK_CHAT_CONFIG.appSecret || '',
-    userSecret: ISOMETRIK_CHAT_CONFIG.userSecret || '',
-    userToken: '',
-    isometrikUserId: '', // mir
-    projectId: ISOMETRIK_CHAT_CONFIG.projectId || '',
-    keysetId: ISOMETRIK_CHAT_CONFIG.keysetId || '',
-    accountId: ISOMETRIK_CHAT_CONFIG.accountId || '',
-    conversationId: '',
-  };
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -69,104 +45,7 @@ const PdpCta: React.FC<PdpCtaProps> = ({
   }, []);
 
   const chatIconClickHandler = async () => {
-    // if (userInfo) {
-    //   const profilePic = apiData?.images[0]?.url.includes('https')
-    //     ? apiData?.images[0]?.url
-    //     : `${STATIC_IMAGE_URL}/${apiData?.images[0]?.url}`;
-    //   const chatCreds: any = {};
-    //   const userName = userInfo.username.charAt(0).toUpperCase() + userInfo.username.slice(1).toLowerCase();
-    //   let password = userName + apiData?._id.slice(-5);
-    //   let userIdentifier = `${userInfo.username}${apiData?._id}`;
-    //   try {
-    //     setLoadingChat(true);
-    //     const users = await getChatUsers();
-    //     const userData = users.users.find((user: ChatUser) => user.userIdentifier === userIdentifier);
-    //     if (userData) {
-    //       try {
-          
-    //         const tokenData = await getChatUserToken(userData.userIdentifier, password);
-    //         chatCreds.userToken = tokenData.userToken;
-    //         chatCreds.isometrikUserId = tokenData.userId;
-    //         try {
-    //           const conversation = await createConversation(tokenData.userToken, {
-    //             typingEvents: true,
-    //             searchableTags: [apiData?.title || '', apiData?._id || '', apiData?.description || ''],
-    //             readEvents: true,
-    //             pushNotifications: true,
-    //             metaData: {
-    //               'open conversation': true,
-    //             },
-    //             members: [ISOMETRIK_CHAT_CONFIG.adminId],
-    //             isGroup: false,
-    //             customType: 'Test conversations',
-    //             conversationType: 0,
-    //             conversationTitle: apiData?.title || `${apiData?.description}`,
-    //             conversationImageUrl: profilePic,
-    //           });
-              
-    //             initializeChat({
-    //               ...props,
-    //               conversationId: conversation.conversationId,
-    //               isometrikUserId: chatCreds.isometrikUserId,
-    //               userToken: chatCreds.userToken,
-    //             });
-    //         } catch (error) {
-    //           console.log(error);
-    //         }
-    //       } catch (error) {
-    //         console.log(error);
-    //       }
-    //     } else {
-    //       try {
-    //         const userDetails = await createChatUserDetails({
-    //           userIdentifier: userIdentifier,
-    //           password: password,
-    //           userName: apiData?.title || `${apiData?.description}`,
-    //           userProfileImageUrl: profilePic,
-    //         });
-    //         if (userDetails) {
-    //           chatCreds.userToken = userDetails.userToken;
-    //           chatCreds.isometrikUserId = userDetails.userId;
-    //           try {
-    //             const conversation = await createConversation(userDetails.userToken, {
-    //               typingEvents: true,
-    //               searchableTags: [apiData?.title || '', apiData?._id || '', apiData?.description || ''],
-    //               readEvents: true,
-    //               pushNotifications: true,
-    //               metaData: {
-    //                 'open conversation': true,
-    //               },
-    //               members: [ISOMETRIK_CHAT_CONFIG.adminId],
-    //               isGroup: false,
-    //               customType: 'Test conversations',
-    //               conversationType: 0,
-    //               conversationTitle: apiData?.title || `${apiData?.description}`,
-    //               conversationImageUrl: profilePic,
-    //             });
-
-    //             initializeChat({
-    //               ...props,
-    //               conversationId: conversation.conversationId,
-    //               isometrikUserId: chatCreds.isometrikUserId,
-    //               userToken: chatCreds.userToken,
-    //             });
-    //           } catch (error) {
-    //             console.log(error);
-    //           }
-    //         }
-    //       } catch (error) {
-    //         console.log(error);
-    //       }
-    //     }
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    //   finally{
-    //     setLoadingChat(false);
-    //   }
-    // } else {
-    //   router.push('/login');
-    // }
+    console.log('chatIconClickHandler');
   };
 
 
@@ -208,7 +87,7 @@ const PdpCta: React.FC<PdpCtaProps> = ({
       }, []);
 
   return (
-    <div className={`flex w-full gap-2 ${isSold ? 'mt-0' : 'mt-5'} justify-around`} ref={buttonsRef}>
+    <div className={`flex w-full gap-2 ${isSold ? 'mt-0' : 'mt-5'} justify-between`} ref={buttonsRef}>
       {!isSold ? (
         <>
           <Button

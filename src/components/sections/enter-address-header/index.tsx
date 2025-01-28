@@ -30,8 +30,8 @@ const EnterAddressHeader: FC<Props> = ({
     >
       {progressbar ? (
         <div className="w-full absolute bottom-0 flex gap-[4px] justify-between sm:hidden">
-          <div className={'left w-[50%] h-[4px] rounded-[10px] bg-[#6D3EC1] '}></div>
-          <div className={'right w-[50%] h-[4px] rounded-[10px] ' + (confirmLocation ? 'bg-[#6D3EC1]' : '')}></div>
+          <div className={'left w-[50%] h-[4px] rounded-[10px] bg-brand-color '}></div>
+          <div className={'right w-[50%] h-[4px] rounded-[10px] ' + (confirmLocation ? 'bg-brand-color' : '')}></div>
         </div>
       ) : null}
 

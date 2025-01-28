@@ -21,7 +21,7 @@ const TestimonialSection: React.FC = () => {
   return (
     <div className=" py-12 mobile:py-0 mobile:mt-9 w-100">
       <div className="">
-        <SectionTitle className="text-center !py-0 mb-8">{_text?.title}</SectionTitle>
+        <SectionTitle className="text-center !py-0 mb-4 md:mb-8">{_text?.title}</SectionTitle>
       </div>
       {/* <div className=" grid text-center md:text-left mobile:grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1 mobile:gap-4 place-items-center place-content-center "> */}
       <div className="">

@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Button from '../../ui/button';
@@ -33,7 +33,7 @@ import FeedsIcon from '../../../../public/assets/svg/feed-icon';
 import NotificationIcon from '../../../../public/assets/svg/notification-icon';
 import { removeCookie } from '@/utils/cookies';
 import LeftArrowIcon from '../../../../public/assets/svg/left-arrow-icon';
-import { HIDE_SELLER_FLOW } from '@/config';
+import { HIDE_SELLER_FLOW, STATIC_IMAGE_URL } from '@/config';
 import HartSvg from '../../../../public/assets/svg/heart';
 import { appClsx } from '@/lib/utils';
 export type loginOrUserName = {
@@ -63,7 +63,7 @@ type menuOptions = {
 
 const Header: FC<Props> = ({
   stickyHeaderWithSearchBox = false,
-  showItems = 6,
+  showItems:showNoOfItems = 6,
   // categoriesWithChildCategories,
   containerClassName,
   mobileContainerClassName,
@@ -72,6 +72,7 @@ const Header: FC<Props> = ({
   const minThreshold = useNewWindowScroll(0);
   const maxThreshold = useNewWindowScroll(130);
   const windowWidth = useWindowResize();
+  const [showItems, setShowItems] = useState(showNoOfItems);
 
   const { categories } = useAppSelector((state: RootState) => state.auth);
 
@@ -100,6 +101,26 @@ const Header: FC<Props> = ({
       router.push(SIGN_IN_PAGE);
     }
   };
+
+  const CategoriesInMobileRoute = ['/search', '/categories'];
+const showCategoriesInMobile = useMemo(() => {
+  const router = useRouter();
+  return CategoriesInMobileRoute.some((route) => router.pathname.startsWith(route));
+}, [router.pathname]);
+
+ useEffect(() => {
+   if (window.innerWidth > 1144) {
+     setShowItems(6);
+   } else if (window.innerWidth > 963) {
+     setShowItems(3);
+   } else if (window.innerWidth > 831) {
+     setShowItems(2);
+   } else if (window.innerWidth > 634) {
+     setShowItems(1);
+   } else {
+     setShowItems(0);
+   }
+ }, []);
 
   ///// profile drop down data start
   const menuOptions = t('page.menuOptions', { returnObjects: true }) as menuOptions[];
@@ -340,8 +361,9 @@ const Header: FC<Props> = ({
 
       {/* <CategoryDrower className={`sm:hidden mobile:inline-block ${searchCategoryDrower && "!hidden"} transition duration-700`} searchCategoryDrower={searchCategoryDrower} setsearchCategoryDrower={setsearchCategoryDrower}/> */}
       <nav
+        style={{ zIndex: 1 }}
         className={appClsx(
-          `z-[2] border-error ${stickyHeaderWithSearchBox && 'bg-bg-secondary-light dark:bg-bg-secondary-dark'} ${
+          ` border-error ${stickyHeaderWithSearchBox && 'bg-bg-secondary-light dark:bg-bg-secondary-dark'} ${
             minThreshold && 'dark:bg-bg-primary-dark bg-bg-secondary-light'
           } mobile:inline-block sm:hidden h-[69px] w-full fixed top-0  flex items-center justify-center px-[16px]`,
           mobileContainerClassName
@@ -418,6 +440,60 @@ const Header: FC<Props> = ({
               </div>
             </>
           )}
+          {/* mobile header right side start */}
+          {showCategoriesInMobile && (
+            <div className="flex items-center justify-center gap-3">
+              <CategoriesIcon
+                height="19"
+                width="19"
+                onClick={() => changMenu()}
+                color={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
+              />
+              <ChatIcon height='21' width='21' primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} />
+              <HydrationGuard>
+                {userInfo ? (
+                  userInfo?.profilePic ? (
+                    <Image
+                      onClick={() => router.push(`/profile/${userInfo?.fullName.replace(/\s+/g, '')}`)}
+                      src={
+                        userInfo?.profilePic.includes('http')
+                          ? userInfo?.profilePic
+                          : `${STATIC_IMAGE_URL}/${userInfo?.profilePic}`
+                      }
+                      alt="profile"
+                      width={54}
+                      height={37}
+                      className="rounded-full min-h-8 max-h-8 min-w-8 max-w-8 object-cover"
+                    />
+                  ) : (
+                    <div className="border-2 min-h-8 max-h-8 min-w-8 max-w-8 flex items-center justify-center rounded-full text-sm text-center bg-bg-tertiary-light text-text-primary-light font-semibold">
+                      {(userInfo?.firstName?.[0] + '' + (userInfo?.lastName?.[0] || '')).toLocaleUpperCase()}
+                    </div>
+                  )
+                ) : (
+                  <Link
+                    aria-label="Login"
+                    className={'rtl:mr-0 flex items-center justify-center text-text-secondary-light'}
+                    href={SIGN_IN_PAGE}
+                  >
+                    <span
+                      className={`${
+                        stickyHeaderWithSearchBox && '!text-text-primary-light dark:!text-text-secondary-light'
+                      } ${
+                        minThreshold
+                          ? '!text-text-primary-light dark:!text-text-secondary-light'
+                          : 'text-text-secondary-light'
+                      }  text-sm font-semibold rtl:ml-0 ml-0 `}
+                    >
+                      {loginOrUserName.login}
+                    </span>
+                  </Link>
+                )}
+              </HydrationGuard>
+            </div>
+          )}
+
+          {/* mobile header right side end */}
         </div>
       </nav>
       {/* profile dropdown start */}

@@ -124,10 +124,13 @@ input[type="radio"] {
   -webkit-appearance: none;
   width: 20px;
   height: 20px;
-  border: 2px solid #333; /* Border color */
+  border: 2px solid #DBDBDB; /* Border color */
   border-radius: 50%; /* Makes it round */
   position: relative;
   cursor: pointer;
+}
+input[type="radio"]:checked{
+  border: 2px solid var(--brand-color);
 }
 
 /* radio button dot with :checked and ::before */
@@ -141,11 +144,14 @@ input[type="radio"]::before {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  transition: background-color 0.3s ease;
+  transition: background-color 0.2s ease;
 }
 
 /* When checked */
 input[type="radio"]:checked::before {
+  background-color: var(--brand-color);
+}
+input[type="radio"]:checked::after {
   background-color: var(--brand-color);
 }
 
@@ -215,4 +221,51 @@ input[type="radio"]:checked::before {
 }
 input[type="number"]:focus {
   pointer-events: none;
+}
+
+/* /////////////////////////////////// */
+
+/* Base checkbox styling */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #DBDBDB;
+  border-radius: 4px;
+  position: relative;
+  cursor: pointer;
+  background-color: transparent;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+/* When the checkbox is checked */
+input[type="checkbox"]:checked {
+  border-color: var(--brand-color);
+  background-color: var(--brand-color);
+  /* Background color changes when checked */
+}
+
+/* Add a checkmark using ::after */
+input[type="checkbox"]::after {
+  content: '';
+  width: 12px;
+  height: 6px;
+  border-left: 2px solid white;
+  /* Checkmark line */
+  border-bottom: 2px solid white;
+  /* Checkmark line */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg) scale(0);
+  /* Rotate and scale for animation */
+  transition: transform 0.3s ease;
+  /* Smooth animation */
+}
+
+/* When checked, show the checkmark */
+input[type="checkbox"]:checked::after {
+  transform: translate(-50%, -50%) rotate(-45deg) scale(1);
+  /* Scale up the checkmark */
 }

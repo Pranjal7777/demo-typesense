@@ -12,7 +12,7 @@ const Description: FC<Props> = ({ desc , className}) => {
       {
         desc.map((item, index) => (
           <p
-            className={appClsx('text-base mb-5 lg:mb-12  mobile:!text-xs text-text-primary-light dark:text-text-tertiary-dark',className)}
+            className={appClsx('text-base mb-5 lg:mb-12  mobile:!text-sm text-text-primary-light dark:text-text-tertiary-dark',className)}
             key={index}
           >
             {item.toString()}

@@ -15,7 +15,7 @@ function AddressHeader ({className,children,iconClassName,iconClickEvent}:Props)
   return (
     <header className={appClsx('relative flex py-[20px] items-center justify-center sm:justify-start dark:text-text-primary-dark ', className)}
     >
-      <LeftArrowIcon primaryColor={theme ? '#FFFFFF' : '#000000'} height='12' width='13' onClick={iconClickEvent} className = {appClsx(' absolute left-0 sm:hidden ',iconClassName)}/>
+      <LeftArrowIcon primaryColor={theme ? '#FFFFFF' : '#000000'} height='16' width='16' onClick={iconClickEvent} className = {appClsx(' absolute left-0 sm:hidden ',iconClassName)}/>
         
       <h1 className='text-[18px] md:text-[24px] font-semibold'>{children}</h1>
         

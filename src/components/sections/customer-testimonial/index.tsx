@@ -46,13 +46,13 @@ const CustomerTestimonial: FC<Props> = ({ data }) => {
               <Rating value={item.ratings} key={index} color="var(--brand-color)" className='mobile:text-xs sm:text-2xl' itemClassName="mr-2 " />
             </div>
             <div className="flex flex-wrap text-wrap w-full flex-col mobile:items-center mobile:justify-center pt-3 ">
-              <p className=" text-text-primary-light dark:text-text-primary-dark font-semibold text-xs sm:text-base py-2">
+              <p className=" text-text-primary-light dark:text-text-primary-dark text-sm sm:text-base py-2 font-semibold">
                 {item.title}
               </p>
-              <p className=" flex flex-wrap text-wrap  border-error sm:h-[105px] mobile:text-center mobile:text-[10px] mobile:px-4 sm:text-sm text-text-tertiary-light dark:text-text-tertiary-dark">{item.comment}</p>
+              <p className=" flex flex-wrap text-wrap  border-error sm:h-[105px] mobile:text-center mobile:text-xs mobile:px-4 sm:text-sm text-text-tertiary-light dark:text-text-tertiary-dark">{item.comment}</p>
             </div>
             <div className="pt-3 mobile:pt-1">
-              <p className="mobile:text-[10px] text-sm font-medium text-text-primary-light dark:text-text-primary-dark">{item.userName}</p>
+              <p className="mobile:text-xs text-sm font-semibold text-text-primary-light dark:text-text-primary-dark">{item.userName}</p>
             </div>
           </div>
  

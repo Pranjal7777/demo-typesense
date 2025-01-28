@@ -199,7 +199,7 @@ const About: FC<Props> = ({ aboutData , aboutSeoData}) => {
             />
           </div>
           <div className="mobile:inline sm:inline lg:hidden">
-            <PageDescription className="mt-4 !text-base !font-normal">
+            <PageDescription className="mt-4 mobile:!text-sm !text-base !font-normal">
               {aboutData?.attributes?.ourServiceSection?.description}
             </PageDescription>
           </div>

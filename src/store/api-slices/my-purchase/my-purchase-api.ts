@@ -10,6 +10,7 @@ export const myPurchaseApi = rootApi.injectEndpoints({
         url: `${GET_ALL_PURCHASE}?${queryParams}`,
         method: 'GET',
       }),
+      keepUnusedDataFor: 0,
     }),
     getPurchasesDetails: builder.query<PurchaseDetailsResponse, { queryParams: string }>({
       query: ({ queryParams }) => ({

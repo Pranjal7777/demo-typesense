@@ -26,7 +26,7 @@ import { productsApi } from '@/store/api-slices/products-api';
 import LeftArrowIcon from '../../../public/assets/svg/left-arrow-icon';
 import Image from 'next/image';
 import { HIDE_SELLER_FLOW } from '@/config';
-import { NO_RECENT_SEARCHES, RECENT_SEARCHES } from '@/constants/texts';
+import { NO_RECENT_SEARCHES, RECENT_SEARCHES, SEARCH_PLACEHOLDER_TEXT } from '@/constants/texts';
 
 interface PlacePredictions {
   place_id: string;
@@ -264,6 +264,7 @@ const [isRecentSearchOpen, setIsRecentSearchOpen] = useState(false);
               className="truncate border-border-tertiary-light dark:border-border-tertiary-dark dark:bg-bg-quinary-dark focus:border-2 focus:!border-brand-color dark:text-bg-tertiary-light px-11 rtl:px-5 pr-9 rtl:pr-12 text-sm outline-none border rounded-md h-12 w-full focus:border-primary bg-bg-tertiary-light"
               type="text"
               name="search"
+              placeholder={SEARCH_PLACEHOLDER_TEXT}
               onFocus={handleFocusSearchBox}
               value={formData.search}
               onBlur={() =>

@@ -133,6 +133,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     longitude: searchParams.get('longitude') || '',
     country: searchParams.get('country') || myLocation?.country || 'India',
     category: { title: searchParams.get('categoryTitle') || '', _id: searchParams.get('categoryId') || '' },
+    sort: searchParams.get('sort') || '',
   };
 
   const [filtersDrawer, setFilterDrawer] = useState(false);
@@ -140,14 +141,21 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   const [threshold, setThreshold] = useState(700);
 
   const minThreshold = useNewWindowScroll(threshold);
+  useEffect(() => {
+    if (window.innerWidth < 643) {
+      setThreshold(280);
+    } else {
+      setThreshold(700);
+    }
+  }, []);
 
   useEffect(() => {
     window.addEventListener('resize', () => {
-      setThreshold(window.innerWidth < 643 ? 540 : 700);
+      setThreshold(window.innerWidth < 643 ? 280 : 700);
     });
     return () => {
       window.removeEventListener('resize', () => {
-        setThreshold(window.innerWidth < 643 ? 540 : 700);
+        setThreshold(window.innerWidth < 643 ? 280 : 700);
       });
     };
   }, []);
@@ -204,6 +212,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
       { shallow: true }
     );
   };
+
   const removeFilter = (key: string) => {
     const updatedFeaturedFilters = { ...selectedItemsFromFilterSection };
     if (key === 'category') {
@@ -354,6 +363,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
       latitude: getQueryParam(router.query.latitude),
       longitude: getQueryParam(router.query.longitude),
       country: getQueryParam(router.query.couuntry),
+      sort: getQueryParam(router.query.sort),
     };
     setSelectedItemsFromFilterSection(updatedFilters);
   }, [router.query]);
@@ -505,6 +515,8 @@ const Categories: NextPage<CategoriesPageProps> = function ({
         categories={categories}
         heroImageSrc={categoriesBannerData?.webBanner || IMAGES.PRIMARY_BANNER}
         description={categoriesBannerData?.description || ''}
+        stickyHeader={threshold <= 540}
+        stickyHeroSection={threshold <= 540}
       >
         {/* header with image and search box */}
         {/* Section:- What are you looking for? */}
@@ -578,18 +590,18 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                   </div>
                 </div>
               )}
-              <div className=" w-full pt-9 sm:py-8 lg:py-12 flex flex-col items-center justify-center">
+              <div className=" w-full pt-9 sm:py-0 lg:py-0 flex flex-col items-center justify-center">
                 <div
                   style={{ zIndex: 1 }}
                   className={`w-full ${
                     minThreshold
                       ? `fixed !z-1 ${
-                          threshold < 700 ? 'top-[175px]' : 'top-[145px]'
+                          threshold < 300 ? 'top-[118px]' : 'top-[145px]'
                         } left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-5 mx-auto max-w-[1440px]`
                       : ''
                   }`}
                 >
-                {/* <div
+                  {/* <div
                   ref={setStickyFilterRef}
                   style={{ zIndex: 1 }}
                   className={`w-full ${
@@ -617,6 +629,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                           { value: 'price_desc', label: 'High to Low' },
                         ]}
                         defaultValue={{ value: 'newest', label: 'Newest First' }}
+                        // value={{ value: 'newest', label: 'Newest First' }}
                         formatOptionLabel={({ label }, { context }) => <span className="pl-2">{label}</span>}
                         styles={customStyles}
                         theme={(theme) => ({

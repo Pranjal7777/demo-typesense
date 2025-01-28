@@ -16,7 +16,6 @@ import MyLocationIcon from '../../../../public/assets/svg/my-location-icon';
 import { getLocalStorageItem } from '@/helper/browser-storage/local-storage/get-item';
 import AddressDetails from '@/components/sections/address-details';
 import AutoCompleteSearchBox from '@/components/ui/auto-complete';
-import { toast, Toaster } from 'sonner';
 import ConfirmationPopup from '@/components/ui/confirmation-popup';
 import { addressApi } from '@/store/api-slices/profile/address-api';
 import { AddressErrorType, UserInfoType } from '@/store/types/profile-type';
@@ -28,6 +27,7 @@ import { useAppSelector } from '@/store/utils/hooks';
 import { RootState } from '@/store/store';
 import { SIGN_IN_PAGE } from '@/routes';
 import validatePhoneNumber from '@/helper/validation/phone-number-validation';
+import showToast from '@/helper/show-toaster';
 
 
 const AddressContainer = dynamic(() => import('@/containers/address'), {
@@ -236,20 +236,13 @@ function Address() {
           ...(formData.note && { note: formData.note }),
         }).unwrap();
 
-        toast.success('Saved Successfully', {
-          duration: 3000,
-          position: 'top-center',
-        });
+        showToast({message: 'Saved Successfully', messageType: 'success'});
         router.replace({ pathname: '/profile/address' });
         setFormData(initialFormData);
         refetch();
       } catch (error) {
         const Error = error as AddressErrorType;
-        
-        toast.error( `${Error?.data?.message}`, {
-          duration: 4000,
-          position: 'top-center',
-        });
+        showToast({message: `${Error?.data?.message}`, messageType: 'error'});
       }
 
     }
@@ -260,17 +253,11 @@ function Address() {
 
     try {
       await deleteAddress(deleteId).unwrap();
-      toast.success('Deleted Successfully', {
-        duration: 3000,
-        position: 'top-center',   
-      });
+      showToast({message: 'Deleted Successfully', messageType: 'success'});
       refetch();
     } catch (error) {
       const Error = error as AddressErrorType;     
-      toast.error( `${Error?.data?.message}`, {
-        duration: 4000,
-        position: 'top-center',
-      });
+      showToast({message: `${Error?.data?.message}`, messageType: 'error'});
     }
 
   };
@@ -356,22 +343,14 @@ function Address() {
           aptNo: formData.aptNo,
           ...(formData.note && { note: formData.note }),
         }).unwrap();
-
-        toast.success('Updated Successfully', {
-          duration: 4000,
-          position: 'top-center',
-        });
+        showToast({message: 'Updated Successfully', messageType: 'success'});
         router.replace({ pathname: '/profile/address' });
         setFormData(initialFormData);
         setShowEditSection(false);
         refetch();
       } catch (error) {
         const Error = error as AddressErrorType;
-        
-        toast.error( `${Error?.data?.message}`, {
-          duration: 4000,
-          position: 'top-center',
-        });
+        showToast({message: `${Error?.data?.message}`, messageType: 'error'});
       }
     }
   },[formData, setErrorState, errorState, updateAddress, setFormData, setShowEditSection, refetch, router]);
@@ -414,10 +393,7 @@ function Address() {
           });     
       })
       .catch(()=>{
-        toast.error( 'Unable to fetch your location please try another way', {
-          duration: 4000,
-          position: 'top-center',
-        });
+        showToast({message: 'Unable to fetch your location please try another way', messageType: 'error'});
       });
     
   };
@@ -442,18 +418,13 @@ function Address() {
       refetch();
     } catch (error) {
       const Error = error as AddressErrorType;     
-      toast.error( `${Error?.data?.message}`, {
-        duration: 4000,
-        position: 'top-center',
-      });
+      showToast({message: `${Error?.data?.message}`, messageType: 'error',position: 'top-center'});
     }
   };
  
   return (
     <div className="w-full h-[100vh] overflow-y-scroll dark:bg-bg-primary-dark">
-      {
-        (isDeleting || isDefaultUpdating) ? <FullScreenSpinner/> : null
-      }
+      {isDeleting || isDefaultUpdating ? <FullScreenSpinner /> : null}
 
       <ConfirmationPopup
         isOpen={isConfirmationOpen}
@@ -461,12 +432,11 @@ function Address() {
         onClose={closeConfirmation}
         onConfirm={onConfirm}
       />
-      <Toaster />
       <div className="w-full">
         <div className="w-full hidden sm:block">
           <Header stickyHeaderWithSearchBox />
         </div>
-        
+
         <div className="w-full bg-[#FFF] flex flex-col  sm:px-[64px] max-w-[1440px] mx-auto dark:bg-bg-primary-dark">
           {/* show enter address section for add new address (address details form with map) for mobile start   */}
           {showEnterAddress === 'true' ? (
@@ -476,10 +446,10 @@ function Address() {
               </EnterAddressHeader>
               {!confirmLocation ? (
                 <>
-                  <div className="w-[100vw] relative pt-[16px] h-[79vh] flex justify-center md:block sm:h-[77vh] overflow-y-scroll  bg-[#FFFFFF] dark:bg-bg-primary-dark">
+                  <div className="w-[100vw] relative pt-[16px] h-[80vh] flex justify-center md:block sm:h-[77vh] overflow-y-scroll  bg-[#FFFFFF] dark:bg-bg-primary-dark">
                     <GoogleMapComponent
-                    isClickOnChange = {isClickOnChange}
-                    showEditSection = {showEditSection}
+                      isClickOnChange={isClickOnChange}
+                      showEditSection={showEditSection}
                       setUserLocation={setUserLocation}
                       setFormData={setFormData}
                       setIsMapLoaded={setIsMapLoaded}
@@ -501,20 +471,27 @@ function Address() {
 
                     <button
                       onClick={locateMeHandler}
-                      className="w-[48px] h-[48px] bg-brand-color rounded-[50%] absolute bottom-[16px] left-[16px] flex justify-center items-center"
+                      className="w-[48px] h-[48px] bg-brand-color rounded-[50%] absolute bottom-[36px] left-[16px] flex justify-center items-center"
                     >
                       <MyLocationIcon primaryColor="#FFFFFF" />
                     </button>
                   </div>
-                  <Button onClick={confirmLocationHandler} className='w-[90%] h-[48px] text-[16px] font-[600] min-w-[343px]  leading-[24px] rounded-[4px] my-[10px] mx-auto'>{showEditSection ? 'Update Location' : CONFIRM_LOCATION}</Button>
+                  <div className="fixed bottom-0 bg-white dark:bg-bg-primary-dark flex items-center justify-center left-0 right-0">
+                    <Button
+                      onClick={confirmLocationHandler}
+                      className="w-[90%] h-[48px] text-[16px] font-[600] min-w-[343px]  leading-[24px] rounded-[4px] !mt-1 !mb-5 mx-auto"
+                    >
+                      {showEditSection ? 'Update Location' : CONFIRM_LOCATION}
+                    </Button>
+                  </div>
                 </>
               ) : (
                 <>
                   <AddressContainer>
                     <AddressDetails
-                    setIsClickOnChange={setIsClickOnChange}
+                      setIsClickOnChange={setIsClickOnChange}
                       setErrorState={setErrorState}
-                      setFormData = {setFormData}
+                      setFormData={setFormData}
                       errorState={errorState}
                       formData={formData}
                       changeFormData={changeFormData}
@@ -522,23 +499,45 @@ function Address() {
                     />
                   </AddressContainer>
                   {showEditSection ? (
-                    <Button className='w-[90%] h-[48px] text-[16px] font-[600] min-w-[343px]  leading-[24px] rounded-[4px] my-[10px] mx-auto ' onClick={updateButtonHandler} isLoading={isUpdating} isDisabled={isUpdating} buttonType={'primary'}>
-                      {UPDATE_ADDRESS}
-                    </Button>
+                    <div className="fixed bottom-0 bg-white dark:bg-bg-primary-dark flex items-center justify-center left-0 right-0">
+                      <Button
+                        className="w-[90%] h-[48px] text-[16px] font-[600] min-w-[343px]  leading-[24px] rounded-[4px] !mt-1 !mb-5 mx-auto "
+                        onClick={updateButtonHandler}
+                        isLoading={isUpdating}
+                        isDisabled={isUpdating}
+                        buttonType={'primary'}
+                      >
+                        {UPDATE_ADDRESS}
+                      </Button>
+                    </div>
                   ) : (
-                    <Button className='w-[90%] h-[48px] text-[16px] font-[600] min-w-[343px] leading-[24px] rounded-[4px] my-[10px] mx-auto ' onClick={saveAddressButtonHandler} isLoading={isSaving} isDisabled={isSaving} buttonType={'primary'}>
-                      {SAVE_ADDRESS}
-                    </Button>
+                    <div className="fixed bottom-0 bg-white dark:bg-bg-primary-dark flex items-center justify-center left-0 right-0">
+                      <Button
+                        className="w-[90%] h-[48px] text-[16px] font-[600] min-w-[343px] leading-[24px] rounded-[4px] !mt-1 !mb-5 mx-auto "
+                        onClick={saveAddressButtonHandler}
+                        isLoading={isSaving}
+                        isDisabled={isSaving}
+                        buttonType={'primary'}
+                      >
+                        {SAVE_ADDRESS}
+                      </Button>
+                    </div>
                   )}
                 </>
               )}
             </>
           ) : (
-          //  {/* show enter address section for add new address (address details form with map) for mobile end   */}
-            
+            //  {/* show enter address section for add new address (address details form with map) for mobile end   */}
+
             //  user saved address cards section for mobile and desktop start
             <>
-              <AddressHeader iconClickEvent={()=>{router.push('/');}} iconClassName="left-[4%]" className="sm:mt-[69px]">
+              <AddressHeader
+                iconClickEvent={() => {
+                  router.push('/');
+                }}
+                iconClassName="left-[4%]"
+                className="sm:mt-[69px]"
+              >
                 {'My Addresses'}
               </AddressHeader>
               <AddressCards
@@ -548,9 +547,15 @@ function Address() {
                 deleteButtonHandler={deleteButtonHandler}
                 clickEvent={addNewAddressButtonForDesktopHandler}
               />
-              <Button className='sm:hidden w-[90%] h-[48px] text-[16px] font-[600] max-w-[427px] min-w-[343px] leading-[24px] rounded-[4px] my-[10px] mx-auto ' onClick={toggleEnterAddress} buttonType={'primary'}>
-                {`+ ${ADD_NEW_ADDRESS}`}
-              </Button>
+              <div className="fixed bottom-0 h-[60px] flex items-center justify-center left-0 right-0">
+                <Button
+                  className="sm:hidden w-[90%] h-[48px] text-[16px] font-[600] max-w-[427px] min-w-[343px] leading-[24px] rounded-[4px] !mb-5 mx-auto "
+                  onClick={toggleEnterAddress}
+                  buttonType={'primary'}
+                >
+                  {`+ ${ADD_NEW_ADDRESS}`}
+                </Button>
+              </div>
             </>
             //  user saved address cards section for mobile and desktop end
           )}
@@ -567,10 +572,10 @@ function Address() {
               </EnterAddressHeader>
               <div className="map-for-desktop h-[466px] w-full min-h-[456px] relative">
                 <GoogleMapComponent
-                isClickOnChange = {isClickOnChange}
-                showEditSection = {showEditSection}
-                 setUserLocation={setUserLocation}
-                 setFormData={setFormData}
+                  isClickOnChange={isClickOnChange}
+                  showEditSection={showEditSection}
+                  setUserLocation={setUserLocation}
+                  setFormData={setFormData}
                   setIsMapLoaded={setIsMapLoaded}
                   userLocation={userLocation}
                   setMap={setMap}
@@ -591,7 +596,7 @@ function Address() {
                   formData={formData}
                   setFormData={setFormData}
                 />
-  
+
                 <button
                   className="absolute bottom-[16px] rounded-md text-[14px] font-semibold right-[60px] w-[130px] h-[48px] bg-[#E1BBB4]"
                   onClick={continueButtonHandler}
@@ -609,13 +614,17 @@ function Address() {
             </div>
           ) : showAddressDetailsInDesktop ? (
             <div className="max-w-[804px] w-[80%] mb-[10px] flex flex-col items-center mx-auto mt-[10vh] px-[24px]  rounded-[10px] bg-[#FFF] dark:bg-bg-primary-dark">
-              <EnterAddressHeader iconClass='right-[5px]' className=" dark:bg-bg-primary-dark" clickEvent={closeIconHandler}>
+              <EnterAddressHeader
+                iconClass="right-[5px]"
+                className=" dark:bg-bg-primary-dark"
+                clickEvent={closeIconHandler}
+              >
                 {showEditSection ? UPDATE_ADDRESS : ADD_NEW_ADDRESS}
               </EnterAddressHeader>
               <AddressDetails
-              setIsClickOnChange={setIsClickOnChange}
+                setIsClickOnChange={setIsClickOnChange}
                 setErrorState={setErrorState}
-                setFormData = {setFormData}
+                setFormData={setFormData}
                 errorState={errorState}
                 formData={formData}
                 changeFormData={changeFormData}
@@ -623,11 +632,23 @@ function Address() {
               />
 
               {showEditSection ? (
-                <Button className='w-[520px] h-[44px] mt-[20px] mb-[24px]' onClick={updateButtonHandler} isLoading={isUpdating} isDisabled={isUpdating} buttonType={'primary'}>
+                <Button
+                  className="w-[520px] h-[44px] mt-[20px] mb-[24px]"
+                  onClick={updateButtonHandler}
+                  isLoading={isUpdating}
+                  isDisabled={isUpdating}
+                  buttonType={'primary'}
+                >
                   {UPDATE_ADDRESS}
                 </Button>
               ) : (
-                <Button className='w-[520px] h-[44px] mt-[20px] mb-[24px]' onClick={saveAddressButtonHandler} isLoading={isSaving} isDisabled={isSaving} buttonType={'primary'}>
+                <Button
+                  className="w-[520px] h-[44px] mt-[20px] mb-[24px]"
+                  onClick={saveAddressButtonHandler}
+                  isLoading={isSaving}
+                  isDisabled={isSaving}
+                  buttonType={'primary'}
+                >
                   {SAVE_ADDRESS}
                 </Button>
               )}
@@ -636,7 +657,7 @@ function Address() {
         </div>
       ) : // {/* add address section (address details form with map) for desktop end   */}
 
-        null}
+      null}
     </div>
   );
 }

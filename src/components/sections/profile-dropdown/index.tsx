@@ -180,12 +180,10 @@ const ProfileDropdown: FC<Props> = ({ menuOptions, signOut }) => {
             </div>
           </div>
 
-          <div className="block sm:hidden font-bold p-4">
-            <hr
-              className={`mt-5border-[1px] ${theme ? 'border-border-tertiary-light' : 'border-border-senary-light'}`}
-            />
+          <div className="block sm:hidden font-bold p-4 pt-0">
+            <hr className={`border border-border-tertiary-light dark:border-border-tertiary-dark`} />
 
-            <div className="flex flex-col font-normal text-base gap-5 mt-5">
+            <div className="flex flex-col font-normal text-base gap-3 mt-3">
               <Link href={'/about'}>
                 <span>About Le-Offer</span>
               </Link>

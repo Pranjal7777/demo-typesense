@@ -92,7 +92,8 @@ const WhatAreYouLookingFor: FC<Props> = ({ categories }) => {
                 role="button"
                 tabIndex={0}
                 onKeyUp={(e) => keyDownHandler(e, () => categoryRoute(item.id, item.title))}
-                className="cursor-pointer mobile:h-full max-h-[224] md:h-[224px] flex items-center justify-center"
+                // className="cursor-pointer mobile:h-full max-h-[224] md:h-[224px] flex items-center justify-center"
+                className="cursor-pointer h-fit"
                 key={index}
               >
                 <CategoryCard category={item} />
@@ -100,7 +101,6 @@ const WhatAreYouLookingFor: FC<Props> = ({ categories }) => {
             ))}
 
             <div
-              className="mt-2 mobile:h-full max-h-[224] h-[224px] w-full flex flex-col items-center sm:justify-center sm:hidden cursor-pointer transition ease-in-out delay-100 hover:-translate-y-1 hover:scale-110 duration-150"
               onClick={changMenu}
               role="button"
               tabIndex={0}
@@ -110,13 +110,21 @@ const WhatAreYouLookingFor: FC<Props> = ({ categories }) => {
                   changMenu();
                 }
               }}
+              className="cursor-pointer sm:hidden mobile:h-full max-h-[224] md:h-[224px] flex items-center justify-center"
+              // key={index}
             >
-              <div className=" bg-bg-quattuordenary-light h-[60px] w-[60px] md:h-[203px] md:w-[203px] flex-wrap rounded-full md:rounded-lg flex justify-center items-center p-2 ">
-                <RightArrowRoundedEdge primaryColor="var(--brand-color)" />
+              <div className="mobile:dark:bg-bg-primary-dark   md:dark:bg-bg-secondary-dark md:bg-bg-tertiary-light h-full w-full md:h-[203px] md:w-[203px] flex-wrap rounded-full md:rounded-lg flex justify-center items-start md:items-center p-2 transition-all ease-in-out delay-100 hover:cursor-pointer hover:-translate-y-1 hover:scale-110 duration-150 cursor-pointer">
+                <div className="mobile:bg-opacity-0 w-full flex flex-col justify-center items-center">
+                  <div className="mobile:min-w-[60px] w-full !aspect-square mobile:min-h-[60px] mobile:bg-opacity-0 md:dark:bg-bg-tertiary-dark md:rounded-full sm:h-[103px] sm:w-[103px] flex items-center justify-center">
+                    <div style={{aspectRatio:1}} className="bg-gradient-color-from w-full !aspect-square h-full md:h-[203px]  md:w-[203px] flex-wrap rounded-full md:rounded-lg flex justify-center items-center p-2 ">
+                      <RightArrowRoundedEdge primaryColor="var(--brand-color)" />
+                    </div>
+                  </div>
+                  <span className="text-xs md:text-base mt-6 text-text-primary-color font-primary font-normal text-center max-w-[154.59px]">
+                    See All
+                  </span>
+                </div>
               </div>
-              <span className="mt-6 sm:mt-5 text-xs text-primary md:text-base  font-primary font-normal text-center max-w-[154.6px]">
-                See All
-              </span>
             </div>
           </div>
         </div>

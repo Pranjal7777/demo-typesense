@@ -52,7 +52,7 @@ const AddressCards: FC<Props> = ({
   
 
   return (
-    <AddressContainer>
+    <AddressContainer className='mb-16 md:mb-0'>
       {data && data?.data?.length > 0 && (
         <div
           tabIndex={0}

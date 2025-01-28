@@ -87,7 +87,7 @@ function Blogs({ posts, blogSeoData }: blogsProps) {
     <>
     <CustomHeader title={seoData?.title} description={seoData?.description} image={seoData?.image?.url} url={seoData?.url}/>
       <Layout excludeHeroSection={true} stickyHeader={true}>
-        {posts?.data?.attributes?.breadCrumbLinks?.length > 0 ? <PageHeaderWithBreadcrumb className='' steps={posts?.data?.attributes?.breadCrumbLinks
+        {posts?.data?.attributes?.breadCrumbLinks?.length > 0 ? <PageHeaderWithBreadcrumb className='pl-0 mobile:pl-0' steps={posts?.data?.attributes?.breadCrumbLinks
         }></PageHeaderWithBreadcrumb> : null}
       <div className=" mt-[50px] sm:mt-[69px] relative custom-container mx-auto sm:px-16 mobile:px-4 ">
         {posts?.data?.attributes?.heroSection ? <PageBanner
@@ -103,7 +103,7 @@ function Blogs({ posts, blogSeoData }: blogsProps) {
 
         <div className='py-12 pt-0 mobile:pb-[71px] mobile:pt-0 flex flex-col items-center  border-error'>
           {posts?.data?.attributes?.blog_data?.length > 0 ? posts?.data?.attributes?.blog_data?.map((item, key) => (
-            <Link href={`blog/${item?.id}`} key={key} className={`flex sm:flex-col mobile:flex-col gap-6 lg:flex-row  max-w-[1103px] max-h-[308px] mobile:max-h-full sm:max-h-full ${key === 0 && 'mobile:mt-0'} mobile:mt-5 p-9 mobile:p-0 rounded-[20px] hover:cursor-pointer hover:bg-brand-color-hover items-center`}>
+            <Link href={`blog/${item?.id}`} key={key} className={`flex sm:flex-col mobile:flex-col gap-4 md:gap-6 lg:flex-row  max-w-[1103px] max-h-[308px] mobile:max-h-full sm:max-h-full ${key === 0 && 'mobile:mt-0'} mobile:mt-5 p-9 mobile:p-0 rounded-[20px] hover:cursor-pointer md:hover:bg-brand-color-hover items-center`}>
               <div className='relative lg:w-[482px] h-[236px] w-full overflow-hidden rounded-xl'>
                 <Image
                   src={item?.cover_image?.data?.attributes?.url}
@@ -115,7 +115,7 @@ function Blogs({ posts, blogSeoData }: blogsProps) {
                   className=''
                 />
               </div>
-              <div className=' lg:w-[50%] max-w-[521px] flex flex-col items-end pr-5'>
+              <div className=' lg:w-[50%] max-w-[521px] flex flex-col items-end md:pr-5'>
                 <div className=' text-base font-semibold text-brand-color'>{item?.posted_date}</div>
                 <div className=' ml-7 mobile:ml-0 mt-5'>
                   <div className='text-xl font-semibold text-text-primary-light dark:text-text-primary-dark'>{item?.title}</div>

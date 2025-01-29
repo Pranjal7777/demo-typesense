@@ -118,8 +118,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   const { myLocation } = useAppSelector((state: RootState) => state.auth);
   const { data: filterParameters, error: filterParametersError } = productsApi.useGetFilterParametersQuery();
   const theme = useTheme();
-  console.log(filterParameters?.data?.filters, 'mirh filterParameters');
-
   const conditionOptions = filterParameters?.data?.filters
     .find((filter: any) => filter.typeCode === 20)
     ?.data?.map((item: any) => ({ value: item?.value, label: item?.name }));
@@ -167,8 +165,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({
 
   const [filtersDrawer, setFilterDrawer] = useState(false);
   const [selectedItemsFromFilterSection, setSelectedItemsFromFilterSection] = useState<filterTypes>(initialFilters);
-
-  console.log(selectedItemsFromFilterSection, 'mirhf selectedItemsFromFilterSection');
 
   const [threshold, setThreshold] = useState(80);
   const minThreshold = useNewWindowScroll(threshold);
@@ -249,18 +245,15 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   };
 
   const handleFilterClick = (filterType: keyof filterTypes, value: string) => {
-    console.log(filterType, value, 'filterType, value');
     const updatedFilters = { ...selectedItemsFromFilterSection };
     if (value && filterType !== 'address' && filterType !== 'category') {
       updatedFilters[filterType] = value;
     }
     addFiltersToQuery(updatedFilters);
-
     // updateFilters(typesenseFilters);
   };
 
   const handleCategoryClick = (category: { categoryId: string; categoryTitle: string }) => {
-    console.log(category, 'onCategoryClick category');
     const newFilters = { ...selectedItemsFromFilterSection };
     newFilters.category = { title: category.categoryTitle, _id: category.categoryId };
     setSelectedItemsFromFilterSection(newFilters);
@@ -269,10 +262,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     // handleFilterClick('categoryTitle', categoryTitle);
   };
 
-  console.log(router.pathname, 'router pathname');
-
   const removeFilter = (key: string) => {
-    console.log(key, 'key remove');
     const updatedFeaturedFilters = { ...selectedItemsFromFilterSection };
     if (key === 'category') {
       updatedFeaturedFilters.category = { title: '', _id: '' };
@@ -408,7 +398,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     }
   }, [bannersAndRecommendedProducts]);
 
-  useEffect(() => {
+  useEffect(() => {    
     const updatedFilters = {
       type: getQueryParam(router.query.type),
       condition: getQueryParam(router.query.condition),
@@ -436,6 +426,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   };
 
   const { searchTerm: routeSearchTerm } = router.query;
+
   const searchText = Array.isArray(routeSearchTerm) ? getSearchTermFromQuery(routeSearchTerm[0]) : getSearchTermFromQuery(routeSearchTerm || '');
 
   const {
@@ -552,7 +543,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
         <div className="w-full custom-container mx-auto sm:px-16 mobile:px-4">
           <Breadcrumb
             isLinkDisable={true}
-            className="!pl-0 md:!pl-0 !my-2 md:my-3"
+            className="!pl-0 md:!pl-0 !mb-3 !mt-2 md:my-3"
             steps={[{ name: 'Home', link: '/' }, { name: `Search results for "${searchText}"` }]}
           ></Breadcrumb>
           <h1 className=" text-xl md:text-2xl font-semibold text-text-primary-light dark:text-text-primary-dark">
@@ -565,8 +556,8 @@ const Categories: NextPage<CategoriesPageProps> = function ({
         <div
           style={{ zIndex: 1 }}
           className={`w-full ${
-            minThreshold ? `fixed pt-2 !z-1 ${threshold < 80 ? 'top-[122px]' : 'top-[69px]'} left-0 right-0 ` : 'pt-5'
-          } bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pb-5 mx-auto max-w-[1440px]`}
+            minThreshold ? `fixed pt-2 !z-1 ${threshold < 80 ? 'top-[122px]' : 'top-[69px]'} left-0 right-0 ` : 'pt-3'
+          } bg-bg-secondary-light dark:bg-bg-primary-dark  px-4 sm:px-[64px] pb-5 mx-auto max-w-[1440px]`}
         >
           <div
             className={`flex  w-full gap-4 justify-end overflow-visible  ${
@@ -599,7 +590,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                   onChange={(selected) => {
                     handleFilterClick('condition', selected as string);
                     // updateFilters({ sort: selected as string });
-                    console.log(selected, 'selected');
                   }}
                 />
 
@@ -612,7 +602,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                       : ''
                   }`}
                   options={sortOptions || []}
-                  allSelectedValues={selectedItemsFromFilterSection.sort || ''}
+                  allSelectedValues={selectedItemsFromFilterSection.sort ? selectedItemsFromFilterSection.sort : ''}
                   type="radio"
                   onChange={(selected) => {
                     handleFilterClick('sort', selected as string);
@@ -630,7 +620,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                   initialMaxPrice={initialMaxPrice}
                   allSelectedValues={(selectedItemsFromFilterSection.price as string) || ''}
                   onChange={(selected) => {
-                    console.log(selected, 'selected');
                     handleFilterClick('price', selected as string);
                   }}
                 />

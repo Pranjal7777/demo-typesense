@@ -149,17 +149,33 @@ const ProductSlider: React.FC<Props> = ({ imagesArray, className, shareURL, shar
         let newDetails = { ...prevDetails };
 
         // Set showProductImage to true when the imageElement is either scrolled past 145px from the top or completely out of viewport
-        if (imageRect.top <= 145 || imageRect.bottom < 0) {
-          newDetails.showProductImage = true;
-        } else {
-          newDetails.showProductImage = false;
-        }
+        if(window.innerWidth < 768){
+           if (imageRect.top <= 50 || imageRect.bottom < 0) {
+             newDetails.showProductImage = true;
+           } else {
+             newDetails.showProductImage = false;
+           }
 
-        if (shareIconRect.top <= 145) {
-          newDetails.showShareIcon = true;
-        } else {
-          newDetails.showShareIcon = false;
+           if (shareIconRect.top <= 50) {
+             newDetails.showShareIcon = true;
+           } else {
+             newDetails.showShareIcon = false;
+           }
         }
+        else{
+          if (imageRect.top <= 145 || imageRect.bottom < 0) {
+            newDetails.showProductImage = true;
+          } else {
+            newDetails.showProductImage = false;
+          }
+
+          if (shareIconRect.top <= 145) {
+            newDetails.showShareIcon = true;
+          } else {
+            newDetails.showShareIcon = false;
+          }
+        }
+        
 
         // Update state only if there's a change
         if (

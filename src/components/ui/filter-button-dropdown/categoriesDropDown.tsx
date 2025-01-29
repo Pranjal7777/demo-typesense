@@ -5,8 +5,6 @@ import { useTheme } from '@/hooks/theme';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { Category } from '@/store/types';
-import SearchBox from '@/components/typesense/SearchBox';
-import NewSearchBox from '../search-box';
 import SearchIcon from '../../../../public/assets/svg/search-icon';
 import CloseIcon from '../../../../public/assets/svg/close-icon';
 type CategoriesDropDownProps = {
@@ -51,7 +49,7 @@ const CategoriesDropDown = ({ isActive, containerClassName, buttonClassName, tit
   return (
     <div
       className={appClsx(
-        'relative px-4 py-[10px] text-center dark:text-text-primary-dark text-text-primary-light bg-white dark:bg-bg-primary-dark border rounded-3xl',
+        'relative px-[10px] py-2 md:px-4 md:py-[10px] text-center dark:text-text-primary-dark text-text-primary-light bg-white dark:bg-bg-primary-dark border rounded-3xl',
         `${isActive ? 'bg-brand-color-hover dark:bg-brand-color-hover border-brand-color' : ''}`,
         containerClassName
       )}

@@ -44,6 +44,10 @@ const FilterButtonDropdown: React.FC<FilterButtonDropdownProps> = ({
 }) => {
   const { theme } = useTheme();
   const [selectedValues, setSelectedValues] = useState<string[] | string>(allSelectedValues);
+  useEffect(() => {
+    setSelectedValues(allSelectedValues);
+  }, [allSelectedValues]);
+  
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -81,7 +85,7 @@ const FilterButtonDropdown: React.FC<FilterButtonDropdownProps> = ({
     <>
       <div
         className={appClsx(
-          'relative px-4 py-[10px] text-center dark:text-text-primary-dark text-text-primary-light bg-white dark:bg-bg-primary-dark border rounded-3xl',
+          'relative px-[10px] py-2 md:px-4 md:py-[10px] text-center dark:text-text-primary-dark text-text-primary-light bg-white dark:bg-bg-primary-dark border rounded-3xl',
           `${isActive ? 'bg-brand-color-hover dark:bg-brand-color-hover border-brand-color' : ''}`,
           containerClassName
         )}
@@ -96,7 +100,9 @@ const FilterButtonDropdown: React.FC<FilterButtonDropdownProps> = ({
         >
           {title}
           <DownArrowIcon
-            primaryColor={isActive ? 'var(--brand-color)' : theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
+            primaryColor={
+              isActive ? 'var(--brand-color)' : theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'
+            }
             className={appClsx('cursor-pointer', isOpen ? 'rotate-180' : '')}
           />
         </div>
@@ -110,24 +116,33 @@ const FilterButtonDropdown: React.FC<FilterButtonDropdownProps> = ({
             )}
           >
             {/* <div className="w-full"> */}
-            {(type== 'checkbox' || type== 'radio') && options?.map((option) => (
-              <label key={option.value} className={appClsx('flex items-center gap-2', optionClassName)}>
-                <input
-                  className={appClsx('cursor-pointer', inputClassName)}
-                  type={type}
-                  name={type === 'radio' ? 'dropdown-group' : undefined}
-                  value={option.value}
-                  checked={
-                    type === 'checkbox'
-                      ? (selectedValues as string[]).includes(option.value)
-                      : selectedValues === option.value
-                  }
-                  onChange={() => handleSelection(option.value)}
-                />
-                {option.label}
-              </label>
-            ))}
-            {type== 'scale' && <PriceScale allSelectedValues={allSelectedValues} onChange={onChange} initialMinPrice={initialMinPrice || 0} initialMaxPrice={initialMaxPrice || 0} currencySymbol={currencySymbol} />}
+            {(type == 'checkbox' || type == 'radio') &&
+              options?.map((option) => (
+                <label key={option.value} className={appClsx('flex items-center gap-2', optionClassName)}>
+                  <input
+                    className={appClsx('cursor-pointer', inputClassName)}
+                    type={type}
+                    name={type === 'radio' ? 'dropdown-group' : undefined}
+                    value={option.value}
+                    checked={
+                      type === 'radio'
+                        ? selectedValues === option.value
+                        : (selectedValues as string[]).includes(option.value)
+                    }
+                    onChange={() => handleSelection(option.value)}
+                  />
+                  {option.label}
+                </label>
+              ))}
+            {type == 'scale' && (
+              <PriceScale
+                allSelectedValues={allSelectedValues}
+                onChange={onChange}
+                initialMinPrice={initialMinPrice || 0}
+                initialMaxPrice={initialMaxPrice || 0}
+                currencySymbol={currencySymbol}
+              />
+            )}
             {/* </div> */}
           </div>
         )}

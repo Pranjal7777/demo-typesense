@@ -259,7 +259,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
       {(stickyHeaderDetails?.showProductImage || stickyHeaderDetails?.showShareIcon) && (
         <div
           style={{ zIndex: 9999 }}
-          className=" fixed flex justify-between items-center h-[80px] top-[66px]  md:top-[69px] left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] py-2 mx-auto max-w-[1440px]"
+          className=" fixed flex justify-between items-center h-[61px] md:h-[80px] top-[66px]  md:top-[69px] left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] py-2 mx-auto max-w-[1440px]"
         >
           <div className="flex gap-4">
             {stickyHeaderDetails.showProductImage && (

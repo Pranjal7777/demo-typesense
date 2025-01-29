@@ -16,7 +16,7 @@ import Slider from '@/components/ui/slider';
 import BrandSlider from '@/components/sections/brand-slider';
 import { GetServerSidePropsContext, NextPage } from 'next';
 import { CategoriesDataFromServer, GetAllSubCategoriesByCategoryId } from '@/helper/categories-data-from-server';
-import { Category, Product, ResponseGetAllCategoriesPayload, ResponseGetAllGrandParentCategoriesPayload, ResponseGetSubCategoriesByParentIdPayload } from '@/store/types';
+import { Category, Product, ResponseGetAllGrandParentCategoriesPayload, ResponseGetSubCategoriesByParentIdPayload } from '@/store/types';
 import dynamic from 'next/dynamic';
 import cookie from 'cookie';
 import { API, AUTH_URL_V2, BASE_API_URL, HIDE_SELLER_FLOW, STATIC_IMAGE_URL, STRAPI_BASE_API_URL } from '@/config';
@@ -41,6 +41,7 @@ import { IMAGES } from '@/lib/images';
 import CustomHeader from '@/components/ui/custom-header';
 import { useTypesenseCategory } from '@/hooks/useTypesenseCategory';
 import Placeholder from '@/containers/placeholder/placeholder';
+import FilterButtonDropdown from '@/components/ui/filter-button-dropdown';
 
 export type filteredProducts = {
   userName: string;
@@ -143,7 +144,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   const minThreshold = useNewWindowScroll(threshold);
   useEffect(() => {
     if (window.innerWidth < 643) {
-      setThreshold(280);
+      setThreshold(200);
     } else {
       setThreshold(700);
     }
@@ -151,11 +152,11 @@ const Categories: NextPage<CategoriesPageProps> = function ({
 
   useEffect(() => {
     window.addEventListener('resize', () => {
-      setThreshold(window.innerWidth < 643 ? 280 : 700);
+      setThreshold(window.innerWidth < 643 ? 200 : 700);
     });
     return () => {
       window.removeEventListener('resize', () => {
-        setThreshold(window.innerWidth < 643 ? 280 : 700);
+        setThreshold(window.innerWidth < 643 ? 200 : 700);
       });
     };
   }, []);
@@ -239,6 +240,15 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     }
     updateFilters(typesenseFilters);
   };
+  
+  const sortOptions = filterParameters?.data?.filters
+    ?.find((filter: any) => filter.typeCode === 5)
+    ?.data?.map((item: any) => ({ value: item?.value, label: item?.name }));
+
+  const getSortLabel = (value:string)=>{
+    const sortOption = sortOptions?.find((option)=>option.value == value)
+    return sortOption?.label || '';
+  }
 
   const selectedItemsFromFiltersSectionList = () => {
     return Object.entries(selectedItemsFromFilterSection)
@@ -256,7 +266,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
           <div key={key} className="mb-2">
             <SelectedFilterCard
               label={
-                typeof value === 'string' ? value : 'title' in value ? value.title : `$${value.min} - $${value.max}`
+                typeof value === 'string' ? (key == 'sort' ? getSortLabel(value) : value) : 'title' in value ? value.title : `$${value.min} - $${value.max}`
               }
               onDelete={() => removeFilter(key)}
             />
@@ -438,6 +448,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     control: (provided) => ({
       ...provided,
       width: '100%',
+      minWidth: '181px',
       outline: 'none',
       border: theme.theme ? '1px solid #433934' : `1px solid var(--border-tertiary-light)`,
       borderRadius: '0.775rem',
@@ -461,6 +472,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
       fontSize: '14px',
       fontWeight: '400',
       cursor: 'pointer',
+      whiteSpace: 'nowrap',
     }),
     menu: (provided) => ({
       ...provided,
@@ -483,8 +495,19 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     }),
   };
 
-  // const [stickyFilterRef, setStickyFilterRef] = useState<HTMLDivElement | null>(null);
+   const getSortOptionTitle = (value: string) => {
+     return sortOptions?.find((option: any) => option.value === value)?.label;
+   };
 
+  const handleFilterClick = (filterType: keyof filterTypes, value: string) => {
+    const updatedFilters = { ...selectedItemsFromFilterSection };
+    if (value && filterType !== 'address' && filterType !== 'category') {
+      updatedFilters[filterType] = value;
+    }
+    addFiltersToQuery(updatedFilters);
+
+    // updateFilters(typesenseFilters);
+  };
 
   return (
     <>
@@ -531,7 +554,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
           )}
 
           {categoriesLogos.length > 0 && (
-            <Slider className=" border-error pt-9 sm:py-8 lg:py-12 ">
+            <Slider className=" border-error pt-4 sm:py-8 lg:pt-12 lg:pb-8 ">
               <SectionTitle className="mb-4 sm:mb-3">Popular brands</SectionTitle>
               <BrandSlider data={categoriesLogos} />
             </Slider>
@@ -590,44 +613,34 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                   </div>
                 </div>
               )}
-              <div className=" w-full pt-9 sm:py-0 lg:py-0 flex flex-col items-center justify-center">
+              <div className=" w-full pt-3 md:pt-6 lg:pt-6 sm:py-0 lg:py-0 flex flex-col items-center justify-center">
                 <div
                   style={{ zIndex: 1 }}
                   className={`w-full ${
                     minThreshold
                       ? `fixed !z-1 ${
-                          threshold < 300 ? 'top-[118px]' : 'top-[145px]'
+                          threshold < 300 ? 'top-[118px]' : 'top-[69px]'
                         } left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-5 mx-auto max-w-[1440px]`
                       : ''
                   }`}
                 >
-                  {/* <div
-                  ref={setStickyFilterRef}
-                  style={{ zIndex: 1 }}
-                  className={`w-full ${
-                    minThreshold
-                      ? `fixed !z-1 ${
-                          threshold < 700 ? 'top-[175px]' : 'top-[145px]'
-                        } left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-5 mx-auto max-w-[1440px]`
-                      : ''
-                  }`}
-                > */}
                   <div className=" flex  w-full justify-between filterselectContainer">
                     <SectionTitle>All Products</SectionTitle>
-                    <div className="ml-auto mr-[24px] relative inline-flex items-center gap-2">
-                      <Select
+                    <div className="ml-auto mr-[24px] relative  items-center gap-2 hidden sm:inline-flex">
+                      {/* <Select
                         isSearchable={false}
                         className="w-fit min-w-[140px]  mobile:text-sm text-[14px] overflow-ellipsis"
                         onChange={(option) => {
                           updateFilters({ sort: option?.value });
                         }}
                         autoFocus={false}
-                        options={[
-                          { value: 'newest', label: 'Newest First' },
-                          { value: 'oldest', label: 'Oldest First' },
-                          { value: 'price_asc', label: 'Low to High' },
-                          { value: 'price_desc', label: 'High to Low' },
-                        ]}
+                        // options={[
+                        //   { value: 'newest', label: 'Newest First' },
+                        //   { value: 'oldest', label: 'Oldest First' },
+                        //   { value: 'price_asc', label: 'Low to High' },
+                        //   { value: 'price_desc', label: 'High to Low' },
+                        // ]}
+                        options={sortOptions}
                         defaultValue={{ value: 'newest', label: 'Newest First' }}
                         // value={{ value: 'newest', label: 'Newest First' }}
                         formatOptionLabel={({ label }, { context }) => <span className="pl-2">{label}</span>}
@@ -641,6 +654,20 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                             primary: theme ? 'var(--brand-color)' : 'var(--brand-color-hover)',
                           },
                         })}
+                      /> */}
+                      <FilterButtonDropdown
+                        containerClassName="hidden lg:block"
+                        title={`Sort by ${
+                          selectedItemsFromFilterSection.sort
+                            ? `: ${getSortOptionTitle(selectedItemsFromFilterSection.sort)}`
+                            : ''
+                        }`}
+                        options={sortOptions || []}
+                        allSelectedValues={selectedItemsFromFilterSection.sort || ''}
+                        type="radio"
+                        onChange={(selected) => {
+                          handleFilterClick('sort', selected as string);
+                        }}
                       />
                     </div>
                     <button className="flex cursor-pointer justify-between items-center" onClick={handleFilterDrawer}>
@@ -663,11 +690,11 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                     </button>
                   </div>
                   {hasActiveFilters() && (
-                    <div className="border-2 boreder-error flex gap-10 items-center w-full flex-wrap mt-5 mobile:overflow-x-scroll h-8 md:h-4 border-none mb-2">
-                      <div className="flex gap-3 overflow-x-auto scrollbar-hide">
+                    // <div className="border-2 boreder-error flex gap-10 items-center w-full flex-wrap mt-5 mobile:overflow-x-scroll h-8 md:h-4 border-none mb-2">
+                      <div className="flex gap-x-3 mt-3 overflow-x-auto  scrollbar-hide">
                         {selectedItemsFromFiltersSectionList()}
                       </div>
-                    </div>
+                    // {/* </div> */}
                   )}
                 </div>
                 <div className="mt-10 w-full mobile:mt-6">

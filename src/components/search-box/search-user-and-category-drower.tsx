@@ -59,7 +59,7 @@ export type Props = {
   handleGetLocationHelper: () => Promise<boolean>;
   handleRemoveLocationHelper: () => void;
   handleOnChange: (_e: ChangeEvent<HTMLInputElement>) => void;
-  handleSearchEnterKeyDown:(event: KeyboardEvent<HTMLInputElement>) => Promise<void>;
+  handleSearchEnterKeyDown?:(event: KeyboardEvent<HTMLInputElement>) => Promise<void>;
   selectItemOrUserToSearch?: (_searchText: string) => void;
   address: string;
   placesService: {

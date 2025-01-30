@@ -615,8 +615,8 @@ const Categories: NextPage<CategoriesPageProps> = function ({
               )}
               <div className=" w-full pt-3 md:pt-6 lg:pt-6 sm:py-0 lg:py-0 flex flex-col items-center justify-center">
                 <div
-                  style={{ zIndex: 1 }}
-                  className={`w-full ${
+                  // style={{ zIndex: 1 }}
+                  className={`w-full z-[1] ${
                     minThreshold
                       ? `fixed !z-1 ${
                           threshold < 300 ? 'top-[118px]' : 'top-[69px]'
@@ -697,7 +697,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                     // {/* </div> */}
                   )}
                 </div>
-                <div className="mt-10 w-full mobile:mt-6">
+                <div className="mt-10 w-full mobile:mt-6 md:mb-8">
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-x-3 gap-y-4 md:gap-x-2 md:gap-y-7">
                     {errorTypesense ? (
                       <div className="col-span-full">

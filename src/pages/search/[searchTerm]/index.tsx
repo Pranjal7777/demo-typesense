@@ -554,9 +554,9 @@ const Categories: NextPage<CategoriesPageProps> = function ({
         {/* <div className="w-full "> */}
         {/* <div className=" w-full flex flex-col justify-center"> */}
         <div
-          style={{ zIndex: 1 }}
-          className={`w-full ${
-            minThreshold ? `fixed pt-2 !z-1 ${threshold < 80 ? 'top-[122px]' : 'top-[69px]'} left-0 right-0 ` : 'pt-3'
+          // style={{ zIndex: 1 }}
+          className={`w-full z-[1] ${
+            minThreshold ? `fixed pt-0 !z-1 ${threshold < 80 ? 'top-[122px]' : 'top-[69px] pt-3'} left-0 right-0 ` : 'pt-3'
           } bg-bg-secondary-light dark:bg-bg-primary-dark  px-4 sm:px-[64px] pb-5 mx-auto max-w-[1440px]`}
         >
           <div
@@ -657,12 +657,12 @@ const Categories: NextPage<CategoriesPageProps> = function ({
           </div>
           <p
             onClick={handleClearAll}
-            className=" sm:hidden py-3  font-medium text-nowrap text-brand-color cursor-pointer"
+            className=" sm:hidden py-2  font-medium text-nowrap text-brand-color cursor-pointer"
           >
             Clear all
           </p>
         </div>
-        <div className={`mt-10 custom-container mx-auto sm:px-16 mobile:px-4 w-full mobile:mt-6`}>
+        <div className={`mt-10 custom-container mx-auto sm:px-16 mobile:px-4 w-full mobile:mt-2`}>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-x-3 gap-y-4 md:gap-x-2 md:gap-y-7 mb-5">
             {errorTypesense ? (
               <div className="col-span-full">

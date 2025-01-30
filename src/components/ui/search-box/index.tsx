@@ -306,8 +306,10 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
         await selectItemOrUserToSearch(formData.search);
         if (selectedOption !== 'Users') {
           trigger(formData.search);
+          
         }
       }
+      setIsOpen(false);
     }
   };
 
@@ -510,9 +512,9 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
 
       <div
         className={appClsx(
-          `mobile:order-3 border-error text-text-primary-light dark:text-text-primary-dark z-[1] w-full  flex mobile:items-center flex-col sticky top-[69px] ${
+          `mobile:order-3 text-text-primary-light dark:text-text-primary-dark z-[1] w-full  flex mobile:items-center flex-col sticky top-[69px] ${
             stickyHeaderWithSearchBox &&
-            'dark:border-b  dark:border-b-border-tertiary-dark flex items-center min-w-full bg-bg-secondary-light dark:bg-bg-primary-dark !fixed top-[69px] px-16 '
+            ' dark:border-b-border-tertiary-dark flex items-center min-w-full bg-bg-secondary-light dark:bg-bg-primary-dark !fixed top-[69px] px-16 '
           } ${
             minThreshold
               ? '!fixed top-[69px] sm:px-[64px] w-full bg-bg-secondary-light dark:bg-bg-primary-dark'

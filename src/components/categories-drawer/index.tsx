@@ -65,16 +65,21 @@ const CategoriesDrawer: React.FC<CategoriesDrawerProps> = ({ isSearchCategoriesD
     setSearchField('');
   };
 
+  const onCategorySelectChange = (id:string, title: string)=>{
+    categoryRoute(id, title);
+    changMenu()
+  }
+
   const renderCategories = (data: any): ReactNode => {
     return data.map((item: any, index: any) => (
       <div
         key={index}
         tabIndex={0}
         role="button"
-        onClick={() => categoryRoute(item.id, item.title)}
-        onKeyDown={(e) => keyDownHandler(e, () => categoryRoute(item.id, item.title))}
+        onClick={() => onCategorySelectChange(item.id, item.title)}
+        onKeyDown={(e) => keyDownHandler(e, () => onCategorySelectChange(item.id, item.title))}
       >
-        <CategoriesCard data={item} changMenu={changMenu}/>
+        <CategoriesCard data={item} changMenu={changMenu} />
       </div>
     ));
   };

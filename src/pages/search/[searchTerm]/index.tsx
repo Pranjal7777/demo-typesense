@@ -8,48 +8,45 @@ import { filterTypes } from '@/components/filter-drawer';
 const FilterDrawer = dynamic(() => import('@/components/filter-drawer'), {
   ssr: false,
 });
-import { useEffect, useMemo, useRef, useState } from 'react';
-import SelectedFilterCard from '@/components/selected-filter-card';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Skeleton from '@/components/ui/product-card-skeleton';
 import { useRouter } from 'next/router';
 import Slider from '@/components/ui/slider';
-import BrandSlider from '@/components/sections/brand-slider';
 import { GetServerSidePropsContext, NextPage } from 'next';
 import { CategoriesDataFromServer, GetAllSubCategoriesByCategoryId } from '@/helper/categories-data-from-server';
 import {
   Category,
   Product,
-  ResponseGetAllCategoriesPayload,
   ResponseGetAllGrandParentCategoriesPayload,
-  ResponseGetSubCategoriesByParentIdPayload,
 } from '@/store/types';
 import dynamic from 'next/dynamic';
 import cookie from 'cookie';
-import { API, AUTH_URL_V2, BASE_API_URL, HIDE_SELLER_FLOW, STATIC_IMAGE_URL, STRAPI_BASE_API_URL } from '@/config';
-import { GET_SUB_CATEGORIES_BY_ID_URL, STRAPI_CATEGORIES_PLP } from '@/api/endpoints';
+import {HIDE_SELLER_FLOW, STRAPI_BASE_API_URL } from '@/config';
+import { STRAPI_CATEGORIES_PLP } from '@/api/endpoints';
 import CategorySlider from '@/components/sections/category-slider';
 import { RootState } from '@/store/store';
 import { useAppSelector } from '@/store/utils/hooks';
-import AboutUs from '@/components/about-us';
-import Accordion from '@/components/sections/accordion-card';
-import InfoSection from '@/components/sections/info-section';
-import { convertRTKQueryErrorToString } from '@/helper/convert-rtk-query-error-to-string';
 import { useTypesenseSearch } from '@/hooks/useTypesenseSearchPage';
 import { useSearchParams } from 'next/navigation';
-import Select from 'react-select';
 import { useTheme } from '@/hooks/theme';
-import { StylesConfig } from 'react-select';
-import PageHeaderWithBreadcrumb from '@/components/ui/page-header-with-breadcrumb';
 import Breadcrumb from '@/components/ui/breadcrumb';
 import { getGuestTokenFromServer } from '@/helper/get-guest-token-from-server';
-import { categoriesApi } from '@/store/api-slices/categories-api';
 import { useNewWindowScroll } from '@/hooks/new-use-window-scroll';
-import { IMAGES } from '@/lib/images';
 import CustomHeader from '@/components/ui/custom-header';
 import Placeholder from '@/containers/placeholder/placeholder';
-import FilterButtonDropdown from '@/components/ui/filter-button-dropdown';
-import { useSelector } from 'react-redux';
-import CategoriesDropDown from '@/components/ui/filter-button-dropdown/categoriesDropDown';
+const AboutUs = dynamic(() => import('@/components/about-us'), {
+  ssr: false,
+});
+import Accordion from '@/components/sections/accordion-card';
+const InfoSection = dynamic(() => import('@/components/sections/info-section'), {
+  ssr: false,
+});
+const FilterButtonDropdown = dynamic(() => import('@/components/ui/filter-button-dropdown'), {
+  ssr: false,
+});
+const CategoriesDropDown = dynamic(() => import('@/components/ui/filter-button-dropdown/categoriesDropDown'), {
+  ssr: false,
+});
 
 export type filteredProducts = {
   userName: string;
@@ -143,8 +140,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   const { searchTerm: categoryNameId, selectedCategory } = router.query;
   const categoryNameIdArray = Array.isArray(categoryNameId) ? categoryNameId : categoryNameId?.split('-');
   const id = categoryNameIdArray?.[categoryNameIdArray.length - 1];
-  const categoryName = categoryNameIdArray?.slice(0, -1).join('-');
-
   const searchParams = useSearchParams();
 
   const initialFilters = {
@@ -287,32 +282,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({
       typesenseFilters.type = '';
     }
     updateFilters(typesenseFilters);
-  };
-
-  const selectedItemsFromFiltersSectionList = () => {
-    return Object.entries(selectedItemsFromFilterSection)
-      .map(([key, value]) => {
-        // Skip rendering if it's the distance filter
-        if (key === 'distance' || key === 'country' || key === 'latitude' || key === 'longitude') return null;
-        if (!value) return null;
-        if (typeof value === 'object') {
-          if ('title' in value && (!value.title || value.title === '')) return null;
-          if ('min' in value && !value.min) return null;
-        }
-        if (typeof value === 'string' && value === '') return null;
-
-        return (
-          <div key={key} className="mb-2">
-            <SelectedFilterCard
-              label={
-                typeof value === 'string' ? value : 'title' in value ? value.title : `$${value.min} - $${value.max}`
-              }
-              onDelete={() => removeFilter(key)}
-            />
-          </div>
-        );
-      })
-      .filter(Boolean);
   };
   const handleFilterDrawer = () => {
     setFilterDrawer(true);
@@ -505,7 +474,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     );
   };
 
-  const handleClearAll = () => {
+  const handleClearAll = useCallback(() => {
     const { query } = router;
 
     if (Object.keys(query).length > 0 && query.searchTerm) {
@@ -517,10 +486,14 @@ const Categories: NextPage<CategoriesPageProps> = function ({
         { shallow: true }
       );
     }
-  };
+  }, [router]);
 
   return (
     <>
+      <CustomHeader
+        title={` Explore the best products for "${searchText}" term in kwibal`}
+        description={`Explore the "${searchText}" term related products on kwibal. Discover a wide range of products designed to meet your needs.`}
+      />
       <FilterDrawer
         filtersDrawer={filtersDrawer}
         selectedItemsFromFilterSection={selectedItemsFromFilterSection}
@@ -556,7 +529,9 @@ const Categories: NextPage<CategoriesPageProps> = function ({
         <div
           // style={{ zIndex: 1 }}
           className={`w-full z-[1] ${
-            minThreshold ? `fixed pt-0 !z-1 ${threshold < 80 ? 'top-[122px]' : 'top-[69px] pt-3'} left-0 right-0 ` : 'pt-3'
+            minThreshold
+              ? `fixed pt-0 !z-1 ${threshold < 80 ? 'top-[122px]' : 'top-[69px] pt-3'} left-0 right-0 `
+              : 'pt-3'
           } bg-bg-secondary-light dark:bg-bg-primary-dark  px-4 sm:px-[64px] pb-5 mx-auto max-w-[1440px]`}
         >
           <div

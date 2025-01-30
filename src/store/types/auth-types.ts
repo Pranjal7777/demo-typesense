@@ -174,33 +174,39 @@ export  interface ResponseSetUserDetailsDispatchPayload{
     user: User,
 }
 
-export interface User{
-    accountId:string,
-    accountType:string,
-    accountLegalName:string,
-    country:string,
-    countryCode:string,
-    defaultCurrency:string,
-    email:string,
-    fcmTopic:string,
-    firstName:string,
-    fullName:string,
-    googleId:string,
-    isProfileComplete:boolean,
-    lastName:string,
-    location:{lat:number,lon:number},
-    mqttTopic:string,
-    noOfAds:string,
-    noOfVideos:string,
-    phoneNumber:string,
-    profileLink:string,
-    profilePic:string,
-    referralCode:string,
-    subscription:{
-      isSubscribed:boolean,
-    },
-    username:string,
-    _id:string,
+export interface User {
+  accountId: string;
+  accountType: string;
+  accountLegalName: string;
+  country: string;
+  countryCode: string;
+  defaultCurrency: string;
+  email: string;
+  fcmTopic: string;
+  firstName: string;
+  fullName: string;
+  googleId: string;
+  isProfileComplete: boolean;
+  lastName: string;
+  location: { lat: number; lon: number };
+  mqttTopic: string;
+  noOfAds: string;
+  noOfVideos: string;
+  phoneNumber: string;
+  profileLink: string;
+  profilePic: string;
+  referralCode: string;
+  subscription: {
+    isSubscribed: boolean;
+  };
+  username: string;
+  _id: string;
+  isometrikUserId: string;
+  isometrikResp: {
+    userToken: string;
+    userId: string;
+    msg: string;
+  };
 }
 
 

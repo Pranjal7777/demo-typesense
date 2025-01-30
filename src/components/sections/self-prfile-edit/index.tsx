@@ -210,6 +210,10 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
           username: editProfileFormData.username,
         };
         const updateUsernameMsg = await updateUserName(requestPayload);
+        setProfileData((prevState) => ({
+          ...prevState,
+          username: editProfileFormData.username
+        }));
         setCongratulationMsg(updateUsernameMsg?.data?.message || '');
       } catch (error) {
         const errorData = error as { data: { message: string } };

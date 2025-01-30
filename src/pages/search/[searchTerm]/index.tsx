@@ -8,48 +8,45 @@ import { filterTypes } from '@/components/filter-drawer';
 const FilterDrawer = dynamic(() => import('@/components/filter-drawer'), {
   ssr: false,
 });
-import { useEffect, useMemo, useRef, useState } from 'react';
-import SelectedFilterCard from '@/components/selected-filter-card';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Skeleton from '@/components/ui/product-card-skeleton';
 import { useRouter } from 'next/router';
 import Slider from '@/components/ui/slider';
-import BrandSlider from '@/components/sections/brand-slider';
 import { GetServerSidePropsContext, NextPage } from 'next';
 import { CategoriesDataFromServer, GetAllSubCategoriesByCategoryId } from '@/helper/categories-data-from-server';
 import {
   Category,
   Product,
-  ResponseGetAllCategoriesPayload,
   ResponseGetAllGrandParentCategoriesPayload,
-  ResponseGetSubCategoriesByParentIdPayload,
 } from '@/store/types';
 import dynamic from 'next/dynamic';
 import cookie from 'cookie';
-import { API, AUTH_URL_V2, BASE_API_URL, HIDE_SELLER_FLOW, STATIC_IMAGE_URL, STRAPI_BASE_API_URL } from '@/config';
-import { GET_SUB_CATEGORIES_BY_ID_URL, STRAPI_CATEGORIES_PLP } from '@/api/endpoints';
+import {HIDE_SELLER_FLOW, STRAPI_BASE_API_URL } from '@/config';
+import { STRAPI_CATEGORIES_PLP } from '@/api/endpoints';
 import CategorySlider from '@/components/sections/category-slider';
 import { RootState } from '@/store/store';
 import { useAppSelector } from '@/store/utils/hooks';
-import AboutUs from '@/components/about-us';
-import Accordion from '@/components/sections/accordion-card';
-import InfoSection from '@/components/sections/info-section';
-import { convertRTKQueryErrorToString } from '@/helper/convert-rtk-query-error-to-string';
 import { useTypesenseSearch } from '@/hooks/useTypesenseSearchPage';
 import { useSearchParams } from 'next/navigation';
-import Select from 'react-select';
 import { useTheme } from '@/hooks/theme';
-import { StylesConfig } from 'react-select';
-import PageHeaderWithBreadcrumb from '@/components/ui/page-header-with-breadcrumb';
 import Breadcrumb from '@/components/ui/breadcrumb';
 import { getGuestTokenFromServer } from '@/helper/get-guest-token-from-server';
-import { categoriesApi } from '@/store/api-slices/categories-api';
 import { useNewWindowScroll } from '@/hooks/new-use-window-scroll';
-import { IMAGES } from '@/lib/images';
 import CustomHeader from '@/components/ui/custom-header';
 import Placeholder from '@/containers/placeholder/placeholder';
-import FilterButtonDropdown from '@/components/ui/filter-button-dropdown';
-import { useSelector } from 'react-redux';
-import CategoriesDropDown from '@/components/ui/filter-button-dropdown/categoriesDropDown';
+const AboutUs = dynamic(() => import('@/components/about-us'), {
+  ssr: false,
+});
+import Accordion from '@/components/sections/accordion-card';
+const InfoSection = dynamic(() => import('@/components/sections/info-section'), {
+  ssr: false,
+});
+const FilterButtonDropdown = dynamic(() => import('@/components/ui/filter-button-dropdown'), {
+  ssr: false,
+});
+const CategoriesDropDown = dynamic(() => import('@/components/ui/filter-button-dropdown/categoriesDropDown'), {
+  ssr: false,
+});
 
 export type filteredProducts = {
   userName: string;
@@ -118,8 +115,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   const { myLocation } = useAppSelector((state: RootState) => state.auth);
   const { data: filterParameters, error: filterParametersError } = productsApi.useGetFilterParametersQuery();
   const theme = useTheme();
-  console.log(filterParameters?.data?.filters, 'mirh filterParameters');
-
   const conditionOptions = filterParameters?.data?.filters
     .find((filter: any) => filter.typeCode === 20)
     ?.data?.map((item: any) => ({ value: item?.value, label: item?.name }));
@@ -145,8 +140,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   const { searchTerm: categoryNameId, selectedCategory } = router.query;
   const categoryNameIdArray = Array.isArray(categoryNameId) ? categoryNameId : categoryNameId?.split('-');
   const id = categoryNameIdArray?.[categoryNameIdArray.length - 1];
-  const categoryName = categoryNameIdArray?.slice(0, -1).join('-');
-
   const searchParams = useSearchParams();
 
   const initialFilters = {
@@ -168,9 +161,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   const [filtersDrawer, setFilterDrawer] = useState(false);
   const [selectedItemsFromFilterSection, setSelectedItemsFromFilterSection] = useState<filterTypes>(initialFilters);
 
-  console.log(selectedItemsFromFilterSection, 'mirhf selectedItemsFromFilterSection');
-
-  const [threshold, setThreshold] = useState(60);
+  const [threshold, setThreshold] = useState(80);
   const minThreshold = useNewWindowScroll(threshold);
 
   //  const handleFilterClick = (filterType: keyof filterTypes, value: string) => {
@@ -184,17 +175,17 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     if (window.innerWidth < 643) {
       setThreshold(50);
     } else {
-      setThreshold(60);
+      setThreshold(80);
     }
   }, []);
 
   useEffect(() => {
     window.addEventListener('resize', () => {
-      setThreshold(window.innerWidth < 643 ? 50 : 60);
+      setThreshold(window.innerWidth < 643 ? 50 : 80);
     });
     return () => {
       window.removeEventListener('resize', () => {
-        setThreshold(window.innerWidth < 643 ? 50 : 60);
+        setThreshold(window.innerWidth < 643 ? 50 : 80);
       });
     };
   }, []);
@@ -249,18 +240,15 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   };
 
   const handleFilterClick = (filterType: keyof filterTypes, value: string) => {
-    console.log(filterType, value, 'filterType, value');
     const updatedFilters = { ...selectedItemsFromFilterSection };
     if (value && filterType !== 'address' && filterType !== 'category') {
       updatedFilters[filterType] = value;
     }
     addFiltersToQuery(updatedFilters);
-
     // updateFilters(typesenseFilters);
   };
 
   const handleCategoryClick = (category: { categoryId: string; categoryTitle: string }) => {
-    console.log(category, 'onCategoryClick category');
     const newFilters = { ...selectedItemsFromFilterSection };
     newFilters.category = { title: category.categoryTitle, _id: category.categoryId };
     setSelectedItemsFromFilterSection(newFilters);
@@ -269,10 +257,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     // handleFilterClick('categoryTitle', categoryTitle);
   };
 
-  console.log(router.pathname, 'router pathname');
-
   const removeFilter = (key: string) => {
-    console.log(key, 'key remove');
     const updatedFeaturedFilters = { ...selectedItemsFromFilterSection };
     if (key === 'category') {
       updatedFeaturedFilters.category = { title: '', _id: '' };
@@ -297,32 +282,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({
       typesenseFilters.type = '';
     }
     updateFilters(typesenseFilters);
-  };
-
-  const selectedItemsFromFiltersSectionList = () => {
-    return Object.entries(selectedItemsFromFilterSection)
-      .map(([key, value]) => {
-        // Skip rendering if it's the distance filter
-        if (key === 'distance' || key === 'country' || key === 'latitude' || key === 'longitude') return null;
-        if (!value) return null;
-        if (typeof value === 'object') {
-          if ('title' in value && (!value.title || value.title === '')) return null;
-          if ('min' in value && !value.min) return null;
-        }
-        if (typeof value === 'string' && value === '') return null;
-
-        return (
-          <div key={key} className="mb-2">
-            <SelectedFilterCard
-              label={
-                typeof value === 'string' ? value : 'title' in value ? value.title : `$${value.min} - $${value.max}`
-              }
-              onDelete={() => removeFilter(key)}
-            />
-          </div>
-        );
-      })
-      .filter(Boolean);
   };
   const handleFilterDrawer = () => {
     setFilterDrawer(true);
@@ -408,7 +367,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     }
   }, [bannersAndRecommendedProducts]);
 
-  useEffect(() => {
+  useEffect(() => {    
     const updatedFilters = {
       type: getQueryParam(router.query.type),
       condition: getQueryParam(router.query.condition),
@@ -427,11 +386,17 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     setSelectedItemsFromFilterSection(updatedFilters);
   }, [router.query]);
 
+  const getSearchTermFromQuery = (query: string) => {
+    const parts = query.split('-');
+    if (parts.length > 1) {
+      return parts.slice(0, -1).join(' ');
+    }
+    return parts.join('');
+  };
+
   const { searchTerm: routeSearchTerm } = router.query;
-  // Get the actual search term from the URL
-  const searchText = Array.isArray(routeSearchTerm)
-    ? routeSearchTerm[0].split('-').slice(0, -1).join(' ') // Remove the ID part and join with spaces
-    : routeSearchTerm?.split('-').slice(0, -1).join(' ') || '';
+
+  const searchText = Array.isArray(routeSearchTerm) ? getSearchTermFromQuery(routeSearchTerm[0]) : getSearchTermFromQuery(routeSearchTerm || '');
 
   const {
     products,
@@ -447,8 +412,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     searchTerm: searchText,
     country: selectedItemsFromFilterSection.country,
   });
-
-  console.log(totalCount, 'products-search');
 
   useEffect(() => {
     resetFilters();
@@ -511,7 +474,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
     );
   };
 
-  const handleClearAll = () => {
+  const handleClearAll = useCallback(() => {
     const { query } = router;
 
     if (Object.keys(query).length > 0 && query.searchTerm) {
@@ -523,11 +486,14 @@ const Categories: NextPage<CategoriesPageProps> = function ({
         { shallow: true }
       );
     }
-  };
-
+  }, [router]);
 
   return (
     <>
+      <CustomHeader
+        title={` Explore the best products for "${searchText}" term in kwibal`}
+        description={`Explore the "${searchText}" term related products on kwibal. Discover a wide range of products designed to meet your needs.`}
+      />
       <FilterDrawer
         filtersDrawer={filtersDrawer}
         selectedItemsFromFilterSection={selectedItemsFromFilterSection}
@@ -550,21 +516,23 @@ const Categories: NextPage<CategoriesPageProps> = function ({
         <div className="w-full custom-container mx-auto sm:px-16 mobile:px-4">
           <Breadcrumb
             isLinkDisable={true}
-            className="!pl-0 md:!pl-0 !my-2 md:my-3"
-            steps={[{ name: 'Home', link: '/' }, { name: `Search results for "${categoryName?.replace(/-/g, ' ')}"` }]}
+            className="!pl-0 md:!pl-0 !mb-3 !mt-2 md:my-3"
+            steps={[{ name: 'Home', link: '/' }, { name: `Search results for "${searchText}"` }]}
           ></Breadcrumb>
           <h1 className=" text-xl md:text-2xl font-semibold text-text-primary-light dark:text-text-primary-dark">
-            {totalCount ? totalCount : 'No'} search results for "{categoryName?.replace(/-/g, ' ')}"
+            {totalCount ? totalCount : 'No'} search results for "{searchText}"
           </h1>
         </div>
         {/* <div className={`mobile:pb-9 w-full `}> */}
         {/* <div className="w-full "> */}
         {/* <div className=" w-full flex flex-col justify-center"> */}
         <div
-          style={{ zIndex: 1 }}
-          className={`w-full ${
-            minThreshold ? `fixed pt-2 !z-1 ${threshold < 60 ? 'top-[122px]' : 'top-[140px]'} left-0 right-0 ` : 'pt-5'
-          } bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pb-5 mx-auto max-w-[1440px]`}
+          // style={{ zIndex: 1 }}
+          className={`w-full z-[1] ${
+            minThreshold
+              ? `fixed pt-0 !z-1 ${threshold < 80 ? 'top-[122px]' : 'top-[69px] pt-3'} left-0 right-0 `
+              : 'pt-3'
+          } bg-bg-secondary-light dark:bg-bg-primary-dark  px-4 sm:px-[64px] pb-5 mx-auto max-w-[1440px]`}
         >
           <div
             className={`flex  w-full gap-4 justify-end overflow-visible  ${
@@ -597,7 +565,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                   onChange={(selected) => {
                     handleFilterClick('condition', selected as string);
                     // updateFilters({ sort: selected as string });
-                    console.log(selected, 'selected');
                   }}
                 />
 
@@ -610,7 +577,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                       : ''
                   }`}
                   options={sortOptions || []}
-                  allSelectedValues={selectedItemsFromFilterSection.sort || ''}
+                  allSelectedValues={selectedItemsFromFilterSection.sort ? selectedItemsFromFilterSection.sort : ''}
                   type="radio"
                   onChange={(selected) => {
                     handleFilterClick('sort', selected as string);
@@ -628,7 +595,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                   initialMaxPrice={initialMaxPrice}
                   allSelectedValues={(selectedItemsFromFilterSection.price as string) || ''}
                   onChange={(selected) => {
-                    console.log(selected, 'selected');
                     handleFilterClick('price', selected as string);
                   }}
                 />
@@ -666,12 +632,12 @@ const Categories: NextPage<CategoriesPageProps> = function ({
           </div>
           <p
             onClick={handleClearAll}
-            className=" sm:hidden py-3  font-medium text-nowrap text-brand-color cursor-pointer"
+            className=" sm:hidden py-2  font-medium text-nowrap text-brand-color cursor-pointer"
           >
             Clear all
           </p>
         </div>
-        <div className={`mt-10 custom-container mx-auto sm:px-16 mobile:px-4 w-full mobile:mt-6`}>
+        <div className={`mt-10 custom-container mx-auto sm:px-16 mobile:px-4 w-full mobile:mt-2`}>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-x-3 gap-y-4 md:gap-x-2 md:gap-y-7 mb-5">
             {errorTypesense ? (
               <div className="col-span-full">

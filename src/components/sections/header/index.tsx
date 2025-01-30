@@ -109,17 +109,19 @@ const showCategoriesInMobile = useMemo(() => {
 }, [router.pathname]);
 
  useEffect(() => {
-   if (window.innerWidth > 1144) {
-     setShowItems(6);
-   } else if (window.innerWidth > 963) {
-     setShowItems(3);
-   } else if (window.innerWidth > 831) {
-     setShowItems(2);
-   } else if (window.innerWidth > 634) {
-     setShowItems(1);
-   } else {
-     setShowItems(0);
-   }
+  if (window.innerWidth > 1320) {
+    setShowItems(6);
+  } else if (window.innerWidth > 1144) {
+    setShowItems(5);
+  } else if (window.innerWidth > 963) {
+    setShowItems(3);
+  } else if (window.innerWidth > 831) {
+    setShowItems(2);
+  } else if (window.innerWidth > 634) {
+    setShowItems(1);
+  } else {
+    setShowItems(0);
+  }
  }, []);
 
   ///// profile drop down data start

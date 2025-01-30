@@ -59,6 +59,7 @@ export type Props = {
   handleGetLocationHelper: () => Promise<boolean>;
   handleRemoveLocationHelper: () => void;
   handleOnChange: (_e: ChangeEvent<HTMLInputElement>) => void;
+  handleSearchEnterKeyDown:(event: KeyboardEvent<HTMLInputElement>) => Promise<void>;
   selectItemOrUserToSearch?: (_searchText: string) => void;
   address: string;
   placesService: {
@@ -120,6 +121,7 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
   searchClient,
   setSelectedOption,
   selectItemOrUserToSearch,
+  handleSearchEnterKeyDown,
 }) => {
   // please do not remove this -> this code is for translation of this page
   // const { t } = useTranslation('common');
@@ -137,11 +139,11 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
   //   handleRemoveLocationHelper();
   //   setIsLocationTextBoxFocused(false);
   // };
-const [isRecentSearchOpen, setIsRecentSearchOpen] = useState(false);
-    const { data: recentSearchData, isFetching: isRecentSearchDataFetching } = productsApi.useGetRecentSearchDataQuery(
-      undefined,
-      { skip: !isRecentSearchOpen }
-    );
+  const [isRecentSearchOpen, setIsRecentSearchOpen] = useState(false);
+  const { data: recentSearchData, isFetching: isRecentSearchDataFetching } = productsApi.useGetRecentSearchDataQuery(
+    undefined,
+    { skip: !isRecentSearchOpen }
+  );
 
   const removeUserAndItem = () => {
     setFormData((prevState) => ({
@@ -207,13 +209,22 @@ const [isRecentSearchOpen, setIsRecentSearchOpen] = useState(false);
     }));
   }, [myLocation, myLocation?.address]);
 
-   const handleSearchEnterKeyDown = async (event: KeyboardEvent<HTMLInputElement>) => {
-     if (event.key === 'Enter') {
-       if (formData.search !== '') {
-         await selectItemOrUserToSearch?.(formData.search);       
-       }
-     }
-   };
+  //  const handleSearchEnterKeyDown = async (event: KeyboardEvent<HTMLInputElement>) => {
+  //   //  if (event.key === 'Enter') {
+  //   //    if (formData.search !== '') {
+  //   //      await selectItemOrUserToSearch?.(formData.search);
+  //   //    }
+  //   //  }
+  //    if (event.key === 'Enter') {
+  //      if (formData.search !== '') {
+  //        await selectItemOrUserToSearch?.(formData.search);
+  //        if (selectedOption !== 'Users') {
+  //          trigger?.(formData.search);
+  //        }
+  //      }
+  //      setIsOpen(false);
+  //    }
+  //  };
 
   return (
     <div

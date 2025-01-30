@@ -301,13 +301,15 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
   // recent search api end --------------------------
   const handleSearchEnterKeyDown = async (event: KeyboardEvent<HTMLInputElement>) => {
     // if (event.key === 'Enter' && hasValidSearchResults) {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' || event.key === 'Done' || event.key === 'Go') {
       if (formData.search !== '') {
         await selectItemOrUserToSearch(formData.search);
         if (selectedOption !== 'Users') {
           trigger(formData.search);
+          
         }
       }
+      setIsOpen(false);
     }
   };
 
@@ -510,9 +512,9 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
 
       <div
         className={appClsx(
-          `mobile:order-3 border-error text-text-primary-light dark:text-text-primary-dark z-[1] w-full  flex mobile:items-center flex-col sticky top-[69px] ${
+          `mobile:order-3 text-text-primary-light dark:text-text-primary-dark z-[1] w-full  flex mobile:items-center flex-col sticky top-[69px] ${
             stickyHeaderWithSearchBox &&
-            'dark:border-b  dark:border-b-border-tertiary-dark flex items-center min-w-full bg-bg-secondary-light dark:bg-bg-primary-dark !fixed top-[69px] px-16 '
+            ' dark:border-b-border-tertiary-dark flex items-center min-w-full bg-bg-secondary-light dark:bg-bg-primary-dark !fixed top-[69px] px-16 '
           } ${
             minThreshold
               ? '!fixed top-[69px] sm:px-[64px] w-full bg-bg-secondary-light dark:bg-bg-primary-dark'
@@ -855,7 +857,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
               </>
             ) : null} */}
 
-            {isUserLogin && isRecentSearchOpen === true && !formData.search ? (
+            {isRecentSearchOpen === true && !formData.search ? (
               <div
                 className="absolute top-[48px] z-50 shadow-2xl bg-bg-secondary-light dark:bg-bg-secondary-dark left-0 right-0 rounded-b-md max-h-[263px] no-scrollbar"
                 style={{
@@ -1034,10 +1036,10 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
         <div
           className={appClsx(
             ` mobile:order-3 sm:hidden ${
-              stickyHeaderWithSearchBox && '!fixed top-[69px] bg-bg-secondary-light dark:bg-bg-secondary-dark'
-            }  z-50 sticky top-[69px] ${
+              stickyHeaderWithSearchBox && '!fixed top-[68px] bg-bg-secondary-light dark:bg-bg-secondary-dark'
+            }  z-50 sticky top-[68px] ${
               minThreshold
-                ? '!fixed top-[69px] mobile:px-4 w-full bg-bg-secondary-light dark:bg-bg-primary-dark'
+                ? '!fixed top-[68px] mobile:px-4 w-full bg-bg-secondary-light dark:bg-bg-primary-dark'
                 : 'max-w-[1083px] mobile:px-4'
             } mobile:inline-block mx-5 relative w-full max-w-[638px] `,
             mobileContainerClassName
@@ -1184,6 +1186,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
         searchClient={searchClient}
         handleInstantSearchOnChange={handleInstantSearchOnChange}
         setSelectedOption={setSelectedOption}
+        handleSearchEnterKeyDown={handleSearchEnterKeyDown}
       />
     </>
   );

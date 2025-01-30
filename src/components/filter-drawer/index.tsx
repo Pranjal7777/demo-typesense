@@ -440,6 +440,29 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
       setMaxPrice(initialMaxPrice);
     }
   }, [filtersDrawer, selectedItemsFromFilterSection]);
+  const sortOptions = filterParameters?.data?.filters
+    ?.find((filter: any) => filter.typeCode === 5)
+    ?.data?.map((item: any) => ({ value: item?.value, label: item?.name }));
+
+    // const handleFilterClick = (filterType: keyof filterTypes, value: string) => {
+    //   console.log(filterType, value, 'filterType, value');
+    //   const updatedFilters = { ...selectedItemsFromFilterSection };
+    //   if (value && filterType !== 'address' && filterType !== 'category') {
+    //     updatedFilters[filterType] = value;
+    //   }
+    //   addFiltersToQuery(updatedFilters);
+
+    //   // updateFilters(typesenseFilters);
+    // };
+
+    // const onSortOptionClick = (filterType: keyof filterTypes, value: string) => {
+    //   // selectedItemsFromFilterSection;
+    //   // setSelectedItemsFromFilterSection((prev)=>{...prev , [filterType]:value})
+    //   const newFilter = { ...selectedItemsFromFilterSection };
+    //   newFilter.sort = value;
+    // };
+
+
 
   const renderFilterSection = (filter: FilterParameter) => {
     switch (filter.typeCode) {
@@ -468,6 +491,34 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
       //     </div>
       //   );
 
+      case 5: // sortby
+      return (
+        <div className="sort-by">
+          <TextWrapper className="text-base  font-semibold leading-6 ">{filter.name}</TextWrapper>
+          <div className="flex gap-2 whitespace-nowrap flex-wrap mt-3">
+            {sortOptions?.map((option, index) => (
+              <Button
+                key={index}
+                onClick={() => handleFilterClick('sort', option.value)}
+                // buttonType={ BUTTON_TYPE_CLASSES.tertiary}
+                buttonType={
+                   selectedFilters.sort == option.value
+                    ? BUTTON_TYPE_CLASSES.primary
+                    : BUTTON_TYPE_CLASSES.tertiary
+                }
+                className="px-5 py-2 !mb-0 md:mb-0  w-fit text-sm font-normal"
+              >
+                {option.label}
+              </Button>
+            ))}
+
+            {/* <Button>Oldest First</Button>
+            <Button>Newest First</Button>
+            <Button>Oldest First</Button> */}
+          </div>
+        </div>
+      );
+
       case 3: // Price
         return (
           <div className="price mt-[24px]">
@@ -492,13 +543,17 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
               <div className="slider mt-[24px] h-[5px] relative bg-[#DBDBDB] dark:bg-[#242424] rounded-sm">
                 <div
                   className="progress h-full absolute rounded-sm bg-brand-color"
+                  // style={{
+                  //   left: `${((minPrice / initialMaxPrice) * 100).toFixed(2)}%`,
+                  //   right: `${(100 - (maxPrice / initialMaxPrice) * 100).toFixed(2)}%`,
+                  // }}
                   style={{
-                    left: `${((minPrice / initialMaxPrice) * 100).toFixed(2)}%`,
-                    right: `${(100 - (maxPrice / initialMaxPrice) * 100).toFixed(2)}%`,
+                    width: `${((maxPrice - minPrice) / (initialMaxPrice - initialMinPrice)) * 100}%`,
+                    left: `${((minPrice - initialMinPrice) / (initialMaxPrice - initialMinPrice)) * 100}%`,
                   }}
                 />
               </div>
-              <div className="range-input">
+              <div className="range-input w-full">
                 <input
                   type="range"
                   name="range-min"

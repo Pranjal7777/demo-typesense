@@ -173,10 +173,16 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
   const handleRangeInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if (name === 'range-min') {
+       if (parseInt(value) > maxPrice) {
+         return;
+       } 
       setMinPrice(parseInt(value));
       setInputFocus('min');
       setSelectedFilters({ ...selectedFilters, price: `$${parseInt(value)} - $${maxPrice}` });
     } else if (name === 'range-max') {
+      if (parseInt(value) < minPrice) {
+        return;
+      } 
       setMaxPrice(parseInt(value));
       setInputFocus('max');
       setSelectedFilters({ ...selectedFilters, price: `$${minPrice} - $${parseInt(value)}` });

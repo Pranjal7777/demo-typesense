@@ -5,6 +5,8 @@ import { initializeChat } from 'isometrik-webchat/utils';
 import { ISOMETRIK_CHAT_CONFIG } from '@/config';
 import { RootState } from '@/store/store';
 import { useAppSelector } from '@/store/utils/hooks';
+import Header from '@/components/sections/header';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const Chat = () => {
       const { userInfo } = useAppSelector((state: RootState) => state.auth);
@@ -20,7 +22,7 @@ const chatProps = {
   keysetId: ISOMETRIK_CHAT_CONFIG.keysetId || '',
   accountId: ISOMETRIK_CHAT_CONFIG.accountId || '',
   containerId: 'chat-body-container',
-//   isMakeOffer: true,
+  isMakeOffer: true,
 //   isAdmin: false,
 };
     
@@ -30,8 +32,23 @@ const chatProps = {
     },[])
 
   return (
-    <div className='h-screen w-screen' id='chat-body-container'></div>
-  )
+    <div className="w-full bg-[#FFF] dark:bg-bg-primary-dark">
+      <div className="w-full hidden sm:block">
+        <Header stickyHeaderWithSearchBox />
+      </div>
+      <div className="h-fit mt-[69px] sm:px-[64px] max-w-[1440px] mx-auto">
+        <div className="w-full h-[calc(100vh-69px)]" id="chat-body-container"></div>
+      </div>
+    </div>
+  );
 }
 
-export default Chat
+export default Chat;
+
+export async function getServerSideProps({ locale }: { locale: string }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  };
+}

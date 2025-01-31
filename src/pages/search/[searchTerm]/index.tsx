@@ -551,53 +551,60 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                   onCategoryClick={handleCategoryClick}
                   isActive={hasValue('category')}
                 />
-                <FilterButtonDropdown
-                  // containerClassName={`${hasValue('condition') ? 'bg-brand-color-hover' : ''}`}
-                  containerClassName="hidden sm:block"
-                  title={`Condition ${
-                    selectedItemsFromFilterSection.condition ? `: ${selectedItemsFromFilterSection.condition}` : ''
-                  }`}
-                  options={conditionOptions || []}
-                  // buttonClassName={`${hasValue('condition') ? 'text-brand-color' : ''}`}
-                  type="radio"
-                  isActive={hasValue('condition')}
-                  allSelectedValues={selectedItemsFromFilterSection.condition || ''}
-                  onChange={(selected) => {
-                    handleFilterClick('condition', selected as string);
-                    // updateFilters({ sort: selected as string });
-                  }}
-                />
+                {conditionOptions && conditionOptions.length > 0 && (
+                  <FilterButtonDropdown
+                    // containerClassName={`${hasValue('condition') ? 'bg-brand-color-hover' : ''}`}
+                    containerClassName="hidden sm:block"
+                    title={`Condition ${
+                      selectedItemsFromFilterSection.condition ? `: ${selectedItemsFromFilterSection.condition}` : ''
+                    }`}
+                    options={conditionOptions || []}
+                    // buttonClassName={`${hasValue('condition') ? 'text-brand-color' : ''}`}
+                    type="radio"
+                    isActive={hasValue('condition')}
+                    allSelectedValues={selectedItemsFromFilterSection.condition || ''}
+                    onChange={(selected) => {
+                      handleFilterClick('condition', selected as string);
+                      // updateFilters({ sort: selected as string });
+                    }}
+                  />
+                )}
 
-                <FilterButtonDropdown
-                  isActive={hasValue('sort')}
-                  containerClassName="hidden lg:block"
-                  title={`Sort by ${
-                    selectedItemsFromFilterSection.sort
-                      ? `: ${getSortOptionTitle(selectedItemsFromFilterSection.sort)}`
-                      : ''
-                  }`}
-                  options={sortOptions || []}
-                  allSelectedValues={selectedItemsFromFilterSection.sort ? selectedItemsFromFilterSection.sort : ''}
-                  type="radio"
-                  onChange={(selected) => {
-                    handleFilterClick('sort', selected as string);
-                  }}
-                />
-                <FilterButtonDropdown
-                  isActive={hasValue('price')}
-                  containerClassName="hidden md:block"
-                  title={`Price ${
-                    selectedItemsFromFilterSection.price ? `: ${selectedItemsFromFilterSection.price}` : ''
-                  }`}
-                  type="scale"
-                  currencySymbol={currencySymbol}
-                  initialMinPrice={initialMinPrice}
-                  initialMaxPrice={initialMaxPrice}
-                  allSelectedValues={(selectedItemsFromFilterSection.price as string) || ''}
-                  onChange={(selected) => {
-                    handleFilterClick('price', selected as string);
-                  }}
-                />
+                {sortOptions && sortOptions.length > 0 && (
+                  <FilterButtonDropdown
+                    isActive={hasValue('sort')}
+                    containerClassName="hidden lg:block"
+                    title={`Sort by ${
+                      selectedItemsFromFilterSection.sort
+                        ? `: ${getSortOptionTitle(selectedItemsFromFilterSection.sort)}`
+                        : ''
+                    }`}
+                    options={sortOptions || []}
+                    allSelectedValues={selectedItemsFromFilterSection.sort ? selectedItemsFromFilterSection.sort : ''}
+                    type="radio"
+                    onChange={(selected) => {
+                      handleFilterClick('sort', selected as string);
+                    }}
+                  />
+                )}
+
+                {initialMaxPrice > 0 && (
+                    <FilterButtonDropdown
+                      isActive={hasValue('price')}
+                      containerClassName="hidden md:block"
+                      title={`Price ${
+                        selectedItemsFromFilterSection.price ? `: ${selectedItemsFromFilterSection.price}` : ''
+                      }`}
+                      type="scale"
+                      currencySymbol={currencySymbol}
+                      initialMinPrice={initialMinPrice}
+                      initialMaxPrice={initialMaxPrice}
+                      allSelectedValues={(selectedItemsFromFilterSection.price as string) || ''}
+                      onChange={(selected) => {
+                        handleFilterClick('price', selected as string);
+                      }}
+                    />
+                  )}
               </div>
             )}
 

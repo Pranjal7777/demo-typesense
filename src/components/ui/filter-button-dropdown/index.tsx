@@ -118,7 +118,7 @@ const FilterButtonDropdown: React.FC<FilterButtonDropdownProps> = ({
             {/* <div className="w-full"> */}
             {(type == 'checkbox' || type == 'radio') &&
               options?.map((option) => (
-                <label key={option.value} className={appClsx('flex items-center gap-2', optionClassName)}>
+                <label key={option.value} className={appClsx('flex items-center gap-2 cursor-pointer', optionClassName)}>
                   <input
                     className={appClsx('cursor-pointer', inputClassName)}
                     type={type}

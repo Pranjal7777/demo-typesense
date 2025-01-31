@@ -79,40 +79,31 @@ const CategoriesDropDown = ({ isActive, containerClassName, buttonClassName, tit
             dropdownContainerClassName
           )}
         >
-          <div className="flex w-full justify-center items-center md:hidden my-4 fixed top-0 left-0 z-50 mx-4">
-            <h4 className="text-lg font-semibold text-center w-full text-text-primary-light dark:text-text-primary-dark">
-              All Categories
-            </h4>
-            <CloseIcon
-              height="16px"
-              width="16px"
-              primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
-              className="cursor-pointer absolute right-0"
-              onClick={() => setIsOpen(false)}
-            />
-          </div>
-          <div className="w-full fixed z-50 bg-white dark:bg-bg-nonary-dark top-16 left-0 flex items-center gap-2 text-left cursor-pointer border border-border-tertiary-light dark:border-border-senary-light rounded-md p-2">
-            <SearchIcon />
-            <input
-              type="text"
-              placeholder="Search categories"
-              className="w-full bg-transparent"
-              onChange={onSearchChange}
-            />
+          <div className="w-full bg-white dark:bg-bg-nonary-dark mobile:px-4 mobile:fixed top-0 left-0 z-50 ">
+            <div className="flex w-full justify-center items-center md:hidden my-4">
+              <h4 className="text-lg font-semibold text-center w-full text-text-primary-light dark:text-text-primary-dark">
+                All Categories
+              </h4>
+              <CloseIcon
+                height="16px"
+                width="16px"
+                primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
+                className="cursor-pointer absolute right-4"
+                onClick={() => setIsOpen(false)}
+              />
+            </div>
+            <div className="w-full bg-white dark:bg-bg-nonary-dark flex items-center gap-2 text-left cursor-pointer border border-border-tertiary-light dark:border-border-senary-light rounded-md p-2">
+              <SearchIcon />
+              <input
+                type="text"
+                placeholder="Search categories"
+                className="w-full bg-transparent"
+                onChange={onSearchChange}
+              />
+            </div>
           </div>
           {
-            <div className="w-full flex flex-col mt-[90px] overflow-y-auto md:max-h-[230px]">
-              {filteredCategories?.map((category: any, index) => (
-                <div
-                  onClick={() => onCategorySelect(category)}
-                  className={`w-full text-left flex items-center cursor-pointer ${
-                    index !== 0 && 'border-t'
-                  } md:border-none border-border-tertiary-light dark:border-border-senary-light py-4`}
-                  key={category.id}
-                >
-                  {category.title}
-                </div>
-              ))}
+            <div className="w-full flex flex-col mobile:mt-[95px] overflow-y-auto md:max-h-[230px]">
               {filteredCategories?.map((category: any, index) => (
                 <div
                   onClick={() => onCategorySelect(category)}

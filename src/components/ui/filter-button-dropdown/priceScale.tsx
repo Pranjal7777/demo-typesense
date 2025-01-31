@@ -139,14 +139,14 @@ const PriceScale = ({initialMinPrice,initialMaxPrice,allSelectedValues,onChange,
         <div className="flex justify-end mt-8 gap-2">
             <Button
             buttonType={BUTTON_TYPE_CLASSES.senary}
-            className='w-fit h-fit py-[5px] px-8 rounded-[4px] mb-0'
+            className='w-fit h-fit py-[5px] px-8 rounded-[4px] mb-0 font-medium'
             onClick={handleClearFilters}
             >
                 Clear
             </Button>
             <Button
             buttonType={BUTTON_TYPE_CLASSES.primary}
-            className='w-fit h-fit py-[5px] px-8 rounded-[4px] mb-0'
+            className='w-fit h-fit py-[5px] px-8 rounded-[4px] mb-0 font-medium'
             onClick={handleApplyFilters}
             >
                 Apply

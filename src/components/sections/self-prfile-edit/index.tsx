@@ -20,7 +20,7 @@ import EditPopup from './edit-popup';
 import validatePhoneNumber from '@/helper/validation/phone-number-validation';
 import IsEmailValid from '@/helper/validation/email-validation';
 import authApi from '@/store/api-slices/auth';
-import { Toaster } from 'sonner';
+// import { Toaster } from 'sonner';
 import showToast from '@/helper/show-toaster';
 import UserPlaceholderIcon from '../../../../public/assets/svg/user-placeholder-icon';
 import { STATIC_IMAGE_URL } from '@/config';
@@ -462,7 +462,7 @@ const SelfProfileEditSection: FC<SelfProfileEditSectionProps> = ({
 
   return (
     <div className="text-text-primary-light dark:text-text-primary-dark w-full">
-      <Toaster />
+      {/* <Toaster /> */}
       <div className="title relative flex justify-center md:justify-start  items-center gap-x-4 pt-0 pb-5 text-lg md:text-2xl font-semibold">
         <LeftArrowIcon
           onClick={leftArrowClickHandler}

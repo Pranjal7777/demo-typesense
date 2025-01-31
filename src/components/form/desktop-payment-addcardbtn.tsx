@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { addressApi } from '@/store/api-slices/profile/address-api';
 import { toast } from 'sonner';
 import { CONFIRMANDPAY } from '@/constants/texts';
+import showToast from '@/helper/show-toaster';
 
 export default function DesktopPaymentAddCardBtn() {
   const stripe = useStripe();
@@ -34,11 +35,14 @@ export default function DesktopPaymentAddCardBtn() {
       });
 
       if (data.paymentIntent?.status === 'succeeded') {
-        router.push('/checkout/success');
+        showToast({message:'Payment successful. Please wait we will redirect you to chat', messageType: 'success'}, ()=>router.push('/chat'))
+        
+        // router.push('/checkout/success');
       }
       setIsLoading(false);
     } catch (error) {
       console.log(error, 'error');
+      showToast({message: 'Sorry Unable to proceed',messageType:'error'})
       setIsLoading(false);
     }
   };

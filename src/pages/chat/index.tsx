@@ -28,16 +28,18 @@ const chatProps = {
     
 
     useEffect(()=>{
+      setTimeout(()=>{
         initializeChat(chatProps)
+      },3000)
     },[])
 
   return (
     <div className="w-full bg-[#FFF] dark:bg-bg-primary-dark">
-      <div className="w-full hidden sm:block">
+      <div className="w-full hidden md:block">
         <Header stickyHeaderWithSearchBox />
       </div>
-      <div className="h-fit mt-[69px] sm:px-[64px] max-w-[1440px] mx-auto">
-        <div className="w-full h-[calc(100vh-69px)]" id="chat-body-container"></div>
+      <div className="h-fit mt-0 md:mt-[69px] sm:px-[64px] max-w-[1440px] mx-auto">
+        <div className="w-full h-[100vh] md:h-[calc(100vh-69px)]" id="chat-body-container"></div>
       </div>
     </div>
   );

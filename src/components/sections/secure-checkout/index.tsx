@@ -14,7 +14,7 @@ import React, { ChangeEvent, Dispatch, SetStateAction, useEffect, useRef, useSta
 import { getStripePaymentKeys } from '@/helper/payment';
 import { useAppSelector } from '@/store/utils/hooks';
 import { RootState } from '@/store/store';
-import { Toaster } from 'sonner';
+// import { Toaster } from 'sonner';
 import { addressApi } from '@/store/api-slices/profile/address-api';
 import { STATIC_IMAGE_URL } from '@/config';
 import { MobilePaymentForm } from '@/components/ui/drawer/mobile-payment-form';
@@ -562,7 +562,7 @@ export default function SecureCheckout({
           </div>
         ) : null}
       </div>
-      <Toaster />
+      {/* <Toaster /> */}
     </>
   );
 }

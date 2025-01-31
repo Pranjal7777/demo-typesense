@@ -4,7 +4,7 @@ import { addressApi } from '@/store/api-slices/profile/address-api';
 import { AddressErrorType, AddressType, UserInfoType } from '@/store/types/profile-type';
 import getAddressFromLatLng from '@/helper/get-address-by-lat-lng';
 import { getUserLocation } from '@/helper/get-location';
-import { toast, Toaster } from 'sonner';
+import { toast } from 'sonner';
 import { ErrorStateType } from '../profile/address';
 import validatePhoneNumber from '@/helper/validation/phone-number-validation';
 import FullScreenSpinner from '@/components/ui/full-screen-spinner';
@@ -446,7 +446,7 @@ export default function CheckoutPage() {
           onClose={closeConfirmation}
           onConfirm={onConfirm}
         />
-        <Toaster />
+        {/* <Toaster /> */}
 
         <SecureCheckout
           showAddPaymentFormView={showAddPaymentFormView}

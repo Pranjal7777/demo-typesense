@@ -10,7 +10,7 @@ import DocumentIcon from '../../../../public/assets/svg/document-icon';
 import CurrencyExchangeIcon from '../../../../public/assets/svg/currency-exchange';
 import { useTheme } from '@/hooks/theme';
 import ConfirmationPopup from '../confirmation-popup';
-import { Toaster } from 'sonner';
+// import { Toaster } from 'sonner';
 import showToast from '@/helper/show-toaster';
 import FullScreenSpinner from '../full-screen-spinner';
 import ReasonFilter from '../reason-filter';
@@ -132,7 +132,7 @@ const {data: dealCancelReasons} = myPurchaseApi.useGetDealCancelReasonsQuery()
   return (
     <>
       {isPostDealCancelLoading && <FullScreenSpinner />}
-      <Toaster />
+      {/* <Toaster /> */}
       {!isFetching && orderDetails && (
         <div
           className={appClsx(

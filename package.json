@@ -44,6 +44,7 @@
     "firebase": "^10.11.0",
     "i18next-resources-for-ts": "^1.5.0",
     "install": "^0.13.0",
+    "isometrik-webchat": "^1.4.5",
     "isomtrik-quickchat": "^1.1.6",
     "js-cookie": "^3.0.5",
     "lodash.debounce": "^4.0.8",

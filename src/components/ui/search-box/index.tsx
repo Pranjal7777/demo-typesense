@@ -10,25 +10,24 @@ import { Product, SearchItems, SearchUsers } from '@/store/types';
 import { useDebounce } from '@/hooks/use-debounce';
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService';
 import { HydrationGuard } from '../hydration-guard';
-import SearchUserAndCategoryDrower from '@/components/search-box/search-user-and-category-drower';
+const SearchUserAndCategoryDrower = dynamic(() => import('@/components/search-box/search-user-and-category-drower'), { ssr: false });
 import Button from '../button';
 import LocationTargetIcon from '../../../../public/assets/svg/location-target-icon';
 import { appClsx } from '@/lib/utils';
 import { useNewWindowScroll } from '@/hooks/new-use-window-scroll';
-import styles from '../../../styles/enable-scroolbar.module.css';
 import { useRouter } from 'next/router';
 import Spinner from '../loader';
 import DownArrowRoundedEdge from '../../../../public/assets/svg/down-arrow-rounded-edge';
 import { useTheme } from '@/hooks/theme';
-import CloseIcon from '../../../../public/assets/svg/close-icon';
+const CloseIcon = dynamic(() => import('../../../../public/assets/svg/close-icon'), { ssr: false });
 import FullScreenSpinner from '../full-screen-spinner';
 import { RootState } from '@/store/store';
-import SearchIcon from '../../../../public/assets/svg/search-icon';
-import LocationSvg from '../../../../public/assets/svg/location';
-import UpArrowRoundedEdge from '../../../../public/assets/svg/up-arrow-rounded-edge';
+const SearchIcon = dynamic(() => import('../../../../public/assets/svg/search-icon'), { ssr: false });
+const LocationSvg = dynamic(() => import('../../../../public/assets/svg/location'), { ssr: false });
+const UpArrowRoundedEdge = dynamic(() => import('../../../../public/assets/svg/up-arrow-rounded-edge'), { ssr: false });
 import { routeToCategories, routeSellerProfile, routeToSearch } from '@/store/utils/route-helper';
 import { Hits, InstantSearch, Configure, connectStateResults } from 'react-instantsearch-dom';
-import SearchBox from '@/components/typesense/SearchBox';
+const SearchBox = dynamic(() => import('@/components/typesense/SearchBox'), { ssr: false });
 import SearchResults from '@/components/typesense/SearchResults';
 import Image from 'next/image';
 import HistoryIcon from '../../../../public/images/history-icon.svg';
@@ -37,12 +36,12 @@ import Link from 'next/link';
 import { FormDataT } from '@/components/sections/hero-section';
 import { getCookie, setCookie } from '@/utils/cookies';
 import { SearchResponse } from '@/types';
-import LeftArrowIcon from '../../../../public/assets/svg/left-arrow-icon';
+const LeftArrowIcon = dynamic(() => import('../../../../public/assets/svg/left-arrow-icon'), { ssr: false });
 import { getUserLocation } from '@/helper/get-location';
 import getAddressFromLatLng from '@/helper/get-address-by-lat-lng';
 import { IMAGES } from '@/lib/images';
-import CategoriesIcon from '../../../../public/assets/svg/categories-icon';
-import ChatIcon from '../../../../public/assets/svg/chat-icon1';
+const CategoriesIcon = dynamic(() => import('../../../../public/assets/svg/categories-icon'), { ssr: false });
+const ChatIcon = dynamic(() => import('../../../../public/assets/svg/chat-icon1'), { ssr: false });
 import { SIGN_IN_PAGE } from '@/routes';
 const CategoriesDrawer = dynamic(() => import('@/components/categories-drawer'), { ssr: false });
 
@@ -482,7 +481,9 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
   // Add this helper function at the top of the component
   const getPrimaryColor = () => {
     const isSellerProfilePage =
-      router.pathname.startsWith('/seller-profile/') || router.pathname.startsWith('/product');
+      router.pathname.startsWith('/seller-profile/') ||
+      router.pathname.startsWith('/product') ||
+      router.pathname.startsWith('/search');
 
     if (isSellerProfilePage) {
       return theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)';

@@ -1,8 +1,10 @@
 import React from 'react';
-// import UpArrowIconRight from '../../../../public/assets/svg/up_arrow_right'
-import LeftArrowIcon from '../../../../public/assets/svg/left-arrow-icon';
+import dynamic from 'next/dynamic';
 import { appClsx } from '@/lib/utils';
 import { useTheme } from '@/hooks/theme';
+const LeftArrowIcon = dynamic(() => import('../../../../public/assets/svg/left-arrow-icon'), {
+  ssr: false,
+});
 type Props = {
   className:string,
   children:string,

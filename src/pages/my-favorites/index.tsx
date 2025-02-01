@@ -2,13 +2,16 @@ import { myFavoritesApi } from '@/store/api-slices/my-favorites';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import React, { useEffect, useMemo, useState } from 'react';
+import dynamic from 'next/dynamic';
 import cookie from 'cookie';
 import { SellerProfileType } from '@/store/types/seller-profile-type';
 import { buildQueryString } from '@/helper/build-query-string';
 import ProductCard from '@/components/ui/product-card';
 import Header from '@/components/sections/header';
 import ProductCardSkeleton from '@/components/ui/product-card-skeleton';
-import LeftArrowIcon from '../../../public/assets/svg/left-arrow-icon';
+const LeftArrowIcon = dynamic(() => import('../../../public/assets/svg/left-arrow-icon'), {
+  ssr: false,
+});
 import { useRouter } from 'next/router';
 import { useTheme } from '@/hooks/theme';
 import { Product } from '@/store/types';

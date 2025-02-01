@@ -41,7 +41,9 @@ import { IMAGES } from '@/lib/images';
 import CustomHeader from '@/components/ui/custom-header';
 import { useTypesenseCategory } from '@/hooks/useTypesenseCategory';
 import Placeholder from '@/containers/placeholder/placeholder';
-import FilterButtonDropdown from '@/components/ui/filter-button-dropdown';
+const FilterButtonDropdown = dynamic(() => import('@/components/ui/filter-button-dropdown'), {
+  ssr: false,
+});
 
 export type filteredProducts = {
   userName: string;

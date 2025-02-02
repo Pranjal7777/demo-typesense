@@ -89,7 +89,7 @@ function Blogs({ posts, blogSeoData }: blogsProps) {
       <Layout excludeHeroSection={true} stickyHeader={true}>
         {posts?.data?.attributes?.breadCrumbLinks?.length > 0 ? <PageHeaderWithBreadcrumb className='pl-0 mobile:pl-0' steps={posts?.data?.attributes?.breadCrumbLinks
         }></PageHeaderWithBreadcrumb> : null}
-      <div className=" mt-[50px] sm:mt-[69px] relative custom-container mx-auto sm:px-16 mobile:px-4 ">
+      <div className=" mt-[40px] sm:mt-[69px] relative custom-container mx-auto sm:px-16 mobile:px-4 ">
         {posts?.data?.attributes?.heroSection ? <PageBanner
           bannerUrlForMobile={posts?.data?.attributes?.heroSection?.heroImage?.cover_image?.data?.attributes?.url}
           bannerUrlForWeb={posts?.data?.attributes?.heroSection?.heroImage?.cover_image?.data?.attributes?.url}

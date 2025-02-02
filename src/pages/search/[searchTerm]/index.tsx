@@ -509,6 +509,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
       <Layout
         stickyHeader={true}
         stickyHeroSection={true}
+        // excludeHeroSection={true}
         tokenFromServer={tokenFromServer}
         myLocationFromServer={myLocationFromServer}
         categories={categories}
@@ -516,7 +517,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
         <div className="w-full custom-container mx-auto sm:px-16 mobile:px-4">
           <Breadcrumb
             isLinkDisable={true}
-            className="!pl-0 md:!pl-0 !mb-3 !mt-2 md:my-3"
+            className="!pl-0 md:!pl-0 !mb-3 !mt-4 md:my-3"
             steps={[{ name: 'Home', link: '/' }, { name: `Search results for "${searchText}"` }]}
           ></Breadcrumb>
           <h1 className=" text-xl md:text-2xl font-semibold text-text-primary-light dark:text-text-primary-dark">
@@ -527,68 +528,71 @@ const Categories: NextPage<CategoriesPageProps> = function ({
         {/* <div className="w-full "> */}
         {/* <div className=" w-full flex flex-col justify-center"> */}
         <div
-          // style={{ zIndex: 1 }}
           className={`w-full z-[1] ${
             minThreshold
-              ? `fixed pt-0 !z-1 ${threshold < 80 ? 'top-[122px]' : 'top-[69px] pt-3'} left-0 right-0 `
+              ? `fixed pt-0 !z-1 ${threshold < 80 ? 'top-[120px] pt-3' : 'top-[69px] pt-3'} left-0 right-0 `
               : 'pt-3'
-          } bg-bg-secondary-light dark:bg-bg-primary-dark  px-4 sm:px-[64px] pb-5 mx-auto max-w-[1440px]`}
+          } bg-bg-secondary-light dark:bg-bg-primary-dark`}
         >
           <div
-            className={`flex  w-full gap-4 justify-end overflow-visible  ${
-              hasActiveFilters() ? 'justify-between' : 'justify-end'
-            }`}
+            // style={{ zIndex: 1 }}
+            className={`w-full z-[1]  bg-bg-secondary-light dark:bg-bg-primary-dark  px-4 sm:px-[64px] pb-5 mx-auto max-w-[1440px]`}
           >
-            {/* <SectionTitle>All Products</SectionTitle> */}
-            {(!hasActiveFilters() || hasActiveFilters()) && (
-              <div className=" flex gap-4 flex-nowrap items-center w-full whitespace-nowrap md:border-r border-r-border-tertiary-light dark:border-r-border-senary-light">
-                <CategoriesDropDown
-                  title={`${
-                    selectedItemsFromFilterSection.category.title
-                      ? `${selectedItemsFromFilterSection.category.title}`
-                      : 'Categories'
-                  }`}
-                  onCategoryClick={handleCategoryClick}
-                  isActive={hasValue('category')}
-                />
-                {conditionOptions && conditionOptions.length > 0 && (
-                  <FilterButtonDropdown
-                    // containerClassName={`${hasValue('condition') ? 'bg-brand-color-hover' : ''}`}
-                    containerClassName="hidden sm:block"
-                    title={`Condition ${
-                      selectedItemsFromFilterSection.condition ? `: ${selectedItemsFromFilterSection.condition}` : ''
+            <div
+              className={`flex  w-full gap-4 justify-end overflow-visible  ${
+                hasActiveFilters() ? 'justify-between' : 'justify-end'
+              }`}
+            >
+              {/* <SectionTitle>All Products</SectionTitle> */}
+              {(!hasActiveFilters() || hasActiveFilters()) && (
+                <div className=" flex gap-4 flex-nowrap items-center w-full whitespace-nowrap md:border-r border-r-border-tertiary-light dark:border-r-border-senary-light">
+                  <CategoriesDropDown
+                    title={`${
+                      selectedItemsFromFilterSection.category.title
+                        ? `${selectedItemsFromFilterSection.category.title}`
+                        : 'Categories'
                     }`}
-                    options={conditionOptions || []}
-                    // buttonClassName={`${hasValue('condition') ? 'text-brand-color' : ''}`}
-                    type="radio"
-                    isActive={hasValue('condition')}
-                    allSelectedValues={selectedItemsFromFilterSection.condition || ''}
-                    onChange={(selected) => {
-                      handleFilterClick('condition', selected as string);
-                      // updateFilters({ sort: selected as string });
-                    }}
+                    onCategoryClick={handleCategoryClick}
+                    isActive={hasValue('category')}
                   />
-                )}
+                  {conditionOptions && conditionOptions.length > 0 && (
+                    <FilterButtonDropdown
+                      // containerClassName={`${hasValue('condition') ? 'bg-brand-color-hover' : ''}`}
+                      containerClassName="hidden sm:block"
+                      title={`Condition ${
+                        selectedItemsFromFilterSection.condition ? `: ${selectedItemsFromFilterSection.condition}` : ''
+                      }`}
+                      options={conditionOptions || []}
+                      // buttonClassName={`${hasValue('condition') ? 'text-brand-color' : ''}`}
+                      type="radio"
+                      isActive={hasValue('condition')}
+                      allSelectedValues={selectedItemsFromFilterSection.condition || ''}
+                      onChange={(selected) => {
+                        handleFilterClick('condition', selected as string);
+                        // updateFilters({ sort: selected as string });
+                      }}
+                    />
+                  )}
 
-                {sortOptions && sortOptions.length > 0 && (
-                  <FilterButtonDropdown
-                    isActive={hasValue('sort')}
-                    containerClassName="hidden lg:block"
-                    title={`Sort by ${
-                      selectedItemsFromFilterSection.sort
-                        ? `: ${getSortOptionTitle(selectedItemsFromFilterSection.sort)}`
-                        : ''
-                    }`}
-                    options={sortOptions || []}
-                    allSelectedValues={selectedItemsFromFilterSection.sort ? selectedItemsFromFilterSection.sort : ''}
-                    type="radio"
-                    onChange={(selected) => {
-                      handleFilterClick('sort', selected as string);
-                    }}
-                  />
-                )}
+                  {sortOptions && sortOptions.length > 0 && (
+                    <FilterButtonDropdown
+                      isActive={hasValue('sort')}
+                      containerClassName="hidden lg:block"
+                      title={`Sort by ${
+                        selectedItemsFromFilterSection.sort
+                          ? `: ${getSortOptionTitle(selectedItemsFromFilterSection.sort)}`
+                          : ''
+                      }`}
+                      options={sortOptions || []}
+                      allSelectedValues={selectedItemsFromFilterSection.sort ? selectedItemsFromFilterSection.sort : ''}
+                      type="radio"
+                      onChange={(selected) => {
+                        handleFilterClick('sort', selected as string);
+                      }}
+                    />
+                  )}
 
-                {initialMaxPrice > 0 && (
+                  {initialMaxPrice > 0 && (
                     <FilterButtonDropdown
                       isActive={hasValue('price')}
                       containerClassName="hidden md:block"
@@ -605,44 +609,45 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                       }}
                     />
                   )}
-              </div>
-            )}
+                </div>
+              )}
 
-            <button
-              className=" md:w-[148px] mobile:min-w-[36px] md:min-w-[148px] h-11 text-text-primary-light dark:text-text-primary-dark md:border-2 items-center flex  cursor-pointer justify-end md:justify-center gap-1 rounded-[100px]"
-              onClick={handleFilterDrawer}
-            >
-              <span className="hidden md:block">More filters</span>
-              <div>
-                <img
-                  className=" inline-block mobile:hidden h-6 w-6"
-                  width={28}
-                  height={24}
-                  src={'/images/filters_icon_white.svg'}
-                  alt="dollar_coin_icon"
-                />
-                <img
-                  className=" mobile:block hidden h-6 w-6"
-                  width={20}
-                  height={18}
-                  src={'/images/filters_icon_white.svg'}
-                  alt="dollar_coin_icon"
-                />
-              </div>
-            </button>
-            <span
+              <button
+                className=" md:w-[148px] mobile:min-w-[36px] md:min-w-[148px] h-11 text-text-primary-light dark:text-text-primary-dark md:border-2 items-center flex  cursor-pointer justify-end md:justify-center gap-1 rounded-[100px]"
+                onClick={handleFilterDrawer}
+              >
+                <span className="hidden md:block">More filters</span>
+                <div>
+                  <img
+                    className=" inline-block mobile:hidden h-6 w-6"
+                    width={28}
+                    height={24}
+                    src={'/images/filters_icon_white.svg'}
+                    alt="dollar_coin_icon"
+                  />
+                  <img
+                    className=" mobile:block hidden h-6 w-6"
+                    width={20}
+                    height={18}
+                    src={'/images/filters_icon_white.svg'}
+                    alt="dollar_coin_icon"
+                  />
+                </div>
+              </button>
+              <span
+                onClick={handleClearAll}
+                className="hidden sm:flex items-center  font-medium text-nowrap text-brand-color cursor-pointer"
+              >
+                Clear all
+              </span>
+            </div>
+            <p
               onClick={handleClearAll}
-              className="hidden sm:flex items-center  font-medium text-nowrap text-brand-color cursor-pointer"
+              className=" sm:hidden py-2  font-medium text-nowrap text-brand-color cursor-pointer"
             >
               Clear all
-            </span>
+            </p>
           </div>
-          <p
-            onClick={handleClearAll}
-            className=" sm:hidden py-2  font-medium text-nowrap text-brand-color cursor-pointer"
-          >
-            Clear all
-          </p>
         </div>
         <div className={`mt-10 custom-container mx-auto sm:px-16 mobile:px-4 w-full mobile:mt-2`}>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-x-3 gap-y-4 md:gap-x-2 md:gap-y-7 mb-5">

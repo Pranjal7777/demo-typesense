@@ -77,13 +77,13 @@ const TermsAndService: FC<Props>= ({termsOfServiceData,htmlContent,termsOfServic
   return (
     <Layout excludeHeroSection={true} stickyHeader={true}>
       <CustomHeader
-       title={seoData?.title}
-       description={seoData?.description}
-       image={seoData?.image?.url}
-       url={seoData?.url}
+        title={seoData?.title}
+        description={seoData?.description}
+        image={seoData?.image?.url}
+        url={seoData?.url}
       />
-      <PageHeaderWithBreadcrumb className="" steps={breadcrumbLinks}></PageHeaderWithBreadcrumb>
-      <div className="mt-[50px] md:mt-[69px] relative custom-container mx-auto sm:px-16 mobile:px-4 ">
+      <PageHeaderWithBreadcrumb className="pl-0 mobile:pl-0" steps={breadcrumbLinks}></PageHeaderWithBreadcrumb>
+      <div className="mt-[40px] md:mt-[69px] relative custom-container mx-auto sm:px-16 mobile:px-4 ">
         <PageBanner
           bannerUrlForMobile={
             termsOfServiceData?.attributes?.heroSection?.heroImage?.cover_image?.data?.attributes?.url
@@ -93,7 +93,11 @@ const TermsAndService: FC<Props>= ({termsOfServiceData,htmlContent,termsOfServic
           headerDescription={termsOfServiceData?.attributes?.heroSection?.subtitle}
           headerDescriptionForMobile={headerBennerSection.headerDescriptionForMobile}
         />
-        <div ref={contentRef} className="my-8 dark:!text-text-secondary-light !text-text-secondary-dark" dangerouslySetInnerHTML={{ __html: htmlContent }} />
+        <div
+          ref={contentRef}
+          className="my-8 dark:!text-text-secondary-light !text-text-secondary-dark"
+          dangerouslySetInnerHTML={{ __html: htmlContent }}
+        />
       </div>
     </Layout>
   );

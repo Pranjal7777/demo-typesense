@@ -193,15 +193,19 @@ const showCategoriesInMobile = useMemo(() => {
         // ${windowWidth <= 639 && 'hidden'}
         className={appClsx(
           `z-[2] mobile:hidden ${
-            maxThreshold && ' border-b border-border-tertiary-light dark:border-b-border-tertiary-dark'
+            maxThreshold &&
+            ' border-b border-border-tertiary-light dark:border-b-border-tertiary-dark dark:bg-bg-secondary-dark'
           }  
-         ${stickyHeaderWithSearchBox && 'border-b border-b-border-tertiary-light dark:border-b-border-tertiary-dark'} ${
+         ${
+           stickyHeaderWithSearchBox &&
+           'border-b border-b-border-tertiary-light dark:border-b-border-tertiary-dark dark:bg-bg-secondary-dark '
+         } ${
             minThreshold
               ? stickyHeaderWithSearchBox
-                ? 'text-text-primary-light dark:text-text-primary-dark bg-bg-secondary-light dark:bg-bg-primary-dark'
-                : 'text-text-primary-light dark:text-text-primary-dark bg-bg-secondary-light dark:bg-bg-primary-dark'
+                ? 'text-text-primary-light dark:text-text-primary-dark bg-bg-secondary-light dark:red-500 '
+                : 'text-text-primary-light dark:text-text-primary-dark bg-bg-secondary-light dark:bg-bg-secondary-dark'
               : stickyHeaderWithSearchBox
-              ? 'text-text-primary-light dark:text-text-primary-dark bg-bg-secondary-light dark:bg-bg-primary-dark'
+              ? 'text-text-primary-light dark:text-text-primary-dark bg-bg-secondary-light dark:bg-bg-secondary-dark'
               : 'text-text-secondary-light dark:text-text-primary-dark'
           } h-[69px] w-full fixed top-0 text-sm font-medium capitalize transition ease-in-out duration-2000`,
           containerClassName
@@ -348,7 +352,7 @@ const showCategoriesInMobile = useMemo(() => {
                   }`}
                 />
               ) : (
-                <Link aria-label="Login" className="mx-9 " href={SIGN_IN_PAGE}>
+                <Link aria-label="Login" className="mx-9 mr-1" href={SIGN_IN_PAGE}>
                   {' '}
                   {loginOrUserName.login}
                 </Link>
@@ -366,8 +370,10 @@ const showCategoriesInMobile = useMemo(() => {
         style={{ zIndex: 1 }}
         className={appClsx(
           ` border-error ${stickyHeaderWithSearchBox && 'bg-bg-secondary-light dark:bg-bg-secondary-dark'} ${
-            minThreshold && 'dark:bg-bg-primary-dark bg-bg-secondary-light'
-          } mobile:inline-block sm:hidden h-[69px] w-full fixed top-0  flex items-center justify-center px-[16px]`,
+            minThreshold && 'dark:bg-bg-secondary-dark bg-bg-secondary-light'
+          } mobile:inline-block sm:hidden h-[56px] ${
+            showCategoriesInMobile && 'pt-2'
+          } w-full fixed top-0  flex items-center justify-center px-[16px]`,
           mobileContainerClassName
         )}
       >
@@ -451,7 +457,11 @@ const showCategoriesInMobile = useMemo(() => {
                 onClick={() => changMenu()}
                 color={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
               />
-              <ChatIcon height='21' width='21' primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} />
+              <ChatIcon
+                height="21"
+                width="21"
+                primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
+              />
               <HydrationGuard>
                 {userInfo ? (
                   userInfo?.profilePic ? (

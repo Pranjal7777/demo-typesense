@@ -57,10 +57,10 @@ const DownloadCard: React.FC = () => {
               {appDownloadSection.subHeading}
             </p>
 
-            <strong className="mt-[70px] lg:mt-7 text-left sm:text-center lg:text-left font-bold text-base self-start">
+            <strong className="mt-[40px] lg:mt-7 text-left sm:text-center lg:text-left font-bold text-base self-start">
               {appDownloadSection.phoneNumberTitle}
             </strong>
-            <div className="relative z-10 mt-3 max-w-[355px] mobile:w-full w-full self-start">
+            <div className="relative mt-3 max-w-[355px] mobile:w-full w-full self-start">
               <PhoneNumberInput
                 country="in" 
                 placeholder={appDownloadSection.phonePlaceHolder}

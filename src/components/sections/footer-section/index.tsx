@@ -52,7 +52,7 @@ const Footer = () => {
       <div className=' border-error max-w-[1440px] mx-auto px-[64px] mobile:px-4'>
         <div className=' border-yellow-50 flex item-center justify-center'>
 
-          <div className='my-9 sm:my-12 border-yellow-400 max-w-[1203px] w-full flex flex-col sm:grid sm:grid-cols-2 lg:grid-cols-3 place-items-start'>
+          <div className='my-9 sm:my-12 border-yellow-400 w-full flex flex-col sm:grid sm:grid-cols-2 lg:grid-cols-3 place-items-start'>
             <div className='relative mobile:order-3  max-w-[360px] mobile:max-w-full w-full mobile:flex mobile:flex-col mobile:items-center'>
               <Link aria-label="Brand Logo" href={'/'}>
                 <PrimaryLogo ariaLabel="Brand Logo" logoType='secondary' className='hover:cursor-pointer' width={128} height={36}/>

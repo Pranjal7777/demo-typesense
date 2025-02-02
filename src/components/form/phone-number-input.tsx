@@ -91,8 +91,8 @@ const PhoneNumberInput: FC<Props> = ({
             )}
             containerClass={appClsx(
               '!border-2 w-full outline-none h-fit border dark:bg-bg-primary-dark dark:border-border-tertiary-dark border-border-tertiary-light rounded',
-              `${isFocused ? ' dark:border-brand-color border-brand-color ' : ''}`,
               className,
+              `${isFocused ? ' dark:border-brand-color border-brand-color ' : ''}`,
               { 'border-error': error }
             )}
             {...otherProps}

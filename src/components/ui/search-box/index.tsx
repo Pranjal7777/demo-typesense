@@ -299,8 +299,6 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
   };
   // recent search api end --------------------------
   const handleSearchEnterKeyDown = async (event: KeyboardEvent<HTMLInputElement>) => {
-    console.log(event.key, 'key name on search');
-    
     // if (event.key === 'Enter' && hasValidSearchResults) {
     if (event.key === 'Enter' || event.key === 'Done' || event.key === 'Go' || event.key === 'Tab' || event.key === 'Next') {
       if (formData.search !== '') {

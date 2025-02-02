@@ -617,9 +617,9 @@ const Categories: NextPage<CategoriesPageProps> = function ({
               )}
               <div className=" w-full pt-3 md:pt-6 lg:pt-6 sm:py-0 lg:py-0 flex flex-col items-center justify-center dark:bg-bg-primary-dark">
                 <div
-                  className={`w-full z-[1] ${
+                  className={`w-full  ${
                     minThreshold
-                      ? `fixed !z-1 ${
+                      ? `fixed z-[1] ${
                           threshold < 300 ? 'top-[120px]' : 'top-[69px]'
                         } left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark pt-3 sm:pt-5 sm:pb-8 pb-5`
                       : ''
@@ -627,9 +627,9 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                 >
                   <div
                     // style={{ zIndex: 1 }}
-                    className={`w-full left-0 right-0 ${minThreshold ? 'px-[4%] sm:px-[64px] mx-auto max-w-[1440px]' : '' } `
-     
-                    }
+                    className={`w-full left-0 right-0 ${
+                      minThreshold ? 'px-[4%] sm:px-[64px] mx-auto max-w-[1440px]' : ''
+                    } `}
                   >
                     <div className=" flex  w-full justify-between filterselectContainer">
                       <SectionTitle>All Products</SectionTitle>

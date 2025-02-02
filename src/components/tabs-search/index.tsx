@@ -1,10 +1,11 @@
 import { appClsx } from '@/lib/utils';
 import React, { FC, useEffect, useRef, useState } from 'react';
-import SearchIcon from '../../../public/assets/svg/search-icon';
-import FilterIcon from '../../../public/assets/svg/filter-icon';
+import dynamic from 'next/dynamic';
+const SearchIcon = dynamic(() => import('../../../public/assets/svg/search-icon'), { ssr: false });
+const FilterIcon = dynamic(() => import('../../../public/assets/svg/filter-icon'), { ssr: false });
 import FilterPopup from '../ui/filter-popup';
 import { useTheme } from '@/hooks/theme';
-import CloseIcon from '../../../public/assets/svg/close-icon';
+const CloseIcon = dynamic(() => import('../../../public/assets/svg/close-icon'), { ssr: false });
 type OptionType = {
   label: string;
   value: string;

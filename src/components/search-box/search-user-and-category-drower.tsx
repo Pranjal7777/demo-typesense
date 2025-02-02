@@ -272,7 +272,7 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
             />
 
             <input
-              className="truncate border-border-tertiary-light dark:border-border-tertiary-dark dark:bg-bg-quinary-dark focus:border-2 focus:!border-brand-color dark:text-bg-tertiary-light px-11 rtl:px-5 pr-9 rtl:pr-12 text-sm outline-none border rounded-md h-12 w-full focus:border-primary bg-bg-tertiary-light"
+              className="truncate border-border-tertiary-light dark:border-border-tertiary-dark dark:bg-bg-quinary-dark focus:border-2 focus:!border-brand-color dark:text-bg-tertiary-light px-11 rtl:px-5 pr-9 rtl:pr-12 outline-none border rounded-md h-12 w-full focus:border-primary bg-bg-tertiary-light"
               type="text"
               name="search"
               placeholder={SEARCH_PLACEHOLDER_TEXT}
@@ -397,7 +397,7 @@ const SearchUserAndCategoryDrower: FC<Props> = ({
               className="absolute left-4 rtl:right-4"
             />
             <input
-              className="truncate border-border-tertiary-light dark:border-border-tertiary-dark dark:bg-bg-quinary-dark focus:border-2 focus:!border-brand-color dark:text-bg-tertiary-light px-11 rtl:px-5 pr-10 rtl:pr-12  text-sm outline-none border rounded-md h-12 w-full focus:border-primary bg-bg-tertiary-light"
+              className="truncate border-border-tertiary-light dark:border-border-tertiary-dark dark:bg-bg-quinary-dark focus:border-2 focus:!border-brand-color dark:text-bg-tertiary-light px-11 rtl:px-5 pr-10 rtl:pr-12 outline-none border rounded-md h-12 w-full focus:border-primary bg-bg-tertiary-light"
               name="location"
               autoComplete="off"
               type="text"

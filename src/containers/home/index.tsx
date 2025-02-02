@@ -229,9 +229,7 @@ const HomePage: FC<HomeProps> = ({
 
           {/** Banner Section Starts */}
           <>
-          {isErrorBannersAndRecommendedProducts ? (
-            <h2>{convertRTKQueryErrorToString(errorBannersAndRecommendedProducts)}</h2>
-          ) : bannersAndRecommendedProducts?.result !== undefined ? (
+          {!isErrorBannersAndRecommendedProducts && bannersAndRecommendedProducts?.result !== undefined ? (
             <ImgSlider banners={bannersAndRecommendedProducts?.banners} />
           ) : null}
           {

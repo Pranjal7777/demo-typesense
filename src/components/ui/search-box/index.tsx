@@ -10,25 +10,24 @@ import { Product, SearchItems, SearchUsers } from '@/store/types';
 import { useDebounce } from '@/hooks/use-debounce';
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService';
 import { HydrationGuard } from '../hydration-guard';
-import SearchUserAndCategoryDrower from '@/components/search-box/search-user-and-category-drower';
+const SearchUserAndCategoryDrower = dynamic(() => import('@/components/search-box/search-user-and-category-drower'), { ssr: false });
 import Button from '../button';
 import LocationTargetIcon from '../../../../public/assets/svg/location-target-icon';
 import { appClsx } from '@/lib/utils';
 import { useNewWindowScroll } from '@/hooks/new-use-window-scroll';
-import styles from '../../../styles/enable-scroolbar.module.css';
 import { useRouter } from 'next/router';
 import Spinner from '../loader';
 import DownArrowRoundedEdge from '../../../../public/assets/svg/down-arrow-rounded-edge';
 import { useTheme } from '@/hooks/theme';
-import CloseIcon from '../../../../public/assets/svg/close-icon';
+const CloseIcon = dynamic(() => import('../../../../public/assets/svg/close-icon'), { ssr: false });
 import FullScreenSpinner from '../full-screen-spinner';
 import { RootState } from '@/store/store';
-import SearchIcon from '../../../../public/assets/svg/search-icon';
-import LocationSvg from '../../../../public/assets/svg/location';
-import UpArrowRoundedEdge from '../../../../public/assets/svg/up-arrow-rounded-edge';
+const SearchIcon = dynamic(() => import('../../../../public/assets/svg/search-icon'), { ssr: false });
+const LocationSvg = dynamic(() => import('../../../../public/assets/svg/location'), { ssr: false });
+const UpArrowRoundedEdge = dynamic(() => import('../../../../public/assets/svg/up-arrow-rounded-edge'), { ssr: false });
 import { routeToCategories, routeSellerProfile, routeToSearch } from '@/store/utils/route-helper';
 import { Hits, InstantSearch, Configure, connectStateResults } from 'react-instantsearch-dom';
-import SearchBox from '@/components/typesense/SearchBox';
+const SearchBox = dynamic(() => import('@/components/typesense/SearchBox'), { ssr: false });
 import SearchResults from '@/components/typesense/SearchResults';
 import Image from 'next/image';
 import HistoryIcon from '../../../../public/images/history-icon.svg';
@@ -37,12 +36,12 @@ import Link from 'next/link';
 import { FormDataT } from '@/components/sections/hero-section';
 import { getCookie, setCookie } from '@/utils/cookies';
 import { SearchResponse } from '@/types';
-import LeftArrowIcon from '../../../../public/assets/svg/left-arrow-icon';
+const LeftArrowIcon = dynamic(() => import('../../../../public/assets/svg/left-arrow-icon'), { ssr: false });
 import { getUserLocation } from '@/helper/get-location';
 import getAddressFromLatLng from '@/helper/get-address-by-lat-lng';
 import { IMAGES } from '@/lib/images';
-import CategoriesIcon from '../../../../public/assets/svg/categories-icon';
-import ChatIcon from '../../../../public/assets/svg/chat-icon1';
+const CategoriesIcon = dynamic(() => import('../../../../public/assets/svg/categories-icon'), { ssr: false });
+const ChatIcon = dynamic(() => import('../../../../public/assets/svg/chat-icon1'), { ssr: false });
 import { SIGN_IN_PAGE } from '@/routes';
 const CategoriesDrawer = dynamic(() => import('@/components/categories-drawer'), { ssr: false });
 
@@ -300,8 +299,6 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
   };
   // recent search api end --------------------------
   const handleSearchEnterKeyDown = async (event: KeyboardEvent<HTMLInputElement>) => {
-    console.log(event.key, 'key name on search');
-    
     // if (event.key === 'Enter' && hasValidSearchResults) {
     if (event.key === 'Enter' || event.key === 'Done' || event.key === 'Go' || event.key === 'Tab' || event.key === 'Next') {
       if (formData.search !== '') {
@@ -482,7 +479,9 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
   // Add this helper function at the top of the component
   const getPrimaryColor = () => {
     const isSellerProfilePage =
-      router.pathname.startsWith('/seller-profile/') || router.pathname.startsWith('/product');
+      router.pathname.startsWith('/seller-profile/') ||
+      router.pathname.startsWith('/product') ||
+      router.pathname.startsWith('/search');
 
     if (isSellerProfilePage) {
       return theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)';
@@ -515,10 +514,10 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
         className={appClsx(
           `mobile:order-3 text-text-primary-light dark:text-text-primary-dark z-[1] w-full  flex mobile:items-center flex-col sticky top-[69px] ${
             stickyHeaderWithSearchBox &&
-            ' dark:border-b-border-tertiary-dark flex items-center min-w-full bg-bg-secondary-light dark:bg-bg-primary-dark !fixed top-[69px] px-16 '
+            ' dark:border-b-border-tertiary-dark flex items-center min-w-full bg-bg-secondary-light dark:bg-bg-secondary-dark !fixed top-[69px] px-16 '
           } ${
             minThreshold
-              ? '!fixed top-[69px] sm:px-[64px] w-full bg-bg-secondary-light dark:bg-bg-primary-dark'
+              ? '!fixed top-[69px] sm:px-[64px] w-full bg-bg-secondary-light dark:bg-bg-secondary-dark'
               : 'max-w-[1083px] '
           } `,
           className
@@ -595,7 +594,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
 
           <div
             className={
-              'relative flex-[15] flex items-center justify-center 2lg:flex-[10] lg:flex-[8] md:flex-[6] sm:flex-[4] '
+              'relative flex-[15] flex items-center justify-center 2lg:flex-[10] lg:flex-[8] md:flex-[6] sm:flex-[4] rounded-l-[4px]'
             }
           >
             <SearchIcon width={17} height={17} className="absolute left-4 rtl:right-4 " />
@@ -613,15 +612,15 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                 }
               />
               <SearchBox
-                extraStyles={`pr-10 truncate border-r ${
+                extraStyles={`pr-10 truncate border-r rounded-l-[4px] ${
                   minThreshold && theme ? 'dark:border-border-tertiary-dark' : 'border-border-undenary-light'
                 } dark:text-text-primary-light placeholder-text-denary-light ${
                   stickyHeaderWithSearchBox &&
                   'bg-bg-tertiary-light dark:!bg-bg-quinary-dark dark:!text-text-primary-dark'
-                } dark:hover:bg-bg-octonary-dark hover:bg-bg-tertiary-light cursor-text h-full w-full outline-none pl-12 rtl:pr-12 ${
-                  minThreshold ? 'dark:bg-bg-secondary-dark dark:!text-text-primary-dark bg-bg-tertiary-light' : ''
+                }  hover:bg-bg-tertiary-light cursor-text h-full w-full outline-none pl-12 rtl:pr-12 ${
+                  minThreshold ? 'dark:bg-bg-septendenary-dark dark:!text-text-primary-dark bg-bg-tertiary-light' : ''
                 }
-                 ${minThreshold && theme ? 'dark:bg-bg-secondary-dark dark:hover:!text-black bg-bg-tertiary-light' : ''}
+                 ${minThreshold && theme ? 'dark:bg-bg-secondary-dark bg-bg-tertiary-light' : ''}
                 `}
                 inputValue={formData.search}
                 name="search"
@@ -928,7 +927,11 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
             ) : null}
           </div>
 
-          <div className="flex flex-[8] items-center justify-center 2lg:flex-[10] lg:flex-[8] md:flex-[6] sm:flex-[4]">
+          <div
+            className={`flex flex-[8] rounded-r-[4px] items-center justify-center 2lg:flex-[10] lg:flex-[8] md:flex-[6] sm:flex-[4] ${
+              (stickyHeaderWithSearchBox || minThreshold) && 'dark:bg-bg-quinary-dark'
+            }`}
+          >
             <div className="relative h-full w-full items-center flex justify-center ">
               <LocationSvg width={'17'} height={'17'} className="absolute left-4 rtl:right-4 " />
 
@@ -938,9 +941,9 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
                 className={`truncate dark:text-text-primary-light placeholder-text-denary-light /*dark:text-text-primary-dark*/${
                   stickyHeaderWithSearchBox &&
                   ' !bg-bg-tertiary-light dark:!bg-bg-quinary-dark dark:!text-text-primary-dark dark:hover:!text-text-primary-dark'
-                } dark:hover:bg-bg-octonary-dark hover:bg-bg-tertiary-light  cursor-text h-full w-full pl-11 pr-9 rtl:pr-11 outline-none ${
+                }  hover:bg-bg-tertiary-light  cursor-text h-full w-full pl-11 pr-9 rtl:pr-11 outline-none ${
                   minThreshold
-                    ? 'dark:bg-bg-secondary-dark dark:!text-text-primary-dark dark:hover:!text-black  bg-bg-tertiary-light'
+                    ? 'dark:bg-bg-septendenary-dark dark:!text-text-primary-dark  bg-bg-tertiary-light'
                     : ''
                 }`}
                 placeholder={heroSection?.searchPlace?.placeholder}
@@ -1020,7 +1023,7 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
             </div>
             <Button
               buttonType={'quaternary'}
-              className={`bg-btn-quaternary-light text-text-secondary-light hover:text-text-primary-light dark:hover:text-text-primary-dark dark:text-text-primary-dark h-[36px] focus:outline-none hover:bg-btn-quinary-light font-medium rounded text-sm px-5 mr-1 rtl:ml-1 ${
+              className={`bg-btn-quaternary-light ml-1 text-text-secondary-light hover:text-text-primary-light dark:hover:text-text-primary-dark dark:text-text-primary-dark h-[36px] focus:outline-none hover:bg-btn-quinary-light font-medium rounded text-sm px-5 mr-1 rtl:ml-1 ${
                 !isSearchButtonEnabled() ? 'opacity-50 cursor-not-allowed' : ''
               }`}
               type="button"
@@ -1037,10 +1040,10 @@ const NewSearchBox: FC<NewSearchBoxProps> = ({
         <div
           className={appClsx(
             ` mobile:order-3 sm:hidden ${
-              stickyHeaderWithSearchBox && '!fixed top-[68px] bg-bg-secondary-light dark:bg-bg-secondary-dark'
-            }  z-50 sticky top-[68px] ${
+              stickyHeaderWithSearchBox && '!fixed top-[56px] bg-bg-secondary-light dark:bg-bg-secondary-dark pt-3'
+            }  z-50 sticky top-[56px] ${
               minThreshold
-                ? '!fixed top-[68px] mobile:px-4 w-full bg-bg-secondary-light dark:bg-bg-primary-dark'
+                ? '!fixed top-[56px] mobile:px-4 w-full bg-bg-secondary-light dark:bg-bg-secondary-dark'
                 : 'max-w-[1083px] mobile:px-4'
             } mobile:inline-block mx-5 relative w-full max-w-[638px] `,
             mobileContainerClassName

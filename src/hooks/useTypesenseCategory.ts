@@ -57,6 +57,7 @@ export const useTypesenseCategory = ({ categoryId, initialFilters, country }: Us
             title: query.categoryTitle as string,
           }
         : undefined,
+      sort: (query.sort as string) || '',
       // ... other filters
     };
   };
@@ -137,12 +138,14 @@ export const useTypesenseCategory = ({ categoryId, initialFilters, country }: Us
         return `${baseSort},price:asc`;
       case 'price_desc':
         return `${baseSort},price:desc`;
-      case 'newest':
+      case 'new_desc':
         return `${baseSort},listingTs:desc`;
-      case 'oldest':
+      case 'new_asc':
         return `${baseSort},listingTs:asc`;
+      case 'distance':
+        return `${baseSort},geo_location:asc`;
       default:
-        return `${baseSort},listingTs:desc`; // Default sorting
+        return `${baseSort},listingTs:desc`;
     }
   };
 

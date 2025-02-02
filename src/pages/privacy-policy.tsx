@@ -78,7 +78,7 @@ const PrivacyPolicy: FC<Props> = ({ PrivacyData,htmlContent,privacyPolicySeoData
   const breadcrumbLinks = t('page.breadcrumbLinks', { returnObjects: true }) as BreadcrumbLinks[];
 
   return (
-    <Layout  excludeHeroSection={true} stickyHeader={true}>
+    <Layout excludeHeroSection={true} stickyHeader={true}>
       <CustomHeader
         title={seoData?.title}
         description={seoData?.description}
@@ -86,7 +86,7 @@ const PrivacyPolicy: FC<Props> = ({ PrivacyData,htmlContent,privacyPolicySeoData
         url={seoData?.url}
       />
 
-      <PageHeaderWithBreadcrumb className="" steps={breadcrumbLinks}></PageHeaderWithBreadcrumb>
+      <PageHeaderWithBreadcrumb className="pl-0 mobile:pl-0" steps={breadcrumbLinks}></PageHeaderWithBreadcrumb>
       <div className="mt-[5px] sm:mt-[5px] relative custom-container mx-auto sm:px-16 mobile:px-4 ">
         <PageBanner
           bannerUrlForMobile={PrivacyData?.attributes?.heroSection?.heroImage?.cover_image?.data?.attributes?.url}
@@ -96,7 +96,10 @@ const PrivacyPolicy: FC<Props> = ({ PrivacyData,htmlContent,privacyPolicySeoData
           headerDescriptionForMobile={headerBennerSection.headerDescriptionForMobile}
         />
 
-        <div className='my-8 text-text-primary-light dark:text-text-primary-dark' dangerouslySetInnerHTML={{ __html: htmlContent }} />
+        <div
+          className="my-8 text-text-primary-light dark:text-text-primary-dark"
+          dangerouslySetInnerHTML={{ __html: htmlContent }}
+        />
       </div>
     </Layout>
   );

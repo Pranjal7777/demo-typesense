@@ -1,10 +1,11 @@
 import React, { FC, useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { useWindowResize } from '@/hooks/use-window-resize';
 import { appClsx } from '@/lib/utils';
 import HeroImage from '@/components/ui/hero-image';
 
 import { useTranslation } from 'next-i18next';
-import NewSearchBox from '@/components/ui/search-box';
+const NewSearchBox = dynamic(() => import('@/components/ui/search-box'), { ssr: false });
 import { useNewWindowScroll } from '@/hooks/new-use-window-scroll';
 import useTypesenseSearch from '@/hooks/useTypesenseSearch';
 import { useRouter } from 'next/router';

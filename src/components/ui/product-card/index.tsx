@@ -77,7 +77,7 @@ const ProductCard: FC<ProductCardProps> = ({ product, showProfilePic = false, is
       {isLikeAndDislikeLoading && <FullScreenSpinner />}
       <div
         role="button"
-        className="card flex flex-col p-1 gap-2 sm:gap-3 hover:scale-102  transition-all duration-300 ease-in hover:cursor-pointer mobile:max-w-[100%] w-full h-full pb-[10px] max-w-[313px] hover:shadow-lg"
+        className="card flex flex-col p-1 gap-2 sm:gap-3 md:hover:scale-102  transition-all duration-300 ease-in hover:cursor-pointer mobile:max-w-[100%] w-full h-full pb-[10px] max-w-[313px] md:hover:shadow-lg"
       >
         {showProfilePic && (
         <Link

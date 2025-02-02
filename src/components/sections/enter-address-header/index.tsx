@@ -1,8 +1,12 @@
 import React, { FC } from 'react';
-import CloseIcon from '../../../../public/assets/svg/close-icon';
+
+// import CloseIcon from '../../../../public/assets/svg/close-icon';
 import { useTheme } from '@/hooks/theme';
 import { appClsx } from '@/lib/utils';
-
+import dynamic from 'next/dynamic';
+const CloseIcon = dynamic(() => import('../../../../public/assets/svg/close-icon'), {
+  ssr: false,
+});
 export type Props = {
   className?: string;
   confirmLocation?: boolean;

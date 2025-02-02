@@ -41,7 +41,9 @@ import { IMAGES } from '@/lib/images';
 import CustomHeader from '@/components/ui/custom-header';
 import { useTypesenseCategory } from '@/hooks/useTypesenseCategory';
 import Placeholder from '@/containers/placeholder/placeholder';
-import FilterButtonDropdown from '@/components/ui/filter-button-dropdown';
+const FilterButtonDropdown = dynamic(() => import('@/components/ui/filter-button-dropdown'), {
+  ssr: false,
+});
 
 export type filteredProducts = {
   userName: string;
@@ -613,21 +615,26 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                   </div>
                 </div>
               )}
-              <div className=" w-full pt-3 md:pt-6 lg:pt-6 sm:py-0 lg:py-0 flex flex-col items-center justify-center">
+              <div className=" w-full pt-3 md:pt-6 lg:pt-6 sm:py-0 lg:py-0 flex flex-col items-center justify-center dark:bg-bg-primary-dark">
                 <div
-                  // style={{ zIndex: 1 }}
-                  className={`w-full z-[1] ${
+                  className={`w-full  ${
                     minThreshold
-                      ? `fixed !z-1 ${
-                          threshold < 300 ? 'top-[118px]' : 'top-[69px]'
-                        } left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] pt-2 pb-5 mx-auto max-w-[1440px]`
+                      ? `fixed z-[1] ${
+                          threshold < 300 ? 'top-[120px]' : 'top-[69px]'
+                        } left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark pt-3 sm:pt-5 sm:pb-8 pb-5`
                       : ''
                   }`}
                 >
-                  <div className=" flex  w-full justify-between filterselectContainer">
-                    <SectionTitle>All Products</SectionTitle>
-                    <div className="ml-auto mr-[24px] relative  items-center gap-2 hidden sm:inline-flex">
-                      {/* <Select
+                  <div
+                    // style={{ zIndex: 1 }}
+                    className={`w-full left-0 right-0 ${
+                      minThreshold ? 'px-[4%] sm:px-[64px] mx-auto max-w-[1440px]' : ''
+                    } `}
+                  >
+                    <div className=" flex  w-full justify-between filterselectContainer">
+                      <SectionTitle>All Products</SectionTitle>
+                      <div className="ml-auto mr-[24px] relative  items-center gap-2 hidden sm:inline-flex">
+                        {/* <Select
                         isSearchable={false}
                         className="w-fit min-w-[140px]  mobile:text-sm text-[14px] overflow-ellipsis"
                         onChange={(option) => {
@@ -655,47 +662,48 @@ const Categories: NextPage<CategoriesPageProps> = function ({
                           },
                         })}
                       /> */}
-                      <FilterButtonDropdown
-                        containerClassName="hidden lg:block"
-                        title={`Sort by ${
-                          selectedItemsFromFilterSection.sort
-                            ? `: ${getSortOptionTitle(selectedItemsFromFilterSection.sort)}`
-                            : ''
-                        }`}
-                        options={sortOptions || []}
-                        allSelectedValues={selectedItemsFromFilterSection.sort || ''}
-                        type="radio"
-                        onChange={(selected) => {
-                          handleFilterClick('sort', selected as string);
-                        }}
-                      />
-                    </div>
-                    <button className="flex cursor-pointer justify-between items-center" onClick={handleFilterDrawer}>
-                      <div>
-                        <img
-                          className=" inline-block mobile:hidden"
-                          width={28}
-                          height={24}
-                          src={'/images/filters_icon_white.svg'}
-                          alt="dollar_coin_icon"
-                        />
-                        <img
-                          className=" mobile:block hidden"
-                          width={20}
-                          height={18}
-                          src={'/images/filters_icon_white.svg'}
-                          alt="dollar_coin_icon"
+                        <FilterButtonDropdown
+                          containerClassName="hidden lg:block"
+                          title={`Sort by ${
+                            selectedItemsFromFilterSection.sort
+                              ? `: ${getSortOptionTitle(selectedItemsFromFilterSection.sort)}`
+                              : ''
+                          }`}
+                          options={sortOptions || []}
+                          allSelectedValues={selectedItemsFromFilterSection.sort || ''}
+                          type="radio"
+                          onChange={(selected) => {
+                            handleFilterClick('sort', selected as string);
+                          }}
                         />
                       </div>
-                    </button>
-                  </div>
-                  {hasActiveFilters() && (
-                    // <div className="border-2 boreder-error flex gap-10 items-center w-full flex-wrap mt-5 mobile:overflow-x-scroll h-8 md:h-4 border-none mb-2">
+                      <button className="flex cursor-pointer justify-between items-center" onClick={handleFilterDrawer}>
+                        <div>
+                          <img
+                            className=" md:inline-block hidden"
+                            width={28}
+                            height={24}
+                            src={'/images/filters_icon_white.svg'}
+                            alt="dollar_coin_icon"
+                          />
+                          <img
+                            className="block md:hidden"
+                            width={20}
+                            height={18}
+                            src={'/images/filters_icon_white.svg'}
+                            alt="dollar_coin_icon"
+                          />
+                        </div>
+                      </button>
+                    </div>
+                    {hasActiveFilters() && (
+                      // <div className="border-2 boreder-error flex gap-10 items-center w-full flex-wrap mt-5 mobile:overflow-x-scroll h-8 md:h-4 border-none mb-2">
                       <div className="flex gap-x-3 mt-3 overflow-x-auto  scrollbar-hide">
                         {selectedItemsFromFiltersSectionList()}
                       </div>
-                    // {/* </div> */}
-                  )}
+                      // {/* </div> */}
+                    )}
+                  </div>
                 </div>
                 <div className="mt-10 w-full mobile:mt-6 md:mb-8">
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-x-3 gap-y-4 md:gap-x-2 md:gap-y-7">

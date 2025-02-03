@@ -35,6 +35,7 @@ export type HeroSectionProps = {
   mobileSearchBoxContainerClassName?: string;
   showBackArrowInSearchBox?: boolean;
   heroImageSrc?: string;
+  title?: string;
   description?: string;
 };
 
@@ -53,6 +54,7 @@ const HeroSection: FC<HeroSectionProps> = ({
   mobileSearchBoxContainerClassName,
   showBackArrowInSearchBox = false,
   heroImageSrc,
+  title,
   description,
 }) => {
   const maxThreshold = useNewWindowScroll(400);
@@ -106,7 +108,7 @@ const HeroSection: FC<HeroSectionProps> = ({
             stickyHeaderWithSearchBox && 'hidden'
           } ${minThreshold ? 'hidden' : ''} transition-all duration-300 ease-in`}
         >
-          {heroSection.title}
+          {title ||  heroSection.title}
         </h1>
         <NewSearchBox
           showBackArrow={showBackArrowInSearchBox}

@@ -116,6 +116,9 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   const theme = useTheme();
   const router = useRouter();
 
+  console.log(categoriesBannerData, 'categoriesBannerData in');
+  
+
   const { 'categoryName-id': categoryNameId , selectedCategory} = router.query;
   const categoryNameIdArray = Array.isArray(categoryNameId) ? categoryNameId : categoryNameId?.split('-');
   const id = categoryNameIdArray?.[categoryNameIdArray.length - 1];
@@ -540,6 +543,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
         categories={categories}
         heroImageSrc={categoriesBannerData?.webBanner || IMAGES.PRIMARY_BANNER}
         description={categoriesBannerData?.description || ''}
+        title={categoriesBannerData?.headline || ''}
         stickyHeader={threshold <= 540}
         stickyHeroSection={threshold <= 540}
       >

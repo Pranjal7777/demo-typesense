@@ -17,6 +17,7 @@ export interface ResponseGetSubCategoriesByParentIdPayload {
   total_count?: number;
   mobileBanner?: string;
   description?: string;
+  headline?: string;
 }
 export interface Category {
   id: string;

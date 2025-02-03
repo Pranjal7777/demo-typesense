@@ -134,9 +134,9 @@ export const useTypesenseSearch = ({ searchTerm, initialFilters, country }: UseT
         return `${baseSort},price:asc`;
       case 'price_desc':
         return `${baseSort},price:desc`;
-      case 'newest':
+      case 'new_desc':
         return `${baseSort},listingTs:desc`;
-      case 'oldest':
+      case 'new_asc':
         return `${baseSort},listingTs:asc`;
       case 'distance':
         return `${baseSort},geo_location:asc`;

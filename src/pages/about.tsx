@@ -151,8 +151,8 @@ const About: FC<Props> = ({ aboutData , aboutSeoData}) => {
         url={seoData?.url}
       />
       <Layout excludeHeroSection={true} stickyHeader={true}>
-      <PageHeaderWithBreadcrumb className="" steps={breadcrumbLinks}></PageHeaderWithBreadcrumb>
-      <div className=" mt-[50px] sm:mt-[69px]  relative custom-container mx-auto sm:px-16 mobile:px-4 ">
+      <PageHeaderWithBreadcrumb className="pl-0 mobile:pl-0" steps={breadcrumbLinks}></PageHeaderWithBreadcrumb>
+      <div className=" mt-[40px] sm:mt-[69px]  relative custom-container mx-auto sm:px-16 mobile:px-4 ">
         <PageBanner
           bannerUrlForMobile={aboutData?.attributes?.heroSection?.heroImage?.cover_image?.data?.attributes?.url}
           bannerUrlForWeb={aboutData?.attributes?.heroSection?.heroImage?.cover_image?.data?.attributes?.url}

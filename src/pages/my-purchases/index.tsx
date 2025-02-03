@@ -1,8 +1,13 @@
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import React, { useEffect, useRef, useState } from 'react';
-import LeftArrowIcon from '../../../public/assets/svg/left-arrow-icon';
-import TabbedSearch from '@/components/tabs-search';
+import dynamic from 'next/dynamic';
+const LeftArrowIcon = dynamic(() => import('../../../public/assets/svg/left-arrow-icon'), {
+  ssr: false,
+});
+const TabbedSearch = dynamic(() => import('@/components/tabs-search'), {
+  ssr: false,
+});
 import PurchaseContainer from '@/containers/purchase';
 import Header from '@/components/sections/header';
 import { useRouter } from 'next/router';
@@ -10,8 +15,12 @@ import SoldContainer from '@/containers/sold';
 import { buildQueryString } from '@/helper/build-query-string';
 import { myPurchaseApi } from '@/store/api-slices/my-purchase/my-purchase-api';
 import debounce from 'lodash.debounce';
-import FilterBarIcon from '../../../public/assets/svg/filter-bar-icon';
-import FilterPopup from '@/components/ui/filter-popup';
+const FilterBarIcon = dynamic(() => import('../../../public/assets/svg/filter-bar-icon'), {
+  ssr: false,
+});
+const FilterPopup = dynamic(() => import('@/components/ui/filter-popup'), {
+  ssr: false,
+});
 import { useTheme } from '@/hooks/theme';
 import Button from '@/components/ui/button';
 
@@ -123,7 +132,7 @@ const [page, setPage] = useState(1);
           <div className="w-full md:hidden">
             <div className=" relative flex flex-col justify-center md:justify-start items-center text-lg md:text-2xl font-semibold py-5">
               <LeftArrowIcon
-              primaryColor={theme ? '#FFF' : '#202020'} 
+                primaryColor={theme ? '#FFF' : '#202020'}
                 onClick={() => {
                   setShowPurchaseDetailsMobile(false);
                   setShowSoldDetailsMobile(false);
@@ -132,8 +141,8 @@ const [page, setPage] = useState(1);
                 width="15"
                 className="md:hidden absolute left-0"
               />
-              <h1 className='text-base'> Order Details</h1>
-              <span className=' text-sm font-normal text-text-septenary-light'>OID: {showOrderId}</span>
+              <h1 className="text-base"> Order Details</h1>
+              <span className=" text-sm font-normal text-text-septenary-light">OID: {showOrderId}</span>
             </div>
           </div>
         ) : null}
@@ -141,9 +150,19 @@ const [page, setPage] = useState(1);
         {!showPurchaseDetailsMobile && !showSoldDetailsMobile && (
           <div className="w-full md:hidden">
             <div className=" relative  flex justify-center md:justify-start items-center text-lg md:text-2xl font-semibold py-5">
-              <LeftArrowIcon onClick={()=>router.back()} primaryColor={theme ? '#FFF' : '#202020'}  height="15" width="15" className="md:hidden absolute left-0 " />
+              <LeftArrowIcon
+                onClick={() => router.back()}
+                primaryColor={theme ? '#FFF' : '#202020'}
+                height="15"
+                width="15"
+                className="md:hidden absolute left-0 "
+              />
               <h1>My purchases</h1>
-              <FilterBarIcon primaryColor={theme ? '#FFF' : '#202020'} onClick={onFilterBarIconClick} className='md:hidden absolute right-0'/>
+              <FilterBarIcon
+                primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
+                onClick={onFilterBarIconClick}
+                className="md:hidden absolute right-0"
+              />
             </div>
             <TabbedSearch
               isFilterInclude={true}
@@ -155,26 +174,31 @@ const [page, setPage] = useState(1);
               onSelectionChange={handleFilterChange}
               selectedFilters={selectedFilters}
               filterOptions={filterOptions}
-              filterIconWrapperClass='hidden md:block'
+              filterIconWrapperClass="hidden md:block"
             />
-            {
-              showMobileFilterPopup && <FilterPopup
-              ref = {popupRef}
-              selectedValues={selectedFilters || []}
+            {showMobileFilterPopup && (
+              <FilterPopup
+                ref={popupRef}
+                selectedValues={selectedFilters || []}
                 containerClass={'right-[10px]'}
                 options={filterOptions}
                 onSelectionChange={handleFilterChange}
-                filterType={ "RADIO"}
-                filterHeaderText = { 'Filter'}
+                filterType={'RADIO'}
+                filterHeaderText={'Filter'}
               />
-            }
+            )}
           </div>
         )}
 
         {!isMobile && (
           <div className="w-full hidden md:block">
             <div className=" relative  flex justify-center md:justify-start items-center text-lg md:text-2xl font-semibold py-5">
-              <LeftArrowIcon primaryColor={theme ? '#FFF' : '#202020'} height="15" width="15" className="md:hidden absolute left-0 " />
+              <LeftArrowIcon
+                primaryColor={theme ? '#FFF' : '#202020'}
+                height="15"
+                width="15"
+                className="md:hidden absolute left-0 "
+              />
               <h1>My purchases</h1>
             </div>
             <TabbedSearch
@@ -194,14 +218,14 @@ const [page, setPage] = useState(1);
         )}
 
         <div
-          className={`tab-content text-text-primary-light dark:text-text-secondary-light ${showPurchaseDetailsMobile ? 'mt-0' : 'mt-3'} ${
-            currenTab == 'Cancelled' ? 'mt-3' : ''
-          } md:mt-5 flex md:gap-4 flex-1 overflow-y-scroll`}
+          className={`tab-content text-text-primary-light dark:text-text-secondary-light ${
+            showPurchaseDetailsMobile ? 'mt-0' : 'mt-3'
+          } ${currenTab == 'Cancelled' ? 'mt-3' : ''} md:mt-5 flex md:gap-4 flex-1 overflow-y-scroll`}
         >
           {currenTab == 'Purchases' ? (
             <PurchaseContainer
-            refetchPurchaseData={refetch}
-            setShowOrderId = {setShowOrderId}
+              refetchPurchaseData={refetch}
+              setShowOrderId={setShowOrderId}
               isMobile={isMobile}
               data={data}
               isPurchaseDetailsFetching={isFetching}
@@ -210,8 +234,8 @@ const [page, setPage] = useState(1);
             />
           ) : currenTab == 'Cancelled' ? (
             <SoldContainer
-            setShowOrderId={setShowOrderId}
-            isMobile={isMobile}
+              setShowOrderId={setShowOrderId}
+              isMobile={isMobile}
               data={data}
               isPurchaseDetailsFetching={isFetching}
               showSoldDetailsMobile={showSoldDetailsMobile}

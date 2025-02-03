@@ -107,82 +107,81 @@ const Faq: React.FC<FaqProps> = ({ faqData, faqSeoData }) => {
 
   return (
     <>
-        <CustomHeader
-          title={seoData?.title}
-          description={seoData?.description}
-          image={seoData?.image?.url}
-          url={seoData?.url}
+      <CustomHeader
+        title={seoData?.title}
+        description={seoData?.description}
+        image={seoData?.image?.url}
+        url={seoData?.url}
       />
       <Layout excludeHeroSection={true} stickyHeader={true}>
-
-      <PageHeaderWithBreadcrumb className=" " steps={breadcrumbLinks}></PageHeaderWithBreadcrumb>
-      {faqData ? (
-        <>
-          <div className=" mt-[50px] sm:mt-[69px] relative custom-container mx-auto sm:px-16 mobile:px-4">
-            {faqData?.heroSection ? (
-              <PageBanner
-                bannerUrlForMobile={faqData?.heroSection?.heroImage?.cover_image?.data?.attributes?.url}
-                bannerUrlForWeb={faqData?.heroSection?.heroImage?.cover_image?.data?.attributes?.url}
-                headerText={faqData?.heroSection?.title}
-                headerDescription={faqData?.heroSection?.subtitle}
-              />
-            ) : null}
-
-            <div className="py-12 pb-20 mobile:py-6 border-error">
-              {faqData?.FAQSection ? (
-                <>
-                  <ContentSectionPageTitle className="mobile:mb-3">
-                    {faqData?.FAQSection?.title}
-                  </ContentSectionPageTitle>
-
-                  <Description className="mb-0" desc={[faqData?.FAQSection?.description]} />
-                </>
+        <PageHeaderWithBreadcrumb className="pl-0 mobile:pl-0" steps={breadcrumbLinks}></PageHeaderWithBreadcrumb>
+        {faqData ? (
+          <>
+            <div className=" mt-[40px] sm:mt-[69px] relative custom-container mx-auto sm:px-16 mobile:px-4">
+              {faqData?.heroSection ? (
+                <PageBanner
+                  bannerUrlForMobile={faqData?.heroSection?.heroImage?.cover_image?.data?.attributes?.url}
+                  bannerUrlForWeb={faqData?.heroSection?.heroImage?.cover_image?.data?.attributes?.url}
+                  headerText={faqData?.heroSection?.title}
+                  headerDescription={faqData?.heroSection?.subtitle}
+                />
               ) : null}
 
-              {!HIDE_SELLER_FLOW && (
-                <div className="flex flex-col items-center justify-center">
-                  <div className="flex my-9 md:my-16  items-center justify-between h-[60px] mobile:h-[50px] rounded-full dark:bg-bg-tertiary-dark border-border-denary-light dark:border-border-primary-dark bg-bg-octonary-light  max-w-[400px] mobile:max-w-[350px] w-full border-2">
-                    <button
-                      className={`w-[50%] h-full rounded-full transition-all ease-in duration-300 dark:text-text-primary-dark ${
-                        isBuyerOrSeller ? 'bg-brand-color text-text-secondary-light' : 'text-text-primary-light'
-                      }`}
-                      onClick={() => setIsBuyerOrSeller(true)}
-                    >
-                      {faqData?.BuyersSection?.name}
-                    </button>
-                    <button
-                      className={`w-[50%] h-full rounded-full transition-all ease-in duration-300 dark:text-text-primary-dark  ${
-                        !isBuyerOrSeller ? 'bg-brand-color text-text-secondary-light' : 'text-text-primary-light'
-                      }`}
-                      onClick={() => setIsBuyerOrSeller(false)}
-                    >
-                      {faqData?.SellersSection?.name}
-                    </button>
-                  </div>
-                  {faqData.BuyersSection && faqData.SellersSection && (
-                    <div className="w-full flex justify-center mobile:justify-start">
-                      <div className="max-w-[792px]">
-                        {(isBuyerOrSeller ? buyerQuestions : sellerQuestions).map((item) => (
-                          <FaqCard
-                            key={item.id}
-                            id={item.id}
-                            onClick={handleCardClick}
-                            isOpen={item.id === openCard}
-                            question={item.question}
-                            answer={item.answer}
-                          />
-                        ))}
-                      </div>
+              <div className="py-12 pb-20 mobile:py-6 border-error">
+                {faqData?.FAQSection ? (
+                  <>
+                    <ContentSectionPageTitle className="mobile:mb-3">
+                      {faqData?.FAQSection?.title}
+                    </ContentSectionPageTitle>
+
+                    <Description className="mb-0" desc={[faqData?.FAQSection?.description]} />
+                  </>
+                ) : null}
+
+                {!HIDE_SELLER_FLOW && (
+                  <div className="flex flex-col items-center justify-center">
+                    <div className="flex my-9 md:my-16  items-center justify-between h-[60px] mobile:h-[50px] rounded-full dark:bg-bg-tertiary-dark border-border-denary-light dark:border-border-primary-dark bg-bg-octonary-light  max-w-[400px] mobile:max-w-[350px] w-full border-2">
+                      <button
+                        className={`w-[50%] h-full rounded-full transition-all ease-in duration-300 dark:text-text-primary-dark ${
+                          isBuyerOrSeller ? 'bg-brand-color text-text-secondary-light' : 'text-text-primary-light'
+                        }`}
+                        onClick={() => setIsBuyerOrSeller(true)}
+                      >
+                        {faqData?.BuyersSection?.name}
+                      </button>
+                      <button
+                        className={`w-[50%] h-full rounded-full transition-all ease-in duration-300 dark:text-text-primary-dark  ${
+                          !isBuyerOrSeller ? 'bg-brand-color text-text-secondary-light' : 'text-text-primary-light'
+                        }`}
+                        onClick={() => setIsBuyerOrSeller(false)}
+                      >
+                        {faqData?.SellersSection?.name}
+                      </button>
                     </div>
-                  )}
-                </div>
-              )}
-              {HIDE_SELLER_FLOW && <FAQ />}
+                    {faqData.BuyersSection && faqData.SellersSection && (
+                      <div className="w-full flex justify-center mobile:justify-start">
+                        <div className="max-w-[792px]">
+                          {(isBuyerOrSeller ? buyerQuestions : sellerQuestions).map((item) => (
+                            <FaqCard
+                              key={item.id}
+                              id={item.id}
+                              onClick={handleCardClick}
+                              isOpen={item.id === openCard}
+                              question={item.question}
+                              answer={item.answer}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+                {HIDE_SELLER_FLOW && <FAQ />}
+              </div>
             </div>
-          </div>
-        </>
-      ) : (
-        <NoTFound status={404} error={'Data not found'} />
+          </>
+        ) : (
+          <NoTFound status={404} error={'Data not found'} />
         )}
       </Layout>
     </>

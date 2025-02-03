@@ -57,7 +57,7 @@ const DownloadCard: React.FC = () => {
               {appDownloadSection.subHeading}
             </p>
 
-            <strong className="mt-[70px] lg:mt-7 text-left sm:text-center lg:text-left font-bold text-base self-start">
+            <strong className="mt-[40px] lg:mt-7 text-left sm:text-center lg:text-left font-bold text-base self-start">
               {appDownloadSection.phoneNumberTitle}
             </strong>
             <div className="relative mt-3 max-w-[355px] mobile:w-full w-full self-start">
@@ -65,7 +65,7 @@ const DownloadCard: React.FC = () => {
                 country="in" 
                 placeholder={appDownloadSection.phonePlaceHolder}
                 mainClassName=""
-                inputClass="dark:!bg-bg-quaternary-dark dark:!text-text-secondary-dark"
+                inputClass="dark:!bg-bg-quaternary-dark dark:!text-text-secondary-dark !text-base"
                 className="text-text-secondary-dark border-none rounded !h-[44px]"
                 buttonClass="!border-none dark:!bg-bg-quaternary-dark !bg-transparent"
                 value={phoneNumber}

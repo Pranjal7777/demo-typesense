@@ -54,8 +54,8 @@ function BlogsDetails({ post, id }: blogs_detailsProps) {
           <>
             {post?.data?.attributes?.breadCrumbLinks?.length > 0 ? (
               <PageHeaderWithBreadcrumb
-                listClassName="max-w-[100px] truncate"
-                className=""
+                listClassName="max-w-[150px] md:max-w-[300px] truncate"
+                className=" pl-0 mobile:pl-0"
                 steps={post?.data.attributes.breadCrumbLinks}
                 slugDetail={{ name: slugData[0]?.title, link: `${id}` }}
               ></PageHeaderWithBreadcrumb>

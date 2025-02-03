@@ -1,8 +1,8 @@
 import React, { ChangeEvent, useState, useEffect, useCallback, useLayoutEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import AddressHeader from '@/components/sections/address-header';
-import dynamic from 'next/dynamic';
 import GoogleMapComponent from '@/components/ui/google-map';
 import {
   ADD_NEW_ADDRESS,

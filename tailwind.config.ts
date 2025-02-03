@@ -104,6 +104,7 @@ const config: Config = {
         'bg-quattuordenary-dark': '#15392B',
         'bg-quinquedenary-dark': '#242424',
         'bg-sexdenary-dark': '#343434',
+        'bg-septendenary-dark': '#404040',
 
         // border color
         'border-primary-light': '#000000',

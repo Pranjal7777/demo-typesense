@@ -29,7 +29,6 @@ export type Props = {
   stickyHeroSection?:boolean,
   excludeFooter?:boolean,
   containerClass?: string,
-  title?: string;
   keywords?: string;
   description?: string;
   tokenFromServer?: Token;
@@ -42,6 +41,7 @@ export type Props = {
   mobileHeaderContainerClassName?: string;
   showBackArrowInSearchBox?: boolean;
   heroImageSrc?: string;
+  title?: string;
 };
 
 // Define the type for the schema object
@@ -63,6 +63,7 @@ const Layout: FC<Props> = ({
   mobileHeaderContainerClassName,
   showBackArrowInSearchBox = false,
   heroImageSrc,
+  title,
   description,
 }) => {
   const { locale } = useRouter();
@@ -212,6 +213,7 @@ const Layout: FC<Props> = ({
           !excludeHeroSection && (
             <HeroSection
               description={description}
+              title={title}
               heroImageSrc={heroImageSrc}         
               mobileSearchBoxContainerClassName={appClsx(mobileSearchBoxContainerClassName)}
               showBackArrowInSearchBox={showBackArrowInSearchBox}

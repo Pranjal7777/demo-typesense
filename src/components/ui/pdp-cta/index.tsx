@@ -14,7 +14,8 @@ type PdpCtaProps = {
   apiData?: any;
   setStickyHeaderDetails?: React.Dispatch<React.SetStateAction<StickyHeaderDetails>>;
   stickyHeaderDetails?: StickyHeaderDetails;
-  askQuestionHandler?: ()=>void;
+  askQuestionHandler?: () => void;
+  isChatCreating?: boolean;
 };
 const PdpCta: React.FC<PdpCtaProps> = ({
   isSold,
@@ -27,6 +28,7 @@ const PdpCta: React.FC<PdpCtaProps> = ({
   setStickyHeaderDetails,
   stickyHeaderDetails,
   askQuestionHandler,
+  isChatCreating,
 }) => {
   const theme = useTheme();
   const [loadingChat, setLoadingChat] = useState(false);
@@ -100,6 +102,7 @@ const PdpCta: React.FC<PdpCtaProps> = ({
               className="w-[15rem] mobile:w-[12rem] text-sm mb-0"
               buttonType="secondary"
               onClick={askQuestionHandler}
+              isLoading={isChatCreating}
             >
               Ask A Question
             </Button>

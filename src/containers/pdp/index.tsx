@@ -82,9 +82,7 @@ export type StickyHeaderDetails = {
   showButtons: boolean;
 };
 
-const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
-  console.log(data, 'pdp data');
-  
+const ProductDisplay: React.FC<ProductProps> = ({ data }) => {  
   const sellerAccountId = data?.result?.users?.accountId;
   const router = useRouter();
   const apidata = data.result;
@@ -120,6 +118,8 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
   const [isFirstButtonLoading, setIsFirstButtonLoading] = useState(false);
   const dispatch = useDispatch();  
 
+  const [isChatCreating, setIsChatCreating] = useState<boolean>(false);
+
   const [postChat,{isLoading}] = chatApi.usePostChatMutation();
 
     const [likeAndDislikeProduct, { isLoading: isLikeAndDislikeLoading }] =
@@ -135,8 +135,8 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
             return;
           }
           try {
+            setIsChatCreating(true);
             const data = await getConfigData();
-            console.log(data, 'mirconfig data');
             const createConversationPayload = {
               conversationType: 0,
               pushNotifications: true,
@@ -179,6 +179,8 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
           } catch (error) {
             showToast({ message: 'Sorry something went wrong Please try after some time' });
             console.log(error, 'config error');
+          }finally{
+              setIsChatCreating(true);
           }
         } else {
           router.push('/login');
@@ -228,7 +230,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
   const EngagementStatsData = [
     {
       logo: (
-        <HartSvg
+        <HartSvg     
           className="w-[12px] h-[12px] md:w-[16px] md:h-[16px]"
           borderColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
         />
@@ -237,12 +239,12 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
       value: totalLikedCount,
     },
     {
-      logo: <ViewsIcon color={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} />,
+      logo: <ViewsIcon  color={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} />,
       label: engagementStats[0].views,
       value: viewCount,
     },
     {
-      logo: <OffersIconSVG color={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} />,
+      logo: <OffersIconSVG  color={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} />,
       label: engagementStats[0].offers,
       value: offerTradeCount,
     },
@@ -259,7 +261,6 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
   ];
 
   const handleFirstButtonClick = useCallback(async () => {
-    console.log(data.result, 'data.result');
     if (!userInfo) return router.push('/login');
     if (data.result.isNegotiable) return;
     try {
@@ -406,6 +407,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
                   </Button>
 
                   <Button
+                    isLoading={isChatCreating}
                     className="w-[174px] text-sm mb-0 dark:bg-bg-tertiary-dark dark:text-text-primary-dark"
                     buttonType="secondary"
                     onClick={askQuestionHandler}
@@ -528,6 +530,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
       {apidata?.users?.accountId !== userInfo?.accountId && (
         <div className=" px-2 z-10 sm:hidden flex items-center justify-between h-[76px] w-full fixed bottom-0 right-0 left-0 bg-bg-secondary-light dark:bg-bg-secondary-dark">
           <PdpCta
+            isChatCreating={isChatCreating}
             apiData={apidata}
             firstButtonText={data.result?.isNegotiable ? ctaText[0].makeOfferBtn : ctaText[0].firstBtn}
             isSold={isSold}

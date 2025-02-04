@@ -168,8 +168,9 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
                 chatId: createConversationResponse.conversationId
               };
               const postChatResponse = await postChat(postChatPayload).unwrap();
-              showToast({ message: 'Chat create successfully please wait to ask you question' });
-              console.log(createConversationResponse, 'createConversationData');
+              showToast({ message: 'Chat create successfully please wait to ask your question' }, () =>
+                router.push(`/chat?conversation=${createConversationResponse.conversationId}`)
+              );
             } catch (error) {
               console.log(error, 'createchat error');
               const errorRes = error as { status: number, data: { message: string } };

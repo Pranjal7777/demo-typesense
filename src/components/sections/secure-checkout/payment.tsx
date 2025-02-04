@@ -3,6 +3,7 @@ import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js'
 import React, { useImperativeHandle } from 'react';
 import FullScreenSpinner from '@/components/ui/full-screen-spinner';
 import { useRouter } from 'next/router';
+import showToast from '@/helper/show-toaster';
 
 export const PaymentSection = React.forwardRef<HTMLFormElement>((props, ref) => {
   const stripe = useStripe();
@@ -23,7 +24,13 @@ export const PaymentSection = React.forwardRef<HTMLFormElement>((props, ref) => 
     });
 
     if(data.paymentIntent?.status === 'succeeded'){
-      router.push('/checkout/success');
+              showToast(
+                { message: 'Payment successful. Please wait we will redirect you to chat', messageType: 'success' },
+                () => router.push('/chat')
+              );
+
+      // router.push('/chat');
+      // router.push('/checkout/success');
     }
   };
 

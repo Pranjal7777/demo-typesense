@@ -9,7 +9,7 @@ import '@uppy/dashboard/dist/style.css';
 import '@uppy/image-editor/dist/style.css';
 import { uploadToS3 } from '@/lib/aws-sdk';
 import Button from '../button';
-import { Toaster } from 'sonner';
+// import { Toaster } from 'sonner';
 import showToast from '@/helper/show-toaster';
 import { useTheme } from '@/hooks/theme';
 
@@ -166,7 +166,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
            left: ${fileNamePositionLeft};
           }
       `}</style>
-      <Toaster />
+      {/* <Toaster /> */}
       <div className="h-full w-full flex flex-col">
         <Dashboard
           style={{ flex: 1 }}

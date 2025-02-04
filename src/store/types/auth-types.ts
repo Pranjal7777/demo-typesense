@@ -286,3 +286,65 @@ export interface myLocationField{
 export interface myLocationFieldWithIp  extends  myLocationField{
     ip:string | null;
 }
+
+
+
+interface Isometrik {
+  isometrikAdminId: string;
+  accountId: string;
+  appSecret: string;
+  userSecret: string;
+  keySetId: string;
+  licenseKey: string;
+  projectId: string;
+}
+
+interface CompanyDetail {
+  taxId: string;
+  country: string;
+  zipCode: string;
+  city: string;
+  companyName: string;
+  address: string;
+}
+
+interface KwibalData {
+  convenienceFee: number;
+  noOfVideoAllowForFreePlan: number;
+  copyrightText: string;
+  noOfAds: number;
+  maxProductPrice: number;
+  accountId: string;
+  noOfAdsForFreePlan: number;
+  shippingFee: number;
+  isProfileComplete: boolean;
+  assetsUrl: string;
+  minProductPrice: number;
+  isUsernameUpdateConfirmationEnabled: boolean;
+  accountBrandName: string;
+  currencySymbol: string;
+  freeListingActiveFor: number;
+  accountType: string;
+  chatJoinRequestExpireInDays: number;
+  supportMail: string;
+  sslPinningKey: string[];
+  activeVideoCount: number;
+  activeAdsCount: number;
+  noOfDaysChatRemainActiveAfterSold: number;
+  defaultCurrency: string;
+  videoLengthForPaidAd: number;
+  videoLengthForFreeAd: number;
+  videoAd: number;
+  imageUrl: string;
+  noOfVideos: number;
+  accountLegalName: string;
+  isometrik: Isometrik;
+  activeAd: number;
+  companyDetail: CompanyDetail;
+  paidListingActiveFor: number;
+}
+
+export interface KwibalConfigResponse {
+  message: string;
+  data: KwibalData;
+}

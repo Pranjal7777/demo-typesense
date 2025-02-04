@@ -27,6 +27,10 @@ import Button from '@/components/ui/button';
 import { productsApi } from '@/store/api-slices/products-api';
 import showToast from '@/helper/show-toaster';
 import FullScreenSpinner from '@/components/ui/full-screen-spinner';
+import authApi from '@/store/api-slices/auth';
+import { getConfigData } from '@/helper/get-config-data';
+import { createConversation } from '@/lib/chat-sdk';
+import { chatApi } from '@/store/api-slices/chat-api';
 const ProductDetailsCard = React.lazy(() => import('@/components/ui/product-details-card'));
 const PdpCta = React.lazy(() => import('@/components/ui/pdp-cta'));
 
@@ -78,9 +82,7 @@ export type StickyHeaderDetails = {
   showButtons: boolean;
 };
 
-const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
-  console.log(data, 'pdp data');
-  
+const ProductDisplay: React.FC<ProductProps> = ({ data }) => {  
   const sellerAccountId = data?.result?.users?.accountId;
   const router = useRouter();
   const apidata = data.result;
@@ -103,6 +105,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
   const prodTimeStamp = apidata?.creationTs;
   const isSold = apidata?.sold;
   const shareLink = apidata?.shareLink;
+  const chatId = apidata?.chatId;
   const desc: string = productDetails('page.desc');
   const postingLabel: string = productDetails('page.postedLabel');
   const hamburger = productDetails('page.hamburger', { returnObjects: true }) as hamburger;
@@ -115,11 +118,74 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
   const [isFirstButtonLoading, setIsFirstButtonLoading] = useState(false);
   const dispatch = useDispatch();  
 
+  const [isChatCreating, setIsChatCreating] = useState<boolean>(false);
+
+  const [postChat,{isLoading}] = chatApi.usePostChatMutation();
+
     const [likeAndDislikeProduct, { isLoading: isLikeAndDislikeLoading }] =
       productsApi.useLikeAndDislikeProductMutation();
       const [isLiked, setIsLiked] = useState(apidata?.isLiked);
 
       const [isLikeChange, setIsLikeChange] = useState(false);
+
+      const askQuestionHandler = useCallback(async () => {
+        if (userInfo) {
+          if (chatId) {
+            router.push(`/chat?conversation=${chatId}`);
+            return;
+          }
+          try {
+            setIsChatCreating(true);
+            const data = await getConfigData();
+            const createConversationPayload = {
+              conversationType: 0,
+              pushNotifications: true,
+              isGroup: true,
+              readEvents: true,
+              members: [data?.data?.isometrik?.isometrikAdminId || ''],
+              metaData: {
+                status: 'OPEN',
+                productImage: images,
+                productId: assetId,
+                productTitle: prodTitle,
+                purchaseType: 'OFFER',
+                productPrice: prodPrice,
+                productDescription: prodDesc,
+              },
+              typingEvents: true,
+              conversationImageUrl:
+                'https://isometrik-website-bucket.s3.ap-south-1.amazonaws.com/Profile_placeholder_3x_b2a01071a2.png',
+              conversationTitle: 'Admin',
+            };
+            try {
+              const createConversationResponse = await createConversation(
+                userInfo.isometrikResp.userToken,
+                createConversationPayload
+              );
+
+              const postChatPayload = {
+                assetId: assetId,
+                chatId: createConversationResponse.conversationId
+              };
+              const postChatResponse = await postChat(postChatPayload).unwrap();
+              showToast({ message: 'Chat create successfully please wait to ask your question' }, () =>
+                router.push(`/chat?conversation=${createConversationResponse.conversationId}`)
+              );
+            } catch (error) {
+              console.log(error, 'createchat error');
+              const errorRes = error as { status: number, data: { message: string } };
+              showToast({ message: errorRes.data.message, messageType: 'error' });
+            }
+          } catch (error) {
+            showToast({ message: 'Sorry something went wrong Please try after some time' });
+            console.log(error, 'config error');
+          }finally{
+              setIsChatCreating(true);
+          }
+        } else {
+          router.push('/login');
+        }
+      }, [userInfo, chatId, assetId, images, prodTitle, prodPrice, prodDesc, postChat]);
 
        const handleLike = useCallback(async () => {
          if (userInfo) {
@@ -164,7 +230,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
   const EngagementStatsData = [
     {
       logo: (
-        <HartSvg
+        <HartSvg     
           className="w-[12px] h-[12px] md:w-[16px] md:h-[16px]"
           borderColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
         />
@@ -173,12 +239,12 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
       value: totalLikedCount,
     },
     {
-      logo: <ViewsIcon color={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} />,
+      logo: <ViewsIcon  color={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} />,
       label: engagementStats[0].views,
       value: viewCount,
     },
     {
-      logo: <OffersIconSVG color={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} />,
+      logo: <OffersIconSVG  color={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'} />,
       label: engagementStats[0].offers,
       value: offerTradeCount,
     },
@@ -195,7 +261,6 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
   ];
 
   const handleFirstButtonClick = useCallback(async () => {
-    console.log(data.result, 'data.result');
     if (!userInfo) return router.push('/login');
     if (data.result.isNegotiable) return;
     try {
@@ -257,104 +322,108 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
       showBackArrowInSearchBox={true}
     >
       {(stickyHeaderDetails?.showProductImage || stickyHeaderDetails?.showShareIcon) && (
-        <div
-          // style={{ zIndex: 1 }}
-          className=" z-[1] fixed flex justify-between items-center h-[61px] md:h-[80px] top-[66px]  md:top-[69px] left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark px-[4%] sm:px-[64px] py-2 mx-auto max-w-[1440px]"
-        >
-          <div className="flex gap-4">
-            {stickyHeaderDetails.showProductImage && (
-              <ImageContainer
-                src={getImageSrc(activeProductImage)}
-                alt={`Thumbnail`}
-                width={110}
-                height={110}
-                className={` border !aspect-square h-9 w-9 md:h-[70px] md:w-[70px] object-cover rounded-lg`}
-                layout="fixed"
-              />
-            )}
+        <div className="w-full z-[1] fixed top-[66px] h-fit  md:top-[69px] left-0 right-0 bg-bg-secondary-light dark:bg-bg-primary-dark">
+          <div
+            // style={{ zIndex: 1 }}
+            className=" flex justify-between items-center h-[61px] md:h-[80px] px-[4%] sm:px-[64px] py-2 mx-auto max-w-[1440px]"
+          >
+            <div className="flex gap-4">
+              {stickyHeaderDetails.showProductImage && (
+                <ImageContainer
+                  src={getImageSrc(activeProductImage)}
+                  alt={`Thumbnail`}
+                  width={110}
+                  height={110}
+                  className={` border !aspect-square h-9 w-9 md:h-[70px] md:w-[70px] object-cover rounded-lg`}
+                  layout="fixed"
+                />
+              )}
 
-            <div className="flex items-center gap-x-3 text-text-primary-light dark:text-text-primary-dark">
-              <div className="flex flex-col  gap-y-[5px] md:gap-y-2">
-                {stickyHeaderDetails.showProductName && (
-                  <span className="text-xs md:text-sm font-semibold">{prodTitle}</span>
-                )}
-                {stickyHeaderDetails.showPrice && (
-                  <span className="font-semibold text-xs md:text-sm">{formatPriceWithoutCents(prodPrice)}</span>
+              <div className="flex items-center gap-x-3 text-text-primary-light dark:text-text-primary-dark">
+                <div className="flex flex-col  gap-y-[5px] md:gap-y-2">
+                  {stickyHeaderDetails.showProductName && (
+                    <span className="text-xs md:text-sm font-semibold">{prodTitle}</span>
+                  )}
+                  {stickyHeaderDetails.showPrice && (
+                    <span className="font-semibold text-xs md:text-sm">{formatPriceWithoutCents(prodPrice)}</span>
+                  )}
+                </div>
+                {stickyHeaderDetails.showShareIcon && (
+                  <ShareIcon
+                    aria-label="Share"
+                    onClick={handleShareClick}
+                    height={28}
+                    width={28}
+                    primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
+                    className="cursor-pointer hidden md:block"
+                  />
                 )}
               </div>
+            </div>
+
+            <div className="flex items-center gap-4 md:gap-2 ">
+              {stickyHeaderDetails.showShareIcon && (
+                <>
+                  <HartSvg
+                    aria-label="Like"
+                    onClick={handleLike}
+                    height="24"
+                    width="24"
+                    className="hover:scale-105 cursor-pointer hidden md:block"
+                    borderColor={`${theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}`}
+                    color="var(--heart-fill-color)"
+                    isFilled={isLiked}
+                  />
+                  <HartSvg
+                    aria-label="Like"
+                    onClick={handleLike}
+                    height="20"
+                    width="20"
+                    className="hover:scale-105 cursor-pointer md:hidden"
+                    borderColor={`${theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}`}
+                    color="var(--heart-fill-color)"
+                    isFilled={isLiked}
+                  />
+                </>
+              )}
               {stickyHeaderDetails.showShareIcon && (
                 <ShareIcon
                   aria-label="Share"
                   onClick={handleShareClick}
-                  height={28}
-                  width={28}
+                  height={24}
+                  width={24}
                   primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
-                  className="cursor-pointer hidden md:block"
+                  className="cursor-pointer md:hidden"
                 />
               )}
-            </div>
-          </div>
+              {stickyHeaderDetails.showButtons && (
+                <div className=" gap-2 hidden md:flex">
+                  <Button
+                    isLoading={isFirstButtonLoading}
+                    onClick={handleFirstButtonClick}
+                    className={`w-[174px]  text-sm mb-0`}
+                  >
+                    {data.result?.isNegotiable ? ctaText[0].makeOfferBtn : ctaText[0].firstBtn}
+                  </Button>
 
-          <div className="flex items-center gap-4 md:gap-2 ">
-            {stickyHeaderDetails.showShareIcon && (
-              <>
-              <HartSvg
-                aria-label="Like"
-                onClick={handleLike}
-                height="24"
-                width="24"
-                className="hover:scale-105 cursor-pointer hidden md:block"
-                borderColor={`${theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}`}
-                color="var(--heart-fill-color)"
-                isFilled={isLiked}
-              />
-              <HartSvg
-                aria-label="Like"
-                onClick={handleLike}
-                height="20"
-                width="20"
-                className="hover:scale-105 cursor-pointer md:hidden"
-                borderColor={`${theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}`}
-                color="var(--heart-fill-color)"
-                isFilled={isLiked}
-              />
-            </>
-            )}
-            {stickyHeaderDetails.showShareIcon && (
-              <ShareIcon
-                aria-label="Share"
-                onClick={handleShareClick}
-                height={24}
-                width={24}
-                primaryColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
-                className="cursor-pointer md:hidden"
-              />
-            )}
-            {stickyHeaderDetails.showButtons && (
-              <div className=" gap-2 hidden md:flex">
-                <Button
-                  isLoading={isFirstButtonLoading}
-                  onClick={handleFirstButtonClick}
-                  className={`w-[174px]  text-sm mb-0`}
-                >
-                  {data.result?.isNegotiable ? ctaText[0].makeOfferBtn : ctaText[0].firstBtn}
-                </Button>
+                  <Button
+                    isLoading={isChatCreating}
+                    className="w-[174px] text-sm mb-0 dark:bg-bg-tertiary-dark dark:text-text-primary-dark"
+                    buttonType="secondary"
+                    onClick={askQuestionHandler}
+                  >
+                    Ask A Question
+                  </Button>
 
-                {/* <Button
-                  className="w-[174px] text-sm mb-0 dark:bg-bg-tertiary-dark dark:text-text-primary-dark"
-                  buttonType="secondary"
-                >
-                  {ctaText[0].secondBtn}
-                </Button> */}
-
-                <ChatIcon
+                  {/* <ChatIcon
                   // onClick={chatIconClickHandler}
                   bgFillcolor={theme ? '#363636' : '#F4F4F4'}
                   fillColor={theme ? 'var(--icon-primary-dark)' : 'var(--icon-primary-light)'}
                   // size={isMobile ? 'mobile' : 'pc'}
-                />
-              </div>
-            )}
+                /> */}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -404,6 +473,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
                   {apidata?.users?.accountId !== userInfo?.accountId && (
                     <div className="mobile:hidden">
                       <PdpCta
+                        askQuestionHandler={askQuestionHandler}
                         setStickyHeaderDetails={setStickyHeaderDetails}
                         stickyHeaderDetails={stickyHeaderDetails}
                         apiData={apidata}
@@ -460,6 +530,7 @@ const ProductDisplay: React.FC<ProductProps> = ({ data }) => {
       {apidata?.users?.accountId !== userInfo?.accountId && (
         <div className=" px-2 z-10 sm:hidden flex items-center justify-between h-[76px] w-full fixed bottom-0 right-0 left-0 bg-bg-secondary-light dark:bg-bg-secondary-dark">
           <PdpCta
+            isChatCreating={isChatCreating}
             apiData={apidata}
             firstButtonText={data.result?.isNegotiable ? ctaText[0].makeOfferBtn : ctaText[0].firstBtn}
             isSold={isSold}

@@ -6,6 +6,7 @@ type ChatIconProps = {
   height?: string;
   primaryColor?: string;
   className?: string;
+  onClick?:()=>void;
 };
 
 const ChatIcon: FC<ChatIconProps> = ({ width = '20', height = '20', primaryColor = 'white', className, ...props }) => {

@@ -3,14 +3,20 @@ import React, { FC } from 'react';
 type OfficeIconProps = {
   color?: string;
   size?: string;
+  ariaLabel?: string;
 };
 
-const OffersIconSVG: FC<OfficeIconProps> = ({
-  color = '#FF0000',
-}) => {
+const OffersIconSVG: FC<OfficeIconProps> = ({ color = '#FF0000', ariaLabel }) => {
   return (
     <>
-      <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        aria-label={ariaLabel || 'offers-icon'}
+        width="16"
+        height="17"
+        viewBox="0 0 16 17"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <mask
           id="mask0_2819_209145"
           style={{ maskType: 'alpha' }}

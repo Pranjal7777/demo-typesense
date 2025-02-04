@@ -540,6 +540,7 @@ const Categories: NextPage<CategoriesPageProps> = function ({
         categories={categories}
         heroImageSrc={categoriesBannerData?.webBanner || IMAGES.PRIMARY_BANNER}
         description={categoriesBannerData?.description || ''}
+        title={categoriesBannerData?.headline || ''}
         stickyHeader={threshold <= 540}
         stickyHeroSection={threshold <= 540}
       >

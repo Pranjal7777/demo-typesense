@@ -116,9 +116,6 @@ const Categories: NextPage<CategoriesPageProps> = function ({
   const theme = useTheme();
   const router = useRouter();
 
-  console.log(categoriesBannerData, 'categoriesBannerData in');
-  
-
   const { 'categoryName-id': categoryNameId , selectedCategory} = router.query;
   const categoryNameIdArray = Array.isArray(categoryNameId) ? categoryNameId : categoryNameId?.split('-');
   const id = categoryNameIdArray?.[categoryNameIdArray.length - 1];

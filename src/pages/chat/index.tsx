@@ -28,9 +28,9 @@ const chatProps = {
     
 
     useEffect(()=>{
-      setTimeout(()=>{
+      // setTimeout(()=>{
         initializeChat(chatProps)
-      },3000)
+      // },3000)
     },[])
 
   return (

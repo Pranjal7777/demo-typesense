@@ -14,6 +14,7 @@ type PdpCtaProps = {
   apiData?: any;
   setStickyHeaderDetails?: React.Dispatch<React.SetStateAction<StickyHeaderDetails>>;
   stickyHeaderDetails?: StickyHeaderDetails;
+  askQuestionHandler?: ()=>void;
 };
 const PdpCta: React.FC<PdpCtaProps> = ({
   isSold,
@@ -24,7 +25,8 @@ const PdpCta: React.FC<PdpCtaProps> = ({
   handleFirstButtonClick,
   apiData,
   setStickyHeaderDetails,
-  stickyHeaderDetails
+  stickyHeaderDetails,
+  askQuestionHandler,
 }) => {
   const theme = useTheme();
   const [loadingChat, setLoadingChat] = useState(false);
@@ -48,43 +50,39 @@ const PdpCta: React.FC<PdpCtaProps> = ({
     console.log('chatIconClickHandler');
   };
 
-
   const buttonsRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    const updatePosition = () => {
+      if (!buttonsRef.current) return;
 
-      useEffect(() => {
-        const updatePosition = () => {
-          if (!buttonsRef.current) return;
+      const buttonsRect = buttonsRef.current.getBoundingClientRect();
 
-          const buttonsRect = buttonsRef.current.getBoundingClientRect();
+      setStickyHeaderDetails?.((prevDetails) => {
+        let newDetails = { ...prevDetails };
 
-          setStickyHeaderDetails?.((prevDetails) => {
-            let newDetails = { ...prevDetails };
+        // Set showProductImage to true when the imageElement is either scrolled past 145px from the top or completely out of viewport
+        if (buttonsRect.top <= 145 || buttonsRect.bottom < 0) {
+          newDetails.showButtons = true;
+        } else {
+          newDetails.showButtons = false;
+        }
 
-            // Set showProductImage to true when the imageElement is either scrolled past 145px from the top or completely out of viewport
-            if (buttonsRect.top <= 145 || buttonsRect.bottom < 0) {
-              newDetails.showButtons = true;
-            } else {
-              newDetails.showButtons = false;
-            }
+        // Update state only if there's a change
+        if (newDetails.showButtons !== prevDetails.showButtons) {
+          return newDetails;
+        }
+        return prevDetails;
+      });
+    };
 
-            // Update state only if there's a change
-            if (
-              newDetails.showButtons !== prevDetails.showButtons
-            ) {
-              return newDetails;
-            }
-            return prevDetails;
-          });
-        };
+    updatePosition(); // Initial update when component mounts
+    window.addEventListener('scroll', updatePosition);
 
-        updatePosition(); // Initial update when component mounts
-        window.addEventListener('scroll', updatePosition);
-
-        return () => {
-          window.removeEventListener('scroll', updatePosition);
-        };
-      }, []);
+    return () => {
+      window.removeEventListener('scroll', updatePosition);
+    };
+  }, []);
 
   return (
     <div className={`flex w-full gap-2 ${isSold ? 'mt-0' : 'mt-5'} justify-between`} ref={buttonsRef}>
@@ -97,18 +95,22 @@ const PdpCta: React.FC<PdpCtaProps> = ({
           >
             {firstButtonText}
           </Button>
-          {/* {secondButtonText && (
-            <Button className="w-[15rem] mobile:w-[12rem] text-sm mb-0" buttonType="secondary">
-              {secondButtonText}
+          {secondButtonText && (
+            <Button
+              className="w-[15rem] mobile:w-[12rem] text-sm mb-0"
+              buttonType="secondary"
+              onClick={askQuestionHandler}
+            >
+              Ask A Question
             </Button>
-          )} */}
+          )}
 
-          <ChatIcon
+          {/* <ChatIcon
             aria-label="Chat"
             onClick={chatIconClickHandler}
             bgFillcolor={theme.theme ? '#fff' : '#F4F4F4'}
             size={isMobile ? 'mobile' : 'pc'}
-          />
+          /> */}
         </>
       ) : (
         <div className="w-full">

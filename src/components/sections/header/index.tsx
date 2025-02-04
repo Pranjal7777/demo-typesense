@@ -292,6 +292,27 @@ const showCategoriesInMobile = useMemo(() => {
                 <div className="hidden md:flex gap-6 ">
                   {/* for like route */}
                   <div className="cursor-pointer">
+                    <ChatIcon
+                    onClick={()=>router.push('/chat')}
+                      height="24"
+                      width="24"
+                      className="hover:scale-105"
+                      primaryColor={`${
+                        stickyHeaderWithSearchBox
+                          ? theme
+                            ? 'var(--icon-primary-dark)'
+                            : 'var(--icon-primary-light)'
+                          : theme
+                          ? minThreshold
+                            ? 'var(--icon-primary-dark)'
+                            : 'var(--icon-primary-dark)'
+                          : minThreshold
+                          ? 'var(--icon-primary-light)'
+                          : 'var(--icon-primary-dark)'
+                      }`}
+                    />
+                  </div>
+                  <div className="cursor-pointer">
                     <HartSvg
                       height="24"
                       width="24"
